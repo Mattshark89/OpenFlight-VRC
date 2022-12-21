@@ -14,10 +14,12 @@ public class AvaliFlight : UdonSharpBehaviour {
     private Vector3 LHPosLast;
     private bool isFlapping;
     private bool isFlying;
-    [Tooltip("Change gravity while flying? (Default: true)")]
+    [Tooltip("Change gravity while flying? Highly recommended for that floaty effect (Default: true)")]
     public bool setGravity = true;
-    [Tooltip("Value of gravity while flying (Default: 0.22)")]
-    public float gravity = 0.22f;
+    [Tooltip("Value of gravity while flying (Default: 0.2)")]
+    public float gravity = 0.2f;
+    [Tooltip("Velocity cap (Relative to Flight Strength) (Default: 1.6)")]
+    public float velCap = 1.6f;
     [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
     public bool allowLoco;
     private Vector3 velMod;
@@ -46,7 +48,7 @@ public class AvaliFlight : UdonSharpBehaviour {
                 RHPosLast = RHPos;
                 LHPosLast = LHPos;
 
-                LocalPlayer.SetVelocity(LocalPlayer.GetVelocity() + velMod);
+                LocalPlayer.SetVelocity(Vector3.ClampMagnitude(LocalPlayer.GetVelocity() + velMod, Time.deltaTime * flightStrength * velCap));
             } else { // First frame of flapping (setting necessary variables)
                 isFlapping = true;
                 velMod = LocalPlayer.GetVelocity();
@@ -65,7 +67,7 @@ public class AvaliFlight : UdonSharpBehaviour {
                 RHPosLast = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
                 LHPosLast = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
                 // (pseudocode `LocalPlayer.PlayerGrounded(false)`)
-                LocalPlayer.SetVelocity(velMod);
+                LocalPlayer.SetVelocity(Vector3.ClampMagnitude(velMod, Time.deltaTime * flightStrength * velCap ));
             }
         } else { // Stopped flapping
             isFlapping = false;
