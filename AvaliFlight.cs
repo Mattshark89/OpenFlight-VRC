@@ -1,6 +1,7 @@
 ﻿
 using UdonSharp;
 using UnityEngine;
+using UnityEngine.UI;
 using VRC.SDKBase;
 using VRC.Udon;
 
@@ -28,6 +29,14 @@ public class AvaliFlight : UdonSharpBehaviour {
     private float oldWalkSpeed;
     private float oldRunSpeed;
     private float oldStrafeSpeed;
+    // Bones used for calculating arm/wingspan (defined later)
+    private HumanBodyBones rightUpperArmBone;
+    private HumanBodyBones leftUpperArmBone;
+    private HumanBodyBones rightLowerArmBone;
+    private HumanBodyBones leftLowerArmBone;
+    private HumanBodyBones rightHandBone;
+    private HumanBodyBones leftHandBone;
+    private float wingspan = 0f;
     
     public void Start() {
         isFlapping = false;
@@ -96,5 +105,19 @@ public class AvaliFlight : UdonSharpBehaviour {
             LocalPlayer.SetRunSpeed(oldRunSpeed);
             LocalPlayer.SetStrafeSpeed(oldStrafeSpeed);
         }
+    }
+    
+    // Determine Flight Strength, etc. based on wingspan and whatnot.
+    // This function can be re-run to recalculate these values at any time (upon switching avatars for example)
+    private void CalculateStats() {
+        leftLowerArmBone = HumanBodyBones.LeftLowerArm;
+        rightLowerArmBone = HumanBodyBones.RightLowerArm;
+        leftUpperArmBone = HumanBodyBones.LeftUpperArm;
+        rightUpperArmBone = HumanBodyBones.RightUpperArm;
+        leftHandBone = HumanBodyBones.LeftHand;
+        rightHandBone = HumanBodyBones.RightHand;
+        // `wingspan` does not include the distance between shoulders
+        wingspan = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone),LocalPlayer.GetBonePosition(leftHandBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone),LocalPlayer.GetBonePosition(rightLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone),LocalPlayer.GetBonePosition(rightHandBone));
+        Debug.Log(wingspan);
     }
 }
