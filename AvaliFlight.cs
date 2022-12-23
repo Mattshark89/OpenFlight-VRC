@@ -8,19 +8,19 @@ using VRC.Udon;
 public class AvaliFlight : UdonSharpBehaviour {
     private VRCPlayerApi LocalPlayer;
     [Tooltip("Strength of each flap. Recommended values for default gravity: 300-700 (Default: 400)")]
-    public float flightStrength = 400f;
+    public int flightStrength = 400;
     private Vector3 RHPos;
     private Vector3 LHPos;
     private Vector3 RHPosLast = new Vector3(0f, float.NegativeInfinity, 0f);
     private Vector3 LHPosLast = new Vector3(0f, float.NegativeInfinity, 0f);
-    private bool isFlapping;
-    private bool isFlying;
+    private bool isFlapping = false;
+    private bool isFlying = false;
     [Tooltip("Change gravity while flying? Highly recommended for that floaty effect (Default: true)")]
     public bool setGravity = true;
-    [Tooltip("Value of gravity while flying (Default: 0.2)")]
-    public float gravity = 0.2f;
-    [Tooltip("Velocity cap (Relative to Flight Strength) (Default: 1.6)")]
-    public float velCap = 1.6f;
+    [Tooltip("Value of gravity while flying (Default: 0.22)")]
+    public float gravity = 0.22f;
+    [Tooltip("Velocity cap (Relative to Wingspan) (Default: 700)")]
+    public int velCap = 700;
     [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
     public bool allowLoco;
     private Vector3 velMod;
@@ -58,12 +58,18 @@ public class AvaliFlight : UdonSharpBehaviour {
             downThrust = 0;
         }
         //if ((Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger") > 0.5f) & (Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger") > 0.5f)) {
-        if (downThrust > 0.0002) {
-            if (isFlapping) {
+        if (isFlapping) {
+            if (downThrust > 0) {
                 // Calculate Force to apply
                 velMod = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * Time.deltaTime * flightStrength;
-                LocalPlayer.SetVelocity(Vector3.ClampMagnitude(LocalPlayer.GetVelocity() + velMod, Time.deltaTime * flightStrength * velCap));
-            } else { // First frame of flapping (setting necessary variables)
+                LocalPlayer.SetVelocity(Vector3.ClampMagnitude(LocalPlayer.GetVelocity() + velMod, Time.deltaTime * wingspan * velCap));
+            } else { 
+                isFlapping = false;
+            }
+        } else {
+            // check for the beginning of a flap
+            if (downThrust > 0.0002 && RHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(rightUpperArmBone).y && LHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(leftUpperArmBone).y) {
+                // First frame of flapping (setting necessary variables)
                 isFlapping = true;
                 velMod = LocalPlayer.GetVelocity();
                 if (!isFlying) { // First flap of the flight (ie grounded)
@@ -84,8 +90,6 @@ public class AvaliFlight : UdonSharpBehaviour {
                 // (pseudocode `LocalPlayer.PlayerGrounded(false)`)
                 LocalPlayer.SetVelocity(Vector3.ClampMagnitude(velMod, Time.deltaTime * flightStrength * velCap ));
             }
-        } else { // Stopped flapping
-            isFlapping = false;
         }
         if (isFlying && LocalPlayer.IsPlayerGrounded()) { // Script to run when landing
             isFlying = false;
