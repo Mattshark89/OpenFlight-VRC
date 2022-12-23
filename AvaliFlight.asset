@@ -524,19 +524,25 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: setGravity
+      Data: upwardsGravityMod
     - Name: $v
       Entry: 7
       Data: 26|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: setGravity
+      Data: upwardsGravityMod
     - Name: <UserType>k__BackingField
-      Entry: 9
-      Data: 22
+      Entry: 7
+      Data: 27|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: System.Single, mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 22
+      Data: 27
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -551,17 +557,17 @@ MonoBehaviour:
       Data: true
     - Name: _fieldAttributes
       Entry: 7
-      Data: 27|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
+      Data: 28|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
     - Name: 
       Entry: 12
       Data: 1
     - Name: 
       Entry: 7
-      Data: 28|UnityEngine.TooltipAttribute, UnityEngine.CoreModule
+      Data: 29|UnityEngine.TooltipAttribute, UnityEngine.CoreModule
     - Name: tooltip
       Entry: 1
-      Data: 'Change gravity while flying? Highly recommended for that floaty effect
-        (Default: true)'
+      Data: 'Gravity multiplier while flying upwards. Set to 1 to disable (Default:
+        0.3)'
     - Name: 
       Entry: 8
       Data: 
@@ -582,25 +588,19 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: gravity
+      Data: downwardsGravityMod
     - Name: $v
       Entry: 7
-      Data: 29|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
+      Data: 30|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: gravity
+      Data: downwardsGravityMod
     - Name: <UserType>k__BackingField
-      Entry: 7
-      Data: 30|System.RuntimeType, mscorlib
-    - Name: 
-      Entry: 1
-      Data: System.Single, mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
+      Entry: 9
+      Data: 27
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 30
+      Data: 27
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -624,8 +624,8 @@ MonoBehaviour:
       Data: 32|UnityEngine.TooltipAttribute, UnityEngine.CoreModule
     - Name: tooltip
       Entry: 1
-      Data: 'Value of gravity while flying (this value is ignored if Set Gravity
-        is unchecked) (Default: 0.22)'
+      Data: 'Gravity multiplier while floating downwards. Set to 1 to disable (Default:
+        0.22)'
     - Name: 
       Entry: 8
       Data: 
@@ -760,10 +760,10 @@ MonoBehaviour:
       Data: oldGravityStrength
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 30
+      Data: 27
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 30
+      Data: 27
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -808,10 +808,10 @@ MonoBehaviour:
       Data: oldWalkSpeed
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 30
+      Data: 27
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 30
+      Data: 27
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -856,10 +856,10 @@ MonoBehaviour:
       Data: oldRunSpeed
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 30
+      Data: 27
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 30
+      Data: 27
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -904,10 +904,10 @@ MonoBehaviour:
       Data: oldStrafeSpeed
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 30
+      Data: 27
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 30
+      Data: 27
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -1246,10 +1246,10 @@ MonoBehaviour:
       Data: wingspan
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 30
+      Data: 27
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 30
+      Data: 27
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -1294,10 +1294,10 @@ MonoBehaviour:
       Data: downThrust
     - Name: <UserType>k__BackingField
       Entry: 9
-      Data: 30
+      Data: 27
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 30
+      Data: 27
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib

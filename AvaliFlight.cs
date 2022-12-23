@@ -17,10 +17,10 @@ public class AvaliFlight : UdonSharpBehaviour {
     private Vector3 LHPosLast = new Vector3(0f, float.NegativeInfinity, 0f);
     private bool isFlapping = false;
     private bool isFlying = false;
-    [Tooltip("Change gravity while flying? Highly recommended for that floaty effect (Default: true)")]
-    public bool setGravity = true;
-    [Tooltip("Value of gravity while flying (this value is ignored if Set Gravity is unchecked) (Default: 0.22)")]
-    public float gravity = 0.22f;
+    [Tooltip("Gravity multiplier while flying upwards. Set to 1 to disable (Default: 0.3)")]
+    public float upwardsGravityMod = 0.3f;
+    [Tooltip("Gravity multiplier while floating downwards. Set to 1 to disable (Default: 0.22)")]
+    public float downwardsGravityMod = 0.22f;
     [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
     public bool allowLoco;
     private Vector3 velMod;
@@ -75,15 +75,13 @@ public class AvaliFlight : UdonSharpBehaviour {
                 if (!isFlying) { // First flap of the flight (ie grounded)
                     isFlying = true;
                     CalculateStats();
-                    if (setGravity) {
-                        oldGravityStrength = LocalPlayer.GetGravityStrength();
-                        LocalPlayer.SetGravityStrength(gravity);
-                    }
+                    oldGravityStrength = LocalPlayer.GetGravityStrength();
+                    LocalPlayer.SetGravityStrength(oldGravityStrength * upwardsGravityMod);
+                    // Workaround to get the player off the ground
+                    // velMod.y = LocalPlayer.GetGravityStrength() * Time.deltaTime * 500;
                     if (!allowLoco) {
                         ImmobilizePart(true);
                     }
-                    // Workaround to get the player off the ground
-                    velMod.y = LocalPlayer.GetGravityStrength() * Time.deltaTime * 500;
                 }
                 RHPosLast = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
                 LHPosLast = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
@@ -91,13 +89,18 @@ public class AvaliFlight : UdonSharpBehaviour {
                 LocalPlayer.SetVelocity(Vector3.ClampMagnitude(velMod, Time.deltaTime * flapStrength * velocityCap ));
             }
         }
-        if (isFlying && LocalPlayer.IsPlayerGrounded()) { // Script to run when landing
-            isFlying = false;
-            if (setGravity) {
+        if (isFlying) {
+            if (LocalPlayer.IsPlayerGrounded()) {
+                // Script to run when landing
+                isFlying = false;
                 LocalPlayer.SetGravityStrength(oldGravityStrength);
-            }
-            if (!allowLoco) {
-                ImmobilizePart(false);
+                if (!allowLoco) {
+                    ImmobilizePart(false);
+                }
+            } else {
+                if (LocalPlayer.GetGravityStrength() != (oldGravityStrength * downwardsGravityMod) && LocalPlayer.GetVelocity().y < 0) {
+                    LocalPlayer.SetGravityStrength(oldGravityStrength * downwardsGravityMod);
+                }
             }
         }
         RHPosLast = RHPos;
