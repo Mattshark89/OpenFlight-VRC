@@ -11,8 +11,8 @@ public class AvaliFlight : UdonSharpBehaviour {
     public float flightStrength = 400f;
     private Vector3 RHPos;
     private Vector3 LHPos;
-    private Vector3 RHPosLast;
-    private Vector3 LHPosLast;
+    private Vector3 RHPosLast = new Vector3(0f, float.NegativeInfinity, 0f);
+    private Vector3 LHPosLast = new Vector3(0f, float.NegativeInfinity, 0f);
     private bool isFlapping;
     private bool isFlying;
     [Tooltip("Change gravity while flying? Highly recommended for that floaty effect (Default: true)")]
@@ -36,33 +36,39 @@ public class AvaliFlight : UdonSharpBehaviour {
     private HumanBodyBones leftLowerArmBone;
     private HumanBodyBones rightHandBone;
     private HumanBodyBones leftHandBone;
-    private float wingspan = 0f;
+    private float wingspan = 9999f; // You'll never be able to fly with a wingspan this wide... Unless your avatar is just stupid oversized
+    private float downThrust = 0f;
     
     public void Start() {
         isFlapping = false;
         isFlying = false;
         LocalPlayer = Networking.LocalPlayer;
+        CalculateStats();
     }
     
     public void Update() {
         // Check if both triggers are being held
         // TODO: Check instead if hands are being moved downward while above a certain Y threshold
-        if ((Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger") > 0.5f) & (Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger") > 0.5f)) {
+        // We're using LocalPlayer.GetPosition() to turn these coordinates into relative ones
+        RHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
+        LHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
+        if ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y) > 0) {
+            downThrust = ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y)) * Time.deltaTime / wingspan;
+        } else {
+            downThrust = 0;
+        }
+        //if ((Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger") > 0.5f) & (Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger") > 0.5f)) {
+        if (downThrust > 0.0002) {
             if (isFlapping) {
-                // We're using LocalPlayer.GetPosition() to turn these coordinates into local ones
-                RHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
-                LHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
                 // Calculate Force to apply
-                velMod = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * (Time.deltaTime * flightStrength);
-                RHPosLast = RHPos;
-                LHPosLast = LHPos;
-
+                velMod = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * Time.deltaTime * flightStrength;
                 LocalPlayer.SetVelocity(Vector3.ClampMagnitude(LocalPlayer.GetVelocity() + velMod, Time.deltaTime * flightStrength * velCap));
             } else { // First frame of flapping (setting necessary variables)
                 isFlapping = true;
                 velMod = LocalPlayer.GetVelocity();
                 if (!isFlying) { // First flap of the flight (ie grounded)
                     isFlying = true;
+                    CalculateStats();
                     if (setGravity) {
                         oldGravityStrength = LocalPlayer.GetGravityStrength();
                         LocalPlayer.SetGravityStrength(gravity);
@@ -90,6 +96,8 @@ public class AvaliFlight : UdonSharpBehaviour {
                 ImmobilizePart(false);
             }
         }
+        RHPosLast = RHPos;
+        LHPosLast = LHPos;
     }
     // Immobilize Locomotion but still allow body rotation
     private void ImmobilizePart(bool b) {
