@@ -7,8 +7,10 @@ using VRC.Udon;
 
 public class AvaliFlight : UdonSharpBehaviour {
     private VRCPlayerApi LocalPlayer;
-    [Tooltip("Strength of each flap. Recommended values for default gravity: 300-700 (Default: 400)")]
-    public int flightStrength = 400;
+    [Tooltip("Recommended values for default gravity: 300-450 (Default: 400)")]
+    public int flapStrength = 400;
+    [Tooltip("It is recommended you set this higher than Flap Strength (Default: 700)")]
+    public int velocityCap = 700;
     private Vector3 RHPos;
     private Vector3 LHPos;
     private Vector3 RHPosLast = new Vector3(0f, float.NegativeInfinity, 0f);
@@ -17,10 +19,8 @@ public class AvaliFlight : UdonSharpBehaviour {
     private bool isFlying = false;
     [Tooltip("Change gravity while flying? Highly recommended for that floaty effect (Default: true)")]
     public bool setGravity = true;
-    [Tooltip("Value of gravity while flying (Default: 0.22)")]
+    [Tooltip("Value of gravity while flying (this value is ignored if Set Gravity is unchecked) (Default: 0.22)")]
     public float gravity = 0.22f;
-    [Tooltip("Velocity cap (Relative to Wingspan) (Default: 700)")]
-    public int velCap = 700;
     [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
     public bool allowLoco;
     private Vector3 velMod;
@@ -36,7 +36,7 @@ public class AvaliFlight : UdonSharpBehaviour {
     private HumanBodyBones leftLowerArmBone;
     private HumanBodyBones rightHandBone;
     private HumanBodyBones leftHandBone;
-    private float wingspan = 9999f; // You'll never be able to fly with a wingspan this wide... Unless your avatar is just stupid oversized
+    private float wingspan = 99999f; // You'll never be able to fly with a wingspan this wide... Unless your avatar is just stupid oversized
     private float downThrust = 0f;
     
     public void Start() {
@@ -61,8 +61,8 @@ public class AvaliFlight : UdonSharpBehaviour {
         if (isFlapping) {
             if (downThrust > 0) {
                 // Calculate Force to apply
-                velMod = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * Time.deltaTime * flightStrength;
-                LocalPlayer.SetVelocity(Vector3.ClampMagnitude(LocalPlayer.GetVelocity() + velMod, Time.deltaTime * wingspan * velCap));
+                velMod = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * Time.deltaTime * flapStrength;
+                LocalPlayer.SetVelocity(Vector3.ClampMagnitude(LocalPlayer.GetVelocity() + velMod, Time.deltaTime * wingspan * velocityCap));
             } else { 
                 isFlapping = false;
             }
@@ -88,7 +88,7 @@ public class AvaliFlight : UdonSharpBehaviour {
                 RHPosLast = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
                 LHPosLast = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
                 // (pseudocode `LocalPlayer.PlayerGrounded(false)`)
-                LocalPlayer.SetVelocity(Vector3.ClampMagnitude(velMod, Time.deltaTime * flightStrength * velCap ));
+                LocalPlayer.SetVelocity(Vector3.ClampMagnitude(velMod, Time.deltaTime * flapStrength * velocityCap ));
             }
         }
         if (isFlying && LocalPlayer.IsPlayerGrounded()) { // Script to run when landing
