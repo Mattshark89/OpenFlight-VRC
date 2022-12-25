@@ -7,22 +7,21 @@ using VRC.Udon;
 
 public class AvaliFlight : UdonSharpBehaviour {
     private VRCPlayerApi LocalPlayer;
-    [Tooltip("Recommended values for default gravity: 400-6000 (Default: 500)")]
-    public int flapStrength = 500;
+    [Tooltip("Flap Strength varies by wingsize. 0.3-0.5 include most Avalis, 1 is about the wingspan of a VRChat avatar of average height.")]
+    public AnimationCurve flapStrength = new AnimationCurve(new Keyframe(0.1f,1000, 0, -120), new Keyframe(0.5f,400, -90, -90, 0, 0.2f), new Keyframe(1, 280, -90, -90, 0.3f, 0.08f), new Keyframe(8, 80, 0, 0, 0.1f, 0));
     [Tooltip("Modifier for horizontal flap strength (Default: 1.5)")]
     public float horizontalStrengthMod = 1.5f;
-    [Tooltip("(Default: 500)")]
-    public int velocityCap = 500;
     private Vector3 RHPos;
     private Vector3 LHPos;
     private Vector3 RHPosLast = new Vector3(0f, float.NegativeInfinity, 0f);
     private Vector3 LHPosLast = new Vector3(0f, float.NegativeInfinity, 0f);
     private bool isFlapping = false;
     private bool isFlying = false;
-    [Tooltip("Gravity multiplier while flying upwards, `1` to disable (Default: 0.2)")]
-    public float upwardsGravityMod = 0.2f;
-    [Tooltip("Gravity multiplier while floating downwards, `1` to disable (Default: 0.2)")]
-    public float downwardsGravityMod = 0.2f;
+    // GravityMod Advanced Usage:
+    // The curve exists to make larger avatars feel heavier; they will fall to the ground faster than smaller avatars.
+    // To remove this distinction, make the line a horizontal one
+    [Tooltip("Gravity multiplier while flying.\nFor basic adjustments, drag the middle two dots up/down to the desired y value, using the SHIFT key to lock x (Default: 0.2)")]
+    public AnimationCurve gravityMod = new AnimationCurve(new Keyframe(0.1f, 0.1f, 0, 0, 0, 0), new Keyframe(0.2f, 0.2f, 0, 0, 0, 0), new Keyframe(1, 0.2f, 0, 0, 0, 0), new Keyframe(8, 1, 0, 0, 0, 0));
     [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
     public bool allowLoco;
     private Vector3 targetVelocity;
@@ -65,12 +64,12 @@ public class AvaliFlight : UdonSharpBehaviour {
         if (isFlapping) {
             if (downThrust > 0) {
                 // Calculate Force to apply
-                targetVelocity = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * Time.deltaTime * flapStrength;
+                targetVelocity = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * Time.deltaTime * flapStrength.Evaluate(wingspan);
                 float ley = targetVelocity.y;
                 targetVelocity = targetVelocity * horizontalStrengthMod;
                 targetVelocity.y = ley;
                 newVelocity = targetVelocity + LocalPlayer.GetVelocity();
-                LocalPlayer.SetVelocity(Vector3.ClampMagnitude(newVelocity, Time.deltaTime * wingspan * velocityCap));
+                LocalPlayer.SetVelocity(Vector3.ClampMagnitude(newVelocity, Time.deltaTime * wingspan * flapStrength.Evaluate(wingspan)));
             } else { 
                 isFlapping = false;
             }
@@ -84,7 +83,7 @@ public class AvaliFlight : UdonSharpBehaviour {
                     isFlying = true;
                     CalculateStats();
                     oldGravityStrength = LocalPlayer.GetGravityStrength();
-                    LocalPlayer.SetGravityStrength(oldGravityStrength * upwardsGravityMod);
+                    LocalPlayer.SetGravityStrength(oldGravityStrength * gravityMod.Evaluate(wingspan));
                     // Workaround to get the player off the ground
                     // newVelocity.y = LocalPlayer.GetGravityStrength() * Time.deltaTime * 500;
                     if (!allowLoco) {
@@ -94,7 +93,7 @@ public class AvaliFlight : UdonSharpBehaviour {
                 RHPosLast = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
                 LHPosLast = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
                 // (pseudocode `LocalPlayer.SetPlayerGrounded(false)`)
-                LocalPlayer.SetVelocity(Vector3.ClampMagnitude(newVelocity, Time.deltaTime * wingspan * velocityCap ));
+                LocalPlayer.SetVelocity(Vector3.ClampMagnitude(newVelocity, Time.deltaTime * wingspan * flapStrength.Evaluate(wingspan)));
             }
         }
         if (isFlying) {
@@ -106,8 +105,8 @@ public class AvaliFlight : UdonSharpBehaviour {
                     ImmobilizePart(false);
                 }
             } else {
-                if (LocalPlayer.GetGravityStrength() != (oldGravityStrength * downwardsGravityMod) && LocalPlayer.GetVelocity().y < 0) {
-                    LocalPlayer.SetGravityStrength(oldGravityStrength * downwardsGravityMod);
+                if (LocalPlayer.GetGravityStrength() != (oldGravityStrength * gravityMod.Evaluate(wingspan)) && LocalPlayer.GetVelocity().y < 0) {
+                    LocalPlayer.SetGravityStrength(oldGravityStrength * gravityMod.Evaluate(wingspan));
                 }
             }
         }
@@ -142,6 +141,6 @@ public class AvaliFlight : UdonSharpBehaviour {
         // `wingspan` does not include the distance between shoulders
         wingspan = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone),LocalPlayer.GetBonePosition(leftHandBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone),LocalPlayer.GetBonePosition(rightLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone),LocalPlayer.GetBonePosition(rightHandBone));
         Debug.Log(wingspan);
-        this.GetComponent<Text>().text = LocalPlayer.GetVelocity().magnitude.ToString();
+        this.GetComponent<Text>().text = string.Concat("Wingspan:\n", wingspan.ToString()) + string.Concat("\nStrength:\n", flapStrength.Evaluate(wingspan));
     }
 }
