@@ -8,7 +8,7 @@ using VRC.Udon;
 public class AvaliFlight : UdonSharpBehaviour {
     private VRCPlayerApi LocalPlayer;
     [Tooltip("Flap Strength varies by wingsize. 0.3-0.5 include most Avalis, 1 is about the wingspan of a VRChat avatar of average height.")]
-    public AnimationCurve flapStrength = new AnimationCurve(new Keyframe(0.1f,1000, 0, -120), new Keyframe(0.5f,400, -90, -90, 0, 0.2f), new Keyframe(1, 280, -90, -90, 0.3f, 0.08f), new Keyframe(8, 80, 0, 0, 0.1f, 0));
+    public AnimationCurve flapStrength = new AnimationCurve(new Keyframe(0.1f,1000, 0, -120), new Keyframe(0.5f,400, -90, -90, 0, 0.2f), new Keyframe(1, 260, -90, -90, 0.3f, 0.08f), new Keyframe(8, 80, 0, 0, 0.1f, 0));
     [Tooltip("Modifier for horizontal flap strength (Default: 1.5)")]
     public float horizontalStrengthMod = 1.5f;
     private Vector3 RHPos;
@@ -69,13 +69,23 @@ public class AvaliFlight : UdonSharpBehaviour {
                 targetVelocity = targetVelocity * horizontalStrengthMod;
                 targetVelocity.y = ley;
                 newVelocity = targetVelocity + LocalPlayer.GetVelocity();
+                if (LocalPlayer.IsPlayerGrounded()) {newVelocity = new Vector3(0, newVelocity.y, 0);} // Removes sliding along the ground
                 LocalPlayer.SetVelocity(Vector3.ClampMagnitude(newVelocity, Time.deltaTime * wingspan * flapStrength.Evaluate(wingspan)));
             } else { 
                 isFlapping = false;
             }
         } else {
-            // check for the beginning of a flap
-            if (downThrust > 0.0002 && RHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(rightUpperArmBone).y && LHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(leftUpperArmBone).y) {
+            // Check for the beginning of a flap
+            
+            // So this one's a bit complicated.
+            // First it checks the right hand, then the left, for two conditions.
+            // Condition one: Is the hand higher than shoulder height?
+            // Condition two (the super long lines of code): if the player isn't flying yet, check to see if their hand is held away from their body. (This check makes it much less likely to accidentially initiate flight)
+            if (RHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(rightUpperArmBone).y
+                && (isFlying ? true : Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(rightHandBone).x, LocalPlayer.GetBonePosition(rightHandBone).z)) > wingspan / 3.2f)
+                && LHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(leftUpperArmBone).y
+                && (isFlying ? true : Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(leftUpperArmBone).x, LocalPlayer.GetBonePosition(leftUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(leftHandBone).x, LocalPlayer.GetBonePosition(leftHandBone).z)) > wingspan / 3.2f)
+                && downThrust > 0.0002) {
                 // First frame of flapping (setting necessary variables)
                 isFlapping = true;
                 newVelocity = LocalPlayer.GetVelocity();
@@ -93,6 +103,7 @@ public class AvaliFlight : UdonSharpBehaviour {
                 RHPosLast = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
                 LHPosLast = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
                 // (pseudocode `LocalPlayer.SetPlayerGrounded(false)`)
+                if (LocalPlayer.IsPlayerGrounded()) {newVelocity = new Vector3(0, newVelocity.y, 0);} // Removes sliding along the ground
                 LocalPlayer.SetVelocity(Vector3.ClampMagnitude(newVelocity, Time.deltaTime * wingspan * flapStrength.Evaluate(wingspan)));
             }
         }
@@ -140,7 +151,5 @@ public class AvaliFlight : UdonSharpBehaviour {
         rightHandBone = HumanBodyBones.RightHand;
         // `wingspan` does not include the distance between shoulders
         wingspan = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone),LocalPlayer.GetBonePosition(leftHandBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone),LocalPlayer.GetBonePosition(rightLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone),LocalPlayer.GetBonePosition(rightHandBone));
-        Debug.Log(wingspan);
-        this.GetComponent<Text>().text = string.Concat("Wingspan:\n", wingspan.ToString()) + string.Concat("\nStrength:\n", flapStrength.Evaluate(wingspan));
     }
 }
