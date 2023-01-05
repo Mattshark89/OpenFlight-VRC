@@ -5,18 +5,21 @@ using UnityEngine.UI;
 using VRC.SDKBase;
 using VRC.Udon;
 
-public class OpenFlight : UdonSharpBehaviour {
+public class WingFlightPlusGlide : UdonSharpBehaviour {
     private VRCPlayerApi LocalPlayer;
     [Tooltip("Flap Strength varies by wingsize. 0.3-0.5 include most half-sized birds, 1 is about the wingspan of a VRChat avatar of average height.")]
-    public AnimationCurve flapStrength = new AnimationCurve(new Keyframe(0.1f,1000, 0, -120), new Keyframe(0.5f,400, -90, -90, 0, 0.2f), new Keyframe(1, 260, -90, -90, 0.3f, 0.08f), new Keyframe(8, 80, 0, 0, 0.1f, 0));
+    public AnimationCurve flapStrength = new AnimationCurve(new Keyframe(0.1f,1000, 0, -120), new Keyframe(0.5f,400, -90, -90, 0, 0.2f), new Keyframe(1, 260, -90, -90, 0.3f, 0.08f), new Keyframe(8, 100, 0, 0, 0.1f, 0));
     [Tooltip("Modifier for horizontal flap strength (Default: 1.5)")]
     public float horizontalStrengthMod = 1.5f;
     private Vector3 RHPos;
     private Vector3 LHPos;
     private Vector3 RHPosLast = new Vector3(0f, float.NegativeInfinity, 0f);
     private Vector3 LHPosLast = new Vector3(0f, float.NegativeInfinity, 0f);
-    private bool isFlapping = false;
-    private bool isFlying = false;
+    private Quaternion RHRot;
+    private Quaternion LHRot;
+    private bool isFlapping = false; // Doing the arm motion
+    private bool isFlying = false; // Currently in the air after/during a flap
+    private bool isGliding = false; // Has arms out while flying
     // GravityMod Advanced Usage:
     // The curve exists to make larger avatars feel heavier; they will fall to the ground faster than smaller avatars.
     // To remove this distinction, make the line a horizontal one
@@ -24,8 +27,15 @@ public class OpenFlight : UdonSharpBehaviour {
     public AnimationCurve gravityMod = new AnimationCurve(new Keyframe(0.1f, 0.1f, 0, 0, 0, 0), new Keyframe(0.2f, 0.2f, 0, 0, 0, 0), new Keyframe(1, 0.2f, 0, 0, 0, 0), new Keyframe(8, 1, 0, 0, 0, 0));
     [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
     public bool allowLoco;
+    // TODO: clean up these four vars
     private Vector3 targetVelocity;
     private Vector3 newVelocity;
+    private bool setFinalVelocity;
+    private Vector3 finalVelocity;
+    
+    private Vector3 wingPlaneNormal;
+    private Vector3 wingDirection;
+    private Vector3 counterForce;
     // "old" values are the world's defaults
     private float oldGravityStrength;
     private float oldWalkSpeed;
@@ -50,6 +60,7 @@ public class OpenFlight : UdonSharpBehaviour {
     public void Update() {
         if (LocalPlayer.IsValid()) {
             CalculateStats();
+            setFinalVelocity = false;
             // Check if both triggers are being held
             // TODO: Check instead if hands are being moved downward while above a certain Y threshold
             // We're using LocalPlayer.GetPosition() to turn these coordinates into relative ones
@@ -70,7 +81,8 @@ public class OpenFlight : UdonSharpBehaviour {
                     targetVelocity.y = ley;
                     newVelocity = targetVelocity + LocalPlayer.GetVelocity();
                     if (LocalPlayer.IsPlayerGrounded()) {newVelocity = new Vector3(0, newVelocity.y, 0);} // Removes sliding along the ground
-                    LocalPlayer.SetVelocity(Vector3.ClampMagnitude(newVelocity, Time.deltaTime * wingspan * flapStrength.Evaluate(wingspan)));
+                    setFinalVelocity = true;
+                    finalVelocity = Vector3.ClampMagnitude(newVelocity, Time.deltaTime * wingspan * flapStrength.Evaluate(wingspan));
                 } else { 
                     isFlapping = false;
                 }
@@ -104,25 +116,47 @@ public class OpenFlight : UdonSharpBehaviour {
                     LHPosLast = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
                     // (pseudocode `LocalPlayer.SetPlayerGrounded(false)`)
                     if (LocalPlayer.IsPlayerGrounded()) {newVelocity = new Vector3(0, newVelocity.y, 0);} // Removes sliding along the ground
-                    LocalPlayer.SetVelocity(Vector3.ClampMagnitude(newVelocity, Time.deltaTime * wingspan * flapStrength.Evaluate(wingspan)));
+                    setFinalVelocity = true;
+                    finalVelocity = Vector3.ClampMagnitude(newVelocity, Time.deltaTime * wingspan * flapStrength.Evaluate(wingspan));
                 }
             }
             if (isFlying) {
                 if (LocalPlayer.IsPlayerGrounded()) {
                     // Script to run when landing
                     isFlying = false;
+                    isGliding = false;
                     LocalPlayer.SetGravityStrength(oldGravityStrength);
                     if (!allowLoco) {
                         ImmobilizePart(false);
                     }
                 } else {
+                    // ---=== Run every frame while the player is "flying" ===---
+
                     if (LocalPlayer.GetGravityStrength() != (oldGravityStrength * gravityMod.Evaluate(wingspan)) && LocalPlayer.GetVelocity().y < 0) {
                         LocalPlayer.SetGravityStrength(oldGravityStrength * gravityMod.Evaluate(wingspan));
                     }
+                    LHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
+                    RHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
+                    if (Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(rightHandBone).x, LocalPlayer.GetBonePosition(rightHandBone).z)) > wingspan / 3.2f
+                        && Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(leftUpperArmBone).x, LocalPlayer.GetBonePosition(leftUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(leftHandBone).x, LocalPlayer.GetBonePosition(leftHandBone).z)) > wingspan / 3.2f) {
+                        // Gliding logic
+                        isGliding = true;
+                        newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
+                        wingPlaneNormal = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.right);
+                        wingDirection = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.forward);
+                        counterForce = Vector3.Reflect(newVelocity, wingPlaneNormal); // The force pushing off of the wings
+                        
+                        // X and Z are purely based on which way the wings are pointed ("forward"). While unrealistic physics-wise, it makes sense for VR
+                        targetVelocity = Vector3.ClampMagnitude(new Vector3(wingDirection.x,(newVelocity + counterForce).y, wingDirection.z), newVelocity.magnitude);
+                        finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, Time.deltaTime * 2);
+                        setFinalVelocity = true;
+                        // Note to self: the amount of velocity added by gravity every frame = (new Vector3(0,LocalPlayer.GetGravityStrength(), 0) * Time.deltaTime * 10)
+                    } else {isGliding = false;}
                 }
             }
             RHPosLast = RHPos;
             LHPosLast = LHPos;
+            if (setFinalVelocity) {LocalPlayer.SetVelocity(finalVelocity);}
         }
     }
     // Immobilize Locomotion but still allow body rotation
@@ -152,6 +186,7 @@ public class OpenFlight : UdonSharpBehaviour {
         rightHandBone = HumanBodyBones.RightHand;
         // `wingspan` does not include the distance between shoulders
         wingspan = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone),LocalPlayer.GetBonePosition(leftHandBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone),LocalPlayer.GetBonePosition(rightLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone),LocalPlayer.GetBonePosition(rightHandBone));
-        this.GetComponent<Text>().text = string.Concat("Wingspan:\n", wingspan.ToString()) + string.Concat("\nStrength:\n", flapStrength.Evaluate(wingspan));
+        LHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
+        RHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
     }
 }
