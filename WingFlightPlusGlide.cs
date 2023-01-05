@@ -144,10 +144,12 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                         newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
                         wingPlaneNormal = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.right);
                         wingDirection = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.forward);
+                        // Flip the "wing direction" if flapping backwards
+                        if (Vector2.Angle(new Vector2(wingDirection.x, wingDirection.z), new Vector2(newVelocity.x, newVelocity.z)) > 90) {wingDirection = wingDirection * -1;}
                         counterForce = Vector3.Reflect(newVelocity, wingPlaneNormal); // The force pushing off of the wings
                         
-                        // X and Z are purely based on which way the wings are pointed ("forward"). While unrealistic physics-wise, it makes sense for VR
-                        targetVelocity = Vector3.ClampMagnitude(new Vector3(wingDirection.x,(newVelocity + counterForce).y, wingDirection.z), newVelocity.magnitude);
+                        // X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
+                        targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(new Vector3(wingDirection.x, counterForce.y, wingDirection.z)) * counterForce.magnitude), newVelocity.magnitude);
                         finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, Time.deltaTime * 2);
                         setFinalVelocity = true;
                         // Note to self: the amount of velocity added by gravity every frame = (new Vector3(0,LocalPlayer.GetGravityStrength(), 0) * Time.deltaTime * 10)
@@ -186,7 +188,5 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         rightHandBone = HumanBodyBones.RightHand;
         // `wingspan` does not include the distance between shoulders
         wingspan = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone),LocalPlayer.GetBonePosition(leftHandBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone),LocalPlayer.GetBonePosition(rightLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone),LocalPlayer.GetBonePosition(rightHandBone));
-        LHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
-        RHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
     }
 }
