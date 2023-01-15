@@ -35,6 +35,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     
     private Vector3 wingPlaneNormal;
     private Vector3 wingDirection;
+    private float steering;
     private Vector3 counterForce;
     // "old" values are the world's defaults
     private float oldGravityStrength;
@@ -144,8 +145,11 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                         newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
                         wingPlaneNormal = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.right);
                         wingDirection = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.forward);
-                        // Flip the "wing direction" if flapping backwards
-                        if (Vector2.Angle(new Vector2(wingDirection.x, wingDirection.z), new Vector2(newVelocity.x, newVelocity.z)) > 90) {wingDirection = wingDirection * -1;}
+                        // Uncomment to flip the "wing direction" if moving backwards. Probably more realistic physics-wise but feels awkward in VR
+                        //if (Vector2.Angle(new Vector2(wingDirection.x, wingDirection.z), new Vector2(newVelocity.x, newVelocity.z)) > 90) {wingDirection = wingDirection * -1;}
+                        steering = (RHPos.y - LHPos.y) * 80 / wingspan;
+                        if (steering > 30) {steering = 30;} else if (steering < -30) {steering = -30;}
+                        wingDirection = Quaternion.Euler(0, steering, 0) * wingDirection;
                         counterForce = Vector3.Reflect(newVelocity, wingPlaneNormal); // The force pushing off of the wings
                         
                         // X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
