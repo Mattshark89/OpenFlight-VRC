@@ -6,11 +6,20 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 public class WingFlightPlusGlide : UdonSharpBehaviour {
-    private VRCPlayerApi LocalPlayer;
     [Tooltip("Flap Strength varies by wingsize. 0.3-0.5 include most half-sized birds, 1 is about the wingspan of a VRChat avatar of average height.")]
     public AnimationCurve flapStrength = new AnimationCurve(new Keyframe(0.1f,1000, 0, -120), new Keyframe(0.5f,400, -90, -90, 0, 0.2f), new Keyframe(1, 260, -90, -90, 0.3f, 0.08f), new Keyframe(8, 100, 0, 0, 0.1f, 0));
-    [Tooltip("Modifier for horizontal flap strength (Default: 1.5)")]
+    [Tooltip("Modifier for horizontal flap strength. Makes flapping forwards easier (Default: 1.5)")]
     public float horizontalStrengthMod = 1.5f;
+    // GravityMod Advanced Usage:
+    // The curve exists to make larger avatars feel heavier; they will fall to the ground faster than smaller avatars.
+    // To remove this distinction, make the line a horizontal one
+    [Tooltip("Gravity multiplier while flying.\nFor basic adjustments, drag the middle two dots up/down to the desired y value, using the SHIFT key to lock x (Default: 0.2)")]
+    public AnimationCurve gravityMod = new AnimationCurve(new Keyframe(0.1f, 0.1f, 0, 0, 0, 0), new Keyframe(0.2f, 0.2f, 0, 0, 0, 0), new Keyframe(1, 0.2f, 0, 0, 0, 0), new Keyframe(8, 1, 0, 0, 0, 0));
+    [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
+    public bool allowLoco;
+
+    // Essential Variables
+    private VRCPlayerApi LocalPlayer;
     private Vector3 RHPos;
     private Vector3 LHPos;
     private Vector3 RHPosLast = new Vector3(0f, float.NegativeInfinity, 0f);
@@ -20,41 +29,35 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private bool isFlapping = false; // Doing the arm motion
     private bool isFlying = false; // Currently in the air after/during a flap
     private bool isGliding = false; // Has arms out while flying
-    // GravityMod Advanced Usage:
-    // The curve exists to make larger avatars feel heavier; they will fall to the ground faster than smaller avatars.
-    // To remove this distinction, make the line a horizontal one
-    [Tooltip("Gravity multiplier while flying.\nFor basic adjustments, drag the middle two dots up/down to the desired y value, using the SHIFT key to lock x (Default: 0.2)")]
-    public AnimationCurve gravityMod = new AnimationCurve(new Keyframe(0.1f, 0.1f, 0, 0, 0, 0), new Keyframe(0.2f, 0.2f, 0, 0, 0, 0), new Keyframe(1, 0.2f, 0, 0, 0, 0), new Keyframe(8, 1, 0, 0, 0, 0));
-    [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
-    public bool allowLoco;
-    // TODO: clean up these four vars
-    private Vector3 targetVelocity;
-    private Vector3 newVelocity;
+
+    // Variables related to Velocity
+    private Vector3 finalVelocity; // Modify this value instead of the player's velocity directly, then run `setFinalVelocity = true`
     private bool setFinalVelocity;
-    private Vector3 finalVelocity;
-    
+    private Vector3 newVelocity; // tmp var
+    private Vector3 targetVelocity; // tmp var, usually associated with slerping/lerping
+    private float downThrust = 0f;
+
+    // Variables related to gliding
     private Vector3 wingPlaneNormal;
     private Vector3 wingDirection;
     private float steering;
-    private Vector3 counterForce;
+
     // "old" values are the world's defaults
     private float oldGravityStrength;
     private float oldWalkSpeed;
     private float oldRunSpeed;
     private float oldStrafeSpeed;
-    // Bones used for calculating arm/wingspan (defined later)
-    private HumanBodyBones rightUpperArmBone;
+
+    // Player-specific properties
+    private HumanBodyBones rightUpperArmBone; // Bones aren't given a value until the player is valid
     private HumanBodyBones leftUpperArmBone;
     private HumanBodyBones rightLowerArmBone;
     private HumanBodyBones leftLowerArmBone;
     private HumanBodyBones rightHandBone;
     private HumanBodyBones leftHandBone;
-    private float wingspan = 99999f; // You'll never be able to fly with a wingspan this wide... Unless your avatar is just stupid oversized
-    private float downThrust = 0f;
+    private float wingspan = 1f;
     
     public void Start() {
-        isFlapping = false;
-        isFlying = false;
         LocalPlayer = Networking.LocalPlayer;
     }
     
@@ -62,9 +65,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         if (LocalPlayer.IsValid()) {
             CalculateStats();
             setFinalVelocity = false;
-            // Check if both triggers are being held
-            // TODO: Check instead if hands are being moved downward while above a certain Y threshold
-            // We're using LocalPlayer.GetPosition() to turn these coordinates into relative ones
+            // Check if hands are being moved downward while above a certain Y threshold
+            // We're using LocalPlayer.GetPosition() to turn these global coordinates into local ones
             RHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
             LHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
             if ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y) > 0) {
@@ -72,18 +74,21 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
             } else {
                 downThrust = 0;
             }
+            // Legacy code: check for triggers being held
             //if ((Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger") > 0.5f) & (Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger") > 0.5f)) {
+            
+            // -- STATE: Flapping
             if (isFlapping) {
                 if (downThrust > 0) {
-                    // Calculate Force to apply
+                    // Calculate force to apply based on the flap
                     targetVelocity = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * Time.deltaTime * flapStrength.Evaluate(wingspan);
                     float ley = targetVelocity.y;
                     targetVelocity = targetVelocity * horizontalStrengthMod;
                     targetVelocity.y = ley;
                     newVelocity = targetVelocity + LocalPlayer.GetVelocity();
                     if (LocalPlayer.IsPlayerGrounded()) {newVelocity = new Vector3(0, newVelocity.y, 0);} // Removes sliding along the ground
-                    setFinalVelocity = true;
                     finalVelocity = Vector3.ClampMagnitude(newVelocity, Time.deltaTime * wingspan * flapStrength.Evaluate(wingspan));
+                    setFinalVelocity = true;
                 } else { 
                     isFlapping = false;
                 }
@@ -99,7 +104,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                     && LHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(leftUpperArmBone).y
                     && (isFlying ? true : Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(leftUpperArmBone).x, LocalPlayer.GetBonePosition(leftUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(leftHandBone).x, LocalPlayer.GetBonePosition(leftHandBone).z)) > wingspan / 3.2f)
                     && downThrust > 0.0002) {
-                    // First frame of flapping (setting necessary variables)
+
                     isFlapping = true;
                     newVelocity = LocalPlayer.GetVelocity();
                     if (!isFlying) { // First flap of the flight (ie grounded)
@@ -107,8 +112,6 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                         CalculateStats();
                         oldGravityStrength = LocalPlayer.GetGravityStrength();
                         LocalPlayer.SetGravityStrength(oldGravityStrength * gravityMod.Evaluate(wingspan));
-                        // Workaround to get the player off the ground
-                        // newVelocity.y = LocalPlayer.GetGravityStrength() * Time.deltaTime * 500;
                         if (!allowLoco) {
                             ImmobilizePart(true);
                         }
@@ -117,10 +120,13 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                     LHPosLast = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
                     // (pseudocode `LocalPlayer.SetPlayerGrounded(false)`)
                     if (LocalPlayer.IsPlayerGrounded()) {newVelocity = new Vector3(0, newVelocity.y, 0);} // Removes sliding along the ground
-                    setFinalVelocity = true;
                     finalVelocity = Vector3.ClampMagnitude(newVelocity, Time.deltaTime * wingspan * flapStrength.Evaluate(wingspan));
+                    setFinalVelocity = true;
                 }
             }
+
+            // -- STATE: Flying
+            // `isFlying` is set within STATE: Flapping's `else` block
             if (isFlying) {
                 if (LocalPlayer.IsPlayerGrounded()) {
                     // Script to run when landing
@@ -143,20 +149,20 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                         // Gliding logic
                         isGliding = true;
                         newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
-                        wingPlaneNormal = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.right);
-                        wingDirection = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.forward);
-                        // Uncomment to flip the "wing direction" if moving backwards. Probably more realistic physics-wise but feels awkward in VR
+                        wingPlaneNormal = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.right); // A plane normal is a vector perpendicular to a plane's surface. For example, if the player's wing is horizontal and flat like a table, its plane normal will point straight up.
+                        wingDirection = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.forward); // The direction the player should go based on how they've angled their wings
+                        // Uncomment next line to flip the "wing direction" while moving backwards (Probably more realistic physics-wise but feels awkward in VR)
                         //if (Vector2.Angle(new Vector2(wingDirection.x, wingDirection.z), new Vector2(newVelocity.x, newVelocity.z)) > 90) {wingDirection = wingDirection * -1;}
                         steering = (RHPos.y - LHPos.y) * 80 / wingspan;
                         if (steering > 30) {steering = 30;} else if (steering < -30) {steering = -30;}
                         wingDirection = Quaternion.Euler(0, steering, 0) * wingDirection;
-                        counterForce = Vector3.Reflect(newVelocity, wingPlaneNormal); // The force pushing off of the wings
+                        Vector3 counterForce = Vector3.Reflect(newVelocity, wingPlaneNormal); // The force pushing off of the wings
                         
                         // X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
                         targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(new Vector3(wingDirection.x, counterForce.y, wingDirection.z)) * counterForce.magnitude), newVelocity.magnitude);
                         finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, Time.deltaTime * 2);
                         setFinalVelocity = true;
-                        // Note to self: the amount of velocity added by gravity every frame = (new Vector3(0,LocalPlayer.GetGravityStrength(), 0) * Time.deltaTime * 10)
+                        // Legacy code: the amount of velocity added by gravity every frame = (new Vector3(0,LocalPlayer.GetGravityStrength(), 0) * Time.deltaTime * 10)
                     } else {isGliding = false;}
                 }
             }
@@ -165,6 +171,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
             if (setFinalVelocity) {LocalPlayer.SetVelocity(finalVelocity);}
         }
     }
+
     // Immobilize Locomotion but still allow body rotation
     private void ImmobilizePart(bool b) {
         if (b) {
