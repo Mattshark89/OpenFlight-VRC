@@ -20,6 +20,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
 
     // Essential Variables
     private VRCPlayerApi LocalPlayer;
+    private int timeTick = -1; // -1 until the player is valid, then this value cycles from 0-99 at 50 ticks per second
     private Vector3 RHPos;
     private Vector3 LHPos;
     private Vector3 RHPosLast = new Vector3(0f, float.NegativeInfinity, 0f);
@@ -63,7 +64,17 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     
     public void Update() {
         if (LocalPlayer.IsValid()) {
-            CalculateStats();
+            if (timeTick < 0) {
+                // Only runs once shortly after joining the world
+                timeTick = 0;
+                leftLowerArmBone = HumanBodyBones.LeftLowerArm;
+                rightLowerArmBone = HumanBodyBones.RightLowerArm;
+                leftUpperArmBone = HumanBodyBones.LeftUpperArm;
+                rightUpperArmBone = HumanBodyBones.RightUpperArm;
+                leftHandBone = HumanBodyBones.LeftHand;
+                rightHandBone = HumanBodyBones.RightHand;
+                CalculateStats();
+            }
             setFinalVelocity = false;
             // Check if hands are being moved downward while above a certain Y threshold
             // We're using LocalPlayer.GetPosition() to turn these global coordinates into local ones
@@ -144,7 +155,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                     }
                     LHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
                     RHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
-                    if (Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(rightHandBone).x, LocalPlayer.GetBonePosition(rightHandBone).z)) > wingspan / 3.2f
+                    if (!isFlapping
+                        && Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(rightHandBone).x, LocalPlayer.GetBonePosition(rightHandBone).z)) > wingspan / 3.2f
                         && Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(leftUpperArmBone).x, LocalPlayer.GetBonePosition(leftUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(leftHandBone).x, LocalPlayer.GetBonePosition(leftHandBone).z)) > wingspan / 3.2f) {
                         // Gliding logic
                         isGliding = true;
@@ -172,6 +184,17 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         }
     }
 
+    public void FixedUpdate() {
+        if (timeTick >= 0) {
+            timeTick = timeTick + 1;
+            // Automatically CalculateStats() every two seconds (assuming VRChat uses the Unity default of 50 ticks per second)
+            if (timeTick > 99) {
+                timeTick = 0;
+                CalculateStats();
+            }
+        }
+    }
+
     // Immobilize Locomotion but still allow body rotation
     private void ImmobilizePart(bool b) {
         if (b) {
@@ -191,12 +214,6 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     // Determine Flight Strength, etc. based on wingspan and whatnot.
     // This function can be re-run to recalculate these values at any time (upon switching avatars for example)
     private void CalculateStats() {
-        leftLowerArmBone = HumanBodyBones.LeftLowerArm;
-        rightLowerArmBone = HumanBodyBones.RightLowerArm;
-        leftUpperArmBone = HumanBodyBones.LeftUpperArm;
-        rightUpperArmBone = HumanBodyBones.RightUpperArm;
-        leftHandBone = HumanBodyBones.LeftHand;
-        rightHandBone = HumanBodyBones.RightHand;
         // `wingspan` does not include the distance between shoulders
         wingspan = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone),LocalPlayer.GetBonePosition(leftHandBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone),LocalPlayer.GetBonePosition(rightLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone),LocalPlayer.GetBonePosition(rightHandBone));
     }
