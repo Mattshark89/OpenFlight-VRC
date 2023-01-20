@@ -7,7 +7,7 @@ using VRC.Udon;
 
 public class WingFlightPlusGlide : UdonSharpBehaviour {
     [Tooltip("Flap Strength varies by wingsize. 0.3-0.5 include most half-sized birds, 1 is about the wingspan of a VRChat avatar of average height.")]
-    public AnimationCurve flapStrength = new AnimationCurve(new Keyframe(0.1f,1000, 0, -120), new Keyframe(0.5f,400, -90, -90, 0, 0.2f), new Keyframe(1, 260, -90, -90, 0.3f, 0.08f), new Keyframe(8, 100, 0, 0, 0.1f, 0));
+    public AnimationCurve flapStrength = new AnimationCurve(new Keyframe(0.05f,2000, 0, -120), new Keyframe(0.1f,1000, 0, -120), new Keyframe(0.5f,400, -90, -90, 0, 0.2f), new Keyframe(1, 260, -90, -90, 0.3f, 0.08f), new Keyframe(8, 100, 0, 0, 0.1f, 0));
     [Tooltip("Modifier for horizontal flap strength. Makes flapping forwards easier (Default: 1.5)")]
     public float horizontalStrengthMod = 1.5f;
     // GravityMod Advanced Usage:
@@ -20,6 +20,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
 
     // Essential Variables
     private VRCPlayerApi LocalPlayer;
+    private double debugTemp;
     private int timeTick = -1; // -1 until the player is valid, then this value cycles from 0-99 at 50 ticks per second
     private Vector3 RHPos;
     private Vector3 LHPos;
@@ -129,8 +130,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                     }
                     RHPosLast = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
                     LHPosLast = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
-                    // (pseudocode `LocalPlayer.SetPlayerGrounded(false)`)
-                    if (LocalPlayer.IsPlayerGrounded()) {newVelocity = new Vector3(0, newVelocity.y, 0);} // Removes sliding along the ground
+                    if (LocalPlayer.IsPlayerGrounded()) {newVelocity = new Vector3(0, newVelocity.y, 0);} // Hotfix: removes sliding along the ground
+                    
                     finalVelocity = Vector3.ClampMagnitude(newVelocity, Time.deltaTime * wingspan * flapStrength.Evaluate(wingspan));
                     setFinalVelocity = true;
                 }
@@ -163,6 +164,11 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                         newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
                         wingPlaneNormal = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.right); // A plane normal is a vector perpendicular to a plane's surface. For example, if the player's wing is horizontal and flat like a table, its plane normal will point straight up.
                         wingDirection = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.forward); // The direction the player should go based on how they've angled their wings
+                        // Hotfix: Always have some form of horizontal velocity while falling. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
+                        if (newVelocity.y < 0.1f && newVelocity.x == 0 && newVelocity.z == 0) {
+                            Vector2 tmpV2 = new Vector2(wingDirection.x, wingDirection.z).normalized * 0.18f;
+                            newVelocity = new Vector3(tmpV2.x, newVelocity.y, tmpV2.y);
+                        }
                         // Uncomment next line to flip the "wing direction" while moving backwards (Probably more realistic physics-wise but feels awkward in VR)
                         //if (Vector2.Angle(new Vector2(wingDirection.x, wingDirection.z), new Vector2(newVelocity.x, newVelocity.z)) > 90) {wingDirection = wingDirection * -1;}
                         steering = (RHPos.y - LHPos.y) * 80 / wingspan;
@@ -171,7 +177,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                         Vector3 counterForce = Vector3.Reflect(newVelocity, wingPlaneNormal); // The force pushing off of the wings
                         
                         // X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
-                        targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(new Vector3(wingDirection.x, counterForce.y, wingDirection.z)) * counterForce.magnitude), newVelocity.magnitude);
+                        targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(new Vector3(wingDirection.x, counterForce.normalized.y, wingDirection.z)) * counterForce.magnitude), newVelocity.magnitude);
                         finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, Time.deltaTime * 2);
                         setFinalVelocity = true;
                         // Legacy code: the amount of velocity added by gravity every frame = (new Vector3(0,LocalPlayer.GetGravityStrength(), 0) * Time.deltaTime * 10)
@@ -187,11 +193,12 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     public void FixedUpdate() {
         if (timeTick >= 0) {
             timeTick = timeTick + 1;
-            // Automatically CalculateStats() every two seconds (assuming VRChat uses the Unity default of 50 ticks per second)
-            if (timeTick > 99) {
+            // Automatically CalculateStats() every second (assuming VRChat uses the Unity default of 50 ticks per second)
+            if (timeTick > 49) {
                 timeTick = 0;
                 CalculateStats();
             }
+            
         }
     }
 
