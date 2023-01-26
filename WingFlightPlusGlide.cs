@@ -7,16 +7,16 @@ using VRC.Udon;
 
 public class WingFlightPlusGlide : UdonSharpBehaviour {
     [Tooltip("Flap Strength varies by wingsize. 0.3-0.5 include most half-sized birds, 1 is about the wingspan of a VRChat avatar of average height.")]
-    public AnimationCurve flapStrength = new AnimationCurve(new Keyframe(0.05f,2000, 0, -120), new Keyframe(0.1f,1000, 0, -120), new Keyframe(0.5f,400, -90, -90, 0, 0.2f), new Keyframe(1, 260, -90, -90, 0.3f, 0.08f), new Keyframe(8, 100, 0, 0, 0.1f, 0));
+    public AnimationCurve flapStrength = new AnimationCurve(new Keyframe(0.05f, 800), new Keyframe(0.1f, 460), new Keyframe(0.5f, 245), new Keyframe(1, 180, -90, -90, 0.3f, 0.08f), new Keyframe(8, 80, 0, 0, 0.1f, 0));
     [Tooltip("Require the player to jump before flapping can occur. Makes it less likely to trigger a flap by accident when enabled. (Default: False)")]
     public bool requireJump;
     [Tooltip("Modifier for horizontal flap strength. Makes flapping forwards easier (Default: 1.5)")]
     public float horizontalStrengthMod = 1.5f;
     // GravityMod Advanced Usage:
     // The curve exists to make larger avatars feel heavier; they will fall to the ground faster than smaller avatars.
-    // To remove this distinction, make the line a horizontal one
+    // To remove this distinction, make the line a horizontal one (though you will have to adjust flapStrength to account for it)
     [Tooltip("Gravity multiplier while flying.\nFor basic adjustments, drag the middle two dots up/down to the desired y value, using the SHIFT key to lock x (Default: 0.2)")]
-    public AnimationCurve gravityMod = new AnimationCurve(new Keyframe(0.1f, 0.1f, 0, 0, 0, 0), new Keyframe(0.2f, 0.2f, 0, 0, 0, 0), new Keyframe(1, 0.2f, 0, 0, 0, 0), new Keyframe(8, 1, 0, 0, 0, 0));
+    public AnimationCurve gravityMod = new AnimationCurve(new Keyframe(0.1f, 0.09f, 0, 0, 0, 0), new Keyframe(0.2f, 0.2f, 0, 0, 0, 0), new Keyframe(1, 0.2f, 0, 0, 0, 0), new Keyframe(8, 1, 0, 0, 0, 0));
     [Tooltip("How loose you want your turns while gliding. Lower values mean tighter control/sharper turns. (Default: 2)")]
     public float glideLooseness = 2;
     [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
@@ -43,7 +43,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private Vector3 newVelocity; // tmp var
     private Vector3 targetVelocity; // tmp var, usually associated with slerping/lerping
     private float downThrust = 0f;
-    private float flapAirFriction = 20; // Prevents the gain of infinite speed while flapping. Set to 0 to remove this feature. THIS IS NOT A MAX SPEED
+    private float flapAirFriction = 0.04f; // Prevents the gain of infinite speed while flapping. Set to 0 to remove this feature. THIS IS NOT A MAX SPEED
 
     // Variables related to gliding
     private Vector3 wingPlaneNormal;
@@ -131,9 +131,9 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                     newVelocity.y = ley;
                     finalVelocity = LocalPlayer.GetVelocity() + newVelocity;
                     if (LocalPlayer.IsPlayerGrounded()) {finalVelocity = new Vector3(0, finalVelocity.y, 0);} // Removes sliding along the ground
-                    // Speed cap (check, then apply air friction)
-                    if (finalVelocity.magnitude >  Time.deltaTime * wingspan * flapStrength.Evaluate(wingspan)) {
-                        finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * wingspan * Time.deltaTime));
+                    // Speed cap (check, then apply flapping air friction)
+                    if (finalVelocity.magnitude > 0.02f * flapStrength.Evaluate(wingspan)) {
+                        finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength.Evaluate(wingspan) * Time.deltaTime));
                     }
                     setFinalVelocity = true;
                 } else { 
