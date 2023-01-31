@@ -1,4 +1,6 @@
 ﻿
+// TODO: Stop gliding if both hands angled downwards (Swalia with short arms are almost always gliding)
+
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,21 +8,28 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 public class WingFlightPlusGlide : UdonSharpBehaviour {
-    [Tooltip("Flap Strength varies by wingsize. 0.3-0.5 include most half-sized birds, 1 is about the wingspan of a VRChat avatar of average height.")]
-    public AnimationCurve flapStrength = new AnimationCurve(new Keyframe(0.05f, 800), new Keyframe(0.1f, 460), new Keyframe(0.5f, 245), new Keyframe(1, 180, -90, -90, 0.3f, 0.08f), new Keyframe(8, 80, 0, 0, 0.1f, 0));
-    [Tooltip("Require the player to jump before flapping can occur. Makes it less likely to trigger a flap by accident when enabled. (Default: False)")]
+    [Header("Basic Settings")]
+    // Both of these "base" values are by default affected by the avatar's wingspan. See sizeCurve.
+    [Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 170)")]
+    public int flapStrengthBase = 170;
+    [Tooltip("Base gravity multiplier while flying. Lower values are floatier, higher values are heavier. (Default: 0.2)")]
+    public float flightGravityBase = 0.2f;
+    [Tooltip("Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident when enabled. (Default: false)")]
     public bool requireJump;
-    [Tooltip("Modifier for horizontal flap strength. Makes flapping forwards easier (Default: 1.5)")]
-    public float horizontalStrengthMod = 1.5f;
-    // GravityMod Advanced Usage:
-    // The curve exists to make larger avatars feel heavier; they will fall to the ground faster than smaller avatars.
-    // To remove this distinction, make the line a horizontal one (though you will have to adjust flapStrength to account for it)
-    [Tooltip("Gravity multiplier while flying.\nFor basic adjustments, drag the middle two dots up/down to the desired y value, using the SHIFT key to lock x (Default: 0.2)")]
-    public AnimationCurve gravityMod = new AnimationCurve(new Keyframe(0.1f, 0.09f, 0, 0, 0, 0), new Keyframe(0.2f, 0.2f, 0, 0, 0, 0), new Keyframe(1, 0.2f, 0, 0, 0, 0), new Keyframe(8, 1, 0, 0, 0, 0));
-    [Tooltip("How loose you want your turns while gliding. Lower values mean tighter control/sharper turns. (Default: 2)")]
-    public float glideLooseness = 2;
     [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
     public bool allowLoco;
+    
+    [Header("Advanced Settings")]
+    [Tooltip("How much Flap Strength and Flight Gravity are affected by an avatar's wingspan. Default values will make smaller avis seem lighter and larger avis heavier.")]
+    public AnimationCurve sizeCurve = new AnimationCurve(new Keyframe(0.05f, 2), new Keyframe(1, 1), new Keyframe(20, 0.00195f));
+    [Tooltip("Modifier for horizontal flap strength. Makes flapping forwards easier (Default: 1.5)")]
+    public float horizontalStrengthMod = 1.5f;
+    [Tooltip("How loose you want your turns while gliding. Lower values mean tighter control/sharper turns. (Default: 2)")]
+    public float glideLooseness = 2;
+    [Tooltip("If enabled, flight gravity will use Gravity Curve's curve instead of Size Curve's curve multiplied by Flight Gravity Base. (Default: false)")]
+    public bool useGravityCurve;
+    [Tooltip("Similar to Size Curve, but instead of modifying Flap Strength, it only affects Gravity. This value is ignored unless Use Gravity Curve is enabled.")]
+    public AnimationCurve gravityCurve = new AnimationCurve(new Keyframe(0.05f, 0.4f), new Keyframe(1, 0.2f), new Keyframe(20, 0.00039f));
 
     // Essential Variables
     private VRCPlayerApi LocalPlayer;
@@ -50,7 +59,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private Vector3 wingDirection;
     private float steering;
 
-    // "old" values are the world's defaults
+    // "old" values are the world's defaults (recorded immediately before they are modified)
     private float oldGravityStrength;
     private float oldWalkSpeed;
     private float oldRunSpeed;
@@ -113,7 +122,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                         isFlying = true;
                         CalculateStats();
                         oldGravityStrength = LocalPlayer.GetGravityStrength();
-                        LocalPlayer.SetGravityStrength(oldGravityStrength * gravityMod.Evaluate(wingspan));
+                        LocalPlayer.SetGravityStrength(flightGravity());
                         if (!allowLoco) {
                             ImmobilizePart(true);
                         }
@@ -125,15 +134,15 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
             if (isFlapping) {
                 if (downThrust > 0) {
                     // Calculate force to apply based on the flap
-                    newVelocity = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * Time.deltaTime * flapStrength.Evaluate(wingspan);
+                    newVelocity = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * Time.deltaTime * flapStrength();
                     float ley = newVelocity.y;
                     newVelocity = newVelocity * horizontalStrengthMod;
                     newVelocity.y = ley;
                     finalVelocity = LocalPlayer.GetVelocity() + newVelocity;
                     if (LocalPlayer.IsPlayerGrounded()) {finalVelocity = new Vector3(0, finalVelocity.y, 0);} // Removes sliding along the ground
                     // Speed cap (check, then apply flapping air friction)
-                    if (finalVelocity.magnitude > 0.02f * flapStrength.Evaluate(wingspan)) {
-                        finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength.Evaluate(wingspan) * Time.deltaTime));
+                    if (finalVelocity.magnitude > 0.02f * flapStrength()) {
+                        finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength() * Time.deltaTime));
                     }
                     setFinalVelocity = true;
                 } else { 
@@ -154,8 +163,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                 } else {
                     // ---=== Run every frame while the player is "flying" ===---
 
-                    if (LocalPlayer.GetGravityStrength() != (oldGravityStrength * gravityMod.Evaluate(wingspan)) && LocalPlayer.GetVelocity().y < 0) {
-                        LocalPlayer.SetGravityStrength(oldGravityStrength * gravityMod.Evaluate(wingspan));
+                    if (LocalPlayer.GetGravityStrength() != (flightGravity()) && LocalPlayer.GetVelocity().y < 0) {
+                        LocalPlayer.SetGravityStrength(flightGravity());
                     }
                     LHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
                     RHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
@@ -223,5 +232,17 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private void CalculateStats() {
         // `wingspan` does not include the distance between shoulders
         wingspan = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone),LocalPlayer.GetBonePosition(leftHandBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone),LocalPlayer.GetBonePosition(rightLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone),LocalPlayer.GetBonePosition(rightHandBone));
+    }
+    
+    private float flapStrength() {
+        return sizeCurve.Evaluate(wingspan) * flapStrengthBase;
+    }
+    
+    private float flightGravity() {
+        if (useGravityCurve) {
+            return gravityCurve.Evaluate(wingspan) * wingspan;
+        } else {
+            return sizeCurve.Evaluate(wingspan) * flightGravityBase * wingspan;
+        }
     }
 }
