@@ -14,21 +14,24 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     public int flapStrengthBase = 170;
     [Tooltip("Base gravity multiplier while flying. Lower values are floatier, higher values are heavier. (Default: 0.2)")]
     public float flightGravityBase = 0.2f;
-    [Tooltip("Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident when enabled. (Default: false)")]
+    [Tooltip("Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident. (Default: false)")]
     public bool requireJump;
     [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
     public bool allowLoco;
+    [Tooltip("The player's entire view rotates as they steer while gliding (beta). Highly recommended you leave this off as it may cause motion sickness! The better move would be to have a toggle button in-world so the player can choose to opt in. (Default: false)")]
+    public bool bankingTurns = false;
     
     [Header("Advanced Settings")]
-    [Tooltip("How much Flap Strength and Flight Gravity are affected by an avatar's wingspan. Default values will make smaller avis seem lighter and larger avis heavier.")]
+    [Tooltip("How much Flap Strength and Flight Gravity are affected by an avatar's wingspan. Default values will make smaller avis feel lighter and larger avis heavier.")]
     public AnimationCurve sizeCurve = new AnimationCurve(new Keyframe(0.05f, 2), new Keyframe(1, 1), new Keyframe(20, 0.00195f));
     [Tooltip("Modifier for horizontal flap strength. Makes flapping forwards easier (Default: 1.5)")]
     public float horizontalStrengthMod = 1.5f;
     [Tooltip("How loose you want your turns while gliding. Lower values mean tighter control/sharper turns. (Default: 2)")]
+    [Range(0f, 8f)]
     public float glideLooseness = 2;
     [Tooltip("If enabled, flight gravity will use Gravity Curve's curve instead of Size Curve's curve multiplied by Flight Gravity Base. (Default: false)")]
     public bool useGravityCurve;
-    [Tooltip("Similar to Size Curve, but instead of modifying Flap Strength, it only affects Gravity. This value is ignored unless Use Gravity Curve is enabled.")]
+    [Tooltip("Similar to Size Curve, but instead of modifying Flap Strength, it only affects Gravity. This value is ignored (Size Curve will be used instead) unless Use Gravity Curve is enabled.")]
     public AnimationCurve gravityCurve = new AnimationCurve(new Keyframe(0.05f, 0.4f), new Keyframe(1, 0.2f), new Keyframe(20, 0.00039f));
 
     // Essential Variables
@@ -41,6 +44,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private Vector3 LHPosLast = new Vector3(0f, float.NegativeInfinity, 0f);
     private Quaternion RHRot;
     private Quaternion LHRot;
+    private Quaternion playerRot;
     private bool handsOut = false; // Are the controllers held outside of an imaginary cylinder?
     private bool isFlapping = false; // Doing the arm motion
     private bool isFlying = false; // Currently in the air after/during a flap
@@ -55,9 +59,12 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private float flapAirFriction = 0.04f; // Prevents the gain of infinite speed while flapping. Set to 0 to remove this feature. THIS IS NOT A MAX SPEED
 
     // Variables related to gliding
-    private Vector3 wingPlaneNormal;
     private Vector3 wingDirection;
     private float steering;
+    private bool handsDown = false; // Currently doesn't function as intended
+    private bool spinningRightRound = false; // Can't get that Protogen animation out of my head
+    private float rotSpeed = 0;
+    private float rotSpeedGoal = 0;
 
     // "old" values are the world's defaults (recorded immediately before they are modified)
     private float oldGravityStrength;
@@ -101,9 +108,12 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
             } else {
                 downThrust = 0;
             }
-            if (Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(rightHandBone).x, LocalPlayer.GetBonePosition(rightHandBone).z)) > wingspan / 3.2f && Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(leftUpperArmBone).x, LocalPlayer.GetBonePosition(leftUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(leftHandBone).x, LocalPlayer.GetBonePosition(leftHandBone).z)) > wingspan / 3.2f) {
+            if (Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(rightHandBone).x, LocalPlayer.GetBonePosition(rightHandBone).z)) > wingspan / 3.3f && Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(leftUpperArmBone).x, LocalPlayer.GetBonePosition(leftUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(leftHandBone).x, LocalPlayer.GetBonePosition(leftHandBone).z)) > wingspan / 3.3f) {
                 handsOut = true;
             } else {handsOut = false;}
+            if ((RHPos.y > LocalPlayer.GetBonePosition(rightUpperArmBone).y + (wingspan * 0.4f)) && (LHPos.y > LocalPlayer.GetBonePosition(leftUpperArmBone).y + (wingspan * 0.4f))) {
+                handsDown = true;
+            } else {handsDown = false;}
             
             // Legacy code: check for triggers being held
             //if ((Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger") > 0.5f) & (Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger") > 0.5f)) {
@@ -156,6 +166,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                     // Script to run when landing
                     isFlying = false;
                     isGliding = false;
+                    spinningRightRound = false;
+                    rotSpeedGoal = 0;
                     LocalPlayer.SetGravityStrength(oldGravityStrength);
                     if (!allowLoco) {
                         ImmobilizePart(false);
@@ -169,10 +181,9 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                     LHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
                     RHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
                     if ((!isFlapping) && handsOut) {
-                        // Gliding logic
+                        // Gliding, banking, and steering logic
                         isGliding = true;
                         newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
-                        wingPlaneNormal = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.right); // A plane normal is a vector perpendicular to a plane's surface. For example, if the player's wing is horizontal and flat like a table, its plane normal will point straight up.
                         wingDirection = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.forward); // The direction the player should go based on how they've angled their wings
                         // Hotfix: Always have some form of horizontal velocity while falling. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
                         if (newVelocity.y < 0.3f && newVelocity.x == 0 && newVelocity.z == 0) {
@@ -182,21 +193,36 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                         // Uncomment next line to flip the "wing direction" while moving backwards (Probably more realistic physics-wise but feels awkward in VR)
                         //if (Vector2.Angle(new Vector2(wingDirection.x, wingDirection.z), new Vector2(newVelocity.x, newVelocity.z)) > 90) {wingDirection = wingDirection * -1;}
                         steering = (RHPos.y - LHPos.y) * 80 / wingspan;
-                        if (steering > 30) {steering = 30;} else if (steering < -30) {steering = -30;}
-                        wingDirection = Quaternion.Euler(0, steering, 0) * wingDirection;
-                        Vector3 counterForce = Vector3.Reflect(newVelocity, wingPlaneNormal); // The force pushing off of the wings
-                        
+                        if (steering > 35) {steering = 35;} else if (steering < -35) {steering = -35;}
+                        if (bankingTurns) {
+                            spinningRightRound = true;
+                            rotSpeedGoal = steering;
+                        } else {
+                            // Default "banking," which is just midair strafing
+                            wingDirection = Quaternion.Euler(0, steering, 0) * wingDirection;
+                        }
                         // X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
-                        targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(new Vector3(wingDirection.x, counterForce.normalized.y, wingDirection.z)) * counterForce.magnitude), newVelocity.magnitude);
+                        targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(wingDirection) * newVelocity.magnitude), newVelocity.magnitude);
                         finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, Time.deltaTime * glideLooseness);
                         setFinalVelocity = true;
                         // Legacy code: the amount of velocity added by gravity every frame = (new Vector3(0,LocalPlayer.GetGravityStrength(), 0) * Time.deltaTime * 10)
-                    } else {isGliding = false;}
+                    } else {isGliding = false; rotSpeedGoal = 0;}
                 }
             }
             RHPosLast = RHPos;
             LHPosLast = LHPos;
             if (setFinalVelocity) {LocalPlayer.SetVelocity(finalVelocity);}
+            if (spinningRightRound) {
+                rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * Time.deltaTime * 6);
+                // Legacy code (banking methods that didn't work):
+                //playerRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).rotation;
+                //playerRot = Quaternion.Euler(0, playerRot.eulerAngles.y, 0);
+                //playerRot = Quaternion.Euler(LocalPlayer.GetVelocity().x, 0, LocalPlayer.GetVelocity().z);
+                //LocalPlayer.TeleportTo(LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Origin).position, Quaternion.Lerp(playerRot, playerRot * Quaternion.Euler(Vector3.up * (rotSpeed / 100)), Time.deltaTime * 200), VRC_SceneDescriptor.SpawnOrientation.AlignRoomWithSpawnPoint, true);
+                playerRot = LocalPlayer.GetRotation();
+                // As far as I know, TeleportTo() is the only way (without colliders nor stations) to force a player to rotate
+                LocalPlayer.TeleportTo(LocalPlayer.GetPosition(), Quaternion.Lerp(playerRot, playerRot * Quaternion.Euler(Vector3.up * (rotSpeed / 100)), Time.deltaTime * 200), VRC_SceneDescriptor.SpawnOrientation.AlignPlayerWithSpawnPoint, true);
+            }
         }
     }
 
@@ -232,6 +258,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private void CalculateStats() {
         // `wingspan` does not include the distance between shoulders
         wingspan = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone),LocalPlayer.GetBonePosition(leftHandBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone),LocalPlayer.GetBonePosition(rightLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone),LocalPlayer.GetBonePosition(rightHandBone));
+        //this.GetComponent<Text>().text = string.Concat("spin:\n", spinningRightRound.ToString()) + string.Concat("\nFlapStr:\n", flapStrength().ToString()) + string.Concat("\nGrav: ", (Mathf.Round(LocalPlayer.GetGravityStrength() * 1000) * 0.001f).ToString());
     }
     
     private float flapStrength() {
