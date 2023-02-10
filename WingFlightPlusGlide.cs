@@ -47,6 +47,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private bool isFlapping = false; // Doing the arm motion
     private bool isFlying = false; // Currently in the air after/during a flap
     private bool isGliding = false; // Has arms out while flying
+    private float tmpFloat;
 
     // Variables related to Velocity
     private Vector3 finalVelocity; // Modify this value instead of the player's velocity directly, then run `setFinalVelocity = true`
@@ -161,11 +162,16 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                 if (downThrust > 0) {
                     // Calculate force to apply based on the flap
                     newVelocity = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * Time.deltaTime * flapStrength();
-                    float ley = newVelocity.y;
-                    newVelocity = newVelocity * horizontalStrengthMod;
-                    newVelocity.y = ley;
+                    if (LocalPlayer.IsPlayerGrounded()) {
+                        // Removes sliding along the ground
+                        newVelocity = new Vector3(0, newVelocity.y, 0);
+                    } else {
+                        // apply horizontalStrengthMod
+                        tmpFloat = newVelocity.y;
+                        newVelocity = newVelocity * horizontalStrengthMod;
+                        newVelocity.y = tmpFloat;
+                    }
                     finalVelocity = LocalPlayer.GetVelocity() + newVelocity;
-                    if (LocalPlayer.IsPlayerGrounded()) {finalVelocity = new Vector3(0, finalVelocity.y, 0);} // Removes sliding along the ground
                     // Speed cap (check, then apply flapping air friction)
                     if (finalVelocity.magnitude > 0.02f * flapStrength()) {
                         finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength() * Time.deltaTime));
