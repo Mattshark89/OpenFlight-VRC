@@ -1,6 +1,4 @@
 ﻿
-// TODO: Stop gliding if both hands angled downwards (Swalia with short arms are almost always gliding)
-
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
@@ -83,6 +81,24 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     
     public void Start() {
         LocalPlayer = Networking.LocalPlayer;
+        //oldGravityStrength = LocalPlayer.GetGravityStrength();
+        //oldWalkSpeed = LocalPlayer.GetWalkSpeed();
+        //oldRunSpeed = LocalPlayer.GetRunSpeed();
+        //oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
+    }
+    
+    public void OnEnable() {
+        timeTick = -5;
+        isFlapping = false;
+        isFlying = false;
+        isGliding = false;
+        spinningRightRound = false;
+    }
+    
+    public void OnDisable() {
+        if (isFlying) {
+            land();
+        }
     }
     
     public void Update() {
@@ -164,14 +180,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
             if (isFlying) {
                 if ((!isFlapping) && LocalPlayer.IsPlayerGrounded()) {
                     // Script to run when landing
-                    isFlying = false;
-                    isGliding = false;
-                    spinningRightRound = false;
-                    rotSpeedGoal = 0;
-                    LocalPlayer.SetGravityStrength(oldGravityStrength);
-                    if (!allowLoco) {
-                        ImmobilizePart(false);
-                    }
+                    land();
                 } else {
                     // ---=== Run every frame while the player is "flying" ===---
 
@@ -259,6 +268,20 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         // `wingspan` does not include the distance between shoulders
         wingspan = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone),LocalPlayer.GetBonePosition(leftHandBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone),LocalPlayer.GetBonePosition(rightLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone),LocalPlayer.GetBonePosition(rightHandBone));
         //this.GetComponent<Text>().text = string.Concat("spin:\n", spinningRightRound.ToString()) + string.Concat("\nFlapStr:\n", flapStrength().ToString()) + string.Concat("\nGrav: ", (Mathf.Round(LocalPlayer.GetGravityStrength() * 1000) * 0.001f).ToString());
+    }
+    
+    // Effectually disables all flight-related mechanics
+    private void land() {
+        isFlying = false;
+        isFlapping = false;
+        isGliding = false;
+        spinningRightRound = false;
+        rotSpeed = 0;
+        rotSpeedGoal = 0;
+        LocalPlayer.SetGravityStrength(oldGravityStrength);
+        if (!allowLoco) {
+            ImmobilizePart(false);
+        }
     }
     
     private float flapStrength() {
