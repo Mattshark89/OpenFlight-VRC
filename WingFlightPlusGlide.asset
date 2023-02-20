@@ -165,8 +165,7 @@ MonoBehaviour:
       Data: 10|UnityEngine.TooltipAttribute, UnityEngine.CoreModule
     - Name: tooltip
       Entry: 1
-      Data: 'Base gravity multiplier while flying. Lower values are floatier, higher
-        values are heavier. (Default: 0.2)'
+      Data: 'Base gravity while flying (Default: 0.2)'
     - Name: 
       Entry: 8
       Data: 
@@ -341,13 +340,7 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 7
-      Data: 20|UnityEngine.TooltipAttribute, UnityEngine.CoreModule
-    - Name: tooltip
-      Entry: 1
-      Data: 'The player''s entire view rotates as they steer while gliding (beta).
-        Highly recommended you leave this off as it may cause motion sickness! The
-        better move would be to have a toggle button in-world so the player can choose
-        to opt in. (Default: false)'
+      Data: 20|UnityEngine.HideInInspector, UnityEngine.CoreModule
     - Name: 
       Entry: 8
       Data: 

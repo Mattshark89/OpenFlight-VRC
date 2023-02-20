@@ -10,13 +10,13 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     // Both of these "base" values are by default affected by the avatar's wingspan. See sizeCurve.
     [Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 170)")]
     public int flapStrengthBase = 170;
-    [Tooltip("Base gravity multiplier while flying. Lower values are floatier, higher values are heavier. (Default: 0.2)")]
+    [Tooltip("Base gravity while flying (Default: 0.2)")]
     public float flightGravityBase = 0.2f;
     [Tooltip("Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident. (Default: false)")]
     public bool requireJump;
     [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
     public bool allowLoco;
-    [Tooltip("The player's entire view rotates as they steer while gliding (beta). Highly recommended you leave this off as it may cause motion sickness! The better move would be to have a toggle button in-world so the player can choose to opt in. (Default: false)")]
+    [HideInInspector]
     public bool bankingTurns = false;
     
     [Header("Advanced Settings")]
@@ -103,7 +103,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     }
     
     public void Update() {
-        if (LocalPlayer.IsValid()) {
+        if ((LocalPlayer != null) && LocalPlayer.IsValid()) {
             if (timeTick < 0) {
                 // Only runs once shortly after joining the world
                 timeTick = 0;
@@ -273,7 +273,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private void CalculateStats() {
         // `wingspan` does not include the distance between shoulders
         wingspan = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone),LocalPlayer.GetBonePosition(leftHandBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone),LocalPlayer.GetBonePosition(rightLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone),LocalPlayer.GetBonePosition(rightHandBone));
-        //this.GetComponent<Text>().text = string.Concat("spin:\n", spinningRightRound.ToString()) + string.Concat("\nFlapStr:\n", flapStrength().ToString()) + string.Concat("\nGrav: ", (Mathf.Round(LocalPlayer.GetGravityStrength() * 1000) * 0.001f).ToString());
+        //this.GetComponent<Text>().text = string.Concat("Wingspan:\n", wingspan.ToString()) + string.Concat("\nFlapStr:\n", flapStrength().ToString()) + string.Concat("\nGrav: ", (Mathf.Round(LocalPlayer.GetGravityStrength() * 1000) * 0.001f).ToString());
     }
     
     // Effectually disables all flight-related mechanics
