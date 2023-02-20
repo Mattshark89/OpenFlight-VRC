@@ -16,10 +16,10 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     public bool requireJump;
     [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
     public bool allowLoco;
-    [HideInInspector]
-    public bool bankingTurns = false;
     
     [Header("Advanced Settings")]
+    [HideInInspector]
+    public bool bankingTurns = false;
     [Tooltip("How much Flap Strength and Flight Gravity are affected by an avatar's wingspan. Default values will make smaller avis feel lighter and larger avis heavier.")]
     public AnimationCurve sizeCurve = new AnimationCurve(new Keyframe(0.05f, 2), new Keyframe(1, 1), new Keyframe(20, 0.00195f));
     [Tooltip("Modifier for horizontal flap strength. Makes flapping forwards easier (Default: 1.5)")]
@@ -31,6 +31,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     public bool useGravityCurve;
     [Tooltip("Similar to Size Curve, but instead of modifying Flap Strength, it only affects Gravity. This value is ignored (Size Curve will be used instead) unless Use Gravity Curve is enabled.")]
     public AnimationCurve gravityCurve = new AnimationCurve(new Keyframe(0.05f, 0.4f), new Keyframe(1, 0.2f), new Keyframe(20, 0.00039f));
+    [Tooltip("If a GameObject with a Text component is attached here, debug some basic info into it. (Default: unset)")]
+    public Text debugOutput;
 
     // Essential Variables
     private VRCPlayerApi LocalPlayer;
@@ -100,6 +102,14 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         if (isFlying) {
             land();
         }
+    }
+    
+    public void EnableBetaFeatures() {
+        bankingTurns = true;
+    }
+    
+    public void DisableBetaFeatures() {
+        bankingTurns = false;
     }
     
     public void Update() {
@@ -248,7 +258,14 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
             if (timeTick > 49) {
                 timeTick = 0;
                 CalculateStats();
+                UpdateDebug();
             }
+        }
+    }
+    
+    public void UpdateDebug() {
+        if (debugOutput != null) {
+            debugOutput.text = string.Concat("Wingspan:\n", wingspan.ToString()) + string.Concat("\nFlapStr:\n", flapStrength().ToString()) + string.Concat("\nGrav: ", (Mathf.Round(LocalPlayer.GetGravityStrength() * 1000) * 0.001f).ToString());
         }
     }
 
@@ -273,7 +290,6 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private void CalculateStats() {
         // `wingspan` does not include the distance between shoulders
         wingspan = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone),LocalPlayer.GetBonePosition(leftHandBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone),LocalPlayer.GetBonePosition(rightLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone),LocalPlayer.GetBonePosition(rightHandBone));
-        //this.GetComponent<Text>().text = string.Concat("Wingspan:\n", wingspan.ToString()) + string.Concat("\nFlapStr:\n", flapStrength().ToString()) + string.Concat("\nGrav: ", (Mathf.Round(LocalPlayer.GetGravityStrength() * 1000) * 0.001f).ToString());
     }
     
     // Effectually disables all flight-related mechanics
