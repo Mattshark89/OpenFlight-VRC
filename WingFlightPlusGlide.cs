@@ -17,9 +17,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
     public bool allowLoco;
     
-    [Header("Advanced Settings")]
-    [HideInInspector]
-    public bool bankingTurns = false;
+    [Header("Advanced Settings (Only for specialized use!)")]
     [Tooltip("How much Flap Strength and Flight Gravity are affected by an avatar's wingspan. Default values will make smaller avis feel lighter and larger avis heavier.")]
     public AnimationCurve sizeCurve = new AnimationCurve(new Keyframe(0.05f, 2), new Keyframe(1, 1), new Keyframe(20, 0.00195f));
     [Tooltip("Modifier for horizontal flap strength. Makes flapping forwards easier (Default: 1.5)")]
@@ -33,6 +31,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     public AnimationCurve gravityCurve = new AnimationCurve(new Keyframe(0.05f, 0.4f), new Keyframe(1, 0.2f), new Keyframe(20, 0.00039f));
     [Tooltip("If a GameObject with a Text component is attached here, debug some basic info into it. (Default: unset)")]
     public Text debugOutput;
+    [HideInInspector]
+    public bool bankingTurns = false;
 
     // Essential Variables
     private VRCPlayerApi LocalPlayer;
