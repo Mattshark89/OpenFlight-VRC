@@ -1,6 +1,11 @@
 # OpenFlight-VRC
 
-Creating an open source system to allow all kinds of avatars to fly. Uses Udon Sharp (Make sure it's installed! [Link](https://github.com/MerlinVR/UdonSharp))
+Creating an open source system to allow all kinds of avatars to fly.
+You will need all of these installed in your project first in order for Open-Flight to work. Install these in order
+1. [UdonSharp](https://github.com/MerlinVR/UdonSharp)
+2. [udon-json](https://github.com/koyashiro/udon-json)
+3. [udon-list](https://github.com/koyashiro/udon-list)
+4. [udon-dictionary](https://github.com/koyashiro/udon-dictionary)
 
 You can try out the latest stable version of OpenFlight here: https://vrchat.com/home/launch?worldId=wrld_e61cba97-a1a9-4c53-93d2-7bb77240a2e7
 
