@@ -108,7 +108,7 @@ public class AvatarDetection : UdonSharpBehaviour
 
             //print all the info to the text
             text.text =
-                "Spine to Chest (un adjusted)" +
+                "Spine to Chest: " +
                 d_spinetochest +
                 "\nHead to Neck: " +
                 d_necktohead +
@@ -136,12 +136,7 @@ public class AvatarDetection : UdonSharpBehaviour
                 "\nWeight: " +
                 weight +
                 "\nWingtip Offset: " +
-                WingtipOffset +
-                "\n\nJSON Info: " +
-                "\nVersion: " +
-                jsonVersion +
-                "\nDate: " +
-                jsonDate;
+                WingtipOffset;
         }
         else if (bypassDetection && !allowedToFly)
         {

@@ -6,6 +6,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 public class OpenFlight : UdonSharpBehaviour {
+	public string OpenFlightVersion = "0.0.1";
 	[HideInInspector]
 	public bool frozen = false;
 	public GameObject wingedFlight;
