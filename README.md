@@ -9,6 +9,8 @@ You will need all of these installed in your project first in order for Open-Fli
 
 You can try out the latest stable version of OpenFlight here: https://vrchat.com/home/launch?worldId=wrld_e61cba97-a1a9-4c53-93d2-7bb77240a2e7
 
+You can try out the avatar detection system here: https://vrchat.com/home/launch?worldId=wrld_ef75dcc8-02fa-43ef-8f42-7b8159783d3d
+
 ## How to use
 
 Import the Unity package from [Releases](https://github.com/Mattshark89/OpenFlight-VRC/releases) and place the prefab "OpenFlight" anywhere in your world. This should be all you need for most worlds.
