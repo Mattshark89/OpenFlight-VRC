@@ -10,6 +10,7 @@ public class OpenFlight : UdonSharpBehaviour {
 	[HideInInspector]
 	public bool frozen = false;
 	public GameObject wingedFlight;
+	public string flightMode = "Auto";
 	
 	void SwitchFlight() {
 		if (wingedFlight != null) {
@@ -20,6 +21,7 @@ public class OpenFlight : UdonSharpBehaviour {
 	public void DisableFlight(bool freeze = false) {
 		if ((!frozen) || freeze) {
 			SwitchFlight();
+			flightMode = "Off";
 		}
 		if (freeze) {
 			frozen = true;
@@ -28,15 +30,26 @@ public class OpenFlight : UdonSharpBehaviour {
 
 	public void EnableAutomaticMode() {
 		frozen = false;
+		flightMode = "Auto";
 	}
 	
 	public void EnableWingedFlight(bool freeze = false) {
 		if ((!frozen) || freeze) {
 			SwitchFlight();
 			wingedFlight.SetActive(true);
+			flightMode = "On";
 		}
 		if (freeze) {
 			frozen = true;
 		}
+	}
+
+	//these are needed since I cant pass a bool to the functions using a UI button
+	public void ForceWingedFlight() {
+		EnableWingedFlight(true);
+	}
+
+	public void ForceDisableFlight() {
+		DisableFlight(true);
 	}
 }

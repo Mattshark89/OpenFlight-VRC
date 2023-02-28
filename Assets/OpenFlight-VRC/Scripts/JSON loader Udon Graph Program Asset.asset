@@ -174,8 +174,8 @@ MonoBehaviour:
       flowUIDs: []
       nodeValues:
       - unityObjectValue: {fileID: 0}
-        stringValue: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Attempting
-          Load
+        stringValue: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Making
+          String Load Request
     - fullName: UnityEngineDebug.__Log__SystemObject__SystemVoid
       uid: c4b02d29-b14c-4bb4-9e23-ff9f5cf4da41
       position: {x: 1047, y: 421}
@@ -193,8 +193,8 @@ MonoBehaviour:
       flowUIDs: []
       nodeValues:
       - unityObjectValue: {fileID: 0}
-        stringValue: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Load
-          Attempted
+        stringValue: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|String
+          Load Request Succesful
     - fullName: Event_OnStringLoadError
       uid: c25ddd83-05e4-4a70-8649-74fc24d43661
       position: {x: 43, y: 599.84}
@@ -219,8 +219,8 @@ MonoBehaviour:
       flowUIDs: []
       nodeValues:
       - unityObjectValue: {fileID: 0}
-        stringValue: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Load
-          Failed
+        stringValue: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|String
+          Load Failed
     - fullName: Set_Variable
       uid: 7ee17afb-cff5-4386-a7fb-905441b703fe
       position: {x: 419.69998, y: 126.10001}

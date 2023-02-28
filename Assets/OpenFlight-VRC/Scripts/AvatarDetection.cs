@@ -22,9 +22,9 @@ public class AvatarDetection : UdonSharpBehaviour
     double previous_d_spinetochest = 0;
     //external JSON list stuff
     public UdonBehaviour JSONLoader;
+    public OpenFlight OpenFlight;
     string jsonString = "";
     UdonJsonValue json;
-    public bool bypassDetection = false;
     public bool allowedToFly = false;
     public bool skipLoadingAvatar = true;
 
@@ -73,7 +73,6 @@ public class AvatarDetection : UdonSharpBehaviour
         //if the player has changed avatars, do the hashing and determine if the avatar is allowed to fly
         if (Mathf.Abs((float)d_spinetochest - (float)previous_d_spinetochest) > 0.0001f)
         {
-            bypassDetection = false;
             previous_d_spinetochest = d_spinetochest;
 
             //get all the bones now
@@ -110,6 +109,12 @@ public class AvatarDetection : UdonSharpBehaviour
             //check if the avatar is allowed to fly
             allowedToFly = isAvatarAllowedToFly(hash);
 
+            //tell openflight if the avatar is allowed to fly
+            if (allowedToFly)
+                OpenFlight.EnableWingedFlight();
+            else
+                OpenFlight.DisableFlight();
+
             //print all the info to the text
             text.text =
                 "Spine to Chest: " +
@@ -141,11 +146,6 @@ public class AvatarDetection : UdonSharpBehaviour
                 weight +
                 "\nWingtip Offset: " +
                 WingtipOffset;
-        }
-        else if (bypassDetection && !allowedToFly)
-        {
-            text.text = "Bypassing Avatar Detection\nThe avatar you are currently in is able to fly no matter what. If you change avatars, you will need to re-enable the bypass";
-            allowedToFly = true;
         }
 
         //gizmo stuff
@@ -214,6 +214,7 @@ public class AvatarDetection : UdonSharpBehaviour
         previous_d_spinetochest = 1000f;
     }
 
+    //TODO: Find a way to detect what vector direction to use for displaying the gizmo, since different avatars have different wrist bone rotations
     void visualizeWingTips()
     {
         //move a gameobject to the visualize the wingtips
