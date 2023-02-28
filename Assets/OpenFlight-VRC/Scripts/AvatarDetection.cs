@@ -221,7 +221,7 @@ public class AvatarDetection : UdonSharpBehaviour
         Quaternion rightHandRotation = localPlayer.GetBoneRotation(HumanBodyBones.RightHand);
 
         //calculate the wingtip position by adding the offset to the right hand position in the direction of the right hand rotation
-        Vector3 WingTipPosition = rightHandPosition + (rightHandRotation * Vector3.down * new Vector3(0, 0, (float)WingtipOffset * (float)d_spinetochest).z);
+        Vector3 WingTipPosition = rightHandPosition + (rightHandRotation * Vector3.up * new Vector3(0, 0, (float)WingtipOffset * (float)d_spinetochest).z);
 
         wingtipGizmo.transform.position = WingTipPosition;
     }
