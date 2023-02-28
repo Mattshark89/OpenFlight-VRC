@@ -28,6 +28,10 @@ public class AvatarDetection : UdonSharpBehaviour
     public bool allowedToFly = false;
     public bool skipLoadingAvatar = true;
 
+    //gizmo related stuff
+    public bool showWingTipGizmo = false;
+    public GameObject wingtipGizmo;
+
     //information about the avatar that has been detected
     public double weight = 0;
     public double WingtipOffset = 0;
@@ -143,6 +147,9 @@ public class AvatarDetection : UdonSharpBehaviour
             text.text = "Bypassing Avatar Detection\nThe avatar you are currently in is able to fly no matter what. If you change avatars, you will need to re-enable the bypass";
             allowedToFly = true;
         }
+
+        //gizmo stuff
+        visualizeWingTips();
     }
 
     int getBoneDistance(Vector3 bone1, Vector3 bone2)
@@ -205,5 +212,17 @@ public class AvatarDetection : UdonSharpBehaviour
         jsonString = "";
         d_spinetochest = 0;
         previous_d_spinetochest = 1000f;
+    }
+
+    void visualizeWingTips()
+    {
+        //move a gameobject to the visualize the wingtips
+        Vector3 rightHandPosition = localPlayer.GetBonePosition(HumanBodyBones.RightHand);
+        Quaternion rightHandRotation = localPlayer.GetBoneRotation(HumanBodyBones.RightHand);
+
+        //calculate the wingtip position by adding the offset to the right hand position in the direction of the right hand rotation
+        Vector3 WingTipPosition = rightHandPosition + (rightHandRotation * Vector3.down * new Vector3(0, 0, (float)WingtipOffset * (float)d_spinetochest).z);
+
+        wingtipGizmo.transform.position = WingTipPosition;
     }
 }
