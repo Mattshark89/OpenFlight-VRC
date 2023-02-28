@@ -14,6 +14,7 @@ using Koyashiro.UdonJson;
 public class AvatarDetection : UdonSharpBehaviour
 {
     VRCPlayerApi localPlayer = null;
+	[Tooltip("optional")]
     public TextMeshProUGUI text;
     int scalingFactor = 1000;
     //this is used as the base for the avatar scale compenstation
@@ -22,21 +23,31 @@ public class AvatarDetection : UdonSharpBehaviour
     double previous_d_spinetochest = 0;
     //external JSON list stuff
     public UdonBehaviour JSONLoader;
+	public OpenFlight openFlight;
     string jsonString = "";
     UdonJsonValue json;
+	[HideInInspector]
     public bool bypassDetection = false;
+	[HideInInspector]
     public bool allowedToFly = false;
     public bool skipLoadingAvatar = true;
 
     //information about the avatar that has been detected
+	[HideInInspector]
     public double weight = 0;
+	[HideInInspector]
     public double WingtipOffset = 0;
+	[HideInInspector]
     public string name = "";
+	[HideInInspector]
     public string creator = "";
+	[HideInInspector]
     public string introducer = "";
 
     //information about the json itself
+	[HideInInspector]
     public string jsonVersion = "";
+	[HideInInspector]
     public string jsonDate = "";
 
     void Start()
@@ -44,7 +55,9 @@ public class AvatarDetection : UdonSharpBehaviour
         //get the local player
         localPlayer = Networking.LocalPlayer;
 
-        text.text = "Loading JSON list...";
+		if (text != null) {
+			text.text = "Loading JSON list...";
+		}
         //get the JSON list
         JSONLoader.SendCustomEvent("LoadUrl");
     }
@@ -99,49 +112,61 @@ public class AvatarDetection : UdonSharpBehaviour
             //check if the hash is the loading avatar, and if it is then dont check if the avatar is allowed to fly
             if (hash == -1470672748 && skipLoadingAvatar)
             {
-                text.text = "Loading Avatar Detected, ignoring...";
+				if (text != null) {
+					text.text = "Loading Avatar Detected, ignoring...";
+				}
                 return;
             }
 
             //check if the avatar is allowed to fly
             allowedToFly = isAvatarAllowedToFly(hash);
+			if (allowedToFly) {
+				openFlight.EnableWingedFlight();
+			} else {
+				openFlight.DisableFlight();
+			}
 
             //print all the info to the text
-            text.text =
-                "Spine to Chest: " +
-                d_spinetochest +
-                "\nHead to Neck: " +
-                d_necktohead +
-                "\nChest to Neck: " +
-                d_chesttoneck +
-                "\nLeft Shoulder to Left Upper Arm: " +
-                d_leftshouldertoleftupperarm +
-                "\nLeft Upper Arm to Left Lower Arm: " +
-                d_leftupperarmtoleftlowerarm +
-                "\nLeft Lower Arm to Left Hand: " +
-                d_leftlowertolefthand +
-                "\nCombined Bone Info: " +
-                boneInfo +
-                "\nHash: " +
-                hash + 
-                "\nAllowed to Fly: " +
-                allowedToFly +
-                "\n\nDetected Avatar Info: " +
-                "\nName: " +
-                name +
-                "\nCreator: " +
-                creator +
-                "\nIntroduced by: " +
-                introducer +
-                "\nWeight: " +
-                weight +
-                "\nWingtip Offset: " +
-                WingtipOffset;
+			if (text != null) {
+				text.text =
+					"Spine to Chest: " +
+					d_spinetochest +
+					"\nHead to Neck: " +
+					d_necktohead +
+					"\nChest to Neck: " +
+					d_chesttoneck +
+					"\nLeft Shoulder to Left Upper Arm: " +
+					d_leftshouldertoleftupperarm +
+					"\nLeft Upper Arm to Left Lower Arm: " +
+					d_leftupperarmtoleftlowerarm +
+					"\nLeft Lower Arm to Left Hand: " +
+					d_leftlowertolefthand +
+					"\nCombined Bone Info: " +
+					boneInfo +
+					"\nHash: " +
+					hash + 
+					"\nAllowed to Fly: " +
+					allowedToFly +
+					"\n\nDetected Avatar Info: " +
+					"\nName: " +
+					name +
+					"\nCreator: " +
+					creator +
+					"\nIntroduced by: " +
+					introducer +
+					"\nWeight: " +
+					weight +
+					"\nWingtip Offset: " +
+					WingtipOffset;
+			}
         }
         else if (bypassDetection && !allowedToFly)
         {
-            text.text = "Bypassing Avatar Detection\nThe avatar you are currently in is able to fly no matter what. If you change avatars, you will need to re-enable the bypass";
-            allowedToFly = true;
+            if (text != null) {
+				text.text = "Bypassing Avatar Detection\nThe avatar you are currently in is able to fly no matter what. If you change avatars, you will need to re-enable the bypass";
+            }
+			allowedToFly = true;
+			openFlight.EnableWingedFlight();
         }
     }
 
@@ -198,7 +223,9 @@ public class AvatarDetection : UdonSharpBehaviour
 
     public void reloadJSON()
     {
-        text.text = "Loading JSON list...";
+		if (text != null) {
+			text.text = "Loading JSON list...";
+		}
         //get the JSON list
         JSONLoader.SendCustomEvent("LoadUrl");
 
