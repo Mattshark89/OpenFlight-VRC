@@ -148,10 +148,11 @@ namespace Koyashiro.UdonJson
 
         private static bool TryDeserializeString(this UdonJsonDeserializer des)
         {
-            // "
+            // consume "
             des.Next();
 
             var start = des.GetPos();
+            var hasIncludesEscape = false;
 
             while (true)
             {
@@ -161,19 +162,73 @@ namespace Koyashiro.UdonJson
                     return false;
                 }
 
-                // "
+                // consume "
                 if (des.Current() == '"')
                 {
                     break;
                 }
 
-                des.Next();
+                if (des.Current() == '\\')
+                {
+                    // consume \
+                    des.Next();
+
+                    switch (des.Current())
+                    {
+                        // quotation mark
+                        case '"':
+                        // reverse solidus
+                        case '\\':
+                        // solidus
+                        case '/':
+                        // backspace
+                        case 'b':
+                        // formfeed
+                        case 'f':
+                        // linefeed
+                        case 'n':
+                        // carriage return
+                        case 'r':
+                        // horizontal tab
+                        case 't':
+                            hasIncludesEscape = true;
+                            des.Next();
+                            break;
+                        // unicode
+                        case 'u':
+                            des.SetError("Unicode escape is not supported");
+                            return false;
+                        default:
+                            des.SetError(ERROR_UNEXPECTED_TOKEN);
+                            return false;
+                    }
+                }
+                else
+                {
+                    des.Next();
+                }
             }
 
+            var s = new string(des.GetInput(), start, des.GetPos() - start);
+            if (hasIncludesEscape)
+            {
+                s = s
+                    .Replace("\\\\", "\0")
+                    .Replace("\\\"", "\"")
+                    .Replace("\\\\", "\\")
+                    .Replace("\\/", "/")
+                    .Replace("\\b", "\b")
+                    .Replace("\\f", "\f")
+                    .Replace("\\n", "\n")
+                    .Replace("\\r", "\r")
+                    .Replace("\\t", "\t")
+                    .Replace("\0", "\\");
+            }
+            des.SetOutput(s);
 
-            des.SetOutput(new string(des.GetInput(), start, des.GetPos() - start));
-            // "
+            // consume "
             des.Next();
+
             return true;
         }
 
