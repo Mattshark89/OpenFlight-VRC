@@ -5,6 +5,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 using UnityEngine.UI;
 
+
 public class UISliderUtility : UdonSharpBehaviour
 {
     public UdonBehaviour target;
@@ -39,9 +40,8 @@ public class UISliderUtility : UdonSharpBehaviour
             //if the target variable is a float, then set the target variable to the slider value
             if (TargetIsFloat)
             {
-                target.SetProgramVariable(targetVariable, (float)value);
+                target.SetProgramVariable(targetVariable, value);
             }
-            //if the target variable is a double, then set the target variable to the slider value
             else
             {
                 target.SetProgramVariable(targetVariable, (double)value);
@@ -59,9 +59,9 @@ public class UISliderUtility : UdonSharpBehaviour
         }
         else
         {
-            if ((double)target.GetProgramVariable(targetVariable) != value)
+            if ((float)target.GetProgramVariable(targetVariable) != value)
             {
-                slider.value = (float)(double)target.GetProgramVariable(targetVariable);
+                slider.value = (float)target.GetProgramVariable(targetVariable);
             }
         }
     }
