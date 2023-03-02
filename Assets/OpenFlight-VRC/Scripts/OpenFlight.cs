@@ -21,10 +21,10 @@ public class OpenFlight : UdonSharpBehaviour {
 	public void DisableFlight(bool freeze = false) {
 		if ((!frozen) || freeze) {
 			SwitchFlight();
-			flightMode = "Off";
 		}
 		if (freeze) {
 			frozen = true;
+			flightMode = "Off";
 		}
 	}
 
@@ -37,10 +37,10 @@ public class OpenFlight : UdonSharpBehaviour {
 		if ((!frozen) || freeze) {
 			SwitchFlight();
 			wingedFlight.SetActive(true);
-			flightMode = "On";
 		}
 		if (freeze) {
 			frozen = true;
+			flightMode = "On";
 		}
 	}
 
