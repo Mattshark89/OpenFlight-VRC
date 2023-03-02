@@ -8,8 +8,6 @@ using VRC.SDKBase;
 using VRC.Udon;
 using Koyashiro.UdonJson;
 
-//TODO: Make avatar scaling not recalculate hash, by checking if the lodaing avatar has been changed into first
-//TODO: Fix lag spikes due to long json list
 
 public class AvatarDetection : UdonSharpBehaviour
 {
