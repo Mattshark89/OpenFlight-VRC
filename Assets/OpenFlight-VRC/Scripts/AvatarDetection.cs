@@ -109,9 +109,9 @@ public class AvatarDetection : UdonSharpBehaviour
 
             //tell openflight if the avatar is allowed to fly
             if (allowedToFly)
-                OpenFlight.EnableWingedFlight();
+                OpenFlight.CanFly();
             else
-                OpenFlight.DisableFlight();
+                OpenFlight.CannotFly();
 
             //print all the info to the text
             text.text =

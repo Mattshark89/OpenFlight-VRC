@@ -7,49 +7,40 @@ using VRC.Udon;
 
 public class OpenFlight : UdonSharpBehaviour {
 	public string OpenFlightVersion = "1.0.0";
-	[HideInInspector]
-	public bool frozen = false;
 	public GameObject wingedFlight;
 	public string flightMode = "Auto";
 	
 	void SwitchFlight() {
-		if (wingedFlight != null) {
-			wingedFlight.SetActive(false);
-		}
-	}
-	
-	public void DisableFlight(bool freeze = false) {
-		if ((!frozen) || freeze) {
-			SwitchFlight();
-		}
-		if (freeze) {
-			frozen = true;
-			flightMode = "Off";
-		}
+		wingedFlight.SetActive(false);
 	}
 
-	public void EnableAutomaticMode() {
-		frozen = false;
+	public void FlightOn() {
+		SwitchFlight();
+		wingedFlight.SetActive(true);
+        flightMode = "On";
+	}
+
+	public void FlightOff() {
+		SwitchFlight();
+		wingedFlight.SetActive(false);
+        flightMode = "Off";
+	}
+
+    public void FlightAuto() {
 		flightMode = "Auto";
 	}
-	
-	public void EnableWingedFlight(bool freeze = false) {
-		if ((!frozen) || freeze) {
+
+	public void CanFly() {
+		if (string.Equals(flightMode, "Auto")) {
 			SwitchFlight();
 			wingedFlight.SetActive(true);
 		}
-		if (freeze) {
-			frozen = true;
-			flightMode = "On";
+	}
+
+	public void CannotFly() {
+		if (string.Equals(flightMode, "Auto")) {
+			SwitchFlight();
+			wingedFlight.SetActive(false);
 		}
-	}
-
-	//these are needed since I cant pass a bool to the functions using a UI button
-	public void ForceWingedFlight() {
-		EnableWingedFlight(true);
-	}
-
-	public void ForceDisableFlight() {
-		DisableFlight(true);
 	}
 }

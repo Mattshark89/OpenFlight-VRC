@@ -23,14 +23,14 @@ public class ToggleWingedFlight : UdonSharpBehaviour {
 		// Yes I can combine these. No I will not. Readability my dudes
         if (setting == 0) {
 			// Attempt to disable flight
-			openFlight.DisableFlight(true);
+			openFlight.FlightOff();
 			this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0, 0f));
 		} else if (setting == 1) {
 			// Attempt to enable winged flight
-			openFlight.EnableWingedFlight(true);
+			openFlight.FlightOn();
 			this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0, 0.5f));
 		} else if (setting == 2) {
-			openFlight.EnableAutomaticMode();
+			openFlight.FlightAuto();
 			this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0, 0.75f));
 		}
     }
