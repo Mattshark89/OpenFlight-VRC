@@ -1,7 +1,7 @@
 # OpenFlight-VRC
 
 Creating an open source system to allow all kinds of avatars to fly.
-You will need all of these installed in your project first in order for Open-Flight to work. Install these in order
+You will need all of these installed in your project first in order for Open-Flight to work. Install these in order:
 1. [UdonSharp](https://github.com/MerlinVR/UdonSharp)
 2. [udon-json](https://github.com/koyashiro/udon-json)
 3. [udon-list](https://github.com/koyashiro/udon-list)
@@ -13,7 +13,7 @@ You can try out the avatar detection system here: https://vrchat.com/home/launch
 
 ## How to use
 
-Import the Unity package from [Releases](https://github.com/Mattshark89/OpenFlight-VRC/releases) and place the prefab "OpenFlight" anywhere in your world. This should be all you need for most worlds.
+After installing the four packages listed above, import the Unity package from [Releases](https://github.com/Mattshark89/OpenFlight-VRC/releases) and place the prefab "OpenFlight" anywhere in your world. This should be all you need for most worlds.
 To fine-tune the flight settings, select the WingedFlight GameObject inside of the prefab and check the Inspector.
 
 ## Roadmap to V1.0.0 release
