@@ -114,140 +114,146 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     
     public void Update() {
         if ((LocalPlayer != null) && LocalPlayer.IsValid()) {
-            if (timeTick < 0) {
-                // Only runs once shortly after joining the world
-                timeTick = 0;
-                leftLowerArmBone = HumanBodyBones.LeftLowerArm;
-                rightLowerArmBone = HumanBodyBones.RightLowerArm;
-                leftUpperArmBone = HumanBodyBones.LeftUpperArm;
-                rightUpperArmBone = HumanBodyBones.RightUpperArm;
-                leftHandBone = HumanBodyBones.LeftHand;
-                rightHandBone = HumanBodyBones.RightHand;
-                CalculateStats();
-            }
-            setFinalVelocity = false;
-            // Check if hands are being moved downward while above a certain Y threshold
-            // We're using LocalPlayer.GetPosition() to turn these global coordinates into local ones
-            RHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
-            LHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
-            if ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y) > 0) {
-                downThrust = ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y)) * Time.deltaTime / wingspan;
-            } else {
-                downThrust = 0;
-            }
-            if (Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(rightHandBone).x, LocalPlayer.GetBonePosition(rightHandBone).z)) > wingspan / 3.3f && Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(leftUpperArmBone).x, LocalPlayer.GetBonePosition(leftUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(leftHandBone).x, LocalPlayer.GetBonePosition(leftHandBone).z)) > wingspan / 3.3f) {
-                handsOut = true;
-            } else {handsOut = false;}
-            if ((RHPos.y > LocalPlayer.GetBonePosition(rightUpperArmBone).y + (wingspan * 0.4f)) && (LHPos.y > LocalPlayer.GetBonePosition(leftUpperArmBone).y + (wingspan * 0.4f))) {
-                handsDown = true;
-            } else {handsDown = false;}
-            
-            // Legacy code: check for triggers being held
-            //if ((Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger") > 0.5f) & (Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger") > 0.5f)) {
-            
-            if (!isFlapping) {
-                
-                // Check for the beginning of a flap
-                if ((isFlying ? true : handsOut)
-                    && (requireJump ? !LocalPlayer.IsPlayerGrounded() : true)
-                    && RHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(rightUpperArmBone).y
-                    && LHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(leftUpperArmBone).y
-                    && downThrust > 0.0002) {
+            FlightTick(Time.deltaTime);
+        }
+    }
+    
+    public void FlightTick(float dt) {
+        // Variable `dt` is Delta Time
+        if (timeTick < 0) {
+            // Only runs once shortly after joining the world
+            timeTick = 0;
+            leftLowerArmBone = HumanBodyBones.LeftLowerArm;
+            rightLowerArmBone = HumanBodyBones.RightLowerArm;
+            leftUpperArmBone = HumanBodyBones.LeftUpperArm;
+            rightUpperArmBone = HumanBodyBones.RightUpperArm;
+            leftHandBone = HumanBodyBones.LeftHand;
+            rightHandBone = HumanBodyBones.RightHand;
+            CalculateStats();
+        }
+        setFinalVelocity = false;
+        // Check if hands are being moved downward while above a certain Y threshold
+        // We're using LocalPlayer.GetPosition() to turn these global coordinates into local ones
+        RHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
+        LHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
+        if ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y) > 0) {
+            downThrust = ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y)) * dt / wingspan;
+        } else {
+            downThrust = 0;
+        }
+        if (Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(rightHandBone).x, LocalPlayer.GetBonePosition(rightHandBone).z)) > wingspan / 3.3f && Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(leftUpperArmBone).x, LocalPlayer.GetBonePosition(leftUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(leftHandBone).x, LocalPlayer.GetBonePosition(leftHandBone).z)) > wingspan / 3.3f) {
+            handsOut = true;
+        } else {handsOut = false;}
+        // `handsDown` currently doesn't work as intended. Do not use
+        if ((RHPos.y > LocalPlayer.GetBonePosition(rightUpperArmBone).y + (wingspan * 0.4f)) && (LHPos.y > LocalPlayer.GetBonePosition(leftUpperArmBone).y + (wingspan * 0.4f))) {
+            handsDown = true;
+        } else {handsDown = false;}
+        
+        // Legacy code: check for triggers being held
+        //if ((Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger") > 0.5f) & (Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger") > 0.5f)) {
+        
+        if (!isFlapping) {
+            // Check for the beginning of a flap
+            if ((isFlying ? true : handsOut)
+                && (requireJump ? !LocalPlayer.IsPlayerGrounded() : true)
+                && RHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(rightUpperArmBone).y
+                && LHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(leftUpperArmBone).y
+                && downThrust > 0.0002) {
 
-                    isFlapping = true;
-                    if (!isFlying) { // First flap of the flight (likely from grounded)
-                        isFlying = true;
-                        CalculateStats();
-                        oldGravityStrength = LocalPlayer.GetGravityStrength();
-                        LocalPlayer.SetGravityStrength(flightGravity());
-                        if (!allowLoco) {
-                            ImmobilizePart(true);
-                        }
+                isFlapping = true;
+                if (!isFlying) { // First flap of the flight (likely from grounded)
+                    isFlying = true;
+                    CalculateStats();
+                    oldGravityStrength = LocalPlayer.GetGravityStrength();
+                    LocalPlayer.SetGravityStrength(flightGravity());
+                    if (!allowLoco) {
+                        ImmobilizePart(true);
                     }
                 }
             }
-            
-            // -- STATE: Flapping
-            if (isFlapping) {
-                if (downThrust > 0) {
-                    // Calculate force to apply based on the flap
-                    newVelocity = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * Time.deltaTime * flapStrength();
-                    if (LocalPlayer.IsPlayerGrounded()) {
-                        // Removes sliding along the ground
-                        newVelocity = new Vector3(0, newVelocity.y, 0);
-                    } else {
-                        // apply horizontalStrengthMod
-                        tmpFloat = newVelocity.y;
-                        newVelocity = newVelocity * horizontalStrengthMod;
-                        newVelocity.y = tmpFloat;
-                    }
-                    finalVelocity = LocalPlayer.GetVelocity() + newVelocity;
-                    // Speed cap (check, then apply flapping air friction)
-                    if (finalVelocity.magnitude > 0.02f * flapStrength()) {
-                        finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength() * Time.deltaTime));
-                    }
-                    setFinalVelocity = true;
-                } else { 
-                    isFlapping = false;
-                }
-            }
-
-            // -- STATE: Flying
-            if (isFlying) {
-                if ((!isFlapping) && LocalPlayer.IsPlayerGrounded()) {
-                    // Script to run when landing
-                    land();
+        }
+        
+        // -- STATE: Flapping
+        if (isFlapping) {
+            if (downThrust > 0) {
+                // Calculate force to apply based on the flap
+                newVelocity = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * dt * flapStrength();
+                if (LocalPlayer.IsPlayerGrounded()) {
+                    // Removes sliding along the ground
+                    newVelocity = new Vector3(0, newVelocity.y, 0);
                 } else {
-                    // ---=== Run every frame while the player is "flying" ===---
-
-                    if (LocalPlayer.GetGravityStrength() != (flightGravity()) && LocalPlayer.GetVelocity().y < 0) {
-                        LocalPlayer.SetGravityStrength(flightGravity());
-                    }
-                    LHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
-                    RHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
-                    if ((!isFlapping) && handsOut) {
-                        // Gliding, banking, and steering logic
-                        isGliding = true;
-                        newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
-                        wingDirection = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.forward); // The direction the player should go based on how they've angled their wings
-                        // Hotfix: Always have some form of horizontal velocity while falling. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
-                        if (newVelocity.y < 0.3f && newVelocity.x == 0 && newVelocity.z == 0) {
-                            Vector2 tmpV2 = new Vector2(wingDirection.x, wingDirection.z).normalized * 0.145f;
-                            newVelocity = new Vector3(Mathf.Round(tmpV2.x * 10) / 10, newVelocity.y, Mathf.Round(tmpV2.y * 10) / 10);
-                        }
-                        // Uncomment next line to flip the "wing direction" while moving backwards (Probably more realistic physics-wise but feels awkward in VR)
-                        //if (Vector2.Angle(new Vector2(wingDirection.x, wingDirection.z), new Vector2(newVelocity.x, newVelocity.z)) > 90) {wingDirection = wingDirection * -1;}
-                        steering = (RHPos.y - LHPos.y) * 80 / wingspan;
-                        if (steering > 35) {steering = 35;} else if (steering < -35) {steering = -35;}
-                        if (bankingTurns) {
-                            spinningRightRound = true;
-                            rotSpeedGoal = steering;
-                        } else {
-                            // Default "banking," which is just midair strafing
-                            wingDirection = Quaternion.Euler(0, steering, 0) * wingDirection;
-                        }
-                        // X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
-                        targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(wingDirection) * newVelocity.magnitude), newVelocity.magnitude);
-                        finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, Time.deltaTime * glideLooseness);
-                        setFinalVelocity = true;
-                        // Legacy code: the amount of velocity added by gravity every frame = (new Vector3(0,LocalPlayer.GetGravityStrength(), 0) * Time.deltaTime * 10)
-                    } else {isGliding = false; rotSpeedGoal = 0;}
+                    // apply horizontalStrengthMod
+                    tmpFloat = newVelocity.y;
+                    newVelocity = newVelocity * horizontalStrengthMod;
+                    newVelocity.y = tmpFloat;
                 }
+                finalVelocity = LocalPlayer.GetVelocity() + newVelocity;
+                // Speed cap (check, then apply flapping air friction)
+                if (finalVelocity.magnitude > 0.02f * flapStrength()) {
+                    finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength() * dt));
+                }
+                setFinalVelocity = true;
+            } else { 
+                isFlapping = false;
             }
-            RHPosLast = RHPos;
-            LHPosLast = LHPos;
-            if (setFinalVelocity) {LocalPlayer.SetVelocity(finalVelocity);}
-            if (spinningRightRound) {
-                rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * Time.deltaTime * 6);
-                // Legacy code (banking methods that didn't work):
-                //playerRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).rotation;
-                //playerRot = Quaternion.Euler(0, playerRot.eulerAngles.y, 0);
-                //playerRot = Quaternion.Euler(LocalPlayer.GetVelocity().x, 0, LocalPlayer.GetVelocity().z);
-                //LocalPlayer.TeleportTo(LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Origin).position, Quaternion.Lerp(playerRot, playerRot * Quaternion.Euler(Vector3.up * (rotSpeed / 100)), Time.deltaTime * 200), VRC_SceneDescriptor.SpawnOrientation.AlignRoomWithSpawnPoint, true);
-                playerRot = LocalPlayer.GetRotation();
-                // As far as I know, TeleportTo() is the only way (without colliders nor stations) to force a player to rotate
-                LocalPlayer.TeleportTo(LocalPlayer.GetPosition(), Quaternion.Lerp(playerRot, playerRot * Quaternion.Euler(Vector3.up * (rotSpeed / 100)), Time.deltaTime * 200), VRC_SceneDescriptor.SpawnOrientation.AlignPlayerWithSpawnPoint, true);
+        }
+
+        // -- STATE: Flying
+        // (Flying starts when a player first flaps and ends when they become grounded)
+        if (isFlying) {
+            if ((!isFlapping) && LocalPlayer.IsPlayerGrounded()) {
+                // Script to run when landing
+                land();
+            } else {
+                // ---=== Run every frame while the player is "flying" ===---
+
+                if (LocalPlayer.GetGravityStrength() != (flightGravity()) && LocalPlayer.GetVelocity().y < 0) {
+                    LocalPlayer.SetGravityStrength(flightGravity());
+                }
+                LHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
+                RHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
+                if ((!isFlapping) && handsOut) {
+                    // Gliding, banking, and steering logic
+                    isGliding = true;
+                    newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
+                    wingDirection = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.forward); // The direction the player should go based on how they've angled their wings
+                    // Hotfix: Always have some form of horizontal velocity while falling. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
+                    if (newVelocity.y < 0.3f && newVelocity.x == 0 && newVelocity.z == 0) {
+                        Vector2 tmpV2 = new Vector2(wingDirection.x, wingDirection.z).normalized * 0.145f;
+                        newVelocity = new Vector3(Mathf.Round(tmpV2.x * 10) / 10, newVelocity.y, Mathf.Round(tmpV2.y * 10) / 10);
+                    }
+                    // Uncomment next line to flip the "wing direction" while moving backwards (Probably more realistic physics-wise but feels awkward in VR)
+                    //if (Vector2.Angle(new Vector2(wingDirection.x, wingDirection.z), new Vector2(newVelocity.x, newVelocity.z)) > 90) {wingDirection = wingDirection * -1;}
+                    steering = (RHPos.y - LHPos.y) * 80 / wingspan;
+                    if (steering > 35) {steering = 35;} else if (steering < -35) {steering = -35;}
+                    if (bankingTurns) {
+                        spinningRightRound = true;
+                        rotSpeedGoal = steering;
+                    } else {
+                        // Default "banking," which is just midair strafing
+                        wingDirection = Quaternion.Euler(0, steering, 0) * wingDirection;
+                    }
+                    // X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
+                    targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(wingDirection) * newVelocity.magnitude), newVelocity.magnitude);
+                    finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, dt * glideLooseness);
+                    setFinalVelocity = true;
+                    // Legacy code: the amount of velocity added by gravity every frame = (new Vector3(0,LocalPlayer.GetGravityStrength(), 0) * dt * 10)
+                } else {isGliding = false; rotSpeedGoal = 0;}
             }
+        }
+        RHPosLast = RHPos;
+        LHPosLast = LHPos;
+        if (setFinalVelocity) {LocalPlayer.SetVelocity(finalVelocity);}
+        if (spinningRightRound) {
+            rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * dt * 6);
+            // Legacy code (banking methods that didn't work):
+            //playerRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).rotation;
+            //playerRot = Quaternion.Euler(0, playerRot.eulerAngles.y, 0);
+            //playerRot = Quaternion.Euler(LocalPlayer.GetVelocity().x, 0, LocalPlayer.GetVelocity().z);
+            //LocalPlayer.TeleportTo(LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Origin).position, Quaternion.Lerp(playerRot, playerRot * Quaternion.Euler(Vector3.up * (rotSpeed / 100)), dt * 200), VRC_SceneDescriptor.SpawnOrientation.AlignRoomWithSpawnPoint, true);
+            playerRot = LocalPlayer.GetRotation();
+            // As far as I know, TeleportTo() is the only way (without colliders nor stations) to force a player to rotate
+            LocalPlayer.TeleportTo(LocalPlayer.GetPosition(), Quaternion.Lerp(playerRot, playerRot * Quaternion.Euler(Vector3.up * (rotSpeed / 100)), dt * 200), VRC_SceneDescriptor.SpawnOrientation.AlignPlayerWithSpawnPoint, true);
         }
     }
 
@@ -258,14 +264,10 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
             if (timeTick > 49) {
                 timeTick = 0;
                 CalculateStats();
-                UpdateDebug();
+                if (debugOutput != null) {
+                    debugOutput.text = string.Concat("Wingspan:\n", wingspan.ToString()) + string.Concat("\nFlapStr:\n", flapStrength().ToString()) + string.Concat("\nGrav: ", (Mathf.Round(LocalPlayer.GetGravityStrength() * 1000) * 0.001f).ToString());
+                }
             }
-        }
-    }
-    
-    public void UpdateDebug() {
-        if (debugOutput != null) {
-            debugOutput.text = string.Concat("Wingspan:\n", wingspan.ToString()) + string.Concat("\nFlapStr:\n", flapStrength().ToString()) + string.Concat("\nGrav: ", (Mathf.Round(LocalPlayer.GetGravityStrength() * 1000) * 0.001f).ToString());
         }
     }
 
