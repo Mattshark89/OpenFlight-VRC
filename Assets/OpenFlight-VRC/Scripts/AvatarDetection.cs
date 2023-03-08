@@ -19,7 +19,7 @@ public class AvatarDetection : UdonSharpBehaviour
     //used to see if the player has changed avatars
     double previous_d_spinetochest = 0;
     //external JSON list stuff
-    public UdonBehaviour JSONLoader;
+    public AvatarListLoader JSONLoader;
     public OpenFlight OpenFlight;
     string jsonString = "";
     UdonJsonValue json;
@@ -48,7 +48,7 @@ public class AvatarDetection : UdonSharpBehaviour
 
         text.text = "Loading JSON list...";
         //get the JSON list
-        JSONLoader.SendCustomEvent("LoadUrl");
+        JSONLoader.LoadURL();
     }
 
     void Update()
@@ -56,7 +56,7 @@ public class AvatarDetection : UdonSharpBehaviour
         //if the JSON list is empty, then return
         if (jsonString == "" || jsonString == null)
         {
-            jsonString = (string)JSONLoader.GetProgramVariable("Output");
+            jsonString = (string)JSONLoader.Output;
             LoadJSON();
             return;
         }
@@ -205,7 +205,7 @@ public class AvatarDetection : UdonSharpBehaviour
     {
         text.text = "Loading JSON list...";
         //get the JSON list
-        JSONLoader.SendCustomEvent("LoadUrl");
+        JSONLoader.LoadURL();
 
         jsonString = "";
         d_spinetochest = 0;
