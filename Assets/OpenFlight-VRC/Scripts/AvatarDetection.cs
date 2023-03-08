@@ -212,16 +212,20 @@ public class AvatarDetection : UdonSharpBehaviour
         previous_d_spinetochest = 1000f;
     }
 
-    //TODO: Find a way to detect what vector direction to use for displaying the gizmo, since different avatars have different wrist bone rotations
+    //TODO: Clean up this code so it isnt so segmented
     void visualizeWingTips()
     {
+        //reset the wingtip gizmo rotation
+        wingtipGizmo.transform.rotation = Quaternion.identity;
+
         //move a gameobject to the visualize the wingtips
-        Vector3 rightHandPosition = localPlayer.GetBonePosition(HumanBodyBones.RightHand);
-        Quaternion rightHandRotation = localPlayer.GetBoneRotation(HumanBodyBones.RightHand);
+        Vector3 rightHandPosition = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
+        Quaternion rightHandRotation = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
 
         //calculate the wingtip position by adding the offset to the right hand position in the direction of the right hand rotation
-        Vector3 WingTipPosition = rightHandPosition + (rightHandRotation * Vector3.up * new Vector3(0, 0, (float)WingtipOffset * (float)d_spinetochest).z);
+        Vector3 WingTipPosition = rightHandPosition + (rightHandRotation * Vector3.forward * new Vector3(0, 0, (float)WingtipOffset * (float)d_spinetochest).z);
 
         wingtipGizmo.transform.position = WingTipPosition;
+        wingtipGizmo.transform.RotateAround(rightHandPosition, rightHandRotation * Vector3.up, 70);
     }
 }
