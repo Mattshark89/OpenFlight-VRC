@@ -21,6 +21,7 @@ public class AvatarDetection : UdonSharpBehaviour
     //external JSON list stuff
     public AvatarListLoader JSONLoader;
     public OpenFlight OpenFlight;
+    public WingFlightPlusGlide WingFlightPlusGlide;
     string jsonString = "";
     UdonJsonValue json;
     public bool allowedToFly = false;
@@ -31,8 +32,8 @@ public class AvatarDetection : UdonSharpBehaviour
     public GameObject wingtipGizmo;
 
     //information about the avatar that has been detected
-    public double weight = 0;
-    public double WingtipOffset = 0;
+    public float weight = 0;
+    public float WingtipOffset = 0;
     public string name = "";
     public string creator = "";
     public string introducer = "";
@@ -109,9 +110,17 @@ public class AvatarDetection : UdonSharpBehaviour
 
             //tell openflight if the avatar is allowed to fly
             if (allowedToFly)
+            {
                 OpenFlight.CanFly();
+                WingFlightPlusGlide.wingtipOffset = WingtipOffset;
+                WingFlightPlusGlide.weight = weight;
+            }
             else
+            {
                 OpenFlight.CannotFly();
+                WingFlightPlusGlide.wingtipOffset = 0;
+                WingFlightPlusGlide.weight = 1;
+            }
 
             //print all the info to the text
             text.text =
@@ -176,8 +185,8 @@ public class AvatarDetection : UdonSharpBehaviour
                     name = variant.GetValue("Name").AsString();
                     creator = variant.GetValue("Creator").AsString();
                     introducer = variant.GetValue("Introducer").AsString();
-                    weight = variant.GetValue("Weight").AsNumber();
-                    WingtipOffset = variant.GetValue("WingtipOffset").AsNumber();
+                    weight = (float)variant.GetValue("Weight").AsNumber();
+                    WingtipOffset = (float)variant.GetValue("WingtipOffset").AsNumber();
                     return true;
                 }
             }
