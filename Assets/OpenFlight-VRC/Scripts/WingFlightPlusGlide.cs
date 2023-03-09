@@ -80,7 +80,12 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private HumanBodyBones leftLowerArmBone;
     private HumanBodyBones rightHandBone;
     private HumanBodyBones leftHandBone;
-    private float wingspan = 1f;
+	[HideInInspector]
+    public float wingspan = 1f;
+	[HideInInspector]
+	public float wingtipOffset = 0;
+	[HideInInspector]
+	public float weight = 1.0f;
     
     public void Start() {
         LocalPlayer = Networking.LocalPlayer;
