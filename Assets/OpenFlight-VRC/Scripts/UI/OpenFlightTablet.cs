@@ -32,15 +32,40 @@ public class OpenFlightTablet : UdonSharpBehaviour
     void Update()
     {
         //change the scale of the gameobject based on the players scale
+        //add up all of the bone distances from the foot to the head
+        Vector3 footR = localPlayer.GetBonePosition(HumanBodyBones.RightFoot);
+        Vector3 LowerLegR = localPlayer.GetBonePosition(HumanBodyBones.RightLowerLeg);
+        Vector3 UpperLegR = localPlayer.GetBonePosition(HumanBodyBones.RightUpperLeg);
+        Vector3 Hips = localPlayer.GetBonePosition(HumanBodyBones.Hips);
         Vector3 spine = localPlayer.GetBonePosition(HumanBodyBones.Spine);
         Vector3 chest = localPlayer.GetBonePosition(HumanBodyBones.Chest);
-        float d_spinetochest = Vector3.Distance(chest, spine);
+        Vector3 Neck = localPlayer.GetBonePosition(HumanBodyBones.Neck);
+        Vector3 Head = localPlayer.GetBonePosition(HumanBodyBones.Head);
+        float PlayerScale = totalVectorDistance(new Vector3[] { footR, LowerLegR, UpperLegR, Hips, spine, chest, Neck, Head });
 
         //set this gameobjects scale to the players scale
-        transform.localScale = new Vector3((float)d_spinetochest * scalingOffset, (float)d_spinetochest * scalingOffset, (float)d_spinetochest * scalingOffset);
+        transform.localScale = new Vector3((float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset);
 
         //set the version info text
         VersionInfo.text = "Open-Flight Ver " + OpenFlight.OpenFlightVersion + "\nPanel Ver " + PanelVersion + "\nJSON Ver " + AvatarDetection.jsonVersion;
+    }
+
+    //Helper function to get the total distance of a vector array
+    public float totalVectorDistance(Vector3[] vectors)
+    {
+        float totalDistance = 0;
+        for (int i = 0; i < vectors.Length; i++)
+        {
+            if (i == 0)
+            {
+                continue;
+            }
+            else
+            {
+                totalDistance += Vector3.Distance(vectors[i], vectors[i - 1]);
+            }
+        }
+        return totalDistance;
     }
 
     public void SetActiveTab(int tab)
