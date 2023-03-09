@@ -47,7 +47,7 @@ public class OpenFlightTablet : UdonSharpBehaviour
         transform.localScale = new Vector3((float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset);
 
         //set the version info text
-        VersionInfo.text = "Open-Flight Ver " + OpenFlight.OpenFlightVersion + "\nPanel Ver " + PanelVersion + "\nJSON Ver " + AvatarDetection.jsonVersion;
+        VersionInfo.text = "Open-Flight Ver " + OpenFlight.OpenFlightVersion + "\nPanel Ver " + PanelVersion + "\nJSON Ver " + AvatarDetection.jsonVersion + "\nJSON Date " + AvatarDetection.jsonDate;
     }
 
     //Helper function to get the total distance of a vector array
