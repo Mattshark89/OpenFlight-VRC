@@ -16,13 +16,15 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     public bool requireJump;
     [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
     public bool allowLoco;
+    [Tooltip("Avatars using the avatar detection system may have wingtip, weight, etc. modifiers intended to personalize how they feel in the air. Set this value to true to use these modifiers or false if you want them disregarded for consistency. (Note: avatar size detection is not an Avatar Modifier; size-related calculations will always apply even if this setting is set to false.) (Default: false)")]
+    public bool useAvatarModifiers = false;
     
     [Header("Advanced Settings (Only for specialized use!)")]
     [Tooltip("How much Flap Strength and Flight Gravity are affected by an avatar's wingspan. Default values will make smaller avis feel lighter and larger avis heavier.")]
     public AnimationCurve sizeCurve = new AnimationCurve(new Keyframe(0.05f, 2), new Keyframe(1, 1), new Keyframe(20, 0.00195f));
     [Tooltip("Modifier for horizontal flap strength. Makes flapping forwards easier (Default: 1.5)")]
     public float horizontalStrengthMod = 1.5f;
-    [Tooltip("How loose you want your turns while gliding. Lower values mean tighter control/sharper turns. (Default: 2)")]
+    [Tooltip("How loose you want your turns while gliding. Lower values mean tighter control/sharper turns. May be dynamically increased by Avatar Modifier: weight. (Default: 2)")]
     [Range(0f, 8f)]
     public float glideLooseness = 2;
     [Tooltip("If enabled, flight gravity will use Gravity Curve's curve instead of Size Curve's curve multiplied by Flight Gravity Base. (Default: false)")]
@@ -80,6 +82,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private HumanBodyBones leftLowerArmBone;
     private HumanBodyBones rightHandBone;
     private HumanBodyBones leftHandBone;
+	[HideInInspector]
+    public float armspan = 1f;
 	[HideInInspector]
     public float wingspan = 1f;
 	[HideInInspector]
@@ -142,15 +146,15 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         RHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
         LHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
         if ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y) > 0) {
-            downThrust = ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y)) * dt / wingspan;
+            downThrust = ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y)) * dt / armspan;
         } else {
             downThrust = 0;
         }
-        if (Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(rightHandBone).x, LocalPlayer.GetBonePosition(rightHandBone).z)) > wingspan / 3.3f && Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(leftUpperArmBone).x, LocalPlayer.GetBonePosition(leftUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(leftHandBone).x, LocalPlayer.GetBonePosition(leftHandBone).z)) > wingspan / 3.3f) {
+        if (Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(rightHandBone).x, LocalPlayer.GetBonePosition(rightHandBone).z)) > armspan / 3.3f && Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(leftUpperArmBone).x, LocalPlayer.GetBonePosition(leftUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(leftHandBone).x, LocalPlayer.GetBonePosition(leftHandBone).z)) > armspan / 3.3f) {
             handsOut = true;
         } else {handsOut = false;}
         // `handsDown` currently doesn't work as intended. Do not use
-        if ((RHPos.y > LocalPlayer.GetBonePosition(rightUpperArmBone).y + (wingspan * 0.4f)) && (LHPos.y > LocalPlayer.GetBonePosition(leftUpperArmBone).y + (wingspan * 0.4f))) {
+        if ((RHPos.y > LocalPlayer.GetBonePosition(rightUpperArmBone).y + (armspan * 0.4f)) && (LHPos.y > LocalPlayer.GetBonePosition(leftUpperArmBone).y + (armspan * 0.4f))) {
             handsDown = true;
         } else {handsDown = false;}
         
@@ -229,7 +233,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                     }
                     // Uncomment next line to flip the "wing direction" while moving backwards (Probably more realistic physics-wise but feels awkward in VR)
                     //if (Vector2.Angle(new Vector2(wingDirection.x, wingDirection.z), new Vector2(newVelocity.x, newVelocity.z)) > 90) {wingDirection = wingDirection * -1;}
-                    steering = (RHPos.y - LHPos.y) * 80 / wingspan;
+                    steering = (RHPos.y - LHPos.y) * 80 / armspan;
                     if (steering > 35) {steering = 35;} else if (steering < -35) {steering = -35;}
                     if (bankingTurns) {
                         spinningRightRound = true;
@@ -240,7 +244,9 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                     }
                     // X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
                     targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(wingDirection) * newVelocity.magnitude), newVelocity.magnitude);
-                    finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, dt * glideLooseness);
+                    // tmpFloat == glideLooseness (Except if weight > 1, glideLooseness temporarily increases)
+                    tmpFloat = (useAvatarModifiers && weight > 1) ? glideLooseness + ((weight - 1) * 10) : glideLooseness;
+                    finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, dt * tmpFloat);
                     setFinalVelocity = true;
                     // Legacy code: the amount of velocity added by gravity every frame = (new Vector3(0,LocalPlayer.GetGravityStrength(), 0) * dt * 10)
                 } else {isGliding = false; rotSpeedGoal = 0;}
@@ -250,7 +256,11 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         LHPosLast = LHPos;
         if (setFinalVelocity) {LocalPlayer.SetVelocity(finalVelocity);}
         if (spinningRightRound) {
-            rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * dt * 6);
+            if (useAvatarModifiers) {
+                rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * dt * 6 * (1 - (weight - 1)));
+            } else {
+                rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * dt * 6);
+            }
             // Legacy code (banking methods that didn't work):
             //playerRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).rotation;
             //playerRot = Quaternion.Euler(0, playerRot.eulerAngles.y, 0);
@@ -292,11 +302,16 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         }
     }
     
-    // Determine Flight Strength, etc. based on wingspan and whatnot.
+    // Flight Strength, etc. are based on wingspan and whatnot.
     // This function can be re-run to recalculate these values at any time (upon switching avatars for example)
     private void CalculateStats() {
-        // `wingspan` does not include the distance between shoulders
-        wingspan = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone),LocalPlayer.GetBonePosition(leftHandBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone),LocalPlayer.GetBonePosition(rightLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone),LocalPlayer.GetBonePosition(rightHandBone));
+        // `armspan` does not include the distance between shoulders
+        armspan = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone),LocalPlayer.GetBonePosition(leftHandBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone),LocalPlayer.GetBonePosition(rightLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone),LocalPlayer.GetBonePosition(rightHandBone));
+        if (useAvatarModifiers) {
+            wingspan = armspan + (armspan * wingtipOffset);
+        } else {
+            wingspan = armspan;
+        }
     }
     
     // Effectually disables all flight-related mechanics
@@ -319,9 +334,14 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     
     private float flightGravity() {
         if (useGravityCurve) {
-            return gravityCurve.Evaluate(wingspan) * wingspan;
+            tmpFloat = gravityCurve.Evaluate(armspan) * armspan;
         } else {
-            return sizeCurve.Evaluate(wingspan) * flightGravityBase * wingspan;
+            tmpFloat = sizeCurve.Evaluate(armspan) * flightGravityBase * armspan;
+        }
+        if (useAvatarModifiers) {
+            return tmpFloat * weight;
+        } else {
+            return tmpFloat;
         }
     }
 }
