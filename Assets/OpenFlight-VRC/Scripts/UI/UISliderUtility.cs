@@ -14,6 +14,7 @@ public class UISliderUtility : UdonSharpBehaviour
     float value;
     float previousValue;
     bool TargetIsFloat = false;
+    bool TargetIsInt = false;
     void Start()
     {
         slider = GetComponent<Slider>();
@@ -21,6 +22,11 @@ public class UISliderUtility : UdonSharpBehaviour
         if (target.GetProgramVariableType(targetVariable) == typeof(float))
         {
             TargetIsFloat = true;
+        }
+        else if (target.GetProgramVariableType(targetVariable) == typeof(int))
+        {
+            TargetIsFloat = false;
+            TargetIsInt = true;
         }
         else if (target.GetProgramVariableType(targetVariable) == typeof(double))
         {
@@ -42,6 +48,10 @@ public class UISliderUtility : UdonSharpBehaviour
             {
                 target.SetProgramVariable(targetVariable, value);
             }
+            else if (TargetIsInt)
+            {
+                target.SetProgramVariable(targetVariable, (int)value);
+            }
             else
             {
                 target.SetProgramVariable(targetVariable, (double)value);
@@ -55,6 +65,13 @@ public class UISliderUtility : UdonSharpBehaviour
             if ((float)target.GetProgramVariable(targetVariable) != value)
             {
                 slider.value = (float)target.GetProgramVariable(targetVariable);
+            }
+        }
+        else if (TargetIsInt)
+        {
+            if ((int)target.GetProgramVariable(targetVariable) != value)
+            {
+                slider.value = (int)target.GetProgramVariable(targetVariable);
             }
         }
         else
