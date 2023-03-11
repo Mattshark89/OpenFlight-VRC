@@ -33,7 +33,6 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     public AnimationCurve gravityCurve = new AnimationCurve(new Keyframe(0.05f, 0.4f), new Keyframe(1, 0.2f), new Keyframe(20, 0.00039f));
     [Tooltip("If a GameObject with a Text component is attached here, debug some basic info into it. (Default: unset)")]
     public Text debugOutput;
-    [HideInInspector]
     public bool bankingTurns = false;
 
     // Essential Variables
