@@ -12,7 +12,7 @@ using Koyashiro.UdonJson;
 public class AvatarDetection : UdonSharpBehaviour
 {
     VRCPlayerApi localPlayer = null;
-    public TextMeshProUGUI text;
+    public string debugInfo = "";
     int scalingFactor = 1000;
     //this is used as the base for the avatar scale compenstation
     double d_spinetochest = 0;
@@ -47,7 +47,7 @@ public class AvatarDetection : UdonSharpBehaviour
         //get the local player
         localPlayer = Networking.LocalPlayer;
 
-        text.text = "Loading JSON list...";
+        debugInfo = "Loading JSON list...";
         //get the JSON list
         JSONLoader.LoadURL();
     }
@@ -101,7 +101,7 @@ public class AvatarDetection : UdonSharpBehaviour
             //check if the hash is the loading avatar, and if it is then dont check if the avatar is allowed to fly
             if (hash == -1470672748 && skipLoadingAvatar)
             {
-                text.text = "Loading Avatar Detected, ignoring...";
+                debugInfo = "Loading Avatar Detected, ignoring...";
                 return;
             }
 
@@ -123,7 +123,7 @@ public class AvatarDetection : UdonSharpBehaviour
             }
 
             //print all the info to the text
-            text.text =
+            debugInfo =
                 "Spine to Chest: " +
                 d_spinetochest +
                 "\nHead to Neck: " +
@@ -212,7 +212,7 @@ public class AvatarDetection : UdonSharpBehaviour
 
     public void reloadJSON()
     {
-        text.text = "Loading JSON list...";
+        debugInfo = "Loading JSON list...";
         //get the JSON list
         JSONLoader.LoadURL();
 
