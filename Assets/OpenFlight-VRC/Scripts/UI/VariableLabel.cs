@@ -13,6 +13,7 @@ public class VariableLabel : UdonSharpBehaviour
     public string suffix = "";
     TextMeshProUGUI text;
     bool isStringType = false;
+    bool isBoolType = false;
 
     void Start()
     {
@@ -22,13 +23,29 @@ public class VariableLabel : UdonSharpBehaviour
         {
             isStringType = true;
         }
+        //determine if the target variable is a bool
+        if (target.GetProgramVariableType(targetVariable) == typeof(bool))
+        {
+            isBoolType = true;
+        }
     }
 
     void Update()
     {
         var targetValue = target.GetProgramVariable(targetVariable);
-        //determine if it is a number or a string
-        if (!isStringType)
+        //determine if it is a bool
+        if (isBoolType)
+        {
+            if ((bool)targetValue)
+            {
+                text.text = prefix + "True" + suffix;
+            }
+            else
+            {
+                text.text = prefix + "False" + suffix;
+            }
+        }
+        else if (!isStringType)
         {
             float rounded = Mathf.Round((float)targetValue * 100f) / 100f;
             text.text = prefix + rounded.ToString() + suffix;

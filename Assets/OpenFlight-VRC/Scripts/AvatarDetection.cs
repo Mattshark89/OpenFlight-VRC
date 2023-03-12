@@ -102,6 +102,11 @@ public class AvatarDetection : UdonSharpBehaviour
             if (hash == -1470672748 && skipLoadingAvatar)
             {
                 debugInfo = "Loading Avatar Detected, ignoring...";
+                name = "Loading Avatar";
+                creator = "Loading Avatar";
+                introducer = "Loading Avatar";
+                weight = 0;
+                WingtipOffset = 0;
                 return;
             }
 
