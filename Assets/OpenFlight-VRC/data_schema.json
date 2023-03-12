@@ -1,0 +1,59 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "JSON Version": {
+        "type": "string"
+      },
+      "JSON Date": {
+        "type": "string",
+        "format": "date"
+      },
+      "Bases": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+            "Name": {
+                "type": "string"
+            },
+            "Creator": {
+                "type": "string"
+            },
+            "Introducer": {
+                "type": "string"
+            },
+            "Hash": {
+                "type": "string"
+            },
+            "Weight": {
+                "type": "integer"
+            },
+            "WingtipOffset": {
+                "type": "number"
+            }
+            },
+            "required": [
+            "Name",
+            "Creator",
+            "Introducer",
+            "Hash",
+            "Weight",
+            "WingtipOffset"
+            ],
+            "additionalProperties": false
+          },
+          "minProperties": 1
+        },
+        "minProperties": 1
+      }
+    },
+    "required": [
+      "JSON Version",
+      "JSON Date",
+      "Bases"
+    ]
+  }
+  
