@@ -1,7 +1,5 @@
 name: Validate JSON Formatting
-
-on: [pull_request]
-
+on: [pull_request, workflow_dispatch]
 jobs:
   verify-json-validation:
     runs-on: ubuntu-latest
