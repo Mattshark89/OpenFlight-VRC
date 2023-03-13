@@ -17,6 +17,10 @@ public class UISliderUtility : UdonSharpBehaviour
     bool TargetIsInt = false;
     void Start()
     {
+        //get the real target from the proxy, if it exists
+        if (target.GetProgramVariable("target") != null)
+            target = (UdonBehaviour)target.GetProgramVariable("target");
+            
         slider = GetComponent<Slider>();
         //determine if the target variable is a float or an double
         if (target.GetProgramVariableType(targetVariable) == typeof(float))

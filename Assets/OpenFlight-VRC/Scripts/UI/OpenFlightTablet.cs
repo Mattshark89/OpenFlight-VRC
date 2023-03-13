@@ -21,7 +21,7 @@ public class OpenFlightTablet : UdonSharpBehaviour
 
     public Button[] tabs;
     void Start()
-    {
+    {        
         //get the local player
         localPlayer = Networking.LocalPlayer;
 

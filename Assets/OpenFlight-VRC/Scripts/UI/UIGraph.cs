@@ -21,6 +21,10 @@ public class UIGraph : UdonSharpBehaviour
 
     void Start()
     {
+        //get the real target from the proxy, if it exists
+        if (target.GetProgramVariable("target") != null)
+            target = (UdonBehaviour)target.GetProgramVariable("target");
+
         //the line renderer is a child of the UI object
         lineRenderer = GetComponentInChildren<LineRenderer>();
 
@@ -52,7 +56,6 @@ public class UIGraph : UdonSharpBehaviour
                 normalizationFactor = value;
             }
         }
-        Debug.Log("normalizationFactor: " + normalizationFactor);
 
         OnEnable();
     }

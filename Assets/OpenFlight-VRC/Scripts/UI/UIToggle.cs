@@ -13,6 +13,10 @@ public class UIToggle : UdonSharpBehaviour
     bool value; // The value of variable
     void Start()
     {
+        //get the real target from the proxy, if it exists
+        if (target.GetProgramVariable("target") != null)
+            target = (UdonBehaviour)target.GetProgramVariable("target");
+            
         toggle = GetComponent<Toggle>();
         value = (bool)target.GetProgramVariable(targetVariable);
     }

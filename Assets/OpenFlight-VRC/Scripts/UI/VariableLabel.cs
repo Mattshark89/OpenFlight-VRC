@@ -17,6 +17,10 @@ public class VariableLabel : UdonSharpBehaviour
 
     void Start()
     {
+        //get the real target from the proxy, if it exists
+        if (target.GetProgramVariable("target") != null)
+            target = (UdonBehaviour)target.GetProgramVariable("target");
+
         text = GetComponent<TextMeshProUGUI>();
         //determine if the target variable is a string
         if (target.GetProgramVariableType(targetVariable) == typeof(string))
