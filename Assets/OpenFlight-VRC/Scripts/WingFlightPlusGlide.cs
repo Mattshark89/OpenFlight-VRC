@@ -333,7 +333,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
 			// default setting
 			return sizeCurve.Evaluate(armspan) * ((int)flapStrengthBase + ((float)wingtipOffset * 8));
 		} else {
-			return sizeCurve.Evaluate(armspan) * (int)flapStrengthBase;
+			return sizeCurve.Evaluate(armspan) * (int)flapStrengthBase + 10;
 		}
     }
     
