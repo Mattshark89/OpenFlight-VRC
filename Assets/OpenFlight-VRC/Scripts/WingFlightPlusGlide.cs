@@ -329,7 +329,12 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     }
     
     private float flapStrength() {
-        return sizeCurve.Evaluate(armspan) * ((int)flapStrengthBase + (wingtipOffset * 8));
+		if ((bool)useAvatarModifiers) {
+			// default setting
+			return sizeCurve.Evaluate(armspan) * ((int)flapStrengthBase + ((float)wingtipOffset * 8));
+		} else {
+			return sizeCurve.Evaluate(armspan) * (int)flapStrengthBase;
+		}
     }
     
     private float flightGravity() {
