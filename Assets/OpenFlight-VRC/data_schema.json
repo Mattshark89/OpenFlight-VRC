@@ -1,59 +1,54 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "properties": {
-      "JSON Version": {
-        "type": "string"
-      },
-      "JSON Date": {
-        "type": "string",
-        "format": "date"
-      },
-      "Bases": {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "JSON Version": {
+      "type": "string"
+    },
+    "JSON Date": {
+      "type": "string",
+      "format": "date"
+    },
+    "Bases": {
+      "type": "object",
+      "additionalProperties": {
         "type": "object",
         "additionalProperties": {
           "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "properties": {
+          "properties": {
             "Name": {
-                "type": "string"
+              "type": "string"
             },
             "Creator": {
-                "type": "string"
+              "type": "string"
             },
             "Introducer": {
-                "type": "string"
+              "type": "string"
             },
             "Hash": {
-                "type": "string"
+              "type": "string"
             },
             "Weight": {
-                "type": "integer"
+              "type": "integer"
             },
             "WingtipOffset": {
-                "type": "number"
+              "type": "number"
             }
-            },
-            "required": [
+          },
+          "required": [
             "Name",
             "Creator",
             "Introducer",
             "Hash",
             "Weight",
             "WingtipOffset"
-            ],
-            "additionalProperties": false
-          },
-          "minProperties": 1
+          ],
+          "additionalProperties": false
         },
         "minProperties": 1
-      }
-    },
-    "required": [
-      "JSON Version",
-      "JSON Date",
-      "Bases"
-    ]
-  }
-  
+      },
+      "minProperties": 1
+    }
+  },
+  "required": ["JSON Version", "JSON Date", "Bases"]
+}
