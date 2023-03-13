@@ -26,7 +26,11 @@
               "type": "string"
             },
             "Hash": {
-              "type": "string"
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
             },
             "Weight": {
               "type": "integer"
