@@ -8,8 +8,8 @@ using VRC.Udon;
 public class WingFlightPlusGlide : UdonSharpBehaviour {
     [Header("Basic Settings")]
     // Both of these "base" values are by default affected by the avatar's wingspan. See sizeCurve.
-    [Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 170)")]
-    public int flapStrengthBase = 170;
+    [Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 150)")]
+    public int flapStrengthBase = 150;
     [Tooltip("Base gravity while flying (Default: 0.2)")]
     public float flightGravityBase = 0.2f;
     [Tooltip("Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident. (Default: false)")]
@@ -84,9 +84,9 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
 	[HideInInspector]
     public float armspan = 1f;
 	[HideInInspector]
-    public float wingspan = 1f;
+    public float wingspan = 1f; // Wingspan may be removed as its functionality has been replaced by the var 'armspan'
 	[HideInInspector]
-	public float wingtipOffset = 0;
+	public float wingtipOffset = 1.0f;
 	[HideInInspector]
 	public float weight = 1.0f;
     
@@ -307,7 +307,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         // `armspan` does not include the distance between shoulders
         armspan = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone),LocalPlayer.GetBonePosition(leftHandBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone),LocalPlayer.GetBonePosition(rightLowerArmBone)) + Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone),LocalPlayer.GetBonePosition(rightHandBone));
         if ((bool)useAvatarModifiers) {
-            wingspan = armspan + (armspan * (float)wingtipOffset);
+            // default setting
+            wingspan = armspan + (armspan * (float)wingtipOffset / 2);
         } else {
             wingspan = armspan;
         }
@@ -328,16 +329,18 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     }
     
     private float flapStrength() {
-        return sizeCurve.Evaluate(wingspan) * (int)flapStrengthBase;
+        return sizeCurve.Evaluate(armspan) * ((int)flapStrengthBase + (wingtipOffset * 8));
     }
     
     private float flightGravity() {
         if (useGravityCurve) {
             tmpFloat = gravityCurve.Evaluate(armspan) * armspan;
         } else {
+            // default setting
             tmpFloat = sizeCurve.Evaluate(armspan) * (float)flightGravityBase * armspan;
         }
         if ((bool)useAvatarModifiers) {
+            // default setting
             return tmpFloat * (float)weight;
         } else {
             return tmpFloat;
