@@ -184,15 +184,19 @@ public class AvatarDetection : UdonSharpBehaviour
                 var avi_varaint_keys = avi_base.Keys();
                 var variant = avi_base.GetValue(avi_varaint_keys[j]);
                 //Debug.Log(variant.GetValue("Hash").AsString());
-                string hash = variant.GetValue("Hash").AsString();
-                if (hash == in_hash.ToString())
+                var hashArray = variant.GetValue("Hash");
+                for (int k = 0; k < hashArray.Count(); k++)
                 {
-                    name = variant.GetValue("Name").AsString();
-                    creator = variant.GetValue("Creator").AsString();
-                    introducer = variant.GetValue("Introducer").AsString();
-                    weight = (float)variant.GetValue("Weight").AsNumber();
-                    WingtipOffset = (float)variant.GetValue("WingtipOffset").AsNumber();
-                    return true;
+                    string hash = hashArray.GetValue(k).AsString();
+                    if (hash == in_hash.ToString())
+                    {
+                        name = variant.GetValue("Name").AsString();
+                        creator = variant.GetValue("Creator").AsString();
+                        introducer = variant.GetValue("Introducer").AsString();
+                        weight = (float)variant.GetValue("Weight").AsNumber();
+                        WingtipOffset = (float)variant.GetValue("WingtipOffset").AsNumber();
+                        return true;
+                    }
                 }
             }
         }

@@ -11,12 +11,20 @@ public class AvatarListLoader : UdonSharpBehaviour
     public VRCUrl URL = new VRCUrl("https://mattshark89.github.io/OpenFlight-VRC/Assets/OpenFlight-VRC/data.json");
     public string Output = "";
     public TextAsset OfflineJSON;
+    public bool useOfflineJSON = false;
 
     //Event used to initiate a URL load
     public void LoadURL()
     {
         //reset the output
         Output = "";
+
+        if (useOfflineJSON)
+        {
+            Output = OfflineJSON.text;
+            Debug.Log("Using in-world JSON instead.");
+            return;
+        }
         //load the URL
         VRCStringDownloader.LoadUrl(URL, (VRC.Udon.Common.Interfaces.IUdonEventReceiver)this);
         Debug.Log("Loading URL...");
