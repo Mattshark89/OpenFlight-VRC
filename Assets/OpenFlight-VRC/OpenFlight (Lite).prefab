@@ -222,7 +222,7 @@ MonoBehaviour:
   flightGravityBase: 0.2
   requireJump: 0
   allowLoco: 0
-  useAvatarModifiers: 0
+  useAvatarModifiers: 1
   sizeCurve:
     serializedVersion: 2
     m_Curve:
@@ -257,7 +257,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   horizontalStrengthMod: 1.5
-  glideLooseness: 2
+  glideControl: 2
   useGravityCurve: 0
   gravityCurve:
     serializedVersion: 2
@@ -296,7 +296,7 @@ MonoBehaviour:
   bankingTurns: 0
   armspan: 1
   wingspan: 1
-  wingtipOffset: 1
+  wingtipOffset: 1.5
   weight: 1
 --- !u!114 &4658167408585168752
 MonoBehaviour:

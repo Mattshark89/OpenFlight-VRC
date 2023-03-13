@@ -16,17 +16,17 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     public bool requireJump;
     [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
     public bool allowLoco;
-    [Tooltip("Avatars using the avatar detection system may have wingtip, weight, etc. modifiers intended to personalize how they feel in the air. Set this value to true to use these modifiers or false if you want them disregarded for consistency. (Note: avatar size detection is not an Avatar Modifier; size-related calculations will always apply even if this setting is set to false.) (Default: false)")]
-    public bool useAvatarModifiers = false;
+    [Tooltip("Avatars using the avatar detection system may have wingtip, weight, etc. modifiers intended to personalize how they feel in the air. Set this value to true to use these modifiers or false if you want them disregarded for consistency. (Note: avatar size detection is not an Avatar Modifier; size-related calculations will always apply even if this setting is set to false.) (Default: true)")]
+    public bool useAvatarModifiers = true;
     
     [Header("Advanced Settings (Only for specialized use!)")]
     [Tooltip("How much Flap Strength and Flight Gravity are affected by an avatar's wingspan. Default values will make smaller avis feel lighter and larger avis heavier.")]
     public AnimationCurve sizeCurve = new AnimationCurve(new Keyframe(0.05f, 2), new Keyframe(1, 1), new Keyframe(20, 0.00195f));
     [Tooltip("Modifier for horizontal flap strength. Makes flapping forwards easier (Default: 1.5)")]
     public float horizontalStrengthMod = 1.5f;
-    [Tooltip("How loose you want your turns while gliding. Lower values mean tighter control/sharper turns. May be dynamically increased by Avatar Modifier: weight. (Default: 2)")]
-    [Range(0f, 8f)]
-    public float glideLooseness = 2;
+    [Tooltip("How tight you want your turns while gliding. May be dynamically decreased by Avatar Modifier: weight. (Default: 2)")]
+    [Range(1f, 4f)]
+    public float glideControl = 2; // Do not reduce this below 2; it will break under some weight values if you do
     [Tooltip("If enabled, flight gravity will use Gravity Curve's curve instead of Size Curve's curve multiplied by Flight Gravity Base. (Default: false)")]
     public bool useGravityCurve;
     [Tooltip("Similar to Size Curve, but instead of modifying Flap Strength, it only affects Gravity. This value is ignored (Size Curve will be used instead) unless Use Gravity Curve is enabled.")]
@@ -50,6 +50,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private bool isFlapping = false; // Doing the arm motion
     private bool isFlying = false; // Currently in the air after/during a flap
     private bool isGliding = false; // Has arms out while flying
+	private int cannotFlyTick = 0; // If >0, disables flight then decreases itself by one
     private float tmpFloat;
 
     // Variables related to Velocity
@@ -74,20 +75,23 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private float oldRunSpeed;
     private float oldStrafeSpeed;
 
-    // Player-specific properties
+    // Player/Avatar-specific properties
     private HumanBodyBones rightUpperArmBone; // Bones aren't given a value until the player is valid
     private HumanBodyBones leftUpperArmBone;
     private HumanBodyBones rightLowerArmBone;
     private HumanBodyBones leftLowerArmBone;
     private HumanBodyBones rightHandBone;
     private HumanBodyBones leftHandBone;
+	private int simpleAviHash = 0; // These two vars are only used to check if an avi has been recently swapped/scaled
+	private int simpleAviHash_last = 0;
 	[HideInInspector]
     public float armspan = 1f;
 	[HideInInspector]
     public float wingspan = 1f; // Wingspan may be removed as its functionality has been replaced by the var 'armspan'
-	[HideInInspector]
+	[Tooltip("Default avatar wingtipOffset. (Default: 1.5)")]
 	public float wingtipOffset = 1.5f;
-	[HideInInspector]
+	[Tooltip("Default avatar weight. (Default: 1)")]
+	[Range(0f, 2f)]
 	public float weight = 1.0f;
     
     public void Start() {
@@ -243,8 +247,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                     }
                     // X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
                     targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(wingDirection) * newVelocity.magnitude), newVelocity.magnitude);
-                    // tmpFloat == glideLooseness (Except if weight > 1, glideLooseness temporarily increases)
-                    tmpFloat = ((bool)useAvatarModifiers && (float)weight > 1) ? glideLooseness + (((float)weight - 1) * 10) : glideLooseness;
+                    // tmpFloat == glideControl (Except if weight > 1, glideControl temporarily decreases)
+                    tmpFloat = ((bool)useAvatarModifiers && (float)weight > 1) ? glideControl - (((float)weight - 1) * 0.6f) : glideControl;
                     finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, dt * tmpFloat);
                     setFinalVelocity = true;
                     // Legacy code: the amount of velocity added by gravity every frame = (new Vector3(0,LocalPlayer.GetGravityStrength(), 0) * dt * 10)
@@ -253,6 +257,13 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         }
         RHPosLast = RHPos;
         LHPosLast = LHPos;
+
+		// Bug check: if avatar has been swapped, sometimes the player will be lauched super high vertically
+		simpleAviHash = (int)Mathf.Floor(Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) * 10000);
+		if (simpleAviHash != simpleAviHash_last) {cannotFlyTick = 3;}
+		if (cannotFlyTick > 0) {setFinalVelocity = false; cannotFlyTick--;}
+		simpleAviHash_last = simpleAviHash;
+
         if (setFinalVelocity) {LocalPlayer.SetVelocity(finalVelocity);}
         if (spinningRightRound) {
             if ((bool)useAvatarModifiers) {
