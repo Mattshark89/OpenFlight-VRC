@@ -69,6 +69,9 @@ public class AvatarDetection : UdonSharpBehaviour
         //calculate the avatar scale using the distance from hips to spine
         d_spinetochest = Vector3.Distance(chest, spine);
 
+        WingFlightPlusGlide.wingtipOffset = WingtipOffset;
+        WingFlightPlusGlide.weight = weight;
+
         //if the player has changed avatars, do the hashing and determine if the avatar is allowed to fly
         if (Mathf.Abs((float)d_spinetochest - (float)previous_d_spinetochest) > 0.0001f)
         {
@@ -117,8 +120,6 @@ public class AvatarDetection : UdonSharpBehaviour
             if (allowedToFly)
             {
                 OpenFlight.CanFly();
-                WingFlightPlusGlide.wingtipOffset = WingtipOffset;
-                WingFlightPlusGlide.weight = weight;
             }
             else
             {
