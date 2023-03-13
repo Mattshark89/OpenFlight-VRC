@@ -86,7 +86,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
 	[HideInInspector]
     public float wingspan = 1f; // Wingspan may be removed as its functionality has been replaced by the var 'armspan'
 	[HideInInspector]
-	public float wingtipOffset = 1.0f;
+	public float wingtipOffset = 1.5f;
 	[HideInInspector]
 	public float weight = 1.0f;
     
