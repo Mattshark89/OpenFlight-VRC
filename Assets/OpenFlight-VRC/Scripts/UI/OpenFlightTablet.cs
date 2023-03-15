@@ -51,6 +51,7 @@ public class OpenFlightTablet : UdonSharpBehaviour
     }
 
     //Helper function to get the total distance of a vector array
+    //this adds up all of the distances between each vector in the array in order, then returns the total distance
     public float totalVectorDistance(Vector3[] vectors)
     {
         float totalDistance = 0;
@@ -83,16 +84,15 @@ public class OpenFlightTablet : UdonSharpBehaviour
         }
     }
 
+    //these are dummy events for the buttons to call, since Udon doesn't support sending parameters to events
     public void SetActiveTabMain()
     {
         SetActiveTab(0);
     }
-
     public void SetActiveTabSettings()
     {
         SetActiveTab(1);
     }
-
     public void SetActiveTabDebug()
     {
         SetActiveTab(2);

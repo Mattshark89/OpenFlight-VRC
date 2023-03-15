@@ -12,31 +12,48 @@ using Koyashiro.UdonJson;
 public class AvatarDetection : UdonSharpBehaviour
 {
     VRCPlayerApi localPlayer = null;
-    public string debugInfo = "";
-    int scalingFactor = 1000;
-    //this is used as the base for the avatar scale compenstation
-    double d_spinetochest = 0;
-    //used to see if the player has changed avatars
-    double previous_d_spinetochest = 0;
+    public string debugInfo = ""; //Contains all the debug info about avatar detection
+    /*
+    Spine to Chest: XXX
+    Head to Neck: XXX
+    Chest to Neck: XXX
+    Left Shoulder to Left Upper Arm: XXX
+    Left Upper Arm to Left Lower Arm: XXX
+    Left Lower Arm to Left Hand: XXX
+    Combined Bone Info: XXX
+    Hash: XXX
+    Allowed to Fly: XXX
+    Detected Avatar Info:
+    Name: XXX
+    Creator: XXX
+    Introducer: XXX
+    Weight: XXX
+    Wingtip Offset: XXX
+    */
+
+    int scalingFactor = 1000; //this is used to essentially round and make the bone distances integers
+    double d_spinetochest = 0; //used to calculate the avatar scale
+    double previous_d_spinetochest = 0; //used to see if the avatar has changed
+    
     //external JSON list stuff
-    public AvatarListLoader JSONLoader;
-    public OpenFlight OpenFlight;
+    public AvatarListLoader JSONLoader; //this is the script that loads the JSON list
+    public OpenFlight OpenFlight; 
     public WingFlightPlusGlide WingFlightPlusGlide;
-    string jsonString = "";
-    UdonJsonValue json;
-    public bool allowedToFly = false;
-    public bool skipLoadingAvatar = true;
+    string jsonString = ""; //this is the JSON list in string form
+    UdonJsonValue json; //this is the JSON list in a serialized form, allowing for JSON commands to be used on it
+    public bool allowedToFly = false; //this is used to tell openflight if the avatar is allowed to fly
+    public bool skipLoadingAvatar = true; //this is used to skip the loading avatar, as it is not a real avatar
 
     //gizmo related stuff
     public bool showWingTipGizmo = false;
-    public GameObject wingtipGizmo;
+    public GameObject wingtipGizmo; //this shows the wingtip offset as a sphere in game. Only works in VR due to implementation
 
     //information about the avatar that has been detected
     public float weight = 0;
     public float WingtipOffset = 0;
-    public string name = "";
-    public string creator = "";
-    public string introducer = "";
+    public string name = ""; //this is the name of the avatar base
+    public string creator = ""; //this is the person who created the avatar base
+    public string introducer = ""; //this is the person who introduced the avatar to the JSON list itself
 
     //information about the json itself
     public string jsonVersion = "";
@@ -48,8 +65,7 @@ public class AvatarDetection : UdonSharpBehaviour
         localPlayer = Networking.LocalPlayer;
 
         debugInfo = "Loading JSON list...";
-        //get the JSON list
-        JSONLoader.LoadURL();
+        JSONLoader.LoadURL(); //tell the JSON loader to try to load the JSON list from the github
     }
 
     void Update()
@@ -73,6 +89,7 @@ public class AvatarDetection : UdonSharpBehaviour
         WingFlightPlusGlide.weight = weight;
 
         //if the player has changed avatars, do the hashing and determine if the avatar is allowed to fly
+        //avatar change is doen by checking if the distance from spine to chest has changed by a significant amount
         if (Mathf.Abs((float)d_spinetochest - (float)previous_d_spinetochest) > 0.0001f)
         {
             previous_d_spinetochest = d_spinetochest;
@@ -96,7 +113,8 @@ public class AvatarDetection : UdonSharpBehaviour
                 getBoneDistance(LeftUpperArm, LeftLowerArm);
             int d_leftlowertolefthand = getBoneDistance(LeftLowerArm, LeftHand);
             
-            //this is a combined string of all the bone info, this is used for the avatar detection
+            //this is a combined string of all the bone info
+            //this string is then hashed to get a unique hash for each avatar
             string boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
         
             int hash = boneInfo.GetHashCode();

@@ -4,6 +4,12 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 
+/*
+This entire script is a mess, but this is basically here so all of the scripts that are on the tablet can refer to this instead of the actual scripts.
+this allows the tablet to be placed without also needing to place the standaolne script together.
+feel free to add events here if you need to call them from the tablet.
+*/
+
 public class ProxyUdonScript : UdonSharpBehaviour
 {
     public UdonBehaviour target;
