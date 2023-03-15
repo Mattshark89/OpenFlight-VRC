@@ -304,7 +304,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         }
     }
 
-    // Effectually disables all flight-related mechanics
+    // Set necessary values for beginning flight
     private void TakeOff() {
         if (!isFlying) {
             isFlying = true;
@@ -317,7 +317,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         }
     }
 
-    // Effectually disabled all flight-related variables
+    // Effectually disables all flight-related variables
     private void Land() {
         isFlying = false;
         isFlapping = false;
