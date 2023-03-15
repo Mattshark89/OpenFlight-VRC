@@ -18,6 +18,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     public bool allowLoco;
     [Tooltip("Avatars using the avatar detection system may have wingtip, weight, etc. modifiers intended to personalize how they feel in the air. Set this value to true to use these modifiers or false if you want them disregarded for consistency. (Note: avatar size detection is not an Avatar Modifier; size-related calculations will always apply even if this setting is set to false.) (Default: true)")]
     public bool useAvatarModifiers = true;
+	[Tooltip("Avatars can glide directly from a fall without having to flap first. This behavior is more intuitive for gliding off cliffs, but may cause players to trigger gliding on accident more often (for instance, sitting players who are using armrests naturally hold their arms out forward). (Default: false)")]
+	public bool fallToGlide = false;
 
     [Header("Advanced Settings (Only for specialized use!)")]
     [Tooltip("How much Flap Strength and Flight Gravity are affected by an avatar's wingspan. Default values will make smaller avis feel lighter and larger avis heavier.")]
@@ -52,6 +54,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private bool isFlying = false; // Currently in the air after/during a flap
     private bool isGliding = false; // Has arms out while flying
 	private int cannotFlyTick = 0; // If >0, disables flight then decreases itself by one
+	private int fallingTick = 0; // Increased by one every tick one's y velocity > 0
     private float tmpFloat;
 
     // Variables related to Velocity
@@ -146,6 +149,11 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         } else {
             downThrust = 0;
         }
+		// Check if player is falling
+		if ((!LocalPlayer.IsPlayerGrounded()) && LocalPlayer.GetVelocity().y > 0) {
+			fallingTick++;
+		} else {fallingTick = 0;}
+		// Check if hands are held out
         if (Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(rightHandBone).x, LocalPlayer.GetBonePosition(rightHandBone).z)) > armspan / 3.3f && Vector2.Distance(new Vector2(LocalPlayer.GetBonePosition(leftUpperArmBone).x, LocalPlayer.GetBonePosition(leftUpperArmBone).z), new Vector2(LocalPlayer.GetBonePosition(leftHandBone).x, LocalPlayer.GetBonePosition(leftHandBone).z)) > armspan / 3.3f) {
             handsOut = true;
         } else {handsOut = false;}
@@ -153,7 +161,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         if ((RHPos.y > LocalPlayer.GetBonePosition(rightUpperArmBone).y + (armspan * 0.4f)) && (LHPos.y > LocalPlayer.GetBonePosition(leftUpperArmBone).y + (armspan * 0.4f))) {
             handsDown = true;
         } else {handsDown = false;}
-        
+
         if (!isFlapping) {
             // Check for the beginning of a flap
             if ((isFlying ? true : handsOut)
@@ -191,6 +199,9 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                 isFlapping = false;
             }
         }
+
+		// See fallToGlide tooltip
+		if ((bool)fallToGlide && fallingTick >= 10 && handsOut) {TakeOff();}
 
         // -- STATE: Flying
         // (Flying starts when a player first flaps and ends when they become grounded)
