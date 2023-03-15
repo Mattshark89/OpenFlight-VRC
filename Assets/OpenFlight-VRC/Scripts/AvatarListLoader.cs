@@ -31,7 +31,7 @@ public class AvatarListLoader : UdonSharpBehaviour
     }
 
     //if the URL successfully loads
-    void OnStringLoadSuccess(IVRCStringDownload data)
+    public override void OnStringLoadSuccess(IVRCStringDownload data)
     {
         string result = data.Result;
         Output = result;
@@ -39,7 +39,7 @@ public class AvatarListLoader : UdonSharpBehaviour
     }
 
     //if the URL fails to load, fallback to the in-world stored JSON instead
-    void OnStringLoadError(IVRCStringDownload data)
+    public override void OnStringLoadError(IVRCStringDownload data)
     {
         Output = OfflineJSON.text;
         Debug.Log("Failed to load URL! Using in-world JSON instead.");
