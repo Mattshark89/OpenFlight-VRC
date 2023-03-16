@@ -23,12 +23,13 @@ public class VariableLabel : UdonSharpBehaviour
 
         text = GetComponent<TextMeshProUGUI>();
         //determine if the target variable is a string
-        if (target.GetProgramVariableType(targetVariable) == typeof(string))
+        var targetType = target.GetProgramVariableType(targetVariable);
+        if (targetType == typeof(string))
         {
             isStringType = true;
         }
         //determine if the target variable is a bool
-        if (target.GetProgramVariableType(targetVariable) == typeof(bool))
+        if (targetType == typeof(bool))
         {
             isBoolType = true;
         }

@@ -23,16 +23,17 @@ public class UISliderUtility : UdonSharpBehaviour
             
         slider = GetComponent<Slider>();
         //determine if the target variable is a float or an double
-        if (target.GetProgramVariableType(targetVariable) == typeof(float))
+        var targetType = target.GetProgramVariableType(targetVariable);
+        if (targetType == typeof(float))
         {
             TargetIsFloat = true;
         }
-        else if (target.GetProgramVariableType(targetVariable) == typeof(int))
+        else if (targetType == typeof(int))
         {
             TargetIsFloat = false;
             TargetIsInt = true;
         }
-        else if (target.GetProgramVariableType(targetVariable) == typeof(double))
+        else if (targetType == typeof(double))
         {
             TargetIsFloat = false;
         }

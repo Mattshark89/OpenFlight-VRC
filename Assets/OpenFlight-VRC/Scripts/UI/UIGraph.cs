@@ -10,6 +10,7 @@ public class UIGraph : UdonSharpBehaviour
 {
     AnimationCurve curve; // The curve to graph
     LineRenderer lineRenderer; // The line renderer component
+    RectTransform lineRendererRectTransform; // The transform of the line renderer
     public RectTransform evalPointTransform; // The transform of the evaluation point graphic
     public UdonBehaviour target; // The target UdonBehaviour
     public string targetVariableCurve; // The target variable for the curve
@@ -27,6 +28,8 @@ public class UIGraph : UdonSharpBehaviour
 
         //the line renderer is a child of the UI object
         lineRenderer = GetComponentInChildren<LineRenderer>();
+
+        lineRendererRectTransform = lineRenderer.GetComponent<RectTransform>();
 
         //set the line renderer to the correct number of points
         lineRenderer.positionCount = resolution + 1;
@@ -69,9 +72,8 @@ public class UIGraph : UdonSharpBehaviour
             return;
         }
         
-        var rectTransform = lineRenderer.GetComponent<RectTransform>();
-        float elementWidth = rectTransform.rect.width;
-        float elementHeight = rectTransform.rect.height / normalizationFactor;
+        float elementWidth = lineRendererRectTransform.rect.width;
+        float elementHeight = lineRendererRectTransform.rect.height / normalizationFactor;
         //print each point in the curve
         //we need to use curve.Evaluate() to get the value at a specific time since curve.keys[] is not exposed
         for (int i = 0; i < resolution + 1; i++)
@@ -87,6 +89,6 @@ public class UIGraph : UdonSharpBehaviour
         //place the evaluation point at the correct position
         float evalTime = (float)target.GetProgramVariable(targetVariableEval);
 
-        evalPointTransform.anchoredPosition = new Vector2((evalTime / (totalTime + 1)) * lineRenderer.GetComponent<RectTransform>().rect.width, curve.Evaluate(evalTime) * lineRenderer.GetComponent<RectTransform>().rect.height / normalizationFactor);
+        evalPointTransform.anchoredPosition = new Vector2((evalTime / (totalTime + 1)) * lineRendererRectTransform.rect.width, curve.Evaluate(evalTime) * lineRendererRectTransform.rect.height / normalizationFactor);
     }
 }
