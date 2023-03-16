@@ -265,14 +265,4 @@ public class AvatarDetection : UdonSharpBehaviour
         wingtipGizmo.transform.position = WingTipPosition;
         wingtipGizmo.transform.RotateAround(rightHandPosition, rightHandRotation * Vector3.up, 70);
     }
-
-    public void showGizmo()
-    {
-        wingtipGizmo.SetActive(true);
-    }
-
-    public void hideGizmo()
-    {
-        wingtipGizmo.SetActive(false);
-    }
 }

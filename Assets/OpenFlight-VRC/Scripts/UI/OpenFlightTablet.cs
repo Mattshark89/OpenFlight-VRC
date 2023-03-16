@@ -11,6 +11,8 @@ public class OpenFlightTablet : UdonSharpBehaviour
     VRCPlayerApi localPlayer = null;
     public string PanelVersion = "0.0.1";
     public float scalingOffset = 0.1f;
+    public int fadeDistance = 10;
+    public GameObject[] objectsToHideOnFade;
     public OpenFlight OpenFlight;
     public AvatarDetection AvatarDetection;
 
@@ -31,23 +33,40 @@ public class OpenFlightTablet : UdonSharpBehaviour
 
     void Update()
     {
-        //change the scale of the gameobject based on the players scale
-        //add up all of the bone distances from the foot to the head
-        Vector3 footR = localPlayer.GetBonePosition(HumanBodyBones.RightFoot);
-        Vector3 LowerLegR = localPlayer.GetBonePosition(HumanBodyBones.RightLowerLeg);
-        Vector3 UpperLegR = localPlayer.GetBonePosition(HumanBodyBones.RightUpperLeg);
-        Vector3 Hips = localPlayer.GetBonePosition(HumanBodyBones.Hips);
-        Vector3 spine = localPlayer.GetBonePosition(HumanBodyBones.Spine);
-        Vector3 chest = localPlayer.GetBonePosition(HumanBodyBones.Chest);
-        Vector3 Neck = localPlayer.GetBonePosition(HumanBodyBones.Neck);
-        Vector3 Head = localPlayer.GetBonePosition(HumanBodyBones.Head);
-        float PlayerScale = totalVectorDistance(new Vector3[] { footR, LowerLegR, UpperLegR, Hips, spine, chest, Neck, Head });
+        //check if the player is within the fade distance
+        if (Vector3.Distance(localPlayer.GetPosition(), transform.position) > fadeDistance)
+        {
+            //disable all the objects that should be hidden
+            foreach (GameObject obj in objectsToHideOnFade)
+            {
+                obj.SetActive(false);
+            }
+        }
+        else
+        {
+            //enable all the objects that should be hidden
+            foreach (GameObject obj in objectsToHideOnFade)
+            {
+                obj.SetActive(true);
+            }
+            //change the scale of the gameobject based on the players scale
+            //add up all of the bone distances from the foot to the head
+            Vector3 footR = localPlayer.GetBonePosition(HumanBodyBones.RightFoot);
+            Vector3 LowerLegR = localPlayer.GetBonePosition(HumanBodyBones.RightLowerLeg);
+            Vector3 UpperLegR = localPlayer.GetBonePosition(HumanBodyBones.RightUpperLeg);
+            Vector3 Hips = localPlayer.GetBonePosition(HumanBodyBones.Hips);
+            Vector3 spine = localPlayer.GetBonePosition(HumanBodyBones.Spine);
+            Vector3 chest = localPlayer.GetBonePosition(HumanBodyBones.Chest);
+            Vector3 Neck = localPlayer.GetBonePosition(HumanBodyBones.Neck);
+            Vector3 Head = localPlayer.GetBonePosition(HumanBodyBones.Head);
+            float PlayerScale = totalVectorDistance(new Vector3[] { footR, LowerLegR, UpperLegR, Hips, spine, chest, Neck, Head });
 
-        //set this gameobjects scale to the players scale
-        transform.localScale = new Vector3((float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset);
+            //set this gameobjects scale to the players scale
+            transform.localScale = new Vector3((float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset);
 
-        //set the version info text
-        VersionInfo.text = "Open-Flight Ver " + OpenFlight.OpenFlightVersion + "\nPanel Ver " + PanelVersion + "\nJSON Ver " + AvatarDetection.jsonVersion + "\nJSON Date " + AvatarDetection.jsonDate;
+            //set the version info text
+            VersionInfo.text = "Open-Flight Ver " + OpenFlight.OpenFlightVersion + "\nPanel Ver " + PanelVersion + "\nJSON Ver " + AvatarDetection.jsonVersion + "\nJSON Date " + AvatarDetection.jsonDate;
+        }
     }
 
     //Helper function to get the total distance of a vector array
