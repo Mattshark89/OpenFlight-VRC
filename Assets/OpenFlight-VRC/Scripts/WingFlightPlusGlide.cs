@@ -259,7 +259,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                     tmpFloat = (useAvatarModifiers && weight > 1) ? glideControl - ((weight - 1) * 0.6f) : glideControl;
                     finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, dt * tmpFloat);
 					// Apply Air Friction
-					finalVelocity = finalVelocity * (1 - (airFriction * dt))
+					finalVelocity = finalVelocity * (1 - (airFriction * dt));
                     setFinalVelocity = true;
                 } else {isGliding = false; rotSpeedGoal = 0;}
             }
