@@ -8068,8 +8068,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6124323177475442821}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.924, y: 0.566, z: 2.784}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6124323177247156953}
@@ -8160,7 +8160,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177475442822}
-  PanelVersion: 0.3.1
+  PanelVersion: 0.4.0
   scalingOffset: 0.6183768
   fadeDistance: 10
   objectsToHideOnFade:
