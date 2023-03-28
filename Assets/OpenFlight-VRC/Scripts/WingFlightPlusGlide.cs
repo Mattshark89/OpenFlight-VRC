@@ -18,6 +18,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     public bool allowLoco;
     [Tooltip("Avatars using the avatar detection system may have wingtip, weight, etc. modifiers intended to personalize how they feel in the air. Set this value to true to use these modifiers or false if you want them disregarded for consistency. (Note: avatar size detection is not an Avatar Modifier; size-related calculations will always apply even if this setting is set to false.) (Default: true)")]
     public bool useAvatarModifiers = true;
+	[Tooltip("Allow gliding. (Default: true)")]
+	public bool canGlide = true;
 	[Tooltip("Avatars can glide directly from a fall without having to flap first. This behavior is more intuitive for gliding off cliffs, but may cause players to trigger gliding on accident more often when they just want to fall. (Default: false)")]
 	public bool fallToGlide = false;
 
@@ -218,7 +220,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         }
 
 		// See fallToGlide tooltip
-		if (fallToGlide && fallingTick >= 10 && handsOut) {TakeOff();}
+		if (fallToGlide && fallingTick >= 10 && handsOut && canGlide) {TakeOff();}
 
         // -- STATE: Flying
         // (Flying starts when a player first flaps and ends when they become grounded)
@@ -232,7 +234,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                 }
                 LHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
                 RHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
-                if ((!isFlapping) && handsOut) {
+                if ((!isFlapping) && handsOut && canGlide) {
                     // Gliding, banking, and steering logic
                     isGliding = true;
                     newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
