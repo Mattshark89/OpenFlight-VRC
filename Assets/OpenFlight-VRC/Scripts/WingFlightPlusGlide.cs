@@ -18,7 +18,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     public bool allowLoco;
     [Tooltip("Avatars using the avatar detection system may have wingtip, weight, etc. modifiers intended to personalize how they feel in the air. Set this value to true to use these modifiers or false if you want them disregarded for consistency. (Note: avatar size detection is not an Avatar Modifier; size-related calculations will always apply even if this setting is set to false.) (Default: true)")]
     public bool useAvatarModifiers = true;
-	[Tooltip("Avatars can glide directly from a fall without having to flap first. This behavior is more intuitive for gliding off cliffs, but may cause players to trigger gliding on accident more often (for instance, sitting players who are using armrests naturally hold their arms out forward). (Default: false)")]
+	[Tooltip("Avatars can glide directly from a fall without having to flap first. This behavior is more intuitive for gliding off cliffs, but may cause players to trigger gliding on accident more often when they just want to fall. (Default: false)")]
 	public bool fallToGlide = false;
 
     [Header("Advanced Settings (Only for specialized use!)")]
@@ -29,6 +29,9 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     [Tooltip("How tight you want your turns while gliding. May be dynamically decreased by Avatar Modifier: weight. (Default: 2)")]
     [Range(1f, 4f)]
     public float glideControl = 2; // Do not reduce this below 1; it will break under some weight values if you do
+	[Tooltip("Slows gliding down over time. (Default: 0.02)")]
+	[Range(0f, 0.1f)]
+	public float airFriction = 0.02f;
     [Tooltip("If enabled, flight gravity will use Gravity Curve's curve instead of Size Curve's curve multiplied by Flight Gravity Base. (Default: false)")]
     public bool useGravityCurve;
     [Tooltip("Similar to Size Curve, but instead of modifying Flap Strength, it only affects Gravity. This value is ignored (Size Curve will be used instead) unless Use Gravity Curve is enabled.")]
@@ -253,6 +256,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                     // tmpFloat == glideControl (Except if weight > 1, glideControl temporarily decreases)
                     tmpFloat = (useAvatarModifiers && weight > 1) ? glideControl - ((weight - 1) * 0.6f) : glideControl;
                     finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, dt * tmpFloat);
+					// Apply Air Friction
+					finalVelocity = finalVelocity * (1 - (airFriction * dt))
                     setFinalVelocity = true;
                 } else {isGliding = false; rotSpeedGoal = 0;}
             }
@@ -260,7 +265,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         RHPosLast = RHPos;
         LHPosLast = LHPos;
 
-		// Bug check: if avatar has been swapped, sometimes the player will be lauched super high vertically
+		// Bug check: if avatar has been swapped, sometimes the player will be launched straight up
 		simpleAviHash = (int)Mathf.Floor(Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) * 10000);
 		if (simpleAviHash != simpleAviHash_last) {cannotFlyTick = 3;}
 		if (cannotFlyTick > 0) {setFinalVelocity = false; cannotFlyTick--;}
