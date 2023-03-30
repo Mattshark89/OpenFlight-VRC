@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 4190905665779482798}
   - component: {fileID: 4190905665779482797}
   m_Layer: 0
-  m_Name: OpenFlight 1
+  m_Name: OpenFlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -406,6 +406,7 @@ MonoBehaviour:
   wingspan: 1
   wingtipOffset: 0
   weight: 1
+  originHolder: {fileID: 4190905667190568864}
 --- !u!114 &4190905666689760636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -523,7 +524,7 @@ GameObject:
   - component: {fileID: 4190905667190568866}
   - component: {fileID: 4190905667190568867}
   m_Layer: 0
-  m_Name: Safe Respawn
+  m_Name: Safe Respawn [LoadBearing]
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
