@@ -18,17 +18,19 @@ To fine-tune the flight settings, select the WingedFlight GameObject inside of t
 
 ## Roadmap to V1.0.0 release
 
-- Desktop support
 - ~~Avatar detection system to automatically grant flight to certain avatar bases (for example, winged flight to avali)~~ Implemented as of [ae1c1f0](https://github.com/Mattshark89/OpenFlight-VRC/commit/ae1c1f0075f3a3108b3798301d78939fd8cfe216)
 - Equippable props (such as mechanical wings) that permit flying for everyone
 
 ## Plans for the future
 
 In no particular order:
+- Desktop support
 - In-game "How to fly" reference image
-- Debugging tool/sliders to modify flight settings in-world (for creators)
+- Rework glide detection to be more forgiving while banking
+- Landing during a glide causes the player to slide to a stop
 - Additional flight systems
   - Winged (current system): Flap arms to fly, hold arms out to glide
   - Engine: Arms out to sides to propel forward with greater control, arms down in an A-Pose to stay stationary/fly slowly (iron-man style)
   - Creative (Desktop users): Minecraft-inspired Creative mode flight
 - Wing trails (while gliding)
+- Setup/Settings guide, basic API for hooking in other plugins
