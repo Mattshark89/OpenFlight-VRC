@@ -19,7 +19,6 @@ To fine-tune the flight settings, select the WingedFlight GameObject inside of t
 ## Roadmap to V1.0.0 release
 
 - ~~Avatar detection system to automatically grant flight to certain avatar bases (for example, winged flight to avali)~~ Implemented as of [ae1c1f0](https://github.com/Mattshark89/OpenFlight-VRC/commit/ae1c1f0075f3a3108b3798301d78939fd8cfe216)
-- Equippable props (such as mechanical wings) that permit flying for everyone
 
 ## Plans for the future
 
@@ -34,3 +33,4 @@ In no particular order:
   - Creative (Desktop users): Minecraft-inspired Creative mode flight
 - Wing trails (while gliding)
 - Setup/Settings guide, basic API for hooking in other plugins
+- Equippable props (such as mechanical wings) for players that manually enable flight
