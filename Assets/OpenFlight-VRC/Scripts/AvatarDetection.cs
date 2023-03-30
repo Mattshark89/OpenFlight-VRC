@@ -223,7 +223,7 @@ public class AvatarDetection : UdonSharpBehaviour
         name = "Unknown";
         creator = "Unknown";
         introducer = "Unknown";
-        weight = 0;
+        weight = 1;
         WingtipOffset = 0;
         return false;
     }
@@ -264,5 +264,13 @@ public class AvatarDetection : UdonSharpBehaviour
 
         wingtipGizmo.transform.position = WingTipPosition;
         wingtipGizmo.transform.RotateAround(rightHandPosition, rightHandRotation * Vector3.up, 70);
+    }
+
+    //this can be used for other scripts to check if the avatar is allowed to fly again
+    public void ReevaluateFlight()
+    {
+        d_spinetochest = 0;
+        previous_d_spinetochest = 1000f;
+        //Debug.Log("Reevaluating flight");
     }
 }

@@ -15,6 +15,11 @@ public class ProxyUdonScript : UdonSharpBehaviour
     public UdonBehaviour target;
     public GameObject targetGameObject;
 
+    public void Start()
+    {
+        //try to initialize defaults
+        InitializeDefaults();
+    }
     public void FlightOn()
     {
         target.SendCustomEvent("FlightOn");
@@ -55,5 +60,15 @@ public class ProxyUdonScript : UdonSharpBehaviour
     {
         if (targetGameObject != null)
             targetGameObject.SetActive(true);
+    }
+
+    public void RestoreDefaults()
+    {
+        target.SendCustomEvent("RestoreDefaults");
+    }
+
+    public void InitializeDefaults()
+    {
+        target.SendCustomEvent("InitializeDefaults");
     }
 }

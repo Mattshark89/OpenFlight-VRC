@@ -10,38 +10,53 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     // Both of these "base" values are by default affected by the avatar's wingspan. See sizeCurve.
     [Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 150)")]
     public int flapStrengthBase = 150;
+    int flapStrengthBase_DEFAULT = 0;
     [Tooltip("Base gravity while flying (Default: 0.2)")]
     public float flightGravityBase = 0.2f;
+    float flightGravityBase_DEFAULT = 0;
     [Tooltip("Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident. (Default: false)")]
     public bool requireJump;
+    bool requireJump_DEFAULT = false;
     [Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
     public bool allowLoco;
+    bool allowLoco_DEFAULT = false;
     [Tooltip("Avatars using the avatar detection system may have wingtip, weight, etc. modifiers intended to personalize how they feel in the air. Set this value to true to use these modifiers or false if you want them disregarded for consistency. (Note: avatar size detection is not an Avatar Modifier; size-related calculations will always apply even if this setting is set to false.) (Default: true)")]
     public bool useAvatarModifiers = true;
+    bool useAvatarModifiers_DEFAULT = false;
 	[Tooltip("Allow gliding. (Default: true)")]
 	public bool canGlide = true;
+    bool canGlide_DEFAULT = false;
 	[Tooltip("Avatars can glide directly from a fall without having to flap first. This behavior is more intuitive for gliding off cliffs, but may cause players to trigger gliding on accident more often when they just want to fall. (Default: false)")]
 	public bool fallToGlide = false;
+    bool fallToGlide_DEFAULT = false;
 
     [Header("Advanced Settings (Only for specialized use!)")]
     [Tooltip("How much Flap Strength and Flight Gravity are affected by an avatar's wingspan. Default values will make smaller avis feel lighter and larger avis heavier.")]
     public AnimationCurve sizeCurve = new AnimationCurve(new Keyframe(0.05f, 2), new Keyframe(1, 1), new Keyframe(20, 0.00195f));
     [Tooltip("Modifier for horizontal flap strength. Makes flapping forwards easier (Default: 1.5)")]
     public float horizontalStrengthMod = 1.5f;
+    float horizontalStrengthMod_DEFAULT = 0;
     [Tooltip("How tight you want your turns while gliding. May be dynamically decreased by Avatar Modifier: weight. (Default: 2)")]
     [Range(1f, 4f)]
     public float glideControl = 2; // Do not reduce this below 1; it will break under some weight values if you do
+    float glideControl_DEFAULT = 0;
+
 	[Tooltip("Slows gliding down over time. (Default: 0.02)")]
 	[Range(0f, 0.1f)]
 	public float airFriction = 0.02f;
+    float airFriction_DEFAULT = 0;
+
     [Tooltip("If enabled, flight gravity will use Gravity Curve's curve instead of Size Curve's curve multiplied by Flight Gravity Base. (Default: false)")]
     public bool useGravityCurve;
+    bool useGravityCurve_DEFAULT = false;
+
     [Tooltip("Similar to Size Curve, but instead of modifying Flap Strength, it only affects Gravity. This value is ignored (Size Curve will be used instead) unless Use Gravity Curve is enabled.")]
     public AnimationCurve gravityCurve = new AnimationCurve(new Keyframe(0.05f, 0.4f), new Keyframe(1, 0.2f), new Keyframe(20, 0.00039f));
     [Tooltip("If a GameObject with a Text component is attached here, debug some basic info into it. (Default: unset)")]
     public Text debugOutput;
     [Tooltip("[BETA FEATURE] Banking to the left or right will force the player to rotate. Currently unoptimized and choppy! (Default: false)")]
     public bool bankingTurns = false;
+    bool bankingTurns_DEFAULT = false;
 
     // Essential Variables
     private VRCPlayerApi LocalPlayer;
@@ -413,5 +428,34 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
 
     public void DisableBetaFeatures() {
         bankingTurns = false;
+    }
+
+    public void InitializeDefaults() {
+        flapStrengthBase_DEFAULT = flapStrengthBase;
+        flightGravityBase_DEFAULT = flightGravityBase;
+        requireJump_DEFAULT = requireJump;
+        allowLoco_DEFAULT = allowLoco;
+        useAvatarModifiers_DEFAULT = useAvatarModifiers;
+        canGlide_DEFAULT = canGlide;
+        fallToGlide_DEFAULT = fallToGlide;
+        horizontalStrengthMod_DEFAULT = horizontalStrengthMod;
+        glideControl_DEFAULT = glideControl;
+        airFriction_DEFAULT = airFriction;
+        useGravityCurve_DEFAULT = useGravityCurve;
+        bankingTurns_DEFAULT = bankingTurns;
+    }
+    public void RestoreDefaults() {
+        flapStrengthBase = flapStrengthBase_DEFAULT;
+        flightGravityBase = flightGravityBase_DEFAULT;
+        requireJump = requireJump_DEFAULT;
+        allowLoco = allowLoco_DEFAULT;
+        useAvatarModifiers = useAvatarModifiers_DEFAULT;
+        canGlide = canGlide_DEFAULT;
+        fallToGlide = fallToGlide_DEFAULT;
+        horizontalStrengthMod = horizontalStrengthMod_DEFAULT;
+        glideControl = glideControl_DEFAULT;
+        airFriction = airFriction_DEFAULT;
+        useGravityCurve = useGravityCurve_DEFAULT;
+        bankingTurns = bankingTurns_DEFAULT;
     }
 }

@@ -9,6 +9,7 @@ using VRC.Udon;
 public class OpenFlight : UdonSharpBehaviour {
 	public string OpenFlightVersion = "1.0.0";
 	public GameObject wingedFlight;
+	public AvatarDetection avatarDetection;
 	public string flightMode = "Auto";
 	
 	[ReadOnly] public bool flightAllowed = false;
@@ -35,6 +36,9 @@ public class OpenFlight : UdonSharpBehaviour {
     public void FlightAuto() {
 		flightMode = "Auto";
 		flightAllowed = false;
+
+		//tell the avatar detection script to check if the player can fly again
+		avatarDetection.ReevaluateFlight();
 	}
 
 	public void CanFly() {
