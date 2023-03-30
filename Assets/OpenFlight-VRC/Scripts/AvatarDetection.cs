@@ -223,7 +223,7 @@ public class AvatarDetection : UdonSharpBehaviour
         name = "Unknown";
         creator = "Unknown";
         introducer = "Unknown";
-        weight = 0;
+        weight = 1;
         WingtipOffset = 0;
         return false;
     }
