@@ -2060,6 +2060,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: OpenFlight Tablet
       objectReference: {fileID: 0}
+    - target: {fileID: 6124323177475442821, guid: 47f89c3bc94a83e4b9c05f6f43ee2ef8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6124323177475442823, guid: 47f89c3bc94a83e4b9c05f6f43ee2ef8,
         type: 3}
       propertyPath: OpenFlight
