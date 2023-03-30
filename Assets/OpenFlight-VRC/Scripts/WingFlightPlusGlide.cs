@@ -103,12 +103,21 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
 	[Range(0f, 2f)]
 	public float weight = 1.0f;
 
+    //Banking variables
+    private Vector3 playerHolder;
+    public Transform originHolder;
+
+
+
     public void Start() {
         LocalPlayer = Networking.LocalPlayer;
         //oldGravityStrength = LocalPlayer.GetGravityStrength();
         //oldWalkSpeed = LocalPlayer.GetWalkSpeed();
         //oldRunSpeed = LocalPlayer.GetRunSpeed();
         //oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
+        //originHolder.transform.position = Vector3.zero;
+        //originHolder.transform.rotation = Quaternion.identity;
+        
     }
 
     public void OnEnable() {
@@ -134,14 +143,36 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
             } else {
                 rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * dt * 6);
             }
+
+
+            //New Banking code
+            //
+            //Playspace origin and actual player position seems to work as parent and child objects,
+            //therefore the conclusion is that we must orbit the playspace origin.
+            //
+            //Caching positional data and modifying a virtual origin to be translated.
+            originHolder.position = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Origin).position;
+            originHolder.rotation = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Origin).rotation;
+            playerHolder = LocalPlayer.GetPosition();
+
+            //This function is cursed. 
+            //I feel and am in awe of the Unity engineers that had to fix the edge case of someone wanting to rotate the parent around a child.
+            //Sure is useful in this case though.
+            originHolder.RotateAround(playerHolder, Vector3.up, rotSpeed * Time.deltaTime);
+
+            //Teleport based on playspace position, with an offset to place the player at the teleport location instead of the playspace origin.
+            LocalPlayer.TeleportTo(playerHolder + (originHolder.position - playerHolder), originHolder.rotation, VRC_SceneDescriptor.SpawnOrientation.AlignRoomWithSpawnPoint, true);
+            
+
             // Legacy code (banking methods that didn't work):
             //playerRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).rotation;
             //playerRot = Quaternion.Euler(0, playerRot.eulerAngles.y, 0);
             //playerRot = Quaternion.Euler(LocalPlayer.GetVelocity().x, 0, LocalPlayer.GetVelocity().z);
             //LocalPlayer.TeleportTo(LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Origin).position, Quaternion.Lerp(playerRot, playerRot * Quaternion.Euler(Vector3.up * (rotSpeed / 100)), dt * 200), VRC_SceneDescriptor.SpawnOrientation.AlignRoomWithSpawnPoint, true);
-            playerRot = LocalPlayer.GetRotation();
+            //playerRot = LocalPlayer.GetRotation();
             // As far as I know, TeleportTo() is the only way (without colliders nor stations) to force a player to rotate
-            LocalPlayer.TeleportTo(LocalPlayer.GetPosition(), Quaternion.Lerp(playerRot, playerRot * Quaternion.Euler(Vector3.up * (rotSpeed / 100)), dt * 200), VRC_SceneDescriptor.SpawnOrientation.AlignPlayerWithSpawnPoint, true);
+            //LocalPlayer.TeleportTo(LocalPlayer.GetPosition(), Quaternion.Lerp(playerRot, playerRot * Quaternion.Euler(Vector3.up * (rotSpeed / 100)), dt * 200), VRC_SceneDescriptor.SpawnOrientation.AlignPlayerWithSpawnPoint, true);
+
         }
     }
 
