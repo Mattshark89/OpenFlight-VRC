@@ -49,7 +49,7 @@ public class AvatarDetection : UdonSharpBehaviour
     public GameObject wingtipGizmo; //this shows the wingtip offset as a sphere in game. Only works in VR due to implementation
 
     //information about the avatar that has been detected
-    public float weight = 0;
+    public float weight = 1;
     public float WingtipOffset = 0;
     public string name = ""; //this is the name of the avatar base
     public string creator = ""; //this is the person who created the avatar base
@@ -126,7 +126,7 @@ public class AvatarDetection : UdonSharpBehaviour
                 name = "Loading Avatar";
                 creator = "Loading Avatar";
                 introducer = "Loading Avatar";
-                weight = 0;
+                weight = 1;
                 WingtipOffset = 0;
                 return;
             }
@@ -223,7 +223,7 @@ public class AvatarDetection : UdonSharpBehaviour
         name = "Unknown";
         creator = "Unknown";
         introducer = "Unknown";
-        weight = 0;
+        weight = 1;
         WingtipOffset = 0;
         return false;
     }
@@ -264,5 +264,13 @@ public class AvatarDetection : UdonSharpBehaviour
 
         wingtipGizmo.transform.position = WingTipPosition;
         wingtipGizmo.transform.RotateAround(rightHandPosition, rightHandRotation * Vector3.up, 70);
+    }
+
+    //this can be used for other scripts to check if the avatar is allowed to fly again
+    public void ReevaluateFlight()
+    {
+        d_spinetochest = 0;
+        previous_d_spinetochest = 1000f;
+        //Debug.Log("Reevaluating flight");
     }
 }

@@ -19,6 +19,7 @@ public class UIToggle : UdonSharpBehaviour
             
         toggle = GetComponent<Toggle>();
         value = (bool)target.GetProgramVariable(targetVariable);
+        toggle.isOn = value;
     }
 
     //allow the toggle to be set both by the UI button and by the target variable

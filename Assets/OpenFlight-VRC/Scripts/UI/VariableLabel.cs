@@ -8,6 +8,7 @@ using TMPro;
 public class VariableLabel : UdonSharpBehaviour
 {
     public UdonBehaviour target;
+    public int decimalPlaces = 2;
     public string targetVariable;
     public string prefix = "";
     public string suffix = "";
@@ -52,7 +53,8 @@ public class VariableLabel : UdonSharpBehaviour
         }
         else if (!isStringType)
         {
-            float rounded = Mathf.Round((float)targetValue * 100f) / 100f;
+            float roundingModifier = Mathf.Pow(10, decimalPlaces);
+            float rounded = Mathf.Round((float)targetValue * roundingModifier) / roundingModifier;
             text.text = prefix + rounded.ToString() + suffix;
         }
         else
