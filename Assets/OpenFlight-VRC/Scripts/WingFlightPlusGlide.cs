@@ -126,13 +126,12 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     }
 
     public void Update() {
-		float dt = Time.deltaTime;
         if (spinningRightRound) {
             // Rotate the player (only if the Banking Turns beta setting is enabled)
             if (useAvatarModifiers) {
-                rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * dt * 6 * (1 - (weight - 1)));
+                rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * Time.deltaTime * 6 * (1 - (weight - 1)));
             } else {
-                rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * dt * 6);
+                rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * Time.deltaTime * 6);
             }
             // Legacy code (banking methods that didn't work):
             //playerRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).rotation;
@@ -141,7 +140,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
             //LocalPlayer.TeleportTo(LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Origin).position, Quaternion.Lerp(playerRot, playerRot * Quaternion.Euler(Vector3.up * (rotSpeed / 100)), dt * 200), VRC_SceneDescriptor.SpawnOrientation.AlignRoomWithSpawnPoint, true);
             playerRot = LocalPlayer.GetRotation();
             // As far as I know, TeleportTo() is the only way (without colliders nor stations) to force a player to rotate
-            LocalPlayer.TeleportTo(LocalPlayer.GetPosition(), Quaternion.Lerp(playerRot, playerRot * Quaternion.Euler(Vector3.up * (rotSpeed / 100)), dt * 200), VRC_SceneDescriptor.SpawnOrientation.AlignPlayerWithSpawnPoint, true);
+            LocalPlayer.TeleportTo(LocalPlayer.GetPosition(), Quaternion.Lerp(playerRot, playerRot * Quaternion.Euler(Vector3.up * (rotSpeed / 100)), Time.deltaTime * 200), VRC_SceneDescriptor.SpawnOrientation.AlignPlayerWithSpawnPoint, true);
         }
     }
 
@@ -211,7 +210,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                 finalVelocity = LocalPlayer.GetVelocity() + newVelocity;
                 // Speed cap (check, then apply flapping air friction)
                 if (finalVelocity.magnitude > 0.02f * flapStrength()) {
-                    finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength() * dt));
+                    finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength() * 0.01f));
                 }
                 setFinalVelocity = true;
             } else { 
@@ -269,7 +268,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
 
 		// Bug check: if avatar has been swapped, sometimes the player will be launched straight up
 		simpleAviHash = (int)Mathf.Floor(Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) * 10000);
-		if (simpleAviHash != simpleAviHash_last) {cannotFlyTick = 3;}
+		if (simpleAviHash != simpleAviHash_last) {cannotFlyTick = 20;}
 		if (cannotFlyTick > 0) {setFinalVelocity = false; cannotFlyTick--;}
 		simpleAviHash_last = simpleAviHash;
         // end Bug Check
@@ -290,7 +289,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
             }
         }
         if ((LocalPlayer != null) && LocalPlayer.IsValid()) {
-            FlightTick(Time.fixedDeltaTime);
+            FlightTick(0.02f);
         }
     }
 
