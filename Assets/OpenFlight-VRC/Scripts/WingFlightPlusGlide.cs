@@ -149,13 +149,13 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     }
 
     public void Update() {
-		float dt = Time.deltaTime;
         if (spinningRightRound) {
             // Rotate the player (only if the Banking Turns beta setting is enabled)
             if (useAvatarModifiers) {
-                rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * dt * 6 * (1 - (weight - 1)));
+                rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * Time.deltaTime * 6 * (1 - (weight - 1)));
             } else {
-                rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * dt * 6);
+
+                rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * Time.deltaTime * 6);
             }
 
             //Playspace origin and actual player position seems to work as parent and child objects,
@@ -173,6 +173,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
 
             //Teleport based on playspace position, with an offset to place the player at the teleport location instead of the playspace origin.
             LocalPlayer.TeleportTo(playerHolder + (loadBearingTransform.position - playerHolder), loadBearingTransform.rotation, VRC_SceneDescriptor.SpawnOrientation.AlignRoomWithSpawnPoint, true);
+
         }
     }
 
@@ -242,7 +243,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                 finalVelocity = LocalPlayer.GetVelocity() + newVelocity;
                 // Speed cap (check, then apply flapping air friction)
                 if (finalVelocity.magnitude > 0.02f * flapStrength()) {
-                    finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength() * dt));
+                    finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength() * 0.01f));
                 }
                 setFinalVelocity = true;
             } else { 
@@ -300,7 +301,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
 
 		// Bug check: if avatar has been swapped, sometimes the player will be launched straight up
 		simpleAviHash = (int)Mathf.Floor(Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) * 10000);
-		if (simpleAviHash != simpleAviHash_last) {cannotFlyTick = 3;}
+		if (simpleAviHash != simpleAviHash_last) {cannotFlyTick = 20;}
 		if (cannotFlyTick > 0) {setFinalVelocity = false; cannotFlyTick--;}
 		simpleAviHash_last = simpleAviHash;
         // end Bug Check
@@ -321,7 +322,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
             }
         }
         if ((LocalPlayer != null) && LocalPlayer.IsValid()) {
-            FlightTick(Time.fixedDeltaTime);
+            FlightTick(0.02f);
         }
     }
 
