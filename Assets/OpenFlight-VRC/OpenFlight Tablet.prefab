@@ -584,7 +584,7 @@ MonoBehaviour:
   SynchronizePosition: 0
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
-  _syncMethod: 2
+  _syncMethod: 1
   serializedProgramAsset: {fileID: 11400000, guid: dc0115fec30d2ab4191c5ce1c4ab318b,
     type: 2}
   programSource: {fileID: 11400000, guid: 0aa642c0bcfcd6d46be1e6f5dae4eebd, type: 2}
@@ -3080,7 +3080,7 @@ MonoBehaviour:
   SynchronizePosition: 0
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
-  _syncMethod: 2
+  _syncMethod: 1
   serializedProgramAsset: {fileID: 11400000, guid: dc0115fec30d2ab4191c5ce1c4ab318b,
     type: 2}
   programSource: {fileID: 11400000, guid: 0aa642c0bcfcd6d46be1e6f5dae4eebd, type: 2}
@@ -7407,7 +7407,7 @@ MonoBehaviour:
   SynchronizePosition: 0
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
-  _syncMethod: 2
+  _syncMethod: 1
   serializedProgramAsset: {fileID: 11400000, guid: dc0115fec30d2ab4191c5ce1c4ab318b,
     type: 2}
   programSource: {fileID: 11400000, guid: 0aa642c0bcfcd6d46be1e6f5dae4eebd, type: 2}
@@ -8161,16 +8161,15 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177475442822}
-  PanelVersion: 0.4.0
-  scalingOffset: 0.6183768
+  PanelVersion: 0.0.1
+  scalingOffset: 0.1
   fadeDistance: 10
-  objectsToHideOnFade:
-  - {fileID: 6124323177769528517}
+  objectsToHideOnFade: []
   OpenFlight: {fileID: 0}
   AvatarDetection: {fileID: 0}
   VersionInfo: {fileID: 6124323176387380655}
-  activeTabColor: {r: 1, g: 0.5986123, b: 0, a: 0.7411765}
-  inactiveTabColor: {r: 0.764151, g: 0.4584906, b: 0, a: 0.7411765}
+  activeTabColor: {r: 0, g: 0, b: 0, a: 0}
+  inactiveTabColor: {r: 0, g: 0, b: 0, a: 0}
   tabs:
   - {fileID: 6124323177215462759}
   - {fileID: 6124323177795508449}
@@ -8194,7 +8193,7 @@ MonoBehaviour:
   SynchronizePosition: 0
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
-  _syncMethod: 2
+  _syncMethod: 1
   serializedProgramAsset: {fileID: 11400000, guid: a45d9ab5d1f0a3e449063c3415c57a36,
     type: 2}
   programSource: {fileID: 11400000, guid: 2c57b6963c082a144b0311246540719a, type: 2}
@@ -8576,7 +8575,7 @@ MonoBehaviour:
   SynchronizePosition: 0
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
-  _syncMethod: 2
+  _syncMethod: 1
   serializedProgramAsset: {fileID: 11400000, guid: dc0115fec30d2ab4191c5ce1c4ab318b,
     type: 2}
   programSource: {fileID: 11400000, guid: 0aa642c0bcfcd6d46be1e6f5dae4eebd, type: 2}

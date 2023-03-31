@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2578734945457990364}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.07418847, y: -0.022525609, z: -0.09091842}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1584666931655115624}
@@ -164,6 +164,36 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!1 &4235531707374819430
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5384530840210933175}
+  m_Layer: 0
+  m_Name: Load Bearing
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5384530840210933175
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4235531707374819430}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 9036034538259127635}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4253091968978786445
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,7 +222,8 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
-  m_Children: []
+  m_Children:
+  - {fileID: 5384530840210933175}
   m_Father: {fileID: 1584666931655115624}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -218,11 +249,13 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 4658167408585168752}
-  flapStrengthBase: 150
+  flapStrengthBase: 95
   flightGravityBase: 0.2
   requireJump: 0
   allowLoco: 0
   useAvatarModifiers: 1
+  canGlide: 1
+  fallToGlide: 0
   sizeCurve:
     serializedVersion: 2
     m_Curve:
@@ -257,7 +290,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   horizontalStrengthMod: 1.5
-  glideControl: 2
+  glideControl: 1.5
+  airFriction: 0.04
   useGravityCurve: 0
   gravityCurve:
     serializedVersion: 2
@@ -298,6 +332,7 @@ MonoBehaviour:
   wingspan: 1
   wingtipOffset: 1.5
   weight: 1
+  loadBearingTransform: {fileID: 5384530840210933175}
 --- !u!114 &4658167408585168752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -516,7 +551,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8179998861163924825}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.07418847, y: -0.022525609, z: -0.09091842}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 49657187237930175}
@@ -648,6 +683,7 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 1614601171981653897}
   OpenFlightVersion: 1.0.0
   wingedFlight: {fileID: 4253091968978786445}
+  avatarDetection: {fileID: 2688283379173445320}
   flightMode: Auto
   flightAllowed: 0
 --- !u!114 &1614601171981653897

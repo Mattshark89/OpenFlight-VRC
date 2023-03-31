@@ -8,8 +8,9 @@ using VRC.Udon;
 public class WingFlightPlusGlide : UdonSharpBehaviour {
     [Header("Basic Settings")]
     // Both of these "base" values are by default affected by the avatar's wingspan. See sizeCurve.
-    [Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 150)")]
-    public int flapStrengthBase = 150;
+    [Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 85)")]
+    [Range(1, 200)]
+	public int flapStrengthBase = 95;
     int flapStrengthBase_DEFAULT = 0;
     [Tooltip("Base gravity while flying (Default: 0.2)")]
     public float flightGravityBase = 0.2f;
@@ -38,12 +39,12 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     float horizontalStrengthMod_DEFAULT = 0;
     [Tooltip("How tight you want your turns while gliding. May be dynamically decreased by Avatar Modifier: weight. (Default: 2)")]
     [Range(1f, 4f)]
-    public float glideControl = 2; // Do not reduce this below 1; it will break under some weight values if you do
+    public float glideControl = 1.5f; // Do not reduce this below 1; it will break under some weight values if you do
     float glideControl_DEFAULT = 0;
 
-	[Tooltip("Slows gliding down over time. (Default: 0.02)")]
+	[Tooltip("Slows gliding down over time. (Default: 0.04)")]
 	[Range(0f, 0.1f)]
-	public float airFriction = 0.02f;
+	public float airFriction = 0.04f;
     float airFriction_DEFAULT = 0;
 
     [Tooltip("If enabled, flight gravity will use Gravity Curve's curve instead of Size Curve's curve multiplied by Flight Gravity Base. (Default: false)")]
@@ -243,7 +244,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                 finalVelocity = LocalPlayer.GetVelocity() + newVelocity;
                 // Speed cap (check, then apply flapping air friction)
                 if (finalVelocity.magnitude > 0.02f * flapStrength()) {
-                    finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength() * 0.01f));
+                    finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength() * 0.02f));
                 }
                 setFinalVelocity = true;
             } else { 
@@ -283,7 +284,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                         rotSpeedGoal = steering;
                     } else {
                         // Default "banking" which is just midair strafing
-                        wingDirection = Quaternion.Euler(0, steering, 0) * wingDirection;
+                        wingDirection = Quaternion.Euler(0, steering / 2, 0) * wingDirection;
                     }
                     // X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
                     targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(wingDirection) * newVelocity.magnitude), newVelocity.magnitude);
@@ -385,7 +386,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private float flapStrength() {
 		if (useAvatarModifiers) {
 			// default setting
-			return sizeCurve.Evaluate(armspan) * (flapStrengthBase + (wingtipOffset * 8));
+			return sizeCurve.Evaluate(armspan) * (flapStrengthBase + (wingtipOffset * 4));
 		} else {
 			return sizeCurve.Evaluate(armspan) * flapStrengthBase + 10;
 		}
