@@ -326,7 +326,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 4190905666689760636}
-  flapStrengthBase: 95
+  flapStrengthBase: 160
   flightGravityBase: 0.2
   requireJump: 0
   allowLoco: 0
@@ -338,7 +338,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0.05
-      value: 2
+      value: 1.2
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -356,7 +356,7 @@ MonoBehaviour:
       outWeight: 0
     - serializedVersion: 3
       time: 20
-      value: 0.00195
+      value: 0.00001
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -792,21 +792,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6124323177475442875, guid: 47f89c3bc94a83e4b9c05f6f43ee2ef8,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6124323177475442875, guid: 47f89c3bc94a83e4b9c05f6f43ee2ef8,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6124323177475442875, guid: 47f89c3bc94a83e4b9c05f6f43ee2ef8,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6124323177475442875, guid: 47f89c3bc94a83e4b9c05f6f43ee2ef8,
         type: 3}

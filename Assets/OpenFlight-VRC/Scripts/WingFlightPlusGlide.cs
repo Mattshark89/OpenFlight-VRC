@@ -8,9 +8,9 @@ using VRC.Udon;
 public class WingFlightPlusGlide : UdonSharpBehaviour {
     [Header("Basic Settings")]
     // Both of these "base" values are by default affected by the avatar's wingspan. See sizeCurve.
-    [Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 85)")]
+    [Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 160)")]
     [Range(1, 200)]
-	public int flapStrengthBase = 95;
+	public int flapStrengthBase = 160;
     int flapStrengthBase_DEFAULT = 0;
     [Tooltip("Base gravity while flying (Default: 0.2)")]
     public float flightGravityBase = 0.2f;
@@ -33,7 +33,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
 
     [Header("Advanced Settings (Only for specialized use!)")]
     [Tooltip("How much Flap Strength and Flight Gravity are affected by an avatar's wingspan. Default values will make smaller avis feel lighter and larger avis heavier.")]
-    public AnimationCurve sizeCurve = new AnimationCurve(new Keyframe(0.05f, 2), new Keyframe(1, 1), new Keyframe(20, 0.00195f));
+    public AnimationCurve sizeCurve = new AnimationCurve(new Keyframe(0.05f, 1.2f), new Keyframe(1, 1), new Keyframe(20, 0.00001f));
     [Tooltip("Modifier for horizontal flap strength. Makes flapping forwards easier (Default: 1.5)")]
     public float horizontalStrengthMod = 1.5f;
     float horizontalStrengthMod_DEFAULT = 0;
