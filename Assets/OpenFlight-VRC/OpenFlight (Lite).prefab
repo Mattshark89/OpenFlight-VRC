@@ -249,7 +249,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 4658167408585168752}
-  flapStrengthBase: 160
+  flapStrengthBase: 150
   flightGravityBase: 0.2
   requireJump: 0
   allowLoco: 0
@@ -329,7 +329,6 @@ MonoBehaviour:
   debugOutput: {fileID: 0}
   bankingTurns: 0
   armspan: 1
-  wingspan: 1
   wingtipOffset: 1.5
   weight: 1
   loadBearingTransform: {fileID: 5384530840210933175}
