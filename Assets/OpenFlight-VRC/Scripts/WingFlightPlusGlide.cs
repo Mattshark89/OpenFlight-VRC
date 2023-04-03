@@ -202,7 +202,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
             downThrust = 0;
         }
 		// Check if player is falling
-		if ((!LocalPlayer.IsPlayerGrounded()) && LocalPlayer.GetVelocity().y > 0) {
+		if ((!LocalPlayer.IsPlayerGrounded()) && LocalPlayer.GetVelocity().y < 0) {
 			fallingTick++;
 		} else {fallingTick = 0;}
 		// Check if hands are held out
@@ -253,7 +253,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         }
 
 		// See fallToGlide tooltip
-		if (fallToGlide && fallingTick >= 10 && handsOut && canGlide) {TakeOff();}
+		if (fallToGlide && fallingTick >= 20 && handsOut && canGlide) {TakeOff();}
 
         // -- STATE: Flying
         // (Flying starts when a player first flaps and ends when they become grounded)
