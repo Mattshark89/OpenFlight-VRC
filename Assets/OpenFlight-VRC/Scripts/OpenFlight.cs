@@ -11,6 +11,7 @@ public class OpenFlight : UdonSharpBehaviour {
 	public GameObject wingedFlight;
 	public AvatarDetection avatarDetection;
 	public string flightMode = "Auto";
+	private VRCPlayerApi LocalPlayer;
 	
 	[ReadOnly] public bool flightAllowed = false;
 	
@@ -19,11 +20,20 @@ public class OpenFlight : UdonSharpBehaviour {
 		flightAllowed = false;
 	}
 
+	public void Start() {
+		LocalPlayer = Networking.LocalPlayer;
+		if (!LocalPlayer.IsUserInVR()) {
+			FlightOff();
+		}
+	}
+
 	public void FlightOn() {
-		SwitchFlight();
-		wingedFlight.SetActive(true);
-        flightMode = "On";
-		flightAllowed = true;
+		if (LocalPlayer.IsUserInVR()) {
+			SwitchFlight();
+			wingedFlight.SetActive(true);
+			flightMode = "On";
+			flightAllowed = true;
+		}
 	}
 
 	public void FlightOff() {
@@ -34,11 +44,15 @@ public class OpenFlight : UdonSharpBehaviour {
 	}
 
     public void FlightAuto() {
-		flightMode = "Auto";
-		flightAllowed = false;
+		if (LocalPlayer.IsUserInVR()) {
+			flightMode = "Auto";
+			flightAllowed = false;
 
-		//tell the avatar detection script to check if the player can fly again
-		avatarDetection.ReevaluateFlight();
+			//tell the avatar detection script to check if the player can fly again
+			if (avatarDetection != null) {
+				avatarDetection.ReevaluateFlight();
+			}
+		}
 	}
 
 	public void CanFly() {
