@@ -110,8 +110,10 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
 	private int simpleAviHash_last = 0;
 	[HideInInspector]
     public float armspan = 1f;
-	[Tooltip("Default avatar wingtipOffset. (Default: 1.5)")]
-	public float wingtipOffset = 1.5f;
+	[Tooltip("Default avatar wingtipOffset. (Default: 0)")]
+	public float wingtipOffset = 0;
+	float wingtipOffset_DEFAULT = 0;
+	
 	[Tooltip("Default avatar weight. (Default: 1)")]
 	[Range(0f, 2f)]
 	public float weight = 1.0f;
@@ -410,6 +412,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         requireJump_DEFAULT = requireJump;
         allowLoco_DEFAULT = allowLoco;
         useAvatarModifiers_DEFAULT = useAvatarModifiers;
+		wingtipOffset_DEFAULT = wingtipOffset;
         canGlide_DEFAULT = canGlide;
         fallToGlide_DEFAULT = fallToGlide;
         horizontalStrengthMod_DEFAULT = horizontalStrengthMod;
@@ -425,6 +428,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         requireJump = requireJump_DEFAULT;
         allowLoco = allowLoco_DEFAULT;
         useAvatarModifiers = useAvatarModifiers_DEFAULT;
+		wingtipOffset = wingtipOffset_DEFAULT;
         canGlide = canGlide_DEFAULT;
         fallToGlide = fallToGlide_DEFAULT;
         horizontalStrengthMod = horizontalStrengthMod_DEFAULT;
