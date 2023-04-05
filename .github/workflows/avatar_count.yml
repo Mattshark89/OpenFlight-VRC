@@ -5,6 +5,9 @@ on:
       - "./Assets/OpenFlight-VRC/data.json"
   workflow_dispatch:
 
+env:
+  DATA_JSON_PATH: "./Assets/OpenFlight-VRC/data.json"
+
 jobs:
   create-badge:
     runs-on: ubuntu-latest
@@ -15,24 +18,24 @@ jobs:
         uses: sergeysova/jq-action@v2
         id: unique_avatar_count
         with:
-          cmd: "jq '.Bases | length' ./Assets/OpenFlight-VRC/data.json"
+          cmd: "jq '.Bases | length' $DATA_JSON_PATH"
       - name: Extract total avatar count from data.json
         uses: sergeysova/jq-action@v2
         id: total_avatar_count
         with:
-          cmd: "jq '[.Bases | to_entries[].value | to_entries[].value] | length' Assets/OpenFlight-VRC/data.json"
+          cmd: "jq '[.Bases | to_entries[].value | to_entries[].value] | length' $DATA_JSON_PATH"
       - name: Extract unique hash count from data.json
         uses: sergeysova/jq-action@v2
         id: unique_hash_count
         with:
-          cmd: "jq '[.Bases | to_entries[].value | to_entries[].value.Hash[]] | length' Assets/OpenFlight-VRC/data.json"
+          cmd: "jq '[.Bases | to_entries[].value | to_entries[].value.Hash[]] | length' $DATA_JSON_PATH"
       - name: Create Unique Avatar Count Badge
         uses: RubbaBoy/BYOB@v1.3.0
         with:
           NAME: unique_avatar_count
           LABEL: 'Unique Supported Avatars'
           STATUS: ${{ steps.unique_avatar_count.outputs.value }}
-          COLOR: 00FF00
+          COLOR: blue
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Total Avatar Count Badge
         uses: RubbaBoy/BYOB@v1.3.0
@@ -40,7 +43,7 @@ jobs:
           NAME: total_avatar_count
           LABEL: 'Total Supported Avatar Variations'
           STATUS: ${{ steps.total_avatar_count.outputs.value }}
-          COLOR: 00FF00
+          COLOR: blue
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Unique Hash Count Badge
         uses: RubbaBoy/BYOB@v1.3.0
@@ -48,5 +51,5 @@ jobs:
           NAME: unique_hash_count
           LABEL: 'Unique Avatar Hashes'
           STATUS: ${{ steps.unique_hash_count.outputs.value }}
-          COLOR: 00FF00
+          COLOR: blue
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
