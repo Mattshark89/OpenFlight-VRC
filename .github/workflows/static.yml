@@ -35,7 +35,7 @@ jobs:
         uses: canastro/copy-action@0.0.2
         with:
           source: "./Assets/OpenFlight-VRC/data.json"
-          destination: "./data.json"
+          target: "./data.json"
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
