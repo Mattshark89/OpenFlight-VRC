@@ -22,32 +22,38 @@ public class ProxyUdonScript : UdonSharpBehaviour
     }
     public void FlightOn()
     {
-        target.SendCustomEvent("FlightOn");
+        if (target != null)
+            target.SendCustomEvent("FlightOn");
     }
 
     public void FlightOff()
     {
-        target.SendCustomEvent("FlightOff");
+        if (target != null)
+            target.SendCustomEvent("FlightOff");
     }
 
     public void FlightAuto()
     {
-        target.SendCustomEvent("FlightAuto");
+        if (target != null)
+            target.SendCustomEvent("FlightAuto");
     }
 
     public void reloadJSON()
     {
-        target.SendCustomEvent("reloadJSON");
+        if (target != null)
+            target.SendCustomEvent("reloadJSON");
     }
 
     public void showGizmo()
     {
-        target.SendCustomEvent("showGizmo");
+        if (target != null)
+            target.SendCustomEvent("showGizmo");
     }
 
     public void hideGizmo()
     {
-        target.SendCustomEvent("hideGizmo");
+        if (target != null)
+            target.SendCustomEvent("hideGizmo");
     }
 
     public void OnDisable()
@@ -64,11 +70,13 @@ public class ProxyUdonScript : UdonSharpBehaviour
 
     public void RestoreDefaults()
     {
-        target.SendCustomEvent("RestoreDefaults");
+        if (target != null)
+            target.SendCustomEvent("RestoreDefaults");
     }
 
     public void InitializeDefaults()
     {
-        target.SendCustomEvent("InitializeDefaults");
+        if (target != null)
+            target.SendCustomEvent("InitializeDefaults");
     }
 }
