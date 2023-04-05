@@ -1,27 +1,34 @@
-# OpenFlight-VRC
+Source code: https://github.com/Mattshark89/OpenFlight-VRC/
 
-Creating an open source system to allow all kinds of avatars to fly. Uses Udon Sharp (Make sure it's installed! [Link](https://github.com/MerlinVR/UdonSharp))
+## Want to test OpenFlight first?
 
 You can try out the latest stable version of OpenFlight here: https://vrchat.com/home/launch?worldId=wrld_e61cba97-a1a9-4c53-93d2-7bb77240a2e7
+(Alternate testing/dev world by GitHub user Happyrobot33: https://vrchat.com/home/launch?worldId=wrld_ef75dcc8-02fa-43ef-8f42-7b8159783d3d)
+
+
+## Installation
+
+You will need all of these installed in your project first in order for OpenFlight to work. Install these in order:
+1. [UdonSharp](https://github.com/MerlinVR/UdonSharp)
+2. [udon-json](https://github.com/koyashiro/udon-json)
+3. [udon-list](https://github.com/koyashiro/udon-list)
+4. [udon-dictionary](https://github.com/koyashiro/udon-dictionary)
+
 
 ## How to use
 
-Import the Unity package from [Releases](https://github.com/Mattshark89/OpenFlight-VRC/releases) and place the prefab "OpenFlight" anywhere in your world. This should be all you need for most worlds.
-To fine-tune the flight settings, select the WingedFlight GameObject inside of the prefab and check the Inspector.
+After installing the four packages listed above, place the prefab "OpenFlight" anywhere in your world. This should be all you need for most worlds.
+If you would rather limit the OpenFlight system to a simple toggle button, use "OpenFlight (Lite)" instead of "OpenFlight".
 
-## Roadmap to V1.0.0 release
+To fine-tune the flight physics and other settings, select the WingedFlight GameObject inside of the prefab and check the Inspector. You can also test these values ingame using the OpenFlight tablet.
+(If you plan on hiding the tablet from the average user, keep in mind the tablet will resize itself to match the player's scale; it might peek up through the floor! Instead you should use `OpenFlight (Lite)` and (optionally) disable/remove the WingedToggleBox GameObject.)
 
-- Desktop support
-- Avatar detection system to automatically grant flight to certain avatar bases (for example, winged flight to avali)
-- Equippable props (such as mechanical wings) that permit flying for everyone
 
-## Plans for the future
+## Credits
 
-In no particular order:
-- In-game "How to fly" reference image
-- Debugging tool/sliders to modify flight settings in-world (for creators)
-- Additional flight systems
-  - Winged (current system): Flap arms to fly, hold arms out to glide
-  - Engine: Arms out to sides to propel forward with greater control, arms down in an A-Pose to stay stationary/fly slowly (iron-man style)
-  - Creative (Desktop users): Minecraft-inspired Creative mode flight
-- Wing trails (while gliding)
+The VRChat team for their awesome social platform
+`Mattshark89`: Flight/Gliding physics engine, repository manager
+`Happyrobot33`: Avatar detection system, settings tablet
+Github contributors: https://github.com/Mattshark89/OpenFlight-VRC/graphs/contributors
+
+...and several others for giving suggestions and helping fix critical bugs. You all are great!
