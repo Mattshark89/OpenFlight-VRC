@@ -1,0 +1,52 @@
+name: Create Avatar Count Badge
+on:
+  push:
+    paths:
+      - "./Assets/OpenFlight-VRC/data.json"
+  workflow_dispatch:
+
+jobs:
+  create-badge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Extract unique avatar count from data.json
+        uses: sergeysova/jq-action@v2
+        id: unique_avatar_count
+        with:
+          cmd: "jq '.Bases | length' ./Assets/OpenFlight-VRC/data.json"
+      - name: Extract total avatar count from data.json
+        uses: sergeysova/jq-action@v2
+        id: total_avatar_count
+        with:
+          cmd: "jq '[.Bases | to_entries[].value | to_entries[].value] | length' Assets/OpenFlight-VRC/data.json"
+      - name: Extract unique hash count from data.json
+        uses: sergeysova/jq-action@v2
+        id: unique_hash_count
+        with:
+          cmd: "jq '[.Bases | to_entries[].value | to_entries[].value.Hash[]] | length' Assets/OpenFlight-VRC/data.json"
+      - name: Create Unique Avatar Count Badge
+        uses: RubbaBoy/BYOB@v1.3.0
+        with:
+          NAME: unique_avatar_count
+          LABEL: 'Unique Supported Avatars'
+          STATUS: ${{ steps.unique_avatar_count.outputs.value }}
+          COLOR: 00FF00
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Total Avatar Count Badge
+        uses: RubbaBoy/BYOB@v1.3.0
+        with:
+          NAME: total_avatar_count
+          LABEL: 'Total Supported Avatar Variations'
+          STATUS: ${{ steps.total_avatar_count.outputs.value }}
+          COLOR: 00FF00
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Unique Hash Count Badge
+        uses: RubbaBoy/BYOB@v1.3.0
+        with:
+          NAME: unique_hash_count
+          LABEL: 'Unique Avatar Hashes'
+          STATUS: ${{ steps.unique_hash_count.outputs.value }}
+          COLOR: 00FF00
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
