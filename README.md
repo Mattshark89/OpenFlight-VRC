@@ -15,7 +15,9 @@ The list of avatars that are permitted to fly is fetched from a GitHub-hosted js
 
 ## Installation
 
-You will need all of these installed in your project first in order for Open-Flight to work. Install these in order:
+First step: make sure your VRChat world SDK is up to date. The avatar detection system uses remote string loading, a feature that is very new to Udon!
+
+Next, you will need all of these installed in your project first in order for Open-Flight to work. Install these in order:
 1. [UdonSharp](https://github.com/MerlinVR/UdonSharp)
 2. [udon-json](https://github.com/koyashiro/udon-json)
 3. [udon-list](https://github.com/koyashiro/udon-list)
