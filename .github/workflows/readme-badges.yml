@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  DATA_JSON_PATH: "./Assets/OpenFlight-VRC/data.json"
+  DATA_JSON_PATH: "./Packages/com.mattshark.openflight/Runtime/data.json"
 
 jobs:
   create-badge:

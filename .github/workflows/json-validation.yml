@@ -8,5 +8,5 @@ jobs:
       - name: Validate JSON
         uses: docker://orrosenblatt/validate-json-action:latest
         env:
-          INPUT_SCHEMA: /Assets/OpenFlight-VRC/data_schema.json
-          INPUT_JSONS: /Assets/OpenFlight-VRC/data.json
+          INPUT_SCHEMA: ./Packages/com.mattshark.openflight/Runtime/data_schema.json
+          INPUT_JSONS: ./Packages/com.mattshark.openflight/Runtime/data.json

@@ -1,0 +1,30 @@
+{
+  "name": "com.mattshark.openflight",
+  "displayName": "OpenFlight",
+  "version": "1.0.1",
+  "description": "A VRChat flight system that allow all kinds of avatars to fly. https://github.com/Mattshark89/OpenFlight-VRC",
+  "bugs" : {
+    "url" : "https://github.com/Mattshark89/OpenFlight-VRC/issues"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mattshark89/OpenFlight-VRC"
+  },
+  "dependencies": {
+    "com.unity.textmeshpro": "2.1.6"
+  },
+  "gitDependencies": {},
+  "vpmDependencies": {
+    "com.vrchat.worlds" : ">=3.1.11",
+    "com.vrchat.udonsharp" : ">=1.1.7",
+    "net.koyashiro.udondictionary" : ">=0.9.2",
+    "net.koyashiro.udonjson" : ">=0.12.0",
+    "net.koyashiro.udonlist" : ">=0.14.2"
+  },
+  "legacyFolders": {},
+  "legacyFiles": {},
+  "author": {
+    "name": "Mattshark89\nHappyrobot33"
+  }
+}

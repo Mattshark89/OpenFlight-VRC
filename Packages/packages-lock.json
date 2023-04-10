@@ -1,5 +1,13 @@
 {
   "dependencies": {
+    "com.mattshark.openflight": {
+      "version": "file:com.mattshark.openflight",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.textmeshpro": "2.1.6"
+      }
+    },
     "com.spoiledcat.git": {
       "version": "1.0.12",
       "depth": 0,
