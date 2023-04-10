@@ -35,7 +35,7 @@ To fine-tune the flight settings, select the WingedFlight GameObject inside of t
 
 ## I want to add an avatar to the list!
 
-Neato! Check out the json file (https://github.com/Mattshark89/OpenFlight-VRC/blob/main/Assets/OpenFlight-VRC/data.json) and make a pull request with your avatar added to the list. Follow the formatting of those who came before you.
+Neato! Check out the json file (https://github.com/Mattshark89/OpenFlight-VRC/blob/main/Packages/com.mattshark.openflight/Runtime/data.json) and make a pull request with your avatar added to the list. Follow the formatting of those who came before you.
 Name is the name of the avatar, Creator the creator, Introducer is you. If the avatar you are requesting was made from a public base, `Name` and `Creator` should reference the public base. Don't put your own names here; put your name in `Introducer` instead.
 The Hash can be obtained from the OpenFlight settings tablet (Debug tab) while your avatar is being worn. WingtipOffset can also be found by turning on `Show Gizmos` in the tablet and adjusting the `WingtipOffset` slider until the center of the sphere is roughly on the tip of your wing/feathers/whathaveyou.
 Once your pull request is made, leave a comment along with it that either has a link to the avatar base or, if there is no public page for it, a photo/screenshot of the avatar.
