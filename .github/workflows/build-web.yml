@@ -60,7 +60,7 @@ jobs:
         uses: canastro/copy-action@0.0.2
         with:
           source: "./Packages/com.mattshark.openflight/Runtime/data.json"
-          target: "./data.json"
+          target: "./${{env.listPublishDirectory}}/data.json"
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
