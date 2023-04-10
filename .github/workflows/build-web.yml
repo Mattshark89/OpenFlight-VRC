@@ -2,7 +2,7 @@ name: Update Website Listing
 
 env:
   CurrentPackageName: com.mattshark.openflight
-  listPublishDirectory: "."
+  listPublishDirectory: ""
   pathToCi: ci
   
 on: 
@@ -28,8 +28,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-listing:
-    name: build-listing
+  build-web:
+    name: build-web
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
