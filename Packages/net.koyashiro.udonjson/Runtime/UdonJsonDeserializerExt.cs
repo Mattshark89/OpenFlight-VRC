@@ -4,11 +4,13 @@ namespace Koyashiro.UdonJson
 {
     using Koyashiro.UdonList;
     using Koyashiro.UdonDictionary;
+    using System.Globalization;
 
     public static class UdonJsonDeserializerExt
     {
         private const string ERROR_UNEXPECTED_END = "Unexpected end";
         private const string ERROR_UNEXPECTED_TOKEN = "Unexpected token";
+        private const string ERROR_BAD_CONTROL_CHARACTER = "Bad control character in string literal";
 
         public static char[] GetInput(this UdonJsonDeserializer des)
         {
@@ -148,9 +150,10 @@ namespace Koyashiro.UdonJson
 
         private static bool TryDeserializeString(this UdonJsonDeserializer des)
         {
-            // "
+            // consume "
             des.Next();
 
+            var buf = string.Empty;
             var start = des.GetPos();
 
             while (true)
@@ -161,19 +164,121 @@ namespace Koyashiro.UdonJson
                     return false;
                 }
 
-                // "
+                // consume "
                 if (des.Current() == '"')
                 {
+                    buf += new string(des.GetInput(), start, des.GetPos() - start);
                     break;
                 }
 
-                des.Next();
+                if (0x00 <= des.Current() && des.Current() <= 0x001f)
+                {
+                    des.SetError(ERROR_BAD_CONTROL_CHARACTER);
+                    return false;
+                }
+
+                if (des.Current() == '\\')
+                {
+                    buf += new string(des.GetInput(), start, des.GetPos() - start);
+
+                    // consume \
+                    des.Next();
+
+                    if (des.IsEnd())
+                    {
+                        des.SetError(ERROR_UNEXPECTED_END);
+                        return false;
+                    }
+
+                    switch (des.Current())
+                    {
+                        // quotation mark
+                        case '"':
+                            buf += '"';
+                            des.Next();
+                            start = des.GetPos();
+                            break;
+                        // reverse solidus
+                        case '\\':
+                            buf += '\\';
+                            des.Next();
+                            start = des.GetPos();
+                            break;
+                        // solidus
+                        case '/':
+                            buf += '/';
+                            des.Next();
+                            start = des.GetPos();
+                            break;
+                        // backspace
+                        case 'b':
+                            buf += '\b';
+                            des.Next();
+                            start = des.GetPos();
+                            break;
+                        // formfeed
+                        case 'f':
+                            buf += '\f';
+                            des.Next();
+                            start = des.GetPos();
+                            break;
+                        // linefeed
+                        case 'n':
+                            buf += '\n';
+                            des.Next();
+                            start = des.GetPos();
+                            break;
+                        // carriage return
+                        case 'r':
+                            buf += '\r';
+                            des.Next();
+                            start = des.GetPos();
+                            break;
+                        // horizontal tab
+                        case 't':
+                            buf += '\t';
+                            des.Next();
+                            start = des.GetPos();
+                            break;
+                        // unicode
+                        case 'u':
+                            des.Next();
+                            var digits = new char[4];
+                            for (var i = 0; i < 4; i++)
+                            {
+                                if (des.IsEnd())
+                                {
+                                    des.SetError(ERROR_UNEXPECTED_END);
+                                    return false;
+                                }
+
+                                if ("0123456789ABCDEFabcdef".IndexOf(des.Current()) == -1)
+                                {
+                                    des.SetError(ERROR_UNEXPECTED_TOKEN);
+                                    return false;
+                                }
+
+                                digits[i] = des.Next();
+                            }
+                            buf += (char)int.Parse(new string(digits), NumberStyles.HexNumber);
+                            start = des.GetPos();
+                            break;
+                        default:
+                            des.SetError(ERROR_UNEXPECTED_TOKEN);
+                            return false;
+                    }
+                }
+                else
+                {
+                    des.Next();
+                }
             }
 
+            des.SetOutput(buf);
 
-            des.SetOutput(new string(des.GetInput(), start, des.GetPos() - start));
-            // "
+            // consume "
             des.Next();
+
             return true;
         }
 

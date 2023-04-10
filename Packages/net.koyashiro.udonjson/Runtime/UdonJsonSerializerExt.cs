@@ -14,11 +14,7 @@ namespace Koyashiro.UdonJson
 
         public static string GetOutput(this UdonJsonSerializer ser)
         {
-            var chars = new char[ser.GetBuf().Count()];
-            for (var i = 0; i < chars.Length; i++)
-            {
-                chars[i] = (char)ser.GetBuf().GetValue(i);
-            }
+            var chars = ser.GetBuf().ToArray();
             return new string(chars);
         }
 
@@ -39,7 +35,59 @@ namespace Koyashiro.UdonJson
             {
                 case UdonJsonValueKind.String:
                     ser.Write('"');
-                    ser.Write(v.AsString());
+                    var s = v.AsString().ToCharArray();
+                    var start = 0;
+                    for (var i = 0; i < s.Length; i++)
+                    {
+                        var c = s[i];
+                        switch (c)
+                        {
+                            case '"':
+                                ser.Write(new string(s, start, i - start));
+                                ser.Write("\\\"");
+                                start = i + 1;
+                                continue;
+                            case '\\':
+                                ser.Write(new string(s, start, i - start));
+                                ser.Write("\\\\");
+                                start = i + 1;
+                                continue;
+                            case '\b':
+                                ser.Write(new string(s, start, i - start));
+                                ser.Write("\\b");
+                                start = i + 1;
+                                continue;
+                            case '\f':
+                                ser.Write(new string(s, start, i - start));
+                                ser.Write("\\f");
+                                start = i + 1;
+                                continue;
+                            case '\n':
+                                ser.Write(new string(s, start, i - start));
+                                ser.Write("\\n");
+                                start = i + 1;
+                                continue;
+                            case '\r':
+                                ser.Write(new string(s, start, i - start));
+                                ser.Write("\\r");
+                                start = i + 1;
+                                continue;
+                            case '\t':
+                                ser.Write(new string(s, start, i - start));
+                                ser.Write("\\t");
+                                start = i + 1;
+                                continue;
+                        }
+
+                        if (0x00 <= c && c <= 0x001f)
+                        {
+                            ser.Write(new string(s, start, i - start));
+                            ser.Write($"\\u{((ushort)c):x4}");
+                            start = i + 1;
+                            continue;
+                        }
+                    }
+                    ser.Write(new string(s, start, s.Length - start));
                     ser.Write('"');
                     break;
                 case UdonJsonValueKind.Number:
@@ -99,10 +147,7 @@ namespace Koyashiro.UdonJson
 
         private static void Write(this UdonJsonSerializer ser, string s)
         {
-            for (var i = 0; i < s.Length; i++)
-            {
-                ser.GetBuf().Add(s[i]);
-            }
+            ser.GetBuf().AddRange(s.ToCharArray());
         }
     }
 }
