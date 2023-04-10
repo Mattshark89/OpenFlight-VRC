@@ -2,7 +2,7 @@ name: Update Website Listing
 
 env:
   CurrentPackageName: com.mattshark.openflight
-  listPublishDirectory: Website
+  listPublishDirectory: "."
   pathToCi: ci
   
 on: 
@@ -68,8 +68,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          #path: ${{env.listPublishDirectory}}
-          path: '.'
+          path: ${{env.listPublishDirectory}}
+          #path: '.'
           
       - name: Deploy to GitHub Pages
         id: deployment
