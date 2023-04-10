@@ -17,11 +17,11 @@ The list of avatars that are permitted to fly is fetched from a GitHub-hosted js
 
 First step: make sure your VRChat world SDK is up to date. The avatar detection system uses remote string loading, a feature that is very new to Udon!
 
-Next, you will need all of these installed in your project first in order for Open-Flight to work. Install these in order:
-1. [UdonSharp](https://github.com/MerlinVR/UdonSharp)
-2. [udon-json](https://github.com/koyashiro/udon-json)
-3. [udon-list](https://github.com/koyashiro/udon-list)
-4. [udon-dictionary](https://github.com/koyashiro/udon-dictionary)
+Next, click this link and add the repo to your VCC using the Add to VCC button
+[OpenFlight](https://mattshark89.github.io/OpenFlight-VRC/)
+
+You will also need to add this repo to your VCC
+[Koyashiro's VPM Repos](https://vpm.koyashiro.net/install)
 
 You can try out the latest stable version of OpenFlight here: https://vrchat.com/home/launch?worldId=wrld_e61cba97-a1a9-4c53-93d2-7bb77240a2e7
 Alternate development world by Happyrobot33: https://vrchat.com/home/launch?worldId=wrld_ef75dcc8-02fa-43ef-8f42-7b8159783d3d
@@ -29,13 +29,13 @@ Alternate development world by Happyrobot33: https://vrchat.com/home/launch?worl
 
 ## How to use
 
-After installing the four packages listed above, import the Unity package from [Releases](https://github.com/Mattshark89/OpenFlight-VRC/releases) and place the prefab "OpenFlight" anywhere in your world. This should be all you need for most worlds.
+After installing the VCC packages listed above, add them to your project by clicking "manage project" in the VCC and selecting OpenFlight. Once you are in your project, place the prefab "OpenFlight", which is under "Packages\com.mattshark.openflight\Runtime", anywhere in your world. This should be all you need for most worlds.
 To fine-tune the flight settings, select the WingedFlight GameObject inside of the prefab and check the Inspector. Check the README.md file within the Unity Package for more details.
 
 
 ## I want to add an avatar to the list!
 
-Neato! Check out the json file (https://github.com/Mattshark89/OpenFlight-VRC/blob/main/Assets/OpenFlight-VRC/data.json) and make a pull request with your avatar added to the list. Follow the formatting of those who came before you.
+Neato! Check out the json file (https://github.com/Mattshark89/OpenFlight-VRC/blob/main/Packages/com.mattshark.openflight/Runtime/data.json) and make a pull request with your avatar added to the list. Follow the formatting of those who came before you.
 Name is the name of the avatar, Creator the creator, Introducer is you. If the avatar you are requesting was made from a public base, `Name` and `Creator` should reference the public base. Don't put your own names here; put your name in `Introducer` instead.
 The Hash can be obtained from the OpenFlight settings tablet (Debug tab) while your avatar is being worn. WingtipOffset can also be found by turning on `Show Gizmos` in the tablet and adjusting the `WingtipOffset` slider until the center of the sphere is roughly on the tip of your wing/feathers/whathaveyou.
 Once your pull request is made, leave a comment along with it that either has a link to the avatar base or, if there is no public page for it, a photo/screenshot of the avatar.
