@@ -40,13 +40,13 @@ jobs:
         with:
           url: ${{ steps.liberation-fonts-zip-url.outputs.match }}
           target: ${{ env.TemporaryFolder }}/
-        
+
       - name: Extract Zip
         uses: a7ul/tar-action@v1.1.0
         id: liberation-fonts-extract-zip
         with:
           files: ${{ env.TemporaryFolder }}/${{ steps.liberation-fonts-download-zip.outputs.filename }}
-          cwd: ./Packages/com.mattshark.openflight/Runtime/TMP/LiberationFonts
+          cwd: "./Packages/com.mattshark.openflight/Runtime/TMP/LiberationFonts"
           command: x
       
       - name: Debug Artifacts
