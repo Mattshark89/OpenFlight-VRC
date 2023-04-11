@@ -55,7 +55,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: LiberationFonts
+          name: Pre-Cleanup Artifact
           path: '.'
         
 #      - name: Commit
@@ -70,6 +70,9 @@ jobs:
     steps:
       - name: Download All Artifacts
         uses: actions/download-artifact@v3
+        with:
+          name: Pre-Cleanup Artifact
+          path: '.'
 
       - name: Remove Temporary Folder
         uses: JesseTG/rm@v1.0.3
@@ -79,7 +82,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: Final Artifact
+          name: Post-Cleanup Artifact
           path: '.'
 
         
