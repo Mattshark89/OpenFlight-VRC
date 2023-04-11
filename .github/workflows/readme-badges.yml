@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - "./Packages/com.mattshark.openflight/Runtime/**"
+      - ".github/**"
+      - "./Website/**"
     #branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
