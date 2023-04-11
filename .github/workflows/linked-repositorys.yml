@@ -52,6 +52,12 @@ jobs:
           cwd: "./Packages/com.mattshark.openflight/Runtime/TMP/LiberationFonts"
           command: x
         
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: LiberationFonts
+          path: '.'
+        
 #      - name: Commit
 #        uses: EndBug/add-and-commit@v7
 #        with:
@@ -66,10 +72,14 @@ jobs:
         uses: JesseTG/rm@v1.0.3
         with:
           path: ${{ env.TemporaryFolder }}
+      
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v3
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
+          name: Final Artifact
           path: '.'
 
         
