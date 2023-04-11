@@ -53,10 +53,10 @@ jobs:
           command: x
       
       - name: Flatten Directory
-        run: mv "./Packages/com.mattshark.openflight/Runtime/TMP/LiberationFonts/liberation-fonts-ttf-${{ steps.liberation-fonts-release.outputs.tag }}/*" "./Packages/com.mattshark.openflight/Runtime/TMP/LiberationFonts/"
+        run: mv "./Packages/com.mattshark.openflight/Runtime/TMP/LiberationFonts/liberation-fonts-ttf-${{ steps.liberation-fonts-release.outputs.tag_name }}/*" "./Packages/com.mattshark.openflight/Runtime/TMP/LiberationFonts/"
 
       - name: Remove Flattened Directory
-        run: rm -rf "./Packages/com.mattshark.openflight/Runtime/TMP/LiberationFonts/liberation-fonts-ttf-${{ steps.liberation-fonts-release.outputs.tag }}"
+        run: rm -rf "./Packages/com.mattshark.openflight/Runtime/TMP/LiberationFonts/liberation-fonts-ttf-${{ steps.liberation-fonts-release.outputs.tag_name }}"
         
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
