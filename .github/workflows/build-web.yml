@@ -4,6 +4,7 @@ env:
   CurrentPackageName: com.mattshark.openflight
   listPublishDirectory: Website
   pathToCi: ci
+  PackageListingSuffix: System
   
 on: 
   workflow_dispatch:
@@ -38,7 +39,8 @@ jobs:
       - uses: actions/checkout@v3 # check out this repo
       - uses: actions/checkout@v3 # check out automation repo
         with:
-          repository: vrchat-community/package-list-action
+          #repository: vrchat-community/package-list-action
+          repository: Happyrobot33/package-list-action #TODO: Change this to the main repo once it's merged
           path: ${{env.pathToCi}}
           clean: false # otherwise the local repo will no longer be checked out
           
@@ -51,7 +53,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
           
       - name: Build Package Version Listing
-        run: ${{env.pathToCi}}/build.cmd BuildRepoListing --root ${{env.pathToCi}} --list-publish-directory $GITHUB_WORKSPACE/${{env.listPublishDirectory}} --current-package-name ${{env.CurrentPackageName}}
+        run: ${{env.pathToCi}}/build.cmd BuildRepoListing --root ${{env.pathToCi}} --list-publish-directory $GITHUB_WORKSPACE/${{env.listPublishDirectory}} --current-package-name ${{env.CurrentPackageName}} --package-listing-suffix ${{env.PackageListingSuffix}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
  
