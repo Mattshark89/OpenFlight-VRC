@@ -6,6 +6,9 @@ on:
   schedule:
     - cron: '0 0 * * *' # Every day at midnight
 
+env:
+  TemporaryFolder: ./ActionsTemporary
+
 permissions:
   contents: write
 
@@ -31,11 +34,18 @@ jobs:
           text: ${{ steps.liberation-fonts-release.outputs.body }}
           regex: 'http[s]?:\/\/(?=.*ttf)(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.tar\.gz'
         
+      - name: Download Zip
+        uses: suisei-cn/actions-download-file@v1.3.0
+        id: liberation-fonts-download-zip
+        with:
+          url: ${{ steps.liberation-fonts-zip-url.outputs.match }}
+          target: ${{ env.TemporaryFolder }}/LiberationFonts.tar.gz
+        
       - name: Extract Zip
         uses: a7ul/tar-action@v1.1.0
         id: liberation-fonts-extract-zip
         with:
-          files: ${{ steps.liberation-fonts-zip-url.outputs.match }}
+          files: ${{ steps.liberation-fonts-download-zip.outputs.filename }}
           cwd: ${{ github.workspace }}/Packages/com.mattshark.openflight/Runtime/TMP/LiberationFonts
           command: x
       
@@ -48,3 +58,14 @@ jobs:
 #        uses: EndBug/add-and-commit@v7
 #        with:
 #          message: "Update Liberation Fonts to ${{ steps.liberation-fonts-release.outputs.tag }}"
+
+  # This job will cleanup the temporary folder used to store the downloaded files
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove Temporary Folder
+        uses: JesseTG/rm@v1.0.3
+        with:
+          path: ${{ env.TemporaryFolder }}
+
+        
