@@ -37,7 +37,7 @@ jobs:
         with:
           files: ${{ steps.liberation-fonts-zip-url.outputs.match }}
           cwd: ${{ github.workspace }}/Packages/com.mattshark.openflight/Runtime/TMP/LiberationFonts
-          command: xz
+          command: x
       
       - name: Debug Artifacts
         uses: actions/upload-artifact@v3
