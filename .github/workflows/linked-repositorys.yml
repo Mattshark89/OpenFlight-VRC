@@ -7,7 +7,7 @@ on:
     - cron: '0 0 * * *' # Every day at midnight
 
 env:
-  TemporaryFolder: ./ActionsTemporary
+  TemporaryFolder: ActionsTemporary
 
 permissions:
   contents: write
