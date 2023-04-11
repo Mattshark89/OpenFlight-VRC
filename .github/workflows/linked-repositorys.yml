@@ -31,8 +31,19 @@ jobs:
           text: ${{ steps.liberation-fonts-release.outputs.body }}
           regex: 'http[s]?:\/\/(?=.*ttf)(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.tar\.gz'
         
-      - name: debug
-        run: echo "${{ steps.liberation-fonts-zip-url.outputs.match }}"
+      - name: Extract Zip
+        uses: a7ul/tar-action@v1.1.0
+        id: liberation-fonts-extract-zip
+        with:
+          tarfile: ${{ steps.liberation-fonts-zip-url.outputs.match }}
+          target: ${{ github.workspace }}/Packages/com.mattshark.openflight/Runtime/TMP/LiberationFonts
+          strip: 1
+          flags: zxf
+      
+      - name: Debug Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: '.'
         
 #      - name: Commit
 #        uses: EndBug/add-and-commit@v7
