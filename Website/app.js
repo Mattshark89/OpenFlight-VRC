@@ -93,6 +93,7 @@ const setTheme = () => {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('install') === 'true') {
     vccAddRepoButton.click();
+    alert('VCC will now open and add this repository to your list of repositories. You can then install packages from this repository, and they will be automatically updated when a new version is released. You can close this tab now.');
   }
 
   const vccUrlFieldCopy = document.getElementById('vccUrlFieldCopy');
