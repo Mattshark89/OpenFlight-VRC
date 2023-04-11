@@ -45,7 +45,7 @@ jobs:
         uses: a7ul/tar-action@v1.1.0
         id: liberation-fonts-extract-zip
         with:
-          files: ${{ steps.liberation-fonts-download-zip.outputs.filename }}
+          files: ${{ env.TemporaryFolder }}/${{ steps.liberation-fonts-download-zip.outputs.filename }}
           cwd: ${{ github.workspace }}/Packages/com.mattshark.openflight/Runtime/TMP/LiberationFonts
           command: x
       
