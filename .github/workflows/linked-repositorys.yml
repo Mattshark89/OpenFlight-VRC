@@ -1,0 +1,33 @@
+name: Update Dependencies
+#This workflow will pull from multiple other repositorys release pages and push the relevant artifact of the release to this repository in specific locations
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *' # Every day at midnight
+
+permissions:
+  contents: write
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3 # check out this repo
+
+      - name: Get Latest Release # get the liberation-fonts latest release
+        id: liberation-fonts-release
+        uses: cardinalby/git-get-release-action@1.2.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repo: "liberationfonts/liberation-fonts"
+          latest: true
+        
+      - name: debug
+        run: echo ${{ steps.liberation-fonts-release.outputs.body }}
+        
+#      - name: Commit
+#        uses: EndBug/add-and-commit@v7
+#        with:
+#          message: "Update Liberation Fonts to ${{ steps.liberation-fonts-release.outputs.tag }}"
