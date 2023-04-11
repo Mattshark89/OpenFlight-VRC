@@ -39,7 +39,7 @@ jobs:
           cmd: "jq '[.Bases | to_entries[].value | to_entries[].value.Hash[]] | length' $DATA_JSON_PATH"
       - name: Count TODOs
         id: count_todos
-        run: $(($(grep -r "#TODO:" . | wc -l)-1)) #subtract 1 to account for this line
+        run: grep -r "#TODO:" . | wc -l | awk '{print $1-1}' #subtract 1 to account for this line
       
 
       #Put badge creation here
