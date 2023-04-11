@@ -89,6 +89,11 @@ const setTheme = () => {
 
   const vccAddRepoButton = document.getElementById('vccAddRepoButton');
   vccAddRepoButton.addEventListener('click', () => window.location.assign(`vcc://vpm/addRepo?url=${encodeURIComponent(LISTING_URL)}`));
+  //check to see if the website was accessed with a query of ?install=true
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('install') === 'true') {
+    vccAddRepoButton.click();
+  }
 
   const vccUrlFieldCopy = document.getElementById('vccUrlFieldCopy');
   vccUrlFieldCopy.addEventListener('click', () => {
