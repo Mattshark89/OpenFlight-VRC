@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+        #Put data extraction here
       - name: Extract unique avatar count from data.json
         uses: sergeysova/jq-action@v2
         id: unique_avatar_count
@@ -33,6 +35,16 @@ jobs:
         id: unique_hash_count
         with:
           cmd: "jq '[.Bases | to_entries[].value | to_entries[].value.Hash[]] | length' $DATA_JSON_PATH"
+      - name: Count TODOs
+        id: count_todos
+        run: |
+          todos=$(grep -r "#TODO:" . | wc -l)
+          count=$(($todos-1))
+          echo "Number of TODOs: $count"
+          echo "::set-env name=TODO_COUNT::$count"
+      
+
+      #Put badge creation here
       - name: Create Unique Avatar Count Badge
         uses: RubbaBoy/BYOB@v1.3.0
         with:
@@ -56,4 +68,12 @@ jobs:
           LABEL: 'Unique Avatar Hashes'
           STATUS: ${{ steps.unique_hash_count.outputs.value }}
           COLOR: blue
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create TODO Count Badge
+        uses: RubbaBoy/BYOB@v1.3.0
+        with:
+          NAME: todo_count
+          LABEL: 'TODOs'
+          STATUS: ${{ env.TODO_COUNT }}
+          COLOR: yellow
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
