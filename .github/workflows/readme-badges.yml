@@ -39,11 +39,7 @@ jobs:
           cmd: "jq '[.Bases | to_entries[].value | to_entries[].value.Hash[]] | length' $DATA_JSON_PATH"
       - name: Count TODOs
         id: count_todos
-        run: |
-          todos=$(grep -r "#TODO:" . | wc -l)
-          count=$(($todos-1))
-          echo "Number of TODOs: $count"
-          echo "::set-env name=TODO_COUNT::$count"
+        run: $(($(grep -r "#TODO:" . | wc -l)-1)) #subtract 1 to account for this line
       
 
       #Put badge creation here
@@ -76,6 +72,6 @@ jobs:
         with:
           NAME: todo_count
           LABEL: 'TODOs'
-          STATUS: ${{ env.TODO_COUNT }}
+          STATUS: ${{ steps.count_todos.outputs.value }}
           COLOR: yellow
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

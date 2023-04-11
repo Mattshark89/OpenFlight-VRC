@@ -3,6 +3,7 @@
 This is a VRChat flight system that allow all kinds of avatars to fly. As of right now, it supports a variety of avatar bases that have wings; just jump and flap!
 Note that this is a World/Udon project. This system cannot be installed to an avatar directly, only a world.
 
+![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/todo_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/unique_avatar_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/total_avatar_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/unique_hash_count)
