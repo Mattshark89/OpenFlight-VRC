@@ -35,10 +35,9 @@ jobs:
         uses: a7ul/tar-action@v1.1.0
         id: liberation-fonts-extract-zip
         with:
-          tarfile: ${{ steps.liberation-fonts-zip-url.outputs.match }}
-          target: ${{ github.workspace }}/Packages/com.mattshark.openflight/Runtime/TMP/LiberationFonts
-          strip: 1
-          flags: zxf
+          files: ${{ steps.liberation-fonts-zip-url.outputs.match }}
+          cwd: ${{ github.workspace }}/Packages/com.mattshark.openflight/Runtime/TMP/LiberationFonts
+          command: xz
       
       - name: Debug Artifacts
         uses: actions/upload-artifact@v3
