@@ -23,9 +23,16 @@ jobs:
         with:
           repo: "liberationfonts/liberation-fonts"
           latest: true
+      
+      - name: Get Zip URL
+        id: liberation-fonts-zip-url
+        uses: actions-ecosystem/action-regex-match@v2
+        with:
+          text: ${{ steps.liberation-fonts-release.outputs.body }}
+          regex: '\((http[s]?:\/\/(?=.*ttf)(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.tar\.gz)\)'
         
       - name: debug
-        run: echo ${{ steps.liberation-fonts-release.outputs.body }}
+        run: echo ${{ steps.liberation-fonts-zip-url.outputs.match }}
         
 #      - name: Commit
 #        uses: EndBug/add-and-commit@v7
