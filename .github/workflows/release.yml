@@ -36,11 +36,21 @@ jobs:
       - name: sanitize name
         id: sanitizeName
         run: echo prop=$(echo '${{ steps.name.outputs.prop }}' | tr ' ' '_') >> $GITHUB_OUTPUT
+
+      - name: generate tag
+        id: tag
+        run: echo prop="${{ steps.sanitizeName.outputs.prop }}-${{ steps.version.outputs.prop }}" >> $GITHUB_OUTPUT
+      
+      - name: Check if Release Tag Exists
+        id: checkReleaseTag
+        uses: mukunku/tag-exists-action@v1.2.0
+        with:
+          tag: ${{ steps.tag.outputs.prop }}
     
       - name: Set Environment Variables
         run: |
-          echo "zipFile=${{ matrix.packageID }}-${{ steps.version.outputs.prop }}".zip >> $GITHUB_ENV
-          echo "unityPackage=${{ matrix.packageID }}-${{ steps.version.outputs.prop }}.unitypackage" >> $GITHUB_ENV
+          echo "zipFile=${{ matrix.packageID }}-${{ steps.tag.outputs.prop }}".zip >> $GITHUB_ENV
+          echo "unityPackage=${{ matrix.packageID }}-${{ steps.tag.outputs.prop }}.unitypackage" >> $GITHUB_ENV
         
       - name: Create Zip
         uses: thedoctor0/zip-release@09336613be18a8208dfa66bd57efafd9e2685657
@@ -64,9 +74,10 @@ jobs:
           path: "./${{ env.releaseTemplate }}"
         
       - name: Make Release
+        if: ${{ steps.checkReleaseTag.outputs.exists == 'false' }}
         uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5
         with:
-          tag_name: "${{ steps.sanitizeName.outputs.prop }}-${{ steps.version.outputs.prop }}"
+          tag_name: "${{ steps.tag.outputs.prop }}"
           files: |
             ${{ env.zipFile }}
             ${{ env.unityPackage }}
