@@ -16,13 +16,15 @@ The list of avatars that are permitted to fly is fetched from a GitHub-hosted js
 
 ## Installation
 
-First step: make sure your VRChat world SDK is up to date. The avatar detection system uses remote string loading, a feature that is very new to Udon!
+First step: make sure your VRChat world SDK is up to date and you are using the Vrchat Creator Companion. The avatar detection system uses remote string loading, a feature that is very new to Udon and not available in older SDKs (which means you MUST use the VCC to install UdonSharp)
 
-Next, you will need all of these installed in your project first in order for Open-Flight to work. Install these in order:
-1. [UdonSharp](https://github.com/MerlinVR/UdonSharp)
-2. [udon-json](https://github.com/koyashiro/udon-json)
-3. [udon-list](https://github.com/koyashiro/udon-list)
-4. [udon-dictionary](https://github.com/koyashiro/udon-dictionary)
+You first need to add Koyashiro's repo to your VCC for dependencys
+[Koyashiro's VPM Repos](https://vpm.koyashiro.net/install)
+
+Then, click this link and add the OpenFlight repo to your VCC using the Add to VCC button
+[OpenFlight](https://mattshark89.github.io/OpenFlight-VRC/?install=true)
+
+If clicking on either of those links seems to have done nothing on your Vrchat Creator Companion window, you need to update it.
 
 You can try out the latest stable version of OpenFlight here: https://vrchat.com/home/launch?worldId=wrld_e61cba97-a1a9-4c53-93d2-7bb77240a2e7
 Alternate development world by Happyrobot33: https://vrchat.com/home/launch?worldId=wrld_ef75dcc8-02fa-43ef-8f42-7b8159783d3d
@@ -30,8 +32,8 @@ Alternate development world by Happyrobot33: https://vrchat.com/home/launch?worl
 
 ## How to use
 
-After installing the four packages listed above, import the Unity package from [Releases](https://github.com/Mattshark89/OpenFlight-VRC/releases) and place the prefab "OpenFlight" anywhere in your world. This should be all you need for most worlds.
-To fine-tune the flight settings, select the WingedFlight GameObject inside of the prefab and check the Inspector. Check the README.md file within the Unity Package for more details.
+After installing the VCC packages listed above, add them to your project by clicking "manage project" in the VCC and selecting OpenFlight. Once you are in your project, place the prefab "OpenFlight", which is under "Packages\com.mattshark.openflight\Runtime", anywhere in your world. This should be all you need for most worlds.
+To fine-tune the flight settings, select the WingedFlight GameObject inside of the prefab and check the Inspector. Check the README.md file within the Package for more details.
 
 
 ## I want to add an avatar to the list!
