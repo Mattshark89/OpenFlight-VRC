@@ -32,7 +32,7 @@ Alternate development world by Happyrobot33: https://vrchat.com/home/launch?worl
 
 ## How to use
 
-After installing the VCC packages listed above, add them to your project by clicking "manage project" in the VCC and selecting OpenFlight. Once you are in your project, place the prefab "OpenFlight", which is under "Packages\com.mattshark.openflight\Runtime", anywhere in your world. This should be all you need for most worlds.
+After installing the VCC packages listed above, add them to your project by clicking "manage project" in the VCC and selecting OpenFlight. Once you are in your project, look for the dropdown labeled VRC Packages along the bar that has File and Edit, and inside it go to OpenFlight > Prefabs. You can choose between the lite or full version. The main difference is that the lite version does not come with the tablet on it. Clicking on any of the listed prefabs will automatically add it to your currently open scene. As long as you dont unlink the prefab that it adds, there is no need to do this again if you update the package, as that prefab will update with it.
 To fine-tune the flight settings, select the WingedFlight GameObject inside of the prefab and check the Inspector. Check the README.md file within the Package for more details.
 
 
