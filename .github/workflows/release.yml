@@ -47,7 +47,7 @@ jobs:
         
       - name: Get Release Template Contents
         run: |
-          echo "releaseTemplateContents=$(cat ${{ env.releaseTemplate }})" >> $GITHUB_ENV
+          echo "releaseTemplateContents=$(cat "${{ env.releaseTemplate }}"")" >> $GITHUB_ENV
         
       - name: Make Release
         uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5
