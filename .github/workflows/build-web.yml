@@ -1,10 +1,8 @@
 name: Update Website
 
 env:
-  CurrentPackageName: com.mattshark.openflight
   listPublishDirectory: Website
   pathToCi: ci
-  PackageListingSuffix: System
   
 on: 
   workflow_dispatch:
@@ -54,7 +52,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
           
       - name: Build Package Version Listing
-        run: ${{env.pathToCi}}/build.cmd BuildRepoListing --root ${{env.pathToCi}} --list-publish-directory $GITHUB_WORKSPACE/${{env.listPublishDirectory}} --current-package-name ${{env.CurrentPackageName}} --package-listing-suffix ${{env.PackageListingSuffix}}
+        run: ${{env.pathToCi}}/build.cmd BuildMultiPackageListing --root ${{env.pathToCi}} --list-publish-directory $GITHUB_WORKSPACE/${{env.listPublishDirectory}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
  

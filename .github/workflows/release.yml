@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
 
 env:
-  packageName: "com.mattshark.openflight"
   releaseTemplate: "RELEASE TEMPLATE.md"
 
 permissions:
@@ -13,8 +12,10 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        packageID: [com.mattshark.openflight]
     steps:
-    
       - name: Checkout
         uses: actions/checkout@v3
     
@@ -22,22 +23,33 @@ jobs:
         id: version
         uses: notiz-dev/github-action-json-property@7c8cf5cc36eb85d8d287a8086a39dac59628eb31
         with: 
-            path: "Packages/${{env.packageName}}/package.json"
+            path: "Packages/${{matrix.packageID}}/package.json"
             prop_path: "version"
+      
+      - name: get name
+        id: name
+        uses: notiz-dev/github-action-json-property@7c8cf5cc36eb85d8d287a8086a39dac59628eb31
+        with: 
+            path: "Packages/${{matrix.packageID}}/package.json"
+            prop_path: "displayName"
+      
+      - name: sanitize name
+        id: sanitizeName
+        run: echo prop=$(echo '${{ steps.name.outputs.prop }}' | tr ' ' '_') >> $GITHUB_OUTPUT
     
       - name: Set Environment Variables
         run: |
-          echo "zipFile=${{ env.packageName }}-${{ steps.version.outputs.prop }}".zip >> $GITHUB_ENV
-          echo "unityPackage=${{ env.packageName }}-${{ steps.version.outputs.prop }}.unitypackage" >> $GITHUB_ENV
+          echo "zipFile=${{ matrix.packageID }}-${{ steps.version.outputs.prop }}".zip >> $GITHUB_ENV
+          echo "unityPackage=${{ matrix.packageID }}-${{ steps.version.outputs.prop }}.unitypackage" >> $GITHUB_ENV
         
       - name: Create Zip
         uses: thedoctor0/zip-release@09336613be18a8208dfa66bd57efafd9e2685657
         with:
           type: "zip"
-          directory: "Packages/${{env.packageName}}/"
+          directory: "Packages/${{matrix.packageID}}/"
           filename: "../../${{env.zipFile}}" # make the zip file two directories up, since we start two directories in above
           
-      - run: find "Packages/${{env.packageName}}/" -name \*.meta >> metaList
+      - run: find "Packages/${{matrix.packageID}}/" -name \*.meta >> metaList
           
       - name: Create UnityPackage
         uses: pCYSl5EDgo/create-unitypackage@cfcd3cf0391a5ef1306342794866a9897c32af0b
@@ -54,11 +66,11 @@ jobs:
       - name: Make Release
         uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5
         with:
-          tag_name: ${{ steps.version.outputs.prop }}
+          tag_name: "${{ steps.sanitizeName.outputs.prop }}-${{ steps.version.outputs.prop }}"
           files: |
             ${{ env.zipFile }}
             ${{ env.unityPackage }}
-            Packages/${{ env.packageName }}/package.json
+            Packages/${{ matrix.packageID }}/package.json
           body: |
             ${{ steps.ReleaseTemplateContents.outputs.content }}
           prerelease: true
