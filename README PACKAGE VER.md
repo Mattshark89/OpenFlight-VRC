@@ -16,13 +16,15 @@ The list of avatars that are permitted to fly is fetched from a GitHub-hosted js
 
 ## Installation
 
-First step: make sure your VRChat world SDK is up to date. The avatar detection system uses remote string loading, a feature that is very new to Udon!
+First step: make sure your VRChat world SDK is up to date and you are using the Vrchat Creator Companion. The avatar detection system uses remote string loading, a feature that is very new to Udon and not available in older SDKs (which means you MUST use the VCC to install UdonSharp)
 
-Next, click this link and add the repo to your VCC using the Add to VCC button
+You first need to add Koyashiro's repo to your VCC for dependencys
+[Koyashiro's VPM Repos](https://vpm.koyashiro.net/install)
+
+Then, click this link and add the OpenFlight repo to your VCC using the Add to VCC button
 [OpenFlight](https://mattshark89.github.io/OpenFlight-VRC/?install=true)
 
-You will also need to add this repo to your VCC
-[Koyashiro's VPM Repos](https://vpm.koyashiro.net/install)
+If clicking on either of those links seems to have done nothing on your Vrchat Creator Companion window, you need to update it.
 
 You can try out the latest stable version of OpenFlight here: https://vrchat.com/home/launch?worldId=wrld_e61cba97-a1a9-4c53-93d2-7bb77240a2e7
 Alternate development world by Happyrobot33: https://vrchat.com/home/launch?worldId=wrld_ef75dcc8-02fa-43ef-8f42-7b8159783d3d
