@@ -3,7 +3,7 @@ on:
   # Runs on pushes targeting the default branch
   push:
     paths:
-      - "./Packages/com.mattshark.openflight/Runtime/**"
+      - "./Packages/com.mattshark.openflight/**"
       - ".github/**"
       - "Website/**"
     #branches: ["main"]
