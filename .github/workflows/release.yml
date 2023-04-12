@@ -5,6 +5,7 @@ on:
 
 env:
   packageName: "com.mattshark.openflight"
+  releaseTemplate: "RELEASE TEMPLATE.md"
 
 permissions:
   contents: write
@@ -53,3 +54,5 @@ jobs:
             ${{ env.zipFile }}
             ${{ env.unityPackage }}
             Packages/${{ env.packageName }}/package.json
+          body: |
+            ${{ env.releaseTemplate }}
