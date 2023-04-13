@@ -11,12 +11,13 @@ Note that this is a World/Udon project. This system cannot be installed to an av
 ## How does it work?
 
 At its base level, winged avatars are permitted to fly in the world. Flight is performed by jumping and immediately flapping one's arms like a bird. Optionally, one can also hold their arms straight out to glide. Additional features and settings can be enabled within the Unity inspector or on the provided in-world settings tablet.
+
 The list of avatars that are permitted to fly is fetched from a GitHub-hosted json file as soon as the player joins the world. That means as soon as an avatar is added to the list, it is automatically supported by every world that has OpenFlight installed.
 
 
 ## Installation
 
-First step: make sure your VRChat world SDK is up to date and you are using the Vrchat Creator Companion. The avatar detection system uses remote string loading, a feature that is very new to Udon and not available in older SDKs (which means you MUST use the VCC to install UdonSharp)
+First step: make sure your VRChat world SDK is up to date and you are using the VRChat Creator Companion. The avatar detection system uses remote string loading, a feature that is very new to Udon and not available in older SDKs (which means you MUST use the VCC to install UdonSharp)
 
 You first need to add Koyashiro's repo to your VCC for dependencys
 [Koyashiro's VPM Repos](https://vpm.koyashiro.net/install)
@@ -24,26 +25,32 @@ You first need to add Koyashiro's repo to your VCC for dependencys
 Then, click this link and add the OpenFlight repo to your VCC using the Add to VCC button
 [OpenFlight](https://mattshark89.github.io/OpenFlight-VRC/?install=true)
 
-If clicking on either of those links seems to have done nothing on your Vrchat Creator Companion window, you need to update it.
+If clicking on either of those links seems to have done nothing on your VRChat Creator Companion window, you need to update it.
 
 You can try out the latest stable version of OpenFlight here: https://vrchat.com/home/launch?worldId=wrld_e61cba97-a1a9-4c53-93d2-7bb77240a2e7
+
 Alternate development world by Happyrobot33: https://vrchat.com/home/launch?worldId=wrld_ef75dcc8-02fa-43ef-8f42-7b8159783d3d
 
 
 ## How to use
 
-After installing the VCC packages listed above, add them to your project by clicking "manage project" in the VCC and selecting OpenFlight. Once you are in your project, look for the dropdown labeled VRC Packages along the bar that has File and Edit, and inside it go to OpenFlight > Prefabs. You can choose between the lite or full version. The main difference is that the lite version does not come with the tablet on it. Clicking on any of the listed prefabs will automatically add it to your currently open scene. As long as you dont unlink the prefab that it adds, there is no need to do this again if you update the package, as that prefab will update with it.
+After installing the VCC packages listed above, add them to your project by clicking "Manage Project" in the VCC and selecting OpenFlight. Once you are in your project, look for the dropdown labeled VRC Packages along the bar that has File and Edit, and inside it go to OpenFlight > Prefabs. Clicking on one of the listed prefabs will automatically add it to your currently open scene (The main/full prefab includes the recommended tablet that includes additional settings. If all you want is a toggle button, use the Lite prefab instead. You only need to select one prefab.) As long as you dont unlink the prefab that it adds, there is no need to do this again if you update the package, as that prefab will update with it.
+
 To fine-tune the flight settings, select the WingedFlight GameObject inside of the prefab and check the Inspector. Check the README.md file within the Package for more details.
 
 
 ## I want to add an avatar to the list!
 
 Neato! Check out the json file (https://github.com/Mattshark89/OpenFlight-VRC/blob/main/Packages/com.mattshark.openflight/Runtime/data.json) and make a pull request with your avatar added to the list. Follow the formatting of those who came before you.
-Name is the name of the avatar, Creator the creator, Introducer is you. If the avatar you are requesting was made from a public base, `Name` and `Creator` should reference the public base. Don't put your own names here; put your name in `Introducer` instead.
+
+Name is the name of the avatar, Creator the creator, Introducer is you. If the avatar you are requesting was made from a public base, `Name` and `Creator` should reference the public base. Don't put your own name here; put your name in `Introducer` instead.
+
 The Hash can be obtained from the OpenFlight settings tablet (Debug tab) while your avatar is being worn. WingtipOffset can also be found by turning on `Show Gizmos` in the tablet and adjusting the `WingtipOffset` slider until the center of the sphere is roughly on the tip of your wing/feathers/whathaveyou.
 Once your pull request is made, leave a comment along with it that either has a link to the avatar base or, if there is no public page for it, a photo/screenshot of the avatar.
-Avatars will only be added if they meet one criterion: it has wings that move along with your arms. Wings on your back do not count if they aren't parented to your arms.
-Please let me have three days or so to merge the request before bugging me on Discord: `@Mattshark#1439`
+
+Avatars will only be added if they meet one criterion: it has wings that move along with your arms. Wings on your back do not count if they aren't parented to your arms since flapping... well, your arms, shouldn't cause you to fly now should it?
+
+Please let me have three days or so to merge the request before DM'ing me on Discord: `@Mattshark#1439`
 
 
 ## Plans for the future
@@ -64,9 +71,12 @@ In no particular order:
 
 ## Credits
 
-The VRChat team for their awesome social platform
-`Mattshark89`: Flight/Gliding physics engine, repository manager
-`Happyrobot33`: Avatar detection system, settings tablet
-Github contributors: https://github.com/Mattshark89/OpenFlight-VRC/graphs/contributors
+- The VRChat team for their awesome social platform
+
+- `Mattshark89`: Flight/Gliding physics engine, repository manager
+
+- `Happyrobot33`: Avatar detection system, settings tablet, VCC package manager shenanigans
+
+- Github contributors: https://github.com/Mattshark89/OpenFlight-VRC/graphs/contributors
 
 ...and several others for giving suggestions and helping fix critical bugs. You all are great!
