@@ -1,9 +1,35 @@
-﻿
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
 using VRC.SDKBase;
 using VRC.Udon;
+
+#if !COMPILER_UDONSHARP && UNITY_EDITOR // These using statements must be wrapped in this check to prevent issues on builds
+using UnityEditor;
+using UdonSharpEditor;
+#endif
+
+// This is a custom inspector for the WingFlightPlusGlide script. It currently just adds a reset to defaults button
+#if !COMPILER_UDONSHARP && UNITY_EDITOR
+[CustomEditor(typeof(WingFlightPlusGlide))]
+public class WingFlightPlusGlideEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        WingFlightPlusGlide script = (WingFlightPlusGlide)target;
+
+        if (UdonSharpGUI.DrawDefaultUdonSharpBehaviourHeader(target)) return;
+
+        if (GUILayout.Button("Reset to Prefab Defaults"))
+        {
+            // Reset all values to the default in the prefab
+            PrefabUtility.ResetToPrefabState(script);
+        }
+
+        DrawDefaultInspector();
+    }
+}
+#endif
 
 public class WingFlightPlusGlide : UdonSharpBehaviour {
     [Header("Basic Settings")]
