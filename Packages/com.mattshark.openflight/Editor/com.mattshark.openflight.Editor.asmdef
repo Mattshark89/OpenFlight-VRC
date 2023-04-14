@@ -1,7 +1,9 @@
 {
-    "name": "com.mattshark.openflight.Editor",
+    "name": "com.mattshark.openflight.editor",
     "references": [],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
