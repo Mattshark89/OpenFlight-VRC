@@ -8,17 +8,24 @@ You can try out the latest stable version of OpenFlight here: https://vrchat.com
 
 ## Installation
 
-You will need all of these installed in your project first in order for OpenFlight to work. Install these in order:
-1. [UdonSharp](https://github.com/MerlinVR/UdonSharp)
-2. [udon-json](https://github.com/koyashiro/udon-json)
-3. [udon-list](https://github.com/koyashiro/udon-list)
-4. [udon-dictionary](https://github.com/koyashiro/udon-dictionary)
+First step: make sure your VRChat world SDK is up to date and you are using the VRChat Creator Companion. The avatar detection system uses remote string loading, a feature that is very new to Udon and not available in older SDKs (which means you MUST use the VCC to install UdonSharp)
+
+You first need to add Koyashiro's repo to your VCC for dependencys
+[Koyashiro's VPM Repos](https://vpm.koyashiro.net/install)
+
+Then, click this link and add the OpenFlight repo to your VCC using the Add to VCC button
+[OpenFlight](https://mattshark89.github.io/OpenFlight-VRC/?install=true)
+
+If clicking on either of those links seems to have done nothing on your VRChat Creator Companion window, you need to update it.
+
+Now you can use VCC's Manage Project button to manually add OpenFlight to your world. It should automatically enable all dependencies as well.
 
 
 ## How to use
 
-After installing the four packages listed above, place the prefab "OpenFlight" anywhere in your world. This should be all you need for most worlds.
-If you would rather limit the OpenFlight system to a simple toggle button, use "OpenFlight (Lite)" instead of "OpenFlight".
+After installing OpenFlight, you should see a VRC Packages button at the top of your Unity window. From there you can select which OpenFlight prefab you want to use.
+
+Lite only includes a toggle button for flight. In most cases it is recommended you use Full instead which includes a tablet allowing users to tweak their flight settings and enable extra features.
 
 To fine-tune the flight physics and other settings, select the WingedFlight GameObject inside of the prefab and check the Inspector. You can also test these values ingame using the OpenFlight tablet.
 (If you plan on hiding the tablet from the average user, keep in mind the tablet will resize itself to match the player's scale; it might peek up through the floor! Instead you should use `OpenFlight (Lite)` and (optionally) disable/remove the WingedToggleBox GameObject.)

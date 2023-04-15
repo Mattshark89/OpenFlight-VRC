@@ -34,13 +34,13 @@ public class WingFlightPlusGlideEditor : Editor
 public class WingFlightPlusGlide : UdonSharpBehaviour {
     [Header("Basic Settings")]
     // Both of these "base" values are by default affected by the avatar's armspan. See sizeCurve.
-    [Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 150)")]
-    [Range(1, 300)]
-	public int flapStrengthBase = 150;
-    int flapStrengthBase_DEFAULT = 150;
-    [Tooltip("Base gravity while flying (Default: 0.2)")]
-    public float flightGravityBase = 0.2f;
-    float flightGravityBase_DEFAULT = 0.2f;
+    [Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 160)")]
+    [Range(1, 400)]
+	public int flapStrengthBase = 160;
+    int flapStrengthBase_DEFAULT = 160;
+    [Tooltip("Base gravity while flying (Default: 0.3)")]
+    public float flightGravityBase = 0.3f;
+    float flightGravityBase_DEFAULT = 0.3f;
     [Tooltip("Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident. (Default: false)")]
     public bool requireJump = false;
     bool requireJump_DEFAULT = false;
