@@ -23,7 +23,7 @@ public class WingFlightPlusGlideEditor : Editor
         if (GUILayout.Button("Reset to Prefab Defaults"))
         {
             // Reset all values to the default in the prefab
-            PrefabUtility.ResetToPrefabState(script);
+            PrefabUtility.RevertObjectOverride(script, InteractionMode.AutomatedAction);
         }
 
         DrawDefaultInspector();
