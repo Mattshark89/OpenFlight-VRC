@@ -90,8 +90,8 @@ public class AvatarDetection : UdonSharpBehaviour
         WingFlightPlusGlide.weight = weight;
 
         //if the player has changed avatars, do the hashing and determine if the avatar is allowed to fly
-        //avatar change is doen by checking if the distance from spine to chest has changed by a significant amount
-        if (Mathf.Abs((float)d_spinetochest - (float)previous_d_spinetochest) > 0.0001f)
+        //avatar change is done by checking if the distance from spine to chest has changed by a significant amount
+        if (Mathf.Abs((float)d_spinetochest - (float)previous_d_spinetochest) > 0.01f)
         {
             previous_d_spinetochest = d_spinetochest;
 
