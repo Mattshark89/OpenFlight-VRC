@@ -139,7 +139,7 @@ public class AvatarDetection : UdonSharpBehaviour
 
             //print all the info to the text
             debugInfo =
-                "HashV1: " +
+                "HashV1 (Do not submit): " +
                 hashV1 + 
                 "\nHashV2: " +
                 hashV2 +
