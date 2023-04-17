@@ -111,7 +111,7 @@ public class AvatarDetection : UdonSharpBehaviour
             hashV2 = getHash(boneVectors, 2);
 
             //check if the hash is the loading avatar, and if it is then dont check if the avatar is allowed to fly
-            if ((hashV1 == -1470672748 || hashV2 == 1439458325) && skipLoadingAvatar)
+            if (hashV2 == 1439458325 && skipLoadingAvatar)
             {
                 debugInfo = "Loading Avatar Detected, ignoring...";
                 name = "Loading Avatar";
