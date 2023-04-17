@@ -91,7 +91,7 @@ public class AvatarDetection : UdonSharpBehaviour
 
         //if the player has changed avatars, do the hashing and determine if the avatar is allowed to fly
         //avatar change is done by checking if the distance from spine to chest has changed by a significant amount
-        if (Mathf.Abs((float)d_spinetochest - (float)previous_d_spinetochest) > 0.01f)
+        if (Mathf.Abs((float)d_spinetochest - (float)previous_d_spinetochest) > 0.001f)
         {
             previous_d_spinetochest = d_spinetochest;
 
