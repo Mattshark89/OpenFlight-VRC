@@ -48,8 +48,8 @@ public class AvatarDetection : UdonSharpBehaviour
     public GameObject wingtipGizmo; //this shows the wingtip offset as a sphere in game. Only works in VR due to implementation
 
     //information about the avatar that has been detected
-    public int hashV1 = 0;
-    public int hashV2 = 0;
+    public string hashV1 = "0";
+    public string hashV2 = "0";
     public float weight = 1;
     public float WingtipOffset = 0;
     public string name = ""; //this is the name of the avatar base
@@ -111,7 +111,7 @@ public class AvatarDetection : UdonSharpBehaviour
             hashV2 = getHash(boneVectors, 2);
 
             //check if the hash is the loading avatar, and if it is then dont check if the avatar is allowed to fly
-            if (hashV2 == 1439458325 && skipLoadingAvatar)
+            if (hashV2 == "1439458325v2" && skipLoadingAvatar)
             {
                 debugInfo = "Loading Avatar Detected, ignoring...";
                 name = "Loading Avatar";
@@ -170,7 +170,7 @@ public class AvatarDetection : UdonSharpBehaviour
             scalingFactor);
     }
 
-    bool isAvatarAllowedToFly(int in_hashV1, int in_hashV2)
+    bool isAvatarAllowedToFly(string in_hashV1, string in_hashV2)
     {
         var avi_bases = json.GetValue("Bases"); //array of all the bases
         for (int i = 0; i < avi_bases.Count(); i++)
@@ -229,7 +229,7 @@ public class AvatarDetection : UdonSharpBehaviour
     }
 
     //bonePositions [chest, head, neck, leftShoulder, LeftUpperArm, LeftLowerArm, LeftHand]
-    int getHash(Vector3[] bonePositions, int version)
+    string getHash(Vector3[] bonePositions, int version)
     {
         int scalingFactor;
         int d_necktohead;
@@ -249,7 +249,7 @@ public class AvatarDetection : UdonSharpBehaviour
                 d_leftlowertolefthand = getBoneDistance(bonePositions[5], bonePositions[6], scalingFactor);
 
                 boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
-                return boneInfo.GetHashCode();
+                return boneInfo.GetHashCode().ToString();
             case 2:
                 scalingFactor = 100;
                 d_necktohead = getBoneDistance(bonePositions[2], bonePositions[1], scalingFactor);
@@ -259,10 +259,10 @@ public class AvatarDetection : UdonSharpBehaviour
                 d_leftlowertolefthand = getBoneDistance(bonePositions[5], bonePositions[6], scalingFactor);
 
                 boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
-                return boneInfo.GetHashCode();
+                return boneInfo.GetHashCode().ToString() + "v2";
             default:
                 Debug.LogError("Invalid Hash Version Sent");
-                return 0;
+                return "0";
         }
     }
 
