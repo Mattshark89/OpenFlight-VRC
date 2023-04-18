@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using VRC.SDKBase;
 using VRC.Udon;
+using TMPro;
+
 
 #if !COMPILER_UDONSHARP && UNITY_EDITOR // These using statements must be wrapped in this check to prevent issues on builds
 using UnityEditor;
@@ -79,8 +81,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
 
     [Tooltip("Similar to Size Curve, but instead of modifying Flap Strength, it only affects Gravity. This value is ignored (Size Curve will be used instead) unless Use Gravity Curve is enabled.")]
     public AnimationCurve gravityCurve = new AnimationCurve(new Keyframe(0.05f, 0.4f), new Keyframe(1, 0.2f), new Keyframe(20, 0.00039f));
-    [Tooltip("If a GameObject with a Text component is attached here, debug some basic info into it. (Default: unset)")]
-    public Text debugOutput;
+    [Tooltip("If a GameObject with a TextMeshPro component is attached here, debug some basic info into it. (Default: unset)")]
+    public TextMeshProUGUI debugOutput;
     [Tooltip("[BETA FEATURE] Banking to the left or right will force the player to rotate. May cause network lag? (Default: false)")]
     public bool bankingTurns = false;
     bool bankingTurns_DEFAULT = false;
@@ -339,7 +341,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                 timeTick = 0;
                 CalculateStats();
                 if (debugOutput != null) {
-                    debugOutput.text = string.Concat("Armspan:\n", armspan.ToString()) + string.Concat("\nFlapStr:\n", flapStrength().ToString()) + string.Concat("\nGrav: ", (Mathf.Round(LocalPlayer.GetGravityStrength() * 1000) * 0.001f).ToString());
+                    debugOutput.text = string.Concat("\nIsFlying: ", isFlying.ToString()) + string.Concat("\nIsFlapping: ", isFlapping.ToString()) + string.Concat("\nIsGliding: ", isGliding.ToString()) + string.Concat("\nHandsOut: ", handsOut.ToString()) + string.Concat("\nDownThrust: ", downThrust.ToString()) + string.Concat("\nGrounded: ", LocalPlayer.IsPlayerGrounded().ToString());
                 }
             }
         }

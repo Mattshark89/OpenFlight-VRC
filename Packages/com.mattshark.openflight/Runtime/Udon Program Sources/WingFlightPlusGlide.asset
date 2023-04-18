@@ -1426,7 +1426,7 @@ MonoBehaviour:
       Data: 73|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: UnityEngine.UI.Text, UnityEngine.UI
+      Data: TMPro.TextMeshProUGUI, Unity.TextMeshPro
     - Name: 
       Entry: 8
       Data: 
@@ -1456,8 +1456,8 @@ MonoBehaviour:
       Data: 75|UnityEngine.TooltipAttribute, UnityEngine.CoreModule
     - Name: tooltip
       Entry: 1
-      Data: 'If a GameObject with a Text component is attached here, debug some basic
-        info into it. (Default: unset)'
+      Data: 'If a GameObject with a TextMeshPro component is attached here, debug
+        some basic info into it. (Default: unset)'
     - Name: 
       Entry: 8
       Data: 
