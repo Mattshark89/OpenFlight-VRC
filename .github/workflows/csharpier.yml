@@ -1,5 +1,10 @@
 name: Validate PR
-on: [workflow_dispatch]
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 jobs:
   check_formatting:
     runs-on: ubuntu-latest
