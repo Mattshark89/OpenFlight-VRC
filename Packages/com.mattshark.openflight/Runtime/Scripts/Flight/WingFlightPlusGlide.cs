@@ -36,10 +36,10 @@ public class WingFlightPlusGlideEditor : Editor
 public class WingFlightPlusGlide : UdonSharpBehaviour {
     [Header("Basic Settings")]
     // Both of these "base" values are by default affected by the avatar's armspan. See sizeCurve.
-    [Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 160)")]
-    [Range(1, 400)]
-	public int flapStrengthBase = 160;
-    int flapStrengthBase_DEFAULT = 160;
+    [Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 225)")]
+    [Range(100, 800)]
+	public int flapStrengthBase = 225;
+    int flapStrengthBase_DEFAULT = 225;
     [Tooltip("Base gravity while flying (Default: 0.3)")]
     public float flightGravityBase = 0.3f;
     float flightGravityBase_DEFAULT = 0.3f;
@@ -61,19 +61,19 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
 
     [Header("Advanced Settings (Only for specialized use!)")]
     [Tooltip("How much Flap Strength and Flight Gravity are affected by an avatar's armspan. Default values will make smaller avis feel lighter and larger avis heavier.")]
-    public AnimationCurve sizeCurve = new AnimationCurve(new Keyframe(0.05f, 1.2f), new Keyframe(1, 1), new Keyframe(20, 0.00001f));
+    public AnimationCurve sizeCurve = new AnimationCurve(new Keyframe(0.05f, 2), new Keyframe(1, 1), new Keyframe(20, 0.00195f));
     [Tooltip("Modifier for horizontal flap strength. Makes flapping forwards easier. (Default: 1.5)")]
     public float horizontalStrengthMod = 1.5f;
     float horizontalStrengthMod_DEFAULT = 1.5f;
     [Tooltip("How tight you want your turns while gliding. May be dynamically decreased by Avatar Modifier: weight. (Default: 1.5)")]
-    [Range(1f, 4f)]
-    public float glideControl = 1.5f; // Do not reduce this below 1; it will break under some weight values if you do
-    float glideControl_DEFAULT = 1.5f;
+    [Range(1f, 5f)]
+    public float glideControl = 2.3f; // Do not reduce this below 1; it will break under some weight values if you do
+    float glideControl_DEFAULT = 2.3f;
 
-	[Tooltip("Slows gliding down over time. (Default: 0.04)")]
+	[Tooltip("Slows gliding down over time. (Default: 0.02)")]
 	[Range(0f, 0.2f)]
-	public float airFriction = 0.04f;
-    float airFriction_DEFAULT = 0.04f;
+	public float airFriction = 0.02f;
+    float airFriction_DEFAULT = 0.02f;
 
     [Tooltip("If enabled, flight gravity will use Gravity Curve's curve instead of Size Curve's curve multiplied by Flight Gravity Base. (Default: false)")]
     public bool useGravityCurve = false;
@@ -105,6 +105,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
 	private int cannotFlyTick = 0; // If >0, disables flight then decreases itself by one
 	private int fallingTick = 0; // Increased by one every tick one's y velocity > 0
     private float tmpFloat;
+	private float dtFake = 0;
 
     // Variables related to Velocity
     private Vector3 finalVelocity; // Modify this value instead of the player's velocity directly, then run `setFinalVelocity = true`
@@ -134,8 +135,10 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private HumanBodyBones leftLowerArmBone;
     private HumanBodyBones rightHandBone;
     private HumanBodyBones leftHandBone;
-	private int simpleAviHash = 0; // These two vars are only used to check if an avi has been recently swapped/scaled
-	private int simpleAviHash_last = 0;
+	private HumanBodyBones spine;
+	private HumanBodyBones chest;
+	private float spineToChest = 0; // These two vars are only used to check if an avi has been recently swapped/scaled
+	private float spineToChest_last = 0;
 	[HideInInspector]
     public float armspan = 1f;
 	[Tooltip("Default avatar wingtipOffset. (Default: 0)")]
@@ -177,6 +180,13 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     }
 
     public void Update() {
+        if ((LocalPlayer != null) && LocalPlayer.IsValid()) {
+			dtFake = dtFake + Time.deltaTime;
+			if (dtFake >= 0.011f) {
+				dtFake = dtFake - 0.011f;
+				FlightTick(0.011f);
+			}
+		}
         if (spinningRightRound) {
             // Rotate the player (only if the Banking Turns beta setting is enabled)
             if (useAvatarModifiers) {
@@ -216,6 +226,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
             rightUpperArmBone = HumanBodyBones.RightUpperArm;
             leftHandBone = HumanBodyBones.LeftHand;
             rightHandBone = HumanBodyBones.RightHand;
+			spine = HumanBodyBones.Spine;
+			chest = HumanBodyBones.Chest;
             CalculateStats();
         }
         setFinalVelocity = false;
@@ -267,7 +279,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                 finalVelocity = LocalPlayer.GetVelocity() + newVelocity;
                 // Speed cap (check, then apply flapping air friction)
                 if (finalVelocity.magnitude > 0.02f * flapStrength()) {
-                    finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength() * 0.02f));
+                    finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength() * 0.01f));
                 }
                 setFinalVelocity = true;
             } else { 
@@ -307,7 +319,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
                         rotSpeedGoal = steering;
                     } else {
                         // Default "banking" which is just midair strafing
-                        wingDirection = Quaternion.Euler(0, steering / 2, 0) * wingDirection;
+                        wingDirection = Quaternion.Euler(0, steering, 0) * wingDirection;
                     }
                     // X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
                     targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(wingDirection) * newVelocity.magnitude), newVelocity.magnitude);
@@ -324,10 +336,10 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         LHPosLast = LHPos;
 
 		// Bug check: if avatar has been swapped, sometimes the player will be launched straight up
-		simpleAviHash = (int)Mathf.Floor(Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone),LocalPlayer.GetBonePosition(leftLowerArmBone)) * 10000);
-		if (simpleAviHash != simpleAviHash_last) {cannotFlyTick = 20;}
+		spineToChest = Vector3.Distance(LocalPlayer.GetBonePosition(chest), LocalPlayer.GetBonePosition(spine));
+		if (Mathf.Abs(spineToChest - spineToChest_last) > 0.001f) {cannotFlyTick = 20;}
 		if (cannotFlyTick > 0) {setFinalVelocity = false; cannotFlyTick--;}
-		simpleAviHash_last = simpleAviHash;
+		spineToChest_last = spineToChest;
         // end Bug Check
 
         if (setFinalVelocity) {LocalPlayer.SetVelocity(finalVelocity);}
@@ -337,16 +349,13 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
         if (timeTick >= 0) {
             timeTick = timeTick + 1;
             // Automatically CalculateStats() every second (assuming VRChat uses the Unity default of 50 ticks per second)
-            if (timeTick > 49) {
+            if (timeTick > 9) {
                 timeTick = 0;
                 CalculateStats();
                 if (debugOutput != null) {
-                    debugOutput.text = string.Concat("\nIsFlying: ", isFlying.ToString()) + string.Concat("\nIsFlapping: ", isFlapping.ToString()) + string.Concat("\nIsGliding: ", isGliding.ToString()) + string.Concat("\nHandsOut: ", handsOut.ToString()) + string.Concat("\nDownThrust: ", downThrust.ToString()) + string.Concat("\nGrounded: ", LocalPlayer.IsPlayerGrounded().ToString());
+                    debugOutput.text = string.Concat("\nIsFlying: ", isFlying.ToString()) + string.Concat("\nIsFlapping: ", isFlapping.ToString()) + string.Concat("\nIsGliding: ", isGliding.ToString()) + string.Concat("\nHandsOut: ", handsOut.ToString()) + string.Concat("\nDownThrust: ", downThrust.ToString()) + string.Concat("\nGrounded: ", LocalPlayer.IsPlayerGrounded().ToString()) + string.Concat("\nCannotFly: ", (cannotFlyTick > 0).ToString());
                 }
             }
-        }
-        if ((LocalPlayer != null) && LocalPlayer.IsValid()) {
-            FlightTick(0.02f);  // Apparently Time.fixedDeltaTime doesn't function as it actually should. Until that's fixed, we're going to stick with 0.02, the default Unity value
         }
     }
 
@@ -403,7 +412,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour {
     private float flapStrength() {
 		if (useAvatarModifiers) {
 			// default settings
-			return sizeCurve.Evaluate(armspan) * (flapStrengthBase + (wingtipOffset * 4));
+			return sizeCurve.Evaluate(armspan) * (flapStrengthBase + (wingtipOffset * 8));
 		} else {
 			return sizeCurve.Evaluate(armspan) * flapStrengthBase + 10;
 		}
