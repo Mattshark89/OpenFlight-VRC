@@ -7,6 +7,7 @@ Note that this is a World/Udon project. This system cannot be installed to an av
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/total_avatar_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/unique_hash_count)  
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/todo_count)
+![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/current_release_downloads)
 
 ## How does it work?
 
