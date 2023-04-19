@@ -7,6 +7,10 @@ on:
       - ".github/**"
       - "Website/**"
     branches: ["main"]
+  
+  #runs every day at midnight
+  schedule:
+    - cron: '0 0 * * *'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -40,7 +44,9 @@ jobs:
       - name: Count TODOs
         id: count_todos
         run: echo value=$(grep -rE "#TODO:|//TODO:" . | wc -l | awk '{print $1-1}') >> $GITHUB_OUTPUT #subtract 1 to account for the grep itself
-      
+      - name: Current Release Downloads #use this api endpoint to get the latest release https://api.github.com/repos/Mattshark89/OpenFlight-VRC/releases?per_page=1
+        id: current_release_downloads
+        run: echo value=$(echo $(curl -s https://api.github.com/repos/Mattshark89/OpenFlight-VRC/releases?per_page=1) | jq '.[0].assets[] | select(.name | endswith(".zip")) | .download_count') >> $GITHUB_OUTPUT
 
       #Put badge creation here
       - name: Create Unique Avatar Count Badge
@@ -74,4 +80,12 @@ jobs:
           LABEL: 'TODOs'
           STATUS: ${{ steps.count_todos.outputs.value }}
           COLOR: yellow
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Current Release Downloads Badge
+        uses: RubbaBoy/BYOB@v1.3.0
+        with:
+          NAME: current_release_downloads
+          LABEL: 'Current Release Downloads'
+          STATUS: ${{ steps.current_release_downloads.outputs.value }}
+          COLOR: green
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

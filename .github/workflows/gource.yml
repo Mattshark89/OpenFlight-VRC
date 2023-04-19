@@ -1,0 +1,28 @@
+name: Gource Action
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  action:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+        
+      - name: 'Gource Action'
+        uses: nbprojekt/gource-action@master
+        with:
+          avatars_auto_fetch: true
+          gource_time_scale: 1
+
+      - name: 'Upload gource video'
+        uses: actions/upload-artifact@v2
+        with:
+          name: Gource
+          path: ./gource/gource.mp4
