@@ -51,10 +51,8 @@ jobs:
           url: 'https://api.github.com/repos/Mattshark89/OpenFlight-VRC/releases?per_page=1'
           method: 'GET'
       - name: Current Release Downloads #use this api endpoint to get the latest release https://api.github.com/repos/Mattshark89/OpenFlight-VRC/releases?per_page=1
-        uses: sergeysova/jq-action@v2
         id: current_release_downloads
-        with:
-          cmd: "jq '.assets[] | select(.name | endswith(\".unitypackage\")) | .download_count' \"${{ steps.current_release_json.outputs.response }}\""
+        run: echo value=$(jq '.assets[] | select(.name | endswith(".unitypackage")) | .download_count' "${{ steps.current_release_json.outputs.response }}") >> $GITHUB_OUTPUT
 
       #Put badge creation here
       - name: Create Unique Avatar Count Badge
