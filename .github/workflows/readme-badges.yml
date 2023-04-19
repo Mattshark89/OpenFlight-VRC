@@ -44,12 +44,6 @@ jobs:
       - name: Count TODOs
         id: count_todos
         run: echo value=$(grep -rE "#TODO:|//TODO:" . | wc -l | awk '{print $1-1}') >> $GITHUB_OUTPUT #subtract 1 to account for the grep itself
-      - name: Get Current Release JSON
-        id: current_release_json
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: 'https://api.github.com/repos/Mattshark89/OpenFlight-VRC/releases?per_page=1'
-          method: 'GET'
       - name: Current Release Downloads #use this api endpoint to get the latest release https://api.github.com/repos/Mattshark89/OpenFlight-VRC/releases?per_page=1
         id: current_release_downloads
         run: echo value=$(echo $(curl -s https://api.github.com/repos/Mattshark89/OpenFlight-VRC/releases?per_page=1) | jq '.[0].assets[] | select(.name | endswith(".zip")) | .download_count') >> $GITHUB_OUTPUT
