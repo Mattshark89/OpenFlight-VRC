@@ -54,7 +54,7 @@ jobs:
         uses: sergeysova/jq-action@v2
         id: current_release_downloads
         with:
-          cmd: "jq '.assets[] | select(.name | endswith(\".unitypackage\")) | .download_count' ${{ steps.current_release_json.outputs.data }}"
+          cmd: "jq '.assets[] | select(.name | endswith(\".unitypackage\")) | .download_count' fromJson(steps.current_release_json.outputs.response)"
 
       #Put badge creation here
       - name: Create Unique Avatar Count Badge
