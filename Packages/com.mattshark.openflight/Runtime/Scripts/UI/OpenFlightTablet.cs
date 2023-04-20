@@ -8,7 +8,6 @@ using TMPro;
 public class OpenFlightTablet : UdonSharpBehaviour
 {
 	VRCPlayerApi localPlayer = null;
-	public string PanelVersion = "0.0.1";
 	public float scalingOffset = 0.1f;
 	public int fadeDistance = 10;
 	public GameObject[] objectsToHideOnFade;
@@ -66,14 +65,7 @@ public class OpenFlightTablet : UdonSharpBehaviour
 
 			//set the version info text
 			VersionInfo.text =
-				"Open-Flight Ver "
-				+ OpenFlight.OpenFlightVersion
-				+ "\nPanel Ver "
-				+ PanelVersion
-				+ "\nJSON Ver "
-				+ AvatarDetection.jsonVersion
-				+ "\nJSON Date "
-				+ AvatarDetection.jsonDate;
+				"Open-Flight Ver " + OpenFlight.OpenFlightVersion + "\nJSON Ver " + AvatarDetection.jsonVersion + "\nJSON Date " + AvatarDetection.jsonDate;
 		}
 	}
 

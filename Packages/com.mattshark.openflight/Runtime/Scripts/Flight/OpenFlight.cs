@@ -7,7 +7,9 @@ using VRC.Udon;
 
 public class OpenFlight : UdonSharpBehaviour
 {
-	public string OpenFlightVersion = "1.0.0";
+	//this removes any override that the editor might have set through the inspector ([HideInInspector] does NOT do that)
+	[System.NonSerialized]
+	public string OpenFlightVersion = "1.2.4";
 	public GameObject wingedFlight;
 	public AvatarDetection avatarDetection;
 	public string flightMode = "Auto";
