@@ -44,7 +44,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 10
+      Data: 11
     - Name: 
       Entry: 7
       Data: 
@@ -212,19 +212,19 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: objectsToHideOnFade
+      Data: allowFade
     - Name: $v
       Entry: 7
       Data: 11|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: objectsToHideOnFade
+      Data: allowFade
     - Name: <UserType>k__BackingField
       Entry: 7
       Data: 12|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: UnityEngine.GameObject[], UnityEngine.CoreModule
+      Data: System.Boolean, mscorlib
     - Name: 
       Entry: 8
       Data: 
@@ -266,31 +266,25 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: OpenFlight
+      Data: objectsToHideOnFade
     - Name: $v
       Entry: 7
       Data: 14|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: OpenFlight
+      Data: objectsToHideOnFade
     - Name: <UserType>k__BackingField
       Entry: 7
       Data: 15|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: OpenFlight, com.mattshark.openflight
+      Data: UnityEngine.GameObject[], UnityEngine.CoreModule
     - Name: 
       Entry: 8
       Data: 
     - Name: <SystemType>k__BackingField
-      Entry: 7
-      Data: 16|System.RuntimeType, mscorlib
-    - Name: 
-      Entry: 1
-      Data: VRC.Udon.UdonBehaviour, VRC.Udon
-    - Name: 
-      Entry: 8
-      Data: 
+      Entry: 9
+      Data: 15
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -305,7 +299,7 @@ MonoBehaviour:
       Data: true
     - Name: _fieldAttributes
       Entry: 7
-      Data: 17|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
+      Data: 16|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
     - Name: 
       Entry: 12
       Data: 0
@@ -326,25 +320,31 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: AvatarDetection
+      Data: OpenFlight
     - Name: $v
       Entry: 7
-      Data: 18|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
+      Data: 17|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: AvatarDetection
+      Data: OpenFlight
     - Name: <UserType>k__BackingField
       Entry: 7
-      Data: 19|System.RuntimeType, mscorlib
+      Data: 18|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: AvatarDetection, com.mattshark.openflight
+      Data: OpenFlight, com.mattshark.openflight
     - Name: 
       Entry: 8
       Data: 
     - Name: <SystemType>k__BackingField
-      Entry: 9
-      Data: 16
+      Entry: 7
+      Data: 19|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: VRC.Udon.UdonBehaviour, VRC.Udon
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -380,25 +380,25 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: VersionInfo
+      Data: AvatarDetection
     - Name: $v
       Entry: 7
       Data: 21|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: VersionInfo
+      Data: AvatarDetection
     - Name: <UserType>k__BackingField
       Entry: 7
       Data: 22|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+      Data: AvatarDetection, com.mattshark.openflight
     - Name: 
       Entry: 8
       Data: 
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 22
+      Data: 19
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -434,19 +434,19 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: activeTabColor
+      Data: VersionInfo
     - Name: $v
       Entry: 7
       Data: 24|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: activeTabColor
+      Data: VersionInfo
     - Name: <UserType>k__BackingField
       Entry: 7
       Data: 25|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: UnityEngine.Color, UnityEngine.CoreModule
+      Data: TMPro.TextMeshProUGUI, Unity.TextMeshPro
     - Name: 
       Entry: 8
       Data: 
@@ -488,19 +488,25 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: inactiveTabColor
+      Data: activeTabColor
     - Name: $v
       Entry: 7
       Data: 27|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: inactiveTabColor
+      Data: activeTabColor
     - Name: <UserType>k__BackingField
-      Entry: 9
-      Data: 25
+      Entry: 7
+      Data: 28|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 25
+      Data: 28
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -515,7 +521,55 @@ MonoBehaviour:
       Data: true
     - Name: _fieldAttributes
       Entry: 7
-      Data: 28|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
+      Data: 29|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: inactiveTabColor
+    - Name: $v
+      Entry: 7
+      Data: 30|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
+    - Name: <Name>k__BackingField
+      Entry: 1
+      Data: inactiveTabColor
+    - Name: <UserType>k__BackingField
+      Entry: 9
+      Data: 28
+    - Name: <SystemType>k__BackingField
+      Entry: 9
+      Data: 28
+    - Name: <SyncMode>k__BackingField
+      Entry: 7
+      Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: <IsSerialized>k__BackingField
+      Entry: 5
+      Data: true
+    - Name: _fieldAttributes
+      Entry: 7
+      Data: 31|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
     - Name: 
       Entry: 12
       Data: 0
@@ -539,13 +593,13 @@ MonoBehaviour:
       Data: tabs
     - Name: $v
       Entry: 7
-      Data: 29|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
+      Data: 32|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
       Data: tabs
     - Name: <UserType>k__BackingField
       Entry: 7
-      Data: 30|System.RuntimeType, mscorlib
+      Data: 33|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
       Data: UnityEngine.UI.Button[], UnityEngine.UI
@@ -554,7 +608,7 @@ MonoBehaviour:
       Data: 
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 30
+      Data: 33
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib
@@ -569,7 +623,7 @@ MonoBehaviour:
       Data: true
     - Name: _fieldAttributes
       Entry: 7
-      Data: 31|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
+      Data: 34|System.Collections.Generic.List`1[[System.Attribute, mscorlib]], mscorlib
     - Name: 
       Entry: 12
       Data: 0

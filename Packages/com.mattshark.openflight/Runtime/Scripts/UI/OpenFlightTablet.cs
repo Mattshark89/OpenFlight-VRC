@@ -10,6 +10,7 @@ public class OpenFlightTablet : UdonSharpBehaviour
 	VRCPlayerApi localPlayer = null;
 	public float scalingOffset = 0.1f;
 	public int fadeDistance = 10;
+	public bool allowFade = true;
 	public GameObject[] objectsToHideOnFade;
 	public OpenFlight OpenFlight;
 	public AvatarDetection AvatarDetection;
@@ -33,7 +34,7 @@ public class OpenFlightTablet : UdonSharpBehaviour
 	void Update()
 	{
 		//check if the player is within the fade distance
-		if (Vector3.Distance(localPlayer.GetPosition(), transform.position) > fadeDistance)
+		if (Vector3.Distance(localPlayer.GetPosition(), transform.position) > fadeDistance && allowFade)
 		{
 			//disable all the objects that should be hidden
 			foreach (GameObject obj in objectsToHideOnFade)
