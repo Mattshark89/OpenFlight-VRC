@@ -8,6 +8,8 @@ using VRC.Udon;
 public class AvatarListLoader : UdonSharpBehaviour
 {
 	public VRCUrl URL = new VRCUrl("https://mattshark89.github.io/OpenFlight-VRC/Assets/OpenFlight-VRC/data.json");
+	
+	[System.NonSerialized]
 	public string Output = "";
 	public TextAsset OfflineJSON;
 	public bool useOfflineJSON = false;

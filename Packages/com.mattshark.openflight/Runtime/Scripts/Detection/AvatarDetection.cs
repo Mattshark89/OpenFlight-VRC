@@ -38,6 +38,8 @@ public class AvatarDetection : UdonSharpBehaviour
 	public AvatarListLoader JSONLoader; //this is the script that loads the JSON list
 	public OpenFlight OpenFlight;
 	public WingFlightPlusGlide WingFlightPlusGlide;
+
+	[System.NonSerialized]
 	string jsonString = ""; //this is the JSON list in string form
 	UdonJsonValue json; //this is the JSON list in a serialized form, allowing for JSON commands to be used on it
 	public bool allowedToFly = false; //this is used to tell openflight if the avatar is allowed to fly
