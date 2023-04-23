@@ -9,7 +9,7 @@ public class OpenFlight : UdonSharpBehaviour
 {
 	//this removes any override that the editor might have set through the inspector ([HideInInspector] does NOT do that)
 	[System.NonSerialized]
-	public string OpenFlightVersion = "1.0.0";
+	public string OpenFlightVersion = "1.2.6";
 	public GameObject wingedFlight;
 	public AvatarDetection avatarDetection;
 	public string flightMode = "Auto";
@@ -17,8 +17,6 @@ public class OpenFlight : UdonSharpBehaviour
 
 	[ReadOnly]
 	public bool flightAllowed = false;
-
-	public TextAsset packageJson;
 
 	void SwitchFlight()
 	{
@@ -32,22 +30,6 @@ public class OpenFlight : UdonSharpBehaviour
 		if (!LocalPlayer.IsUserInVR())
 		{
 			FlightOff();
-		}
-
-		//determine the version by grabbing from package.json
-		if (packageJson != null)
-		{
-			string version = packageJson.text;
-			version = version.Substring(version.IndexOf("version") + 10); //this makes version look like "1.0.0"
-			//remove the first " from the version number
-			version = version.Substring(1);
-			version = version.Substring(0, version.IndexOf("\"")); //this removes the last " from the version number
-			OpenFlightVersion = version;
-		}
-		else
-		{
-			OpenFlightVersion = "N/A";
-			Debug.LogError("OpenFlight: package.json not found. Version number not set.");
 		}
 	}
 
