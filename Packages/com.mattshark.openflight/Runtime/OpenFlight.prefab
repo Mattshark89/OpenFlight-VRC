@@ -155,7 +155,6 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 4190905665610937110}
   URL:
     url: https://mattshark89.github.io/OpenFlight-VRC/data.json
-  Output: 
   OfflineJSON: {fileID: 4900000, guid: 9d86ef9407111214f816a786e6c90ad6, type: 3}
   useOfflineJSON: 0
 --- !u!114 &4190905665610937110
@@ -246,8 +245,6 @@ MonoBehaviour:
   avatarDetection: {fileID: 4190905665518863880}
   flightMode: Auto
   flightAllowed: 0
-  packageJson: {fileID: 8385607101436470782, guid: 39fcfd483fb88994a9bb68718ed8453b,
-    type: 3}
 --- !u!114 &4190905665779482797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -407,7 +404,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   debugOutput: {fileID: 0}
-  bankingTurns: 0
+  bankingTurns: 1
   armspan: 1
   wingtipOffset: 0
   weight: 1
@@ -1241,7 +1238,7 @@ PrefabInstance:
     - target: {fileID: 6595210305356247937, guid: 47f89c3bc94a83e4b9c05f6f43ee2ef8,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 6595210305356247937, guid: 47f89c3bc94a83e4b9c05f6f43ee2ef8,
         type: 3}
