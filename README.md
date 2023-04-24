@@ -28,10 +28,15 @@ Then, click this link and add the OpenFlight repo to your VCC using the Add to V
 
 If clicking on either of those links seems to have done nothing on your VRChat Creator Companion window, you need to update it.
 
-You can try out the latest stable version of OpenFlight here: https://vrchat.com/home/launch?worldId=wrld_e61cba97-a1a9-4c53-93d2-7bb77240a2e7
+You can try out the latest stable version of OpenFlight here: [Stable World](https://vrchat.com/home/launch?worldId=wrld_e61cba97-a1a9-4c53-93d2-7bb77240a2e7)<br>
+Alternate development world by Happyrobot33: [Bleeding Edge Hash World](https://vrchat.com/home/launch?worldId=wrld_ef75dcc8-02fa-43ef-8f42-7b8159783d3d)<br>
 
-Alternate development world by Happyrobot33: https://vrchat.com/home/launch?worldId=wrld_ef75dcc8-02fa-43ef-8f42-7b8159783d3d
+<details>
+<summary>Public Community worlds with OpenFlight:</summary>
 
+- [Chipori Home World](https://vrchat.com/home/world/wrld_fe48b7d3-1eb7-4e4c-9d8a-97da1d14a4e4)
+- [Clone Ship](https://vrchat.com/home/world/wrld_2a9832e0-1b68-4a4b-9905-c7d54dc02a69)
+</details>
 
 ## How to use
 
@@ -39,6 +44,7 @@ After installing the VCC packages listed above, add them to your project by clic
 
 To fine-tune the flight settings, select the WingedFlight GameObject inside of the prefab and check the Inspector. Check the README.md file within the Package for more details.
 
+It is recommended that if you add OpenFlight to your world, that you tag your world with OpenFlight so users can find it easier!
 
 ## I want to add an avatar to the list!
 
