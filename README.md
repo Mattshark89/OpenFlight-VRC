@@ -34,7 +34,7 @@ Alternate development world by Happyrobot33: [Bleeding Edge Hash World](https://
 <details>
 <summary>Public Community worlds with OpenFlight:</summary>
 
-- [Chipori Home World](https://vrchat.com/home/world/wrld_fe48b7d3-1eb7-4e4c-9d8a-97da1d14a4e4)
+- [Featherdale - Chipori Village](https://vrchat.com/home/world/wrld_fe48b7d3-1eb7-4e4c-9d8a-97da1d14a4e4)
 - [Clone Ship](https://vrchat.com/home/world/wrld_2a9832e0-1b68-4a4b-9905-c7d54dc02a69)
 </details>
 
