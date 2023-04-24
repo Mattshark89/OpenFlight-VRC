@@ -101,9 +101,9 @@ public class WingFlightPlusGlide : UdonSharpBehaviour
 	[Tooltip("If a GameObject with a TextMeshPro component is attached here, debug some basic info into it. (Default: unset)")]
 	public TextMeshProUGUI debugOutput;
 
-	[Tooltip("[BETA FEATURE] Banking to the left or right will force the player to rotate. May cause network lag? (Default: false)")]
-	public bool bankingTurns = false;
-	bool bankingTurns_DEFAULT = false;
+	[Tooltip("Banking to the left or right will force the player to rotate. May cause network lag? (Default: true)")]
+	public bool bankingTurns = true;
+	bool bankingTurns_DEFAULT = true;
 
 	// Essential Variables
 	private VRCPlayerApi LocalPlayer;
