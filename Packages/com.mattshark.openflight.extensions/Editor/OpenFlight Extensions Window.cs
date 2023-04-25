@@ -39,15 +39,34 @@ public class OpenFlightExtensionsWindow : EditorWindow
 		AddPrefabToScene(prefab);
 	}
 
+	[MenuItem("VRC Packages/OpenFlight/Prefabs/Zones/Out Of Bounds Zone")]
+	public static void OutOfBoundsZone()
+	{
+		//check if a zone notifier is already in the scene
+		//if it isnt, add it
+		if (!GameObject.Find("ZoneNotifier"))
+		{
+			ZoneNotifier();
+		}
+		GameObject prefab =
+			AssetDatabase.LoadAssetAtPath("Packages/com.mattshark.openflight.extensions/Runtime/Prefabs/OutOfBoundsZone.prefab", typeof(GameObject)) as GameObject;
+		AddPrefabToScene(prefab);
+	}
+
 	static void AddPrefabToScene(GameObject prefab, bool checkForExisting = false)
 	{
 		// Check to see if the prefab is already in the scene
 		if (GameObject.Find(prefab.name) && checkForExisting)
 		{
-			EditorUtility.DisplayDialog("Prefab already in scene", "The prefab is already in the scene, so it wont be added", "OK");
+			EditorUtility.DisplayDialog("Prefab already in scene", "Only one of these prefabs is allowed per scene", "OK");
 			return;
 		}
 		GameObject instance = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+
+		//place the prefab at the center of the editor viewport
+		Camera sceneViewCamera = SceneView.lastActiveSceneView.camera;
+		Vector3 center = sceneViewCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 4.0f));
+		instance.transform.position = center;
 	}
 
 	//gizmo show/hide
