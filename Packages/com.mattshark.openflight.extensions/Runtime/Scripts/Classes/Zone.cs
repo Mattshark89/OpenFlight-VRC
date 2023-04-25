@@ -1,5 +1,6 @@
 ﻿using UdonSharp;
 using UnityEngine;
+using UnityEditor;
 using VRC.SDKBase;
 using VRC.Udon;
 
@@ -13,7 +14,7 @@ This is a base class for a zone. It is not meant to be used directly, but rather
 */
 public class Zone : UdonSharpBehaviour
 {
-	BoxCollider zoneCollider;
+	protected BoxCollider zoneCollider;
 	protected ZoneNotifier zoneNotifier;
 	public bool notifyPlayer = true; //whether or not to notify the player when they enter the zone
 	protected VRCPlayerApi localPlayer = null;
@@ -36,8 +37,11 @@ public class Zone : UdonSharpBehaviour
 	float selectionGizmoAlphaAdjust = 0.2f;
     void OnDrawGizmos()
     {
-        Gizmos.color = GetGizmoColorWithAlpha();
-        drawColliderGizmo();
+        if(EditorPrefs.GetBool("OpenFlightShowZoneGizmos"))
+        {
+            Gizmos.color = GetGizmoColorWithAlpha();
+            drawColliderGizmo();
+        }
     }
 
 
@@ -61,7 +65,7 @@ public class Zone : UdonSharpBehaviour
         return color;
     }
 
-    void drawColliderGizmo(){
+    protected virtual void drawColliderGizmo(){
         //handle rotation
         Quaternion rotation = transform.rotation;
         Gizmos.matrix = Matrix4x4.TRS(transform.position, rotation, Vector3.one);

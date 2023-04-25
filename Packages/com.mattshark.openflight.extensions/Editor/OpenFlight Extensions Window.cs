@@ -49,4 +49,17 @@ public class OpenFlightExtensionsWindow : EditorWindow
 		}
 		GameObject instance = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
 	}
+
+	//gizmo show/hide
+	[MenuItem("VRC Packages/OpenFlight/Gizmos/Show Zone Gizmos")]
+	public static void ShowZoneGizmos()
+	{
+		EditorPrefs.SetBool("OpenFlightShowZoneGizmos", true);
+	}
+
+	[MenuItem("VRC Packages/OpenFlight/Gizmos/Hide Zone Gizmos")]
+	public static void HideZoneGizmos()
+	{
+		EditorPrefs.SetBool("OpenFlightShowZoneGizmos", false);
+	}
 }
