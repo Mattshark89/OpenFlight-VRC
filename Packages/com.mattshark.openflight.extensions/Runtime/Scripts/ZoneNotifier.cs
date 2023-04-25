@@ -12,6 +12,7 @@ public class ZoneNotifier : UdonSharpBehaviour
 	VRCPlayerApi localPlayer = null;
 	TextMeshProUGUI zoneNotifierText;
 	public GameObject zoneNotifierTextObject;
+	public GameObject zoneNotifierCanvas;
 	public bool globalNotifyPlayer = true; //whether or not to notify the player when they enter the zone (This is a global setting for all zones)
 
 	void Start()
@@ -24,6 +25,9 @@ public class ZoneNotifier : UdonSharpBehaviour
 
 		//turns off the zone notifier text object
 		zoneNotifierTextObject.SetActive(false);
+
+		//enable the canvas
+		zoneNotifierCanvas.SetActive(true);
 	}
 
 	public void notifyPlayer(string message)

@@ -29,7 +29,7 @@ public class DirectionalZone : Zone
                 //shift the arrow pos so they get placed properly
                 arrowPos -= new Vector3(zoneCollider.size.x / 2, zoneCollider.size.y / 2, 0);
                 //draw the arrow
-                DrawArrow.ForGizmo(arrowPos, Vector3.forward, color: Color.white);
+                DrawArrow.ForGizmo(arrowPos, Vector3.forward);
             }
         }
         //DrawArrow.ForGizmo(zoneCollider.center + new Vector3(0, 0, zoneCollider.size.z / 2), Vector3.forward, color: Color.white);

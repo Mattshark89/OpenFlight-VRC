@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &116673756155569593
 RectTransform:
   m_ObjectHideFlags: 0
@@ -287,6 +287,8 @@ MonoBehaviour:
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 116673756678698366}
   zoneNotifierTextObject: {fileID: 116673756619831991}
+  zoneNotifierCanvas: {fileID: 116673756155569606}
+  globalNotifyPlayer: 1
 --- !u!114 &116673756678698366
 MonoBehaviour:
   m_ObjectHideFlags: 0

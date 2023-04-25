@@ -32,7 +32,7 @@ public class NoFlyZone : Zone
 #if !COMPILER_UDONSHARP && UNITY_EDITOR
     protected override Color GetGizmoColor()
     {
-        return Color.red;
+        return Color.blue;
     }
 #endif
 }
