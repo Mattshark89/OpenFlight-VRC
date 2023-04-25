@@ -5,7 +5,12 @@ using VRC.Udon;
 
 public class WindZone : DirectionalZone
 {
+	[Tooltip(
+		"This is the minimum strength of wind a player will experience if they expose none of their wing area to the wind. Set this to the same value as maxWind to make the wind constant."
+	)]
 	public float minWind = 0f;
+
+	[Tooltip("This is the maximum strength of wind a player will experience if they expose all of their wing area to the wind")]
 	public float maxWind = 10f;
 
 	void Start()

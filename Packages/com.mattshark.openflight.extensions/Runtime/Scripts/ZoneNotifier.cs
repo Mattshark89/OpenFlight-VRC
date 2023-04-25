@@ -13,6 +13,8 @@ public class ZoneNotifier : UdonSharpBehaviour
 	TextMeshProUGUI zoneNotifierText;
 	public GameObject zoneNotifierTextObject;
 	public GameObject zoneNotifierCanvas;
+
+	[Tooltip("Whether or not to notify the player when they enter a zone that also has this setting enabled. This is a global setting for all zones")]
 	public bool globalNotifyPlayer = true; //whether or not to notify the player when they enter the zone (This is a global setting for all zones)
 
 	void Start()
