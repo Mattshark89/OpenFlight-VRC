@@ -54,7 +54,7 @@ Neato! Check out the json file (https://github.com/Mattshark89/OpenFlight-VRC/bl
 
 Name is the name of the avatar, Creator the creator, Introducer is you. If the avatar you are requesting was made from a public base, `Name` and `Creator` should reference the public base. Don't put your own name here; put your name in `Introducer` instead.
 
-The Hash can be obtained from the OpenFlight settings tablet (Debug tab) while your avatar is being worn. WingtipOffset can also be found by turning on `Show Gizmos` in the tablet and adjusting the `WingtipOffset` slider until the center of the sphere is roughly on the tip of your wing/feathers/whathaveyou.
+The Hash can be obtained from the OpenFlight settings tablet (Debug tab) while your avatar is being worn. Ensure you are submitting a v2 hash, which can be identified by having `v2` at the end. WingtipOffset can also be found by turning on `Show Gizmos` in the tablet and adjusting the `WingtipOffset` slider until the center of the sphere is roughly on the tip of your wing/feathers/whathaveyou.
 Once your pull request is made, leave a comment along with it that either has a link to the avatar base or, if there is no public page for it, a photo/screenshot of the avatar.
 
 Avatars will only be added if they meet one criterion: it has wings that move along with your arms. Wings on your back do not count if they aren't parented to your arms since flapping... well, your arms, shouldn't cause you to fly now should it?
