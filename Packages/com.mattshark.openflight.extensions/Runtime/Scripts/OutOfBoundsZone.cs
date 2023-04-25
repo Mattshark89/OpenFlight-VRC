@@ -12,6 +12,11 @@ public class OutOfBoundsZone : DirectionalZone
 		init();
 	}
 
+	public void OnPlayerTriggerEnter()
+	{
+		zoneNotifier.notifyPlayer("This area is out of bounds! Turn back!");
+	}
+
 	public void OnPlayerTriggerStay()
 	{
 		//progressively push you back the deeper you go into the zone
