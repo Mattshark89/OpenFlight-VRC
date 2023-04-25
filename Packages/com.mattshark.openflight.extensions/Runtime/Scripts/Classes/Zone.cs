@@ -16,7 +16,6 @@ public class Zone : UdonSharpBehaviour
 {
 	protected BoxCollider zoneCollider;
 	protected ZoneNotifier zoneNotifier;
-	public bool notifyPlayer = true; //whether or not to notify the player when they enter the zone
 	protected VRCPlayerApi localPlayer = null;
 
 	//This is here to allow sub classes to call it in their start function, grabbing the neccesary components

@@ -7,6 +7,8 @@ using VRC.Udon;
 
 public class OutOfBoundsZone : DirectionalZone
 {
+	public bool notifyPlayer = true;
+
 	void Start()
 	{
 		init();

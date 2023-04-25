@@ -6,6 +6,7 @@ using VRC.Udon;
 public class NoFlyZone : Zone
 {
 	OpenFlight openFlight;
+	public bool notifyPlayer = true; //whether or not to notify the player when they enter the zone
 
 	void Start()
 	{

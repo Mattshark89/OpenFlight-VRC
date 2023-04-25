@@ -6,6 +6,7 @@ using VRC.Udon;
 public class DefaultsZone : Zone
 {
 	WingFlightPlusGlide wingFlightPlusGlide;
+	public bool notifyPlayer = true; //whether or not to notify the player when they enter the zone
 
 	void Start()
 	{
