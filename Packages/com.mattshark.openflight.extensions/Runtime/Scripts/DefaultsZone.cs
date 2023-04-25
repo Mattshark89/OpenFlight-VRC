@@ -19,7 +19,10 @@ public class DefaultsZone : Zone
 	{
 		//turns off flight when the player enters the no fly zone
 		wingFlightPlusGlide.RestoreDefaults();
-		zoneNotifier.notifyPlayer("Flight Settings Reset by World");
+		if (notifyPlayer)
+		{
+			zoneNotifier.notifyPlayer("Flight Settings Reset by World");
+		}
 	}
 
 	//TODO: This should be implemented to restore the player's flight settings to what they were before they entered the zone

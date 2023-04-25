@@ -19,14 +19,20 @@ public class NoFlyZone : Zone
 	{
 		//turns off flight when the player enters the no fly zone
 		openFlight.ForceDisableFlight();
-		zoneNotifier.notifyPlayer("Flight Disabled by World");
+		if (notifyPlayer)
+		{
+			zoneNotifier.notifyPlayer("Flight Disabled by World");
+		}
 	}
 
 	public void OnPlayerTriggerExit()
 	{
 		//turns flight back on when the player leaves the no fly zone
 		openFlight.ResetForcedFlight();
-		zoneNotifier.notifyPlayer("Flight Returned to Previous State");
+		if (notifyPlayer)
+		{
+			zoneNotifier.notifyPlayer("Flight Returned to Previous State");
+		}
 	}
 
 #if !COMPILER_UDONSHARP && UNITY_EDITOR

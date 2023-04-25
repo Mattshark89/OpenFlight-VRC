@@ -14,7 +14,10 @@ public class OutOfBoundsZone : DirectionalZone
 
 	public void OnPlayerTriggerEnter()
 	{
-		zoneNotifier.notifyPlayer("This area is out of bounds! Turn back!");
+		if (notifyPlayer)
+		{
+			zoneNotifier.notifyPlayer("This area is out of bounds! Turn back!");
+		}
 	}
 
 	public void OnPlayerTriggerStay()
