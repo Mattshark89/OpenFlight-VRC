@@ -37,7 +37,6 @@ public class OpenFlight : UdonSharpBehaviour
 	public AvatarDetection avatarDetection;
 	public string flightMode = "Auto";
 	string flightModePrevious = "Auto";
-	public string zoneNotifierInfo = "";
 	private VRCPlayerApi LocalPlayer;
 
 	[ReadOnly]
@@ -123,7 +122,6 @@ public class OpenFlight : UdonSharpBehaviour
 		wingedFlight.SetActive(false);
 		flightModePrevious = flightMode;
 		flightMode = "Forced Off";
-		zoneNotifierInfo = "Flight Disabled by World";
 		flightAllowed = false;
 		flightForcedOff = true;
 	}
@@ -132,7 +130,6 @@ public class OpenFlight : UdonSharpBehaviour
 	{
 		flightForcedOff = false;
 		flightMode = flightModePrevious;
-		zoneNotifierInfo = "Flight Returned to Previous State";
 		if (string.Equals(flightMode, "Auto"))
 		{
 			FlightAuto();

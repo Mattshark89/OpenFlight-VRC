@@ -9,16 +9,13 @@ using TMPro;
 
 public class ZoneNotifier : UdonSharpBehaviour
 {
-	OpenFlight openFlight;
 	VRCPlayerApi localPlayer = null;
 	TextMeshProUGUI zoneNotifierText;
 	public GameObject zoneNotifierTextObject;
+	public bool globalNotifyPlayer = true; //whether or not to notify the player when they enter the zone (This is a global setting for all zones)
 
 	void Start()
 	{
-		//finds the OpenFlight script in the scene
-		openFlight = GameObject.Find("OpenFlight").GetComponent<OpenFlight>();
-
 		//finds the local player
 		localPlayer = Networking.LocalPlayer;
 
@@ -29,16 +26,14 @@ public class ZoneNotifier : UdonSharpBehaviour
 		zoneNotifierTextObject.SetActive(false);
 	}
 
-	void Update()
+	public void notifyPlayer(string message)
 	{
-		if (openFlight.zoneNotifierInfo != "")
-		{
-			zoneNotifierText.text = openFlight.zoneNotifierInfo;
-			openFlight.zoneNotifierInfo = "";
+		if (!globalNotifyPlayer)
+			return;
+		zoneNotifierText.text = message;
 
-			//Turn the text object off and on again to make it update
-			zoneNotifierTextObject.SetActive(false);
-			zoneNotifierTextObject.SetActive(true);
-		}
+		//Turn the text object off and on again to make it update
+		zoneNotifierTextObject.SetActive(false);
+		zoneNotifierTextObject.SetActive(true);
 	}
 }
