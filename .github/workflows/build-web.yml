@@ -67,8 +67,9 @@ jobs:
       - name: Copy Docs
         uses: canastro/copy-action@0.0.2
         with:
-          source: "./docs"
-          target: "./${{env.listPublishDirectory}}/docs"
+          source: "./docs/."
+          target: "./${{env.listPublishDirectory}}/docs/"
+          flags: '-r'
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
