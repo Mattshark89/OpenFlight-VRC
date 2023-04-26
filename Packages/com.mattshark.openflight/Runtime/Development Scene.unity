@@ -2828,6 +2828,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 912721149167261087, guid: 05075599e758a3a49bd426afc0cd5306,
         type: 3}
+      propertyPath: WindSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 912721149167261087, guid: 05075599e758a3a49bd426afc0cd5306,
+        type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 912721149167261087, guid: 05075599e758a3a49bd426afc0cd5306,
