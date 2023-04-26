@@ -65,7 +65,7 @@ jobs:
       
       #Copy docs into the website
       - name: Copy Docs
-        uses: canastro/copy-action@0.0.2
+        uses: canastro/copy-action@master
         with:
           source: "./docs/."
           target: "./${{env.listPublishDirectory}}/docs/"
