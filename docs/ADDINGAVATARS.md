@@ -122,6 +122,6 @@ You will also need to make sure you increment the version number at the top of t
 
 ?> Our date format is `YYYY-MM-DD`, so make sure you follow that format.
 
-After doing this, save the file and then use the key combination `Ctrl+Shift+G` to access source control. Once there, fill in the message field with `[Avatar Addition] Avatar Name`, replacing `Avatar Name` with the name(s) of the avatar(s) you are adding.
+After doing this, save the file using `Ctrl+S`, and then use the key combination `Ctrl+Shift+G` to access source control. Once there, fill in the message field with `[Avatar Addition] Avatar Name`, replacing `Avatar Name` with the name(s) of the avatar(s) you are adding.
 
 !> If you are adding multiple avatars, make sure you list all of their names in the message.
