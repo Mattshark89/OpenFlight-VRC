@@ -118,6 +118,16 @@ To finalize this process, we now need to edit the actual file in the repository.
 ```
 You will also need to make sure you increment the version number at the top of the file, and update the date to the current date.
 
+```json
+{
+  "JSON Version": "1.1.5", <-- Increment this
+  "JSON Date": "2023-04-26", <-- Update this
+  "Bases": {
+    ...
+  }
+}
+```
+
 ?> We use [Semantic Versioning](https://semver.org/) for our version numbers, so make sure you follow the rules for that. For our purposes, avatar additions are considered a minor version update, so increment that field, and set the patch field to 0 if it isnt already.
 
 ?> Our date format is `YYYY-MM-DD`, so make sure you follow that format.
