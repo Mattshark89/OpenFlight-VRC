@@ -1,5 +1,6 @@
+!> This documentation is incomplete! Help us improve it by contributing to the [OpenFlight Repository](https://github.com/Mattshark89/OpenFlight-VRC/tree/main/docs) or by joining the [OpenFlight Discord](https://discord.gg/XrJsUfwqkf) and letting us know what you want to see here!
 # OpenFlight
-Welcome to the documentation for OpenFlight! Read the [Quick Start Guide](QUICKSTART.md) to jump right into using OpenFlight, or read the rest of this page if you want to learn more about OpenFlight itself.
+Welcome to the documentation for OpenFlight! Read the [Quick Start Guide](QUICKSTART.md) to jump right into using OpenFlight, or read the rest of this page if you want to learn more about OpenFlight itself. The public discord for OpenFlight is here: [OpenFlight Discord](https://discord.gg/XrJsUfwqkf)
 
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/unique_avatar_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/total_avatar_count)
@@ -32,3 +33,15 @@ Alongside these, we maintain a list of unofficial worlds that are known to use O
 - [Featherdale - Chipori Village](https://vrchat.com/home/world/wrld_fe48b7d3-1eb7-4e4c-9d8a-97da1d14a4e4)
 
 Lastly, we implore world creators to tag their world with the [`openflight`](https://vrchat.com/home/search/openflight) tag, so that users can easily find worlds that use OpenFlight. If you are a world creator, please consider doing this.
+
+## How does it work?
+!> TODO
+
+
+## Credits
+- The VRChat team for their awesome social platform
+- `Mattshark89`: Flight/Gliding physics engine, repository manager
+- `Happyrobot33`: Avatar detection system, settings tablet, VCC package manager shenanigans, and many other small tasks
+- Github contributors: https://github.com/Mattshark89/OpenFlight-VRC/graphs/contributors
+
+...and several others for giving suggestions and helping fix critical bugs. You all are great!

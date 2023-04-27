@@ -1,1 +1,1 @@
-!> This documentation is incomplete!
+!> This documentation is incomplete! Help us improve it by contributing to the [OpenFlight Repository](https://github.com/Mattshark89/OpenFlight-VRC/tree/main/docs) or by joining the [OpenFlight Discord](https://discord.gg/XrJsUfwqkf) and letting us know what you want to see here!
