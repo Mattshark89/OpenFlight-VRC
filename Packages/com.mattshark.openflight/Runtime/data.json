@@ -1,6 +1,6 @@
 {
-  "JSON Version": "1.1.5",
-  "JSON Date": "2023-04-26",
+  "JSON Version": "1.2.0",
+  "JSON Date": "2023-04-27",
   "Bases": {
     "Kitavali": {
       "Original": {
@@ -610,6 +610,16 @@
         "Hash": ["518712631v2"],
         "Weight": 1,
         "WingtipOffset": 10.25
+      }
+    },
+    "Test": {
+      "Original": {
+        "Name": "Testest",
+        "Creator": "Someone",
+        "Introducer": "Me",
+        "Hash": ["123456", "9876543"],
+        "Weight": 5,
+        "WingtipOffset": 1
       }
     }
   }
