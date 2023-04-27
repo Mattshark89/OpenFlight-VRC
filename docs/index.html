@@ -8,7 +8,7 @@
     content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no, viewport-fit=cover">
   <meta name="description" content="Public Documentation for the OpenFlight system">
   <title>OpenFlight Docs</title>
-  <link rel="icon" type="image/x-icon" href="/docs/icon.png">
+  <link rel="icon" type="image/x-icon" href="icon.png">
 
   <!-- Themes (light + dark) -->
   <link rel="stylesheet" media="(prefers-color-scheme: dark)"
@@ -33,6 +33,9 @@
     window.$docsify = {
       loadSidebar: true,
       subMaxLevel: 3,
+      logo: 'icon.png',
+      name: 'OpenFlight Docs',
+      basePath: '/docs/',
       tabs: {
         persist: true,      // default
         sync: true,      // default
