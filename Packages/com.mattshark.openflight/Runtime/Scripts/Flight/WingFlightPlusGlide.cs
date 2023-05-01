@@ -124,6 +124,8 @@ public class WingFlightPlusGlide : UdonSharpBehaviour
 	private int fallingTick = 0; // Increased by one every tick one's y velocity > 0
 	private float tmpFloat;
 	private float dtFake = 0;
+	private int intUI = 0;
+	private bool menuOpen = false;
 
 	// Variables related to Velocity
 	private Vector3 finalVelocity; // Modify this value instead of the player's velocity directly, then run `setFinalVelocity = true`
@@ -310,9 +312,12 @@ public class WingFlightPlusGlide : UdonSharpBehaviour
 
 		if (!isFlapping)
 		{
+			intUI = Physics.OverlapSphere(LocalPlayer.GetPosition(), 10f, 524288).Length;
+			menuOpen = (intUI == 8 || intUI == 9 || intUI == 10);
 			// Check for the beginning of a flap
 			if (
-				(isFlying ? true : handsOut)
+				!menuOpen
+				&& (isFlying ? true : handsOut)
 				&& (requireJump ? !LocalPlayer.IsPlayerGrounded() : true)
 				&& RHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(rightUpperArmBone).y
 				&& LHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(leftUpperArmBone).y
