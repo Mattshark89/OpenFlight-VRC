@@ -42,6 +42,8 @@ Alternate development world by Happyrobot33: [Bleeding Edge Hash World](https://
   - No Tablet in world, just toggle button
 - [Clone Ship](https://vrchat.com/home/world/wrld_2a9832e0-1b68-4a4b-9905-c7d54dc02a69)
   - Tablet in world, but indoors
+- [Literally Furry Avatars](https://vrchat.com/home/world/wrld_9cfb9bf2-d667-4740-80aa-5b5e70ba48a39)
+  - Tablet in world, largescale mountainous terrain
 </details>
 
 ## How to use
