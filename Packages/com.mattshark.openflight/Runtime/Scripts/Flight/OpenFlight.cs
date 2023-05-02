@@ -36,10 +36,12 @@ public class OpenFlight : UdonSharpBehaviour
 	public GameObject wingedFlight;
 	public AvatarDetection avatarDetection;
 	public string flightMode = "Auto";
+	string flightModePrevious = "Auto";
 	private VRCPlayerApi LocalPlayer;
 
 	[ReadOnly]
 	public bool flightAllowed = false;
+	public bool flightForcedOff = false; //used for external scripts to force flight off no matter what
 
 	void SwitchFlight()
 	{
@@ -58,7 +60,7 @@ public class OpenFlight : UdonSharpBehaviour
 
 	public void FlightOn()
 	{
-		if (LocalPlayer.IsUserInVR())
+		if (LocalPlayer.IsUserInVR() && !flightForcedOff)
 		{
 			SwitchFlight();
 			wingedFlight.SetActive(true);
@@ -69,15 +71,18 @@ public class OpenFlight : UdonSharpBehaviour
 
 	public void FlightOff()
 	{
-		SwitchFlight();
-		wingedFlight.SetActive(false);
-		flightMode = "Off";
-		flightAllowed = false;
+		if (!flightForcedOff)
+		{
+			SwitchFlight();
+			wingedFlight.SetActive(false);
+			flightMode = "Off";
+			flightAllowed = false;
+		}
 	}
 
 	public void FlightAuto()
 	{
-		if (LocalPlayer.IsUserInVR())
+		if (LocalPlayer.IsUserInVR() && !flightForcedOff)
 		{
 			flightMode = "Auto";
 			flightAllowed = false;
@@ -92,7 +97,7 @@ public class OpenFlight : UdonSharpBehaviour
 
 	public void CanFly()
 	{
-		if (string.Equals(flightMode, "Auto"))
+		if (string.Equals(flightMode, "Auto") && !flightForcedOff)
 		{
 			SwitchFlight();
 			wingedFlight.SetActive(true);
@@ -102,11 +107,42 @@ public class OpenFlight : UdonSharpBehaviour
 
 	public void CannotFly()
 	{
-		if (string.Equals(flightMode, "Auto"))
+		if (string.Equals(flightMode, "Auto") && !flightForcedOff)
 		{
 			SwitchFlight();
 			wingedFlight.SetActive(false);
 			flightAllowed = false;
+		}
+	}
+
+	//These are used by scripts that need to force flight on or off no matter what the player wants
+	public void ForceDisableFlight()
+	{
+		SwitchFlight();
+		wingedFlight.SetActive(false);
+		flightModePrevious = flightMode;
+		flightMode = "Forced Off";
+		flightAllowed = false;
+		flightForcedOff = true;
+	}
+
+	public void ResetForcedFlight()
+	{
+		flightForcedOff = false;
+		flightMode = flightModePrevious;
+		if (string.Equals(flightMode, "Auto"))
+		{
+			FlightAuto();
+		}
+
+		if (string.Equals(flightMode, "On"))
+		{
+			FlightOn();
+		}
+
+		if (string.Equals(flightMode, "Off"))
+		{
+			FlightOff();
 		}
 	}
 }

@@ -1,0 +1,29 @@
+{
+    "name": "com.mattshark.openflight.extensions",
+    "displayName": "OpenFlight Extensions",
+    "version": "0.0.1",
+    "description": "Extensions for OpenFlight, a VRChat flight system that allow all kinds of avatars to fly. https://github.com/Mattshark89/OpenFlight-VRC",
+    "bugs" : {
+      "url" : "https://github.com/Mattshark89/OpenFlight-VRC/issues"
+    },
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/Mattshark89/OpenFlight-VRC"
+    },
+    "dependencies": {
+      "com.unity.textmeshpro": "2.1.6"
+    },
+    "gitDependencies": {},
+    "vpmDependencies": {
+      "com.vrchat.worlds" : ">=3.1.11",
+      "com.vrchat.udonsharp" : ">=1.1.7",
+      "com.mattshark.openflight" : ">=1.2.7"
+    },
+    "legacyFolders": {},
+    "legacyFiles": {},
+    "author": {
+      "name": "Mattshark89, Happyrobot33"
+    }
+  }
+  
