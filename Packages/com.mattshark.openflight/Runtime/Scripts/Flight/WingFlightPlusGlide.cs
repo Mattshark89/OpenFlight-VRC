@@ -15,20 +15,20 @@ using UdonSharpEditor;
 [CustomEditor(typeof(WingFlightPlusGlide))]
 public class WingFlightPlusGlideEditor : Editor
 {
-    public override void OnInspectorGUI()
-    {
-        WingFlightPlusGlide script = (WingFlightPlusGlide)target;
+	public override void OnInspectorGUI()
+	{
+		WingFlightPlusGlide script = (WingFlightPlusGlide)target;
 
-        if (UdonSharpGUI.DrawDefaultUdonSharpBehaviourHeader(target)) return;
+		if (UdonSharpGUI.DrawDefaultUdonSharpBehaviourHeader(target)) return;
 
-        if (GUILayout.Button("Reset to Prefab Defaults"))
-        {
-            // Reset all values to the default in the prefab
-            PrefabUtility.RevertObjectOverride(script, InteractionMode.AutomatedAction);
-        }
+		if (GUILayout.Button("Reset to Prefab Defaults"))
+		{
+			// Reset all values to the default in the prefab
+			PrefabUtility.RevertObjectOverride(script, InteractionMode.AutomatedAction);
+		}
 
-        DrawDefaultInspector();
-    }
+		DrawDefaultInspector();
+	}
 }
 #endif
 
@@ -105,6 +105,10 @@ public class WingFlightPlusGlide : UdonSharpBehaviour
 	public bool bankingTurns = true;
 	bool bankingTurns_DEFAULT = true;
 
+	[Tooltip("[BETA] Allow world-placed updraft components to impact flight (Default: false)")]
+	public bool updrafts = false;
+	bool updrafts_DEFAULT = false;
+
 	// Essential Variables
 	private VRCPlayerApi LocalPlayer;
 	private double debugTemp;
@@ -124,6 +128,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour
 	private int fallingTick = 0; // Increased by one every tick one's y velocity > 0
 	private float tmpFloat;
 	private float dtFake = 0;
+	private int rawUpdraftStrength = 0;
 
 	// Variables related to Velocity
 	private Vector3 finalVelocity; // Modify this value instead of the player's velocity directly, then run `setFinalVelocity = true`
@@ -387,11 +392,15 @@ public class WingFlightPlusGlide : UdonSharpBehaviour
 					isGliding = true;
 					newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
 					wingDirection = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.forward); // The direction the player should go based on how they've angled their wings
-					// Hotfix: Always have some form of horizontal velocity while falling. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
+																											   // Hotfix: Always have some form of horizontal velocity while falling. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
 					if (newVelocity.y < 0.3f && newVelocity.x == 0 && newVelocity.z == 0)
 					{
 						Vector2 tmpV2 = new Vector2(wingDirection.x, wingDirection.z).normalized * 0.145f;
 						newVelocity = new Vector3(Mathf.Round(tmpV2.x * 10) / 10, newVelocity.y, Mathf.Round(tmpV2.y * 10) / 10);
+					}
+					if (updrafts && rawUpdraftStrength > 0)
+                    {
+						newVelocity.y += (dt * updraftStrength() * 0.1f);
 					}
 					steering = (RHPos.y - LHPos.y) * 80 / armspan;
 					if (steering > 35)
@@ -540,6 +549,29 @@ public class WingFlightPlusGlide : UdonSharpBehaviour
 		}
 	}
 
+	public void EnterUpdraft(int strength)
+    {
+		rawUpdraftStrength = strength;
+    }
+
+	public void ExitUpdraft()
+    {
+		rawUpdraftStrength = 0;
+    }
+
+	private float updraftStrength()
+    {
+		if (useAvatarModifiers)
+		{
+			// default settings
+			return sizeCurve.Evaluate(armspan) * (rawUpdraftStrength + (wingtipOffset * 8));
+		}
+		else
+		{
+			return sizeCurve.Evaluate(armspan) * rawUpdraftStrength;
+		}
+	}
+
 	private float flapStrength()
 	{
 		if (useAvatarModifiers)
@@ -602,6 +634,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour
 		airFriction_DEFAULT = airFriction;
 		useGravityCurve_DEFAULT = useGravityCurve;
 		bankingTurns_DEFAULT = bankingTurns;
+		updrafts_DEFAULT = updrafts;
 	}
 
 	public void RestoreDefaults()
@@ -619,5 +652,6 @@ public class WingFlightPlusGlide : UdonSharpBehaviour
 		airFriction = airFriction_DEFAULT;
 		useGravityCurve = useGravityCurve_DEFAULT;
 		bankingTurns = bankingTurns_DEFAULT;
+		updrafts = updrafts_DEFAULT;
 	}
 }
