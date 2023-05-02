@@ -16,7 +16,7 @@ public class WindEffectZone : DirectionalZone
 
 	public void OnPlayerTriggerStay()
 	{
-		//progressively push you back the deeper you go into the zone
+		//get the local players velocity
 		Vector3 currentPlayerVelocity = localPlayer.GetVelocity();
 		//Convert the positive z vector of the zone to a world space vector
 		Vector3 worldSpaceDirection = transform.TransformDirection(Vector3.forward);
