@@ -124,8 +124,6 @@ public class WingFlightPlusGlide : UdonSharpBehaviour
 	private int fallingTick = 0; // Increased by one every tick one's y velocity > 0
 	private float tmpFloat;
 	private float dtFake = 0;
-	private int intUI = 0;
-	private bool menuOpen = false;
 
 	// Variables related to Velocity
 	private Vector3 finalVelocity; // Modify this value instead of the player's velocity directly, then run `setFinalVelocity = true`
@@ -312,12 +310,9 @@ public class WingFlightPlusGlide : UdonSharpBehaviour
 
 		if (!isFlapping)
 		{
-			intUI = Physics.OverlapSphere(LocalPlayer.GetPosition(), 10f, 524288).Length;
-			menuOpen = (intUI == 8 || intUI == 9 || intUI == 10);
 			// Check for the beginning of a flap
 			if (
-				!menuOpen
-				&& (isFlying ? true : handsOut)
+				(isFlying ? true : handsOut)
 				&& (requireJump ? !LocalPlayer.IsPlayerGrounded() : true)
 				&& RHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(rightUpperArmBone).y
 				&& LHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(leftUpperArmBone).y
@@ -373,7 +368,7 @@ public class WingFlightPlusGlide : UdonSharpBehaviour
 		// (Flying starts when a player first flaps and ends when they become grounded)
 		if (isFlying)
 		{
-			if ((!isFlapping) && LocalPlayer.IsPlayerGrounded())
+			if (IsMainMenuOpen() || ((!isFlapping) && LocalPlayer.IsPlayerGrounded()))
 			{
 				Land();
 			}
@@ -479,6 +474,14 @@ public class WingFlightPlusGlide : UdonSharpBehaviour
 				}
 			}
 		}
+	}
+
+	// Utility method to detect main menu status
+	// Technique pulled from https://github.com/Superbstingray/UdonPlayerPlatformHook
+	private bool IsMainMenuOpen()
+    {
+		int uiColliderCount = Physics.OverlapSphere(LocalPlayer.GetPosition(), 10f, 524288).Length;
+		return (uiColliderCount == 8 || uiColliderCount == 9 || uiColliderCount == 10);
 	}
 
 	// Immobilize Locomotion but still allow body rotation
