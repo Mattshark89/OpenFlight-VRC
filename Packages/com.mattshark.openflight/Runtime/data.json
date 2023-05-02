@@ -1,6 +1,6 @@
 {
-  "JSON Version": "1.1.3",
-  "JSON Date": "2023-04-23",
+  "JSON Version": "1.2.1",
+  "JSON Date": "2023-04-30",
   "Bases": {
     "Kitavali": {
       "Original": {
@@ -241,7 +241,7 @@
         "Name": "Reverse Avali",
         "Creator": "VictonRoy / Webserfer",
         "Introducer": "Webserfer",
-        "Hash": ["1101981706","-1673956903","-1673955816"],
+        "Hash": ["1101981706","-1673956903","-1673955816", "-597043440v2"],
         "Weight": 1,
         "WingtipOffset": 4.5
       }
@@ -337,7 +337,7 @@
         "Name": "Avali Plushie",
         "Creator": "Maitake",
         "Introducer": "DatGek",
-        "Hash": ["-688592358"],
+        "Hash": ["-688592358", "-1643569577v2"],
         "Weight": 1,
         "WingtipOffset": 0.0
       }
@@ -347,7 +347,7 @@
         "Name": "Bitty Bat",
         "Creator": "Thingy",
         "Introducer": "DatGek",
-        "Hash": ["-750118480"],
+        "Hash": ["-750118480", "1752661837v2"],
         "Weight": 1,
         "WingtipOffset": 4.98
       }
@@ -357,7 +357,7 @@
         "Name": "Fowl",
         "Creator": "ForestWind",
         "Introducer": "DatGek",
-        "Hash": ["1399458319"],
+        "Hash": ["1399458319", "-120118457v2"],
         "Weight": 1,
         "WingtipOffset": 15.91
       }
@@ -367,7 +367,7 @@
         "Name": "Yang Firebird",
         "Creator": "ForestWind",
         "Introducer": "DatGek",
-        "Hash": ["72854416"],
+        "Hash": ["72854416", "1809557050v2"],
         "Weight": 1,
         "WingtipOffset": 8.5
       }
@@ -590,6 +590,36 @@
         "Hash": ["755266400v2"],
         "Weight": 1,
         "WingtipOffset": 10.5
+      }
+    },
+    "ZWyvern": {
+      "ZWyvern": {
+        "Name": "ZWyvern",
+        "Creator": "Morghus",
+        "Introducer": "Literally Marty",
+        "Hash": ["-843246621v2"],
+        "Weight": 1,
+        "WingtipOffset": 10.2
+      }
+    },
+    "Nardovern": {
+      "Nardovern": {
+        "Name": "Nardovern",
+        "Creator": "Morghus",
+        "Introducer": "Literally Marty",
+        "Hash": ["518712631v2"],
+        "Weight": 1,
+        "WingtipOffset": 10.25
+      }
+    },
+    "Maximus Draconis Wyvern": {
+      "Original": {
+        "Name": "Maximus Draconis Wyvern",
+        "Creator": "DragonSkyRunner",
+        "Introducer": "MaleusDragon",
+        "Hash": ["-124394151v2"],
+        "Weight": 1,
+        "WingtipOffset": 15.75
       }
     }
   }

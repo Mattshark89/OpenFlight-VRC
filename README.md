@@ -9,6 +9,10 @@ Note that this is a World/Udon project. This system cannot be installed to an av
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/todo_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/current_release_downloads)
 
+### WIP New docs!
+These are not complete, so use this readme as a reference for now.
+https://mattshark89.github.io/OpenFlight-VRC/docs/#/
+
 ## How does it work?
 
 At its base level, winged avatars are permitted to fly in the world. Flight is performed by jumping and immediately flapping one's arms like a bird. Optionally, one can also hold their arms straight out to glide. Additional features and settings can be enabled within the Unity inspector or on the provided in-world settings tablet.
@@ -28,10 +32,19 @@ Then, click this link and add the OpenFlight repo to your VCC using the Add to V
 
 If clicking on either of those links seems to have done nothing on your VRChat Creator Companion window, you need to update it.
 
-You can try out the latest stable version of OpenFlight here: https://vrchat.com/home/launch?worldId=wrld_e61cba97-a1a9-4c53-93d2-7bb77240a2e7
+You can try out the latest stable version of OpenFlight here: [Stable World](https://vrchat.com/home/launch?worldId=wrld_e61cba97-a1a9-4c53-93d2-7bb77240a2e7)<br>
+Alternate development world by Happyrobot33: [Bleeding Edge Hash World](https://vrchat.com/home/launch?worldId=wrld_ef75dcc8-02fa-43ef-8f42-7b8159783d3d)<br>
 
-Alternate development world by Happyrobot33: https://vrchat.com/home/launch?worldId=wrld_ef75dcc8-02fa-43ef-8f42-7b8159783d3d
+<details>
+<summary>Public Community worlds with OpenFlight:</summary>
 
+- [Featherdale - Chipori Village](https://vrchat.com/home/world/wrld_fe48b7d3-1eb7-4e4c-9d8a-97da1d14a4e4)
+  - No Tablet in world, just toggle button
+- [Clone Ship](https://vrchat.com/home/world/wrld_2a9832e0-1b68-4a4b-9905-c7d54dc02a69)
+  - Tablet in world, but indoors
+- [Literally Furry Avatars](https://vrchat.com/home/world/wrld_9cfb9bf2-d667-4740-80aa-5b5e70ba48a39)
+  - Tablet in world, largescale mountainous terrain
+</details>
 
 ## How to use
 
@@ -39,6 +52,7 @@ After installing the VCC packages listed above, add them to your project by clic
 
 To fine-tune the flight settings, select the WingedFlight GameObject inside of the prefab and check the Inspector. Check the README.md file within the Package for more details.
 
+It is recommended that if you add OpenFlight to your world, that you tag your world with OpenFlight so users can find it easier!
 
 ## I want to add an avatar to the list!
 
@@ -46,7 +60,7 @@ Neato! Check out the json file (https://github.com/Mattshark89/OpenFlight-VRC/bl
 
 Name is the name of the avatar, Creator the creator, Introducer is you. If the avatar you are requesting was made from a public base, `Name` and `Creator` should reference the public base. Don't put your own name here; put your name in `Introducer` instead.
 
-The Hash can be obtained from the OpenFlight settings tablet (Debug tab) while your avatar is being worn. WingtipOffset can also be found by turning on `Show Gizmos` in the tablet and adjusting the `WingtipOffset` slider until the center of the sphere is roughly on the tip of your wing/feathers/whathaveyou.
+The Hash can be obtained from the OpenFlight settings tablet (Debug tab) while your avatar is being worn. Ensure you are submitting a v2 hash, which can be identified by having `v2` at the end. WingtipOffset can also be found by turning on `Show Gizmos` in the tablet and adjusting the `WingtipOffset` slider until the center of the sphere is roughly on the tip of your wing/feathers/whathaveyou.
 Once your pull request is made, leave a comment along with it that either has a link to the avatar base or, if there is no public page for it, a photo/screenshot of the avatar.
 
 Avatars will only be added if they meet one criterion: it has wings that move along with your arms. Wings on your back do not count if they aren't parented to your arms since flapping... well, your arms, shouldn't cause you to fly now should it?
