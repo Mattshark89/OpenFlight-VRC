@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no, viewport-fit=cover">
+  <meta name="description" content="Public Documentation for the OpenFlight system">
+  <title>OpenFlight Docs</title>
+  <link rel="icon" type="image/x-icon" href="icon.png">
+
+  <!-- Themes (light + dark) -->
+  <link rel="stylesheet" media="(prefers-color-scheme: dark)"
+    href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css">
+  <link rel="stylesheet" media="(prefers-color-scheme: light)"
+    href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+
+  <!-- Custom Styles -->
+  <style>
+    :root {
+      /* --theme-hue: 325; */
+    }
+
+  </style>
+</head>
+
+<body>
+  <div id="app"></div>
+
+  <script>
+    // Docsify Configuration
+    window.$docsify = {
+      loadSidebar: true,
+      subMaxLevel: 3,
+      logo: 'icon.png',
+      name: 'OpenFlight Docs',
+      tabs: {
+        persist: true,      // default
+        sync: true,      // default
+        theme: 'classic', // default
+        tabComments: true,      // default
+        tabHeadings: true       // default
+      },
+      plugins: [
+        titlePlugin({
+          prefix: 'OpenFlight Docs: '
+        })
+      ]
+    };
+
+    function titlePlugin(config) {
+      return (hook, vm) => {
+        hook.doneEach((content) => {
+          document.title = config.prefix + document.title
+        });
+      }
+    }
+  </script>
+
+  <!-- Required -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/js/docsify-themeable.min.js"></script>
+
+  <!-- Recommended -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>
+
+  <!-- Plugins -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify-example-panels"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1"></script>
+</body>
+
+</html>

@@ -1,12 +1,42 @@
 name: Validate JSON Formatting
 on: [pull_request, workflow_dispatch]
+
+env:
+  DATA_JSON_PATH: "./Packages/com.mattshark.openflight/Runtime/data.json"
+
 jobs:
   verify-json-validation:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+
+      - name: Check if JSON was Changed
+        id: changed_files
+        uses: tj-actions/changed-files@v35
+        with:
+          files: "**/data.json"
+
       - name: Validate JSON
+        if: steps.changed_files.outputs.any_changed == 'true'
         uses: docker://orrosenblatt/validate-json-action:latest
         env:
           INPUT_SCHEMA: ./Packages/com.mattshark.openflight/Runtime/data_schema.json
           INPUT_JSONS: ./Packages/com.mattshark.openflight/Runtime/data.json
+      
+      - name: Extract JSON Date
+        if: steps.changed_files.outputs.any_changed == 'true'
+        uses: sergeysova/jq-action@v2
+        id: json_date
+        with:
+          cmd: "jq '.[\"JSON Date\"]' $DATA_JSON_PATH"
+
+      - name: Check if Date is latest
+        if: steps.changed_files.outputs.any_changed == 'true'
+        run: |
+          printf -v date '%(%Y-%m-%d)T\n' -1
+          if [ $date != ${{ steps.json_date.outputs.value }} ]; then
+            echo value=false >> $GITHUB_OUTPUT
+            echo "::error file=$DATA_JSON_PATH, line=3::Date not set to the latest date"
+            exit 1
+          fi
+          echo value=true >> $GITHUB_OUTPUT

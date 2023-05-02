@@ -9,6 +9,10 @@ Note that this is a World/Udon project. This system cannot be installed to an av
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/todo_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/current_release_downloads)
 
+### WIP New docs!
+These are not complete, so use this readme as a reference for now.
+https://mattshark89.github.io/OpenFlight-VRC/docs/#/
+
 ## How does it work?
 
 At its base level, winged avatars are permitted to fly in the world. Flight is performed by jumping and immediately flapping one's arms like a bird. Optionally, one can also hold their arms straight out to glide. Additional features and settings can be enabled within the Unity inspector or on the provided in-world settings tablet.
@@ -35,6 +39,8 @@ Alternate development world by Happyrobot33: [Bleeding Edge Hash World](https://
   - No Tablet in world, just toggle button
 - [Clone Ship](https://vrchat.com/home/world/wrld_2a9832e0-1b68-4a4b-9905-c7d54dc02a69)
   - Tablet in world, but indoors
+- [Literally Furry Avatars](https://vrchat.com/home/world/wrld_9cfb9bf2-d667-4740-80aa-5b5e70ba48a39)
+  - Tablet in world, largescale mountainous terrain
 </details>
 
 ## How to use
