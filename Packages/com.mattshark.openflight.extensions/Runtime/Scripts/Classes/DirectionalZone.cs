@@ -32,7 +32,7 @@ public class DirectionalZone : Zone
                 DrawArrow.ForGizmo(arrowPos, Vector3.forward);
             }
         }
-        //DrawArrow.ForGizmo(zoneCollider.center + new Vector3(0, 0, zoneCollider.size.z / 2), Vector3.forward, color: Color.white);
+        //DrawArrow.ForGizmo(zoneCollider.center + new Vector3(0, 0, zoneSize.z / 2), Vector3.forward, color: Color.white);
     }
 #endif
 }
