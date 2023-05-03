@@ -4,43 +4,44 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 //This zone is like a wind zone, but it progressively gets stronger the deeper the player goes into it, at its strongest making it impossible to move forward
-
-public class OutOfBoundsZone : DirectionalZone
+namespace OpenFlightVRC.Extensions
 {
-	public bool notifyPlayer = true;
-
-	void Start()
+	public class OutOfBoundsZone : DirectionalZone
 	{
-		init();
-	}
+		public bool notifyPlayer = true;
 
-	public void OnPlayerTriggerEnter()
-	{
-		if (notifyPlayer)
+		void Start()
 		{
-			zoneNotifier.notifyPlayer("This area is out of bounds! Turn back!");
+			init();
 		}
-	}
 
-	public void OnPlayerTriggerStay()
-	{
-		//progressively push you back the deeper you go into the zone
-		Vector3 currentPlayerVelocity = localPlayer.GetVelocity();
-		//Convert the positive z vector of the zone to a world space vector
-		Vector3 worldSpaceDirection = transform.TransformDirection(getDirectionVector());
+		public void OnPlayerTriggerEnter()
+		{
+			if (notifyPlayer)
+			{
+				zoneNotifier.notifyPlayer("This area is out of bounds! Turn back!");
+			}
+		}
 
-		//calculate how deep into the zone the player is along the z axis
-		float distance = Mathf.Abs((transform.InverseTransformPoint(localPlayer.GetPosition()).z / colliderDepth) - 0.5f);
-		distance = Mathf.Clamp(distance, 0f, 1f);
+		public void OnPlayerTriggerStay()
+		{
+			//progressively push you back the deeper you go into the zone
+			Vector3 currentPlayerVelocity = localPlayer.GetVelocity();
+			//Convert the positive z vector of the zone to a world space vector
+			Vector3 worldSpaceDirection = transform.TransformDirection(getDirectionVector());
 
-		//calculate the strength based on the distance from the far side of the zone
-		float strength = Mathf.Lerp(0f, 20f, distance);
+			//calculate how deep into the zone the player is along the z axis
+			float distance = Mathf.Abs((transform.InverseTransformPoint(localPlayer.GetPosition()).z / colliderDepth) - 0.5f);
+			distance = Mathf.Clamp(distance, 0f, 1f);
 
-		//push the player back based on the direction of the zone (positive z relative to the zone)
-		Vector3 ModifiedVelocity = currentPlayerVelocity + (worldSpaceDirection * strength);
+			//calculate the strength based on the distance from the far side of the zone
+			float strength = Mathf.Lerp(0f, 20f, distance);
 
-		localPlayer.SetVelocity(ModifiedVelocity);
-	}
+			//push the player back based on the direction of the zone (positive z relative to the zone)
+			Vector3 ModifiedVelocity = currentPlayerVelocity + (worldSpaceDirection * strength);
+
+			localPlayer.SetVelocity(ModifiedVelocity);
+		}
 
 #if !COMPILER_UDONSHARP && UNITY_EDITOR
     protected override Color GetGizmoColor()
@@ -48,4 +49,5 @@ public class OutOfBoundsZone : DirectionalZone
         return Color.red;
     }
 #endif
+	}
 }

@@ -4,92 +4,94 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 //the point of this class is to extend the zone to be directional
-public enum Direction
+namespace OpenFlightVRC.Extensions
 {
-	X,
-	Y,
-	Z
-}
-
-public class DirectionalZone : Zone
-{
-	protected float _colliderSizeX = 1f;
-	protected float _colliderSizeY = 1f;
-	protected float _colliderSizeZ = 1f;
-
-	public Direction direction = Direction.Z;
-
-	public bool flipDirection = false;
-
-	protected override void init()
+	public enum Direction
 	{
-		base.init();
-		calcDirectionAlignedSizes();
+		X,
+		Y,
+		Z
 	}
 
-	protected override void calcColliderSize()
+	public class DirectionalZone : Zone
 	{
-		base.calcColliderSize();
-		_colliderSizeX = colliderSizeX;
-		_colliderSizeY = colliderSizeY;
-		_colliderSizeZ = colliderSizeZ;
-	}
+		protected float _colliderSizeX = 1f;
+		protected float _colliderSizeY = 1f;
+		protected float _colliderSizeZ = 1f;
 
-	protected float colliderWidth = 0;
-	protected float colliderHeight = 0;
-	protected float colliderDepth = 0;
-	protected Vector3 directionVector = Vector3.forward;
+		public Direction direction = Direction.Z;
 
-	protected Vector3 getDirectionVector()
-	{
-		calcDirectionAlignedSizes();
-		return directionVector;
-	}
+		public bool flipDirection = false;
 
-	//these are collider sizes that are aligned with the direction of the zone
-	protected void calcDirectionAlignedSizes()
-	{
-		calcColliderSize();
-		switch (direction)
+		protected override void init()
 		{
-			case Direction.X:
-				colliderWidth = colliderSizeZ;
-				colliderHeight = colliderSizeY;
-				colliderDepth = colliderSizeX;
-				break;
-			case Direction.Y:
-				colliderWidth = colliderSizeX;
-				colliderHeight = colliderSizeZ;
-				colliderDepth = colliderSizeY;
-				break;
-			case Direction.Z:
-				colliderWidth = colliderSizeX;
-				colliderHeight = colliderSizeY;
-				colliderDepth = colliderSizeZ;
-				break;
+			base.init();
+			calcDirectionAlignedSizes();
 		}
 
-		//direction vector
-		switch (direction)
+		protected override void calcColliderSize()
 		{
-			case Direction.X:
-				directionVector = Vector3.right;
-				break;
-			case Direction.Y:
-				directionVector = Vector3.up;
-				break;
-			case Direction.Z:
-				directionVector = Vector3.forward;
-				break;
+			base.calcColliderSize();
+			_colliderSizeX = colliderSizeX;
+			_colliderSizeY = colliderSizeY;
+			_colliderSizeZ = colliderSizeZ;
 		}
 
-		//handle direction flipping
-		if (flipDirection)
+		protected float colliderWidth = 0;
+		protected float colliderHeight = 0;
+		protected float colliderDepth = 0;
+		protected Vector3 directionVector = Vector3.forward;
+
+		protected Vector3 getDirectionVector()
 		{
-			colliderDepth *= -1;
-			directionVector *= -1;
+			calcDirectionAlignedSizes();
+			return directionVector;
 		}
-	}
+
+		//these are collider sizes that are aligned with the direction of the zone
+		protected void calcDirectionAlignedSizes()
+		{
+			calcColliderSize();
+			switch (direction)
+			{
+				case Direction.X:
+					colliderWidth = colliderSizeZ;
+					colliderHeight = colliderSizeY;
+					colliderDepth = colliderSizeX;
+					break;
+				case Direction.Y:
+					colliderWidth = colliderSizeX;
+					colliderHeight = colliderSizeZ;
+					colliderDepth = colliderSizeY;
+					break;
+				case Direction.Z:
+					colliderWidth = colliderSizeX;
+					colliderHeight = colliderSizeY;
+					colliderDepth = colliderSizeZ;
+					break;
+			}
+
+			//direction vector
+			switch (direction)
+			{
+				case Direction.X:
+					directionVector = Vector3.right;
+					break;
+				case Direction.Y:
+					directionVector = Vector3.up;
+					break;
+				case Direction.Z:
+					directionVector = Vector3.forward;
+					break;
+			}
+
+			//handle direction flipping
+			if (flipDirection)
+			{
+				colliderDepth *= -1;
+				directionVector *= -1;
+			}
+		}
 
 #if !COMPILER_UDONSHARP && UNITY_EDITOR
     protected override void drawColliderGizmo()
@@ -127,6 +129,12 @@ public class DirectionalZone : Zone
                         arrowPos -= new Vector3(colliderWidth / 2, colliderHeight / 2, 0);
                         break;
                 }
+
+                //for visual sake, make the arrows base start on the collider properly
+                arrowPos = zoneCollider.ClosestPoint(transform.TransformPoint(arrowPos));
+
+                arrowPos -= transform.position;
+
                 //draw the arrow
                 DrawArrow.ForGizmo(arrowPos, directionVector);
             }
@@ -134,4 +142,5 @@ public class DirectionalZone : Zone
         //DrawArrow.ForGizmo(zoneCollider.center + new Vector3(0, 0, zoneCollider.size.z / 2), Vector3.forward, color: Color.white);
     }
 #endif
+	}
 }
