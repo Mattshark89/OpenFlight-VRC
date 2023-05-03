@@ -15,6 +15,7 @@ This is a base class for a zone. It is not meant to be used directly, but rather
 public class Zone : UdonSharpBehaviour
 {
 	protected BoxCollider zoneCollider;
+    protected Vector3 zoneSize;
 	protected ZoneNotifier zoneNotifier;
 	protected VRCPlayerApi localPlayer = null;
 
@@ -74,8 +75,9 @@ public class Zone : UdonSharpBehaviour
         {
             zoneCollider = GetComponent<BoxCollider>();
         }
+        zoneSize = Vector3.Scale(zoneCollider.size, transform.localScale);
 
-        Gizmos.DrawCube(zoneCollider.center, zoneCollider.size);
+        Gizmos.DrawCube(zoneCollider.center, zoneSize);
     }
 #endif
 }
