@@ -27,10 +27,10 @@ public class OutOfBoundsZone : DirectionalZone
 		//progressively push you back the deeper you go into the zone
 		Vector3 currentPlayerVelocity = localPlayer.GetVelocity();
 		//Convert the positive z vector of the zone to a world space vector
-		Vector3 worldSpaceDirection = transform.TransformDirection(Vector3.forward);
+		Vector3 worldSpaceDirection = transform.TransformDirection(getDirectionVector());
 
 		//calculate how deep into the zone the player is along the z axis
-		float distance = Mathf.Abs((transform.InverseTransformPoint(localPlayer.GetPosition()).z / _colliderSizeZ) - 0.5f);
+		float distance = Mathf.Abs((transform.InverseTransformPoint(localPlayer.GetPosition()).z / colliderDepth) - 0.5f);
 		distance = Mathf.Clamp(distance, 0f, 1f);
 
 		//calculate the strength based on the distance from the far side of the zone
