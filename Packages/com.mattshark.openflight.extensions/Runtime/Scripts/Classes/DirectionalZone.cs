@@ -40,6 +40,7 @@ namespace OpenFlightVRC.Extensions
 		protected float colliderWidth = 0;
 		protected float colliderHeight = 0;
 		protected float colliderDepth = 0;
+		protected Vector3 colliderCenter = Vector3.zero;
 		protected Vector3 directionVector = Vector3.forward;
 
 		protected Vector3 getDirectionVector()
@@ -91,6 +92,9 @@ namespace OpenFlightVRC.Extensions
 				colliderDepth *= -1;
 				directionVector *= -1;
 			}
+
+			//collider center is the center of the bounds
+			colliderCenter = transform.InverseTransformPoint(zoneCollider.bounds.center);
 		}
 
 #if !COMPILER_UDONSHARP && UNITY_EDITOR
@@ -117,18 +121,20 @@ namespace OpenFlightVRC.Extensions
                 switch (direction)
                 {
                     case Direction.X:
-                        arrowPos = new Vector3(colliderDepth / 2, colliderHeight / arrowsY * y, colliderWidth / arrowsX * x);
+                        arrowPos += new Vector3(colliderDepth / 2, colliderHeight / arrowsY * y, colliderWidth / arrowsX * x);
                         arrowPos -= new Vector3(0, colliderHeight / 2, colliderWidth / 2);
                         break;
                     case Direction.Y:
-                        arrowPos = new Vector3(colliderWidth / arrowsX * x, colliderDepth / 2, colliderHeight / arrowsY * y);
+                        arrowPos += new Vector3(colliderWidth / arrowsX * x, colliderDepth / 2, colliderHeight / arrowsY * y);
                         arrowPos -= new Vector3(colliderWidth / 2, 0, colliderHeight / 2);
                         break;
                     case Direction.Z:
-                        arrowPos = new Vector3(colliderWidth / arrowsX * x, colliderHeight / arrowsY * y, colliderDepth / 2);
+                        arrowPos += new Vector3(colliderWidth / arrowsX * x, colliderHeight / arrowsY * y, colliderDepth / 2);
                         arrowPos -= new Vector3(colliderWidth / 2, colliderHeight / 2, 0);
                         break;
                 }
+
+				arrowPos += colliderCenter;
 
                 //for visual sake, make the arrows base start on the collider properly
                 arrowPos = zoneCollider.ClosestPoint(transform.TransformPoint(arrowPos));

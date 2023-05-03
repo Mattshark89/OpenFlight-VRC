@@ -157,6 +157,12 @@ namespace OpenFlightVRC.Extensions
         if (zoneCollider == null)
         {
             zoneCollider = GetComponent<Collider>();
+			//if a collider still isnt found, add a box collider
+			if(zoneCollider == null)
+			{
+				zoneCollider = gameObject.AddComponent<BoxCollider>();
+				Debug.LogWarning("No collider found on " + gameObject.name + ", adding a box collider");
+			}
         }
 
         calcColliderSize();
@@ -165,23 +171,75 @@ namespace OpenFlightVRC.Extensions
         if (zoneCollider is BoxCollider)
         {
             BoxCollider boxCollider = zoneCollider as BoxCollider;
+
+			if (!boxCollider.isTrigger)
+			{
+				boxCollider.isTrigger = true;
+				Debug.LogWarning("BoxCollider on " + gameObject.name + " was not set to trigger. Automatically fixed");
+			}
+
             Gizmos.DrawCube(boxCollider.center, boxCollider.size);
         }
         else if (zoneCollider is SphereCollider)
         {
             SphereCollider sphereCollider = zoneCollider as SphereCollider;
+
+			if (!sphereCollider.isTrigger)
+			{
+				sphereCollider.isTrigger = true;
+				Debug.LogWarning("SphereCollider on " + gameObject.name + " was not set to trigger. Automatically fixed");
+			}
+
             Gizmos.DrawSphere(sphereCollider.center, sphereCollider.radius);
         }
         else if (zoneCollider is CapsuleCollider)
         {
             CapsuleCollider capsuleCollider = zoneCollider as CapsuleCollider;
-            //determine the two points based on the axis selected
+
+			if (!capsuleCollider.isTrigger)
+			{
+				capsuleCollider.isTrigger = true;
+				Debug.LogWarning("CapsuleCollider on " + gameObject.name + " was not set to trigger. Automatically fixed");
+			}
+
             DrawCapsule.ForGizmo(capsuleCollider.center, capsuleCollider.height, capsuleCollider.radius, capsuleCollider.direction);
         }
         else if (zoneCollider is MeshCollider)
         {
-            MeshCollider meshCollider = zoneCollider as MeshCollider;
-            Gizmos.DrawMesh(meshCollider.sharedMesh, new Vector3(0,0,0), meshCollider.transform.rotation, meshCollider.transform.localScale);
+			MeshCollider meshCollider = zoneCollider as MeshCollider;
+
+			//make sure the collider is set to convex and trigger
+			if (!meshCollider.convex || !meshCollider.isTrigger)
+			{
+				meshCollider.convex = true;
+				meshCollider.isTrigger = true;
+				Debug.LogWarning("MeshCollider on " + gameObject.name + " was not set to convex and trigger. Automatically fixed.");
+			}
+
+			//use the bounds and place points in a grid on all 6 faces of the bounds
+			Bounds bounds = meshCollider.bounds;
+			//get the distance between two opposite corners
+			float distance = Vector3.Distance(bounds.min, bounds.max);
+			//distribute points right outside of the bounds
+			int numPoints = 1000;
+			//static random seed based on the object's name
+			Random.InitState(gameObject.name.GetHashCode());
+			for (int i = 0; i < numPoints; i++)
+			{
+				//create points randomly on a sphere that is slightly larger than the bounds
+				Vector3 point = Random.onUnitSphere * (distance / 2);
+				point = Vector3.Scale(point, bounds.size.normalized);
+				point += bounds.center;
+				//raycast to the bound center
+				RaycastHit hit;
+				if (meshCollider.Raycast(new Ray(point, bounds.center - point), out hit, distance))
+				{
+					point = hit.point;
+				}
+				//offset points by our transform
+				point = transform.InverseTransformPoint(point);
+				Gizmos.DrawSphere(point, 0.1f);
+			}
         }
     }
 #endif
