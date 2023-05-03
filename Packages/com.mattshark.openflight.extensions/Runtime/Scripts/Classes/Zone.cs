@@ -51,15 +51,16 @@ namespace OpenFlightVRC.Extensions
 
 			if (boxCollider != null)
 			{
-				colliderSizeX = boxCollider.size.x;
-				colliderSizeY = boxCollider.size.y;
-				colliderSizeZ = boxCollider.size.z;
+				colliderSizeX = boxCollider.size.x * transform.lossyScale.x;
+				colliderSizeY = boxCollider.size.y * transform.lossyScale.y;
+				colliderSizeZ = boxCollider.size.z * transform.lossyScale.z;
 			}
 			else if (sphereCollider != null)
 			{
-				colliderSizeX = sphereCollider.radius;
-				colliderSizeY = sphereCollider.radius;
-				colliderSizeZ = sphereCollider.radius;
+				float radius = Mathf.Max(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z);
+				colliderSizeX = sphereCollider.radius * radius;
+				colliderSizeY = sphereCollider.radius * radius;
+				colliderSizeZ = sphereCollider.radius * radius;
 			}
 			else if (capsuleCollider != null)
 			{
@@ -178,7 +179,7 @@ namespace OpenFlightVRC.Extensions
 				Debug.LogWarning("BoxCollider on " + gameObject.name + " was not set to trigger. Automatically fixed");
 			}
 
-            Gizmos.DrawCube(boxCollider.center, boxCollider.size);
+            Gizmos.DrawCube(boxCollider.center, Vector3.Scale(boxCollider.size, transform.lossyScale));
         }
         else if (zoneCollider is SphereCollider)
         {
@@ -190,7 +191,10 @@ namespace OpenFlightVRC.Extensions
 				Debug.LogWarning("SphereCollider on " + gameObject.name + " was not set to trigger. Automatically fixed");
 			}
 
-            Gizmos.DrawSphere(sphereCollider.center, sphereCollider.radius);
+			//collider radius is whatever the largest scale is
+			float radius = Mathf.Max(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z);
+
+            Gizmos.DrawSphere(sphereCollider.center, sphereCollider.radius * radius);
         }
         else if (zoneCollider is CapsuleCollider)
         {
@@ -238,6 +242,7 @@ namespace OpenFlightVRC.Extensions
 				}
 				//offset points by our transform
 				point = transform.InverseTransformPoint(point);
+				point = Vector3.Scale(point, transform.lossyScale);
 				Gizmos.DrawSphere(point, 0.1f);
 			}
         }

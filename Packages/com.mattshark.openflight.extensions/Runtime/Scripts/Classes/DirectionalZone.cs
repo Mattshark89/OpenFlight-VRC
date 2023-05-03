@@ -95,6 +95,7 @@ namespace OpenFlightVRC.Extensions
 
 			//collider center is the center of the bounds
 			colliderCenter = transform.InverseTransformPoint(zoneCollider.bounds.center);
+			colliderCenter = Vector3.Scale(colliderCenter, transform.lossyScale);
 		}
 
 #if !COMPILER_UDONSHARP && UNITY_EDITOR
@@ -134,12 +135,21 @@ namespace OpenFlightVRC.Extensions
                         break;
                 }
 
+				//arrowPos = transform.TransformPoint(arrowPos);
 				arrowPos += colliderCenter;
+				arrowPos = Vector3.Scale(arrowPos, new Vector3(1 / transform.lossyScale.x, 1 / transform.lossyScale.y, 1 / transform.lossyScale.z));
+
+				arrowPos = transform.TransformPoint(arrowPos);
+
 
                 //for visual sake, make the arrows base start on the collider properly
-                arrowPos = zoneCollider.ClosestPoint(transform.TransformPoint(arrowPos));
+                arrowPos = zoneCollider.ClosestPoint(arrowPos);
 
-                arrowPos -= transform.position;
+				//transform the arrow position to local space
+				arrowPos = transform.InverseTransformPoint(arrowPos);
+				arrowPos = Vector3.Scale(arrowPos, transform.lossyScale);
+				//arrowPos -= transform.position;
+				//arrowPos = Quaternion.Inverse(transform.rotation) * arrowPos;
 
                 //draw the arrow
                 DrawArrow.ForGizmo(arrowPos, directionVector);
