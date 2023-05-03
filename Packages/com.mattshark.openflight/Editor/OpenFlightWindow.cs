@@ -15,33 +15,35 @@ VRC Packages
             Full
     AnotherPackagename
 */
-
-public class OpenFlightWindow : EditorWindow
+namespace OpenFlightVRC
 {
-	[MenuItem("VRC Packages/OpenFlight/Prefabs/Lite")]
-	public static void OpenFlightBasic()
+	public class OpenFlightWindow : EditorWindow
 	{
-		// Open the Lite prefab
-		GameObject prefab = AssetDatabase.LoadAssetAtPath("Packages/com.mattshark.openflight/Runtime/OpenFlight (Lite).prefab", typeof(GameObject)) as GameObject;
-		AddPrefabToScene(prefab);
-	}
-
-	[MenuItem("VRC Packages/OpenFlight/Prefabs/Full")]
-	public static void OpenFlightFull()
-	{
-		// Open the full prefab
-		GameObject prefab = AssetDatabase.LoadAssetAtPath("Packages/com.mattshark.openflight/Runtime/OpenFlight.prefab", typeof(GameObject)) as GameObject;
-		AddPrefabToScene(prefab);
-	}
-
-	static void AddPrefabToScene(GameObject prefab)
-	{
-		// Check to see if the prefab is already in the scene
-		if (GameObject.Find(prefab.name))
+		[MenuItem("VRC Packages/OpenFlight/Prefabs/Lite")]
+		public static void OpenFlightBasic()
 		{
-			EditorUtility.DisplayDialog("Prefab already in scene", "The prefab is already in the scene, so it wont be added", "OK");
-			return;
+			// Open the Lite prefab
+			GameObject prefab = AssetDatabase.LoadAssetAtPath("Packages/com.mattshark.openflight/Runtime/OpenFlight (Lite).prefab", typeof(GameObject)) as GameObject;
+			AddPrefabToScene(prefab);
 		}
-		GameObject instance = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+
+		[MenuItem("VRC Packages/OpenFlight/Prefabs/Full")]
+		public static void OpenFlightFull()
+		{
+			// Open the full prefab
+			GameObject prefab = AssetDatabase.LoadAssetAtPath("Packages/com.mattshark.openflight/Runtime/OpenFlight.prefab", typeof(GameObject)) as GameObject;
+			AddPrefabToScene(prefab);
+		}
+
+		static void AddPrefabToScene(GameObject prefab)
+		{
+			// Check to see if the prefab is already in the scene
+			if (GameObject.Find(prefab.name))
+			{
+				EditorUtility.DisplayDialog("Prefab already in scene", "The prefab is already in the scene, so it wont be added", "OK");
+				return;
+			}
+			GameObject instance = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+		}
 	}
 }

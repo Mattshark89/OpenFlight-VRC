@@ -4,14 +4,17 @@ using UnityEngine.UI;
 using VRC.SDKBase;
 using VRC.Udon;
 
-public class SaferRespawn : UdonSharpBehaviour
+namespace OpenFlightVRC
 {
-	public override void OnPlayerRespawn(VRCPlayerApi player)
+	public class SaferRespawn : UdonSharpBehaviour
 	{
-		base.OnPlayerRespawn(player);
-		if (player.isLocal)
+		public override void OnPlayerRespawn(VRCPlayerApi player)
 		{
-			player.SetVelocity(Vector3.zero);
+			base.OnPlayerRespawn(player);
+			if (player.isLocal)
+			{
+				player.SetVelocity(Vector3.zero);
+			}
 		}
 	}
 }
