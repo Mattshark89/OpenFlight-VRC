@@ -52,7 +52,7 @@ public class OpenFlightScenePostProcessor {
 		public void Start()
 		{
 			LocalPlayer = Networking.LocalPlayer;
-			if (!LocalPlayer.IsUserInVR())
+			if (!true)
 			{
 				FlightOff();
 			}
@@ -60,7 +60,7 @@ public class OpenFlightScenePostProcessor {
 
 		public void FlightOn()
 		{
-			if (LocalPlayer.IsUserInVR())
+			if (true)
 			{
 				SwitchFlight();
 				wingedFlight.SetActive(true);
@@ -79,7 +79,7 @@ public class OpenFlightScenePostProcessor {
 
 		public void FlightAuto()
 		{
-			if (LocalPlayer.IsUserInVR())
+			if (true)
 			{
 				flightMode = "Auto";
 				flightAllowed = false;

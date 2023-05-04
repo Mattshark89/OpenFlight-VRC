@@ -206,6 +206,7 @@ public class WingFlightPlusGlideEditor : Editor
 
 		public void Update()
 		{
+			Debug.Log("DownThrust: " + downThrust);
 			if ((LocalPlayer != null) && LocalPlayer.IsValid())
 			{
 				dtFake = dtFake + Time.deltaTime;
