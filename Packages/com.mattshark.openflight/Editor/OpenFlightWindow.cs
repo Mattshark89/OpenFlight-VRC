@@ -15,7 +15,7 @@ VRC Packages
             Full
     AnotherPackagename
 */
-namespace OpenFlightVRC
+namespace OpenFlightVRC.Editor
 {
 	public class OpenFlightWindow : EditorWindow
 	{
