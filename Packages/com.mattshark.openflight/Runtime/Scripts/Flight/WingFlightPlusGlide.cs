@@ -396,7 +396,7 @@ public class WingFlightPlusGlideEditor : Editor
 						// Gliding, banking, and steering logic
 						isGliding = true;
 						newVelocity = setFinalVelocity ? finalVelocity : localPlayer.GetVelocity();
-						wingDirection = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.forward); // The direction the player should go based on how they've angled their wings
+						wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * Vector3.forward, LHRot * Vector3.forward, 0.5f)); // The direction the player should go based on how they have angled their wings
 
 						// Hotfix: Always have some form of horizontal velocity while falling, except when windy. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
 						if ((!windy) && newVelocity.y < 0.3f && newVelocity.x == 0 && newVelocity.z == 0)
