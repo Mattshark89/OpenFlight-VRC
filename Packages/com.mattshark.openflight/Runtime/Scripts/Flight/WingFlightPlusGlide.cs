@@ -118,6 +118,7 @@ public class WingFlightPlusGlideEditor : Editor
 		private Quaternion RHRot;
 		private Quaternion LHRot;
 		private Quaternion playerRot;
+		private float handsOutAmount = 0.01f; // How far apart are your hands from your central body? 0-1
 		private bool handsOut = false; // Are the controllers held outside of an imaginary cylinder?
 		private bool isFlapping = false; // Doing the arm motion
 		private bool isFlying = false; // Currently in the air after/during a flap
@@ -126,6 +127,7 @@ public class WingFlightPlusGlideEditor : Editor
 		private int fallingTick = 0; // Increased by one every tick one's y velocity > 0
 		private float tmpFloat;
 		private float tmpFloatB;
+		private float tmpFloatH; // Reserved for use in helper functions
 		private float dtFake = 0;
 
 		// Variables related to Velocity
@@ -144,7 +146,8 @@ public class WingFlightPlusGlideEditor : Editor
 		private float rotSpeedGoal = 0;
 		
 		// Variables related to wind
-		private Vector3 wingPlaneNormal;
+		private Vector3 wingPlaneNormalL;
+		private Vector3 wingPlaneNormalR;
 		[HideInInspector]
 		public bool windy = false;
 		[HideInInspector]
@@ -298,18 +301,17 @@ public class WingFlightPlusGlideEditor : Editor
 				fallingTick = 0;
 			}
 			// Check if hands are held out
-			if (
-				Vector2.Distance(
+			tmpFloat = Vector2.Distance(
 					new Vector2(localPlayer.GetBonePosition(rightUpperArmBone).x, localPlayer.GetBonePosition(rightUpperArmBone).z),
 					new Vector2(localPlayer.GetBonePosition(rightHandBone).x, localPlayer.GetBonePosition(rightHandBone).z)
-				)
-					> armspan / 3.3f
-				&& Vector2.Distance(
+				);
+			tmpFloatB = Vector2.Distance(
 					new Vector2(localPlayer.GetBonePosition(leftUpperArmBone).x, localPlayer.GetBonePosition(leftUpperArmBone).z),
 					new Vector2(localPlayer.GetBonePosition(leftHandBone).x, localPlayer.GetBonePosition(leftHandBone).z)
-				)
-					> armspan / 3.3f
-			)
+				);
+			// handsOutAmount chooses the closest hand to the body
+			handsOutAmount = (tmpFloat < tmpFloatB ? tmpFloat : tmpFloatB) / (armspan / 2);
+			if (handsOutAmount > 0.6f)
 			{
 				handsOut = true;
 			}
@@ -391,6 +393,9 @@ public class WingFlightPlusGlideEditor : Editor
 					}
 					LHRot = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
 					RHRot = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
+					// Calculate the plane normal of each wing. IE if the player is T-Posing, both wing plane normals will point upwards
+					wingPlaneNormalR = Vector3.Normalize(RHRot * Vector3.up);
+					wingPlaneNormalL = Vector3.Normalize(LHRot * Vector3.down); // Why is it down? I don't know, it's just how it turned up in testing
 					if ((!isFlapping) && handsOut && canGlide)
 					{
 						// Gliding, banking, and steering logic
@@ -452,7 +457,7 @@ public class WingFlightPlusGlideEditor : Editor
 						finalVelocity = setFinalVelocity ? finalVelocity : localPlayer.GetVelocity();
 						// Handle wind
 						// How much speed should be added
-						tmpFloat = windVector.magnitude * GetWingArea(localPlayer, windVector.normalized) * dt;
+						tmpFloat = windVector.magnitude * GetWingArea(windVector.normalized) * dt;
 						// Player's current speed in the same direction as the wind
 						tmpFloatB = Vector3.Dot(finalVelocity, windVector.normalized);
 						
@@ -508,7 +513,7 @@ public class WingFlightPlusGlideEditor : Editor
 							+ string.Concat("\nDownThrust: ", downThrust.ToString())
 							+ string.Concat("\nGrounded: ", localPlayer.IsPlayerGrounded().ToString())
 							+ string.Concat("\nCannotFly: ", (cannotFlyTick > 0).ToString())
-							+ string.Concat("\nThing: ", GetWingArea(localPlayer, windVector.normalized).ToString());
+							+ string.Concat("\nThing: ", GetWingArea(windVector.normalized).ToString());
 					}
 				}
 			}
@@ -595,40 +600,30 @@ public class WingFlightPlusGlideEditor : Editor
 		{
 			if (useGravityCurve)
 			{
-				tmpFloat = gravityCurve.Evaluate(armspan) * armspan;
+				tmpFloatH = gravityCurve.Evaluate(armspan) * armspan;
 			}
 			else
 			{
 				// default settings
-				tmpFloat = sizeCurve.Evaluate(armspan) * flightGravityBase * armspan;
+				tmpFloatH = sizeCurve.Evaluate(armspan) * flightGravityBase * armspan;
 			}
 			if (useAvatarModifiers)
 			{
 				// default settings
-				return tmpFloat * weight;
+				return tmpFloatH * weight;
 			}
 			else
 			{
-				return tmpFloat;
+				return tmpFloatH;
 			}
 		}
 		
-		public float GetWingArea(VRCPlayerApi localPlayer, Vector3 windDirection)
+		public float GetWingArea(Vector3 windDirection)
 		{
-			// Get the alignment of the player's entire arm length to a wind Vector. Basically, how much wing area is the wind impacting?
-			float leftArmAlignment = Mathf.Abs(Vector3.Dot(localPlayer.GetBoneRotation(HumanBodyBones.LeftUpperArm) * Vector3.forward, windDirection));
-			float rightArmAlignment = Mathf.Abs(Vector3.Dot(localPlayer.GetBoneRotation(HumanBodyBones.RightUpperArm) * Vector3.forward, windDirection));
-
-			float leftForearmAlignment = Mathf.Abs(Vector3.Dot(localPlayer.GetBoneRotation(HumanBodyBones.LeftLowerArm) * Vector3.forward, windDirection));
-			float rightForearmAlignment = Mathf.Abs(Vector3.Dot(localPlayer.GetBoneRotation(HumanBodyBones.RightLowerArm) * Vector3.forward, windDirection));
-
-			float leftHandAlignment = Mathf.Abs(Vector3.Dot(localPlayer.GetBoneRotation(HumanBodyBones.LeftHand) * Vector3.forward, windDirection));
-			float rightHandAlignment = Mathf.Abs(Vector3.Dot(localPlayer.GetBoneRotation(HumanBodyBones.RightHand) * Vector3.forward, windDirection));
-
-			float averageAlignment = (leftArmAlignment + rightArmAlignment + leftForearmAlignment + rightForearmAlignment + leftHandAlignment + rightHandAlignment) / 6f;
-
-			return averageAlignment;
-			
+			// Basically, how much wing area is the wind impacting?
+			tmpFloatH = ((Mathf.Abs(Vector3.Angle(wingPlaneNormalL, windVector) - 90) / 100) + 0.1f) / 2;
+			tmpFloatH += ((Mathf.Abs(Vector3.Angle(wingPlaneNormalR, windVector) - 90) / 100) + 0.1f) / 2;
+			return tmpFloatH * handsOutAmount;
 		}
 
 		// --- Helper Functions ---
