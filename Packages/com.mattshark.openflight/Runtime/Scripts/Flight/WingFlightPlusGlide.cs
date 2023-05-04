@@ -125,6 +125,7 @@ public class WingFlightPlusGlideEditor : Editor
 		private int cannotFlyTick = 0; // If >0, disables flight then decreases itself by one
 		private int fallingTick = 0; // Increased by one every tick one's y velocity > 0
 		private float tmpFloat;
+		private float tmpFloatB;
 		private float dtFake = 0;
 
 		// Variables related to Velocity
@@ -141,6 +142,13 @@ public class WingFlightPlusGlideEditor : Editor
 		private bool spinningRightRound = false; // Can't get that Protogen animation out of my head
 		private float rotSpeed = 0;
 		private float rotSpeedGoal = 0;
+		
+		// Variables related to wind
+		private Vector3 wingPlaneNormal;
+		[HideInInspector]
+		public bool windy = false;
+		[HideInInspector]
+		public Vector3 windVector = new Vector3(0,0,0);
 
 		// "old" values are the world's defaults (recorded immediately before they are modified)
 		private float oldGravityStrength;
@@ -389,12 +397,15 @@ public class WingFlightPlusGlideEditor : Editor
 						isGliding = true;
 						newVelocity = setFinalVelocity ? finalVelocity : localPlayer.GetVelocity();
 						wingDirection = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.forward); // The direction the player should go based on how they've angled their wings
-						// Hotfix: Always have some form of horizontal velocity while falling. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
-						if (newVelocity.y < 0.3f && newVelocity.x == 0 && newVelocity.z == 0)
+
+						// Hotfix: Always have some form of horizontal velocity while falling, except when windy. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
+						if ((!windy) && newVelocity.y < 0.3f && newVelocity.x == 0 && newVelocity.z == 0)
 						{
 							Vector2 tmpV2 = new Vector2(wingDirection.x, wingDirection.z).normalized * 0.145f;
 							newVelocity = new Vector3(Mathf.Round(tmpV2.x * 10) / 10, newVelocity.y, Mathf.Round(tmpV2.y * 10) / 10);
 						}
+
+						// Steering logic
 						steering = (RHPos.y - LHPos.y) * 80 / armspan;
 						if (steering > 35)
 						{
@@ -404,6 +415,7 @@ public class WingFlightPlusGlideEditor : Editor
 						{
 							steering = -35;
 						}
+						
 						if (bankingTurns)
 						{
 							spinningRightRound = true;
@@ -411,22 +423,45 @@ public class WingFlightPlusGlideEditor : Editor
 						}
 						else
 						{
-							// Default "banking" which is just midair strafing
-							wingDirection = Quaternion.Euler(0, steering, 0) * wingDirection;
+							if (!windy)
+							{
+								// Default "banking" which is just midair strafing
+								wingDirection = Quaternion.Euler(0, steering, 0) * wingDirection;
+							}
 						}
-						// X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
-						targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(wingDirection) * newVelocity.magnitude), newVelocity.magnitude);
-						// tmpFloat == glideControl (Except if weight > 1, glideControl temporarily decreases)
-						tmpFloat = (useAvatarModifiers && weight > 1) ? glideControl - ((weight - 1) * 0.6f) : glideControl;
-						finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, dt * tmpFloat);
-						// Apply Air Friction
-						finalVelocity = finalVelocity * (1 - (airFriction * dt));
-						setFinalVelocity = true;
+						if (!windy)
+						{
+							// Apply wingDirection
+							// X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
+							targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(wingDirection) * newVelocity.magnitude), newVelocity.magnitude);
+							// tmpFloat == glideControl (Except if weight > 1, glideControl temporarily decreases)
+							tmpFloat = (useAvatarModifiers && weight > 1) ? glideControl - ((weight - 1) * 0.6f) : glideControl;
+							finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, dt * tmpFloat);
+							// Apply Air Friction
+							finalVelocity = finalVelocity * (1 - (airFriction * dt));
+							setFinalVelocity = true;
+						}
 					}
 					else
 					{
 						isGliding = false;
 						rotSpeedGoal = 0;
+					}
+					if (windy)
+					{
+						finalVelocity = setFinalVelocity ? finalVelocity : localPlayer.GetVelocity();
+						// Handle wind
+						// How much speed should be added
+						tmpFloat = windVector.magnitude * GetWingArea(localPlayer, windVector.normalized) * dt;
+						// Player's current speed in the same direction as the wind
+						tmpFloatB = Vector3.Dot(finalVelocity, windVector.normalized);
+						
+						if (tmpFloatB < windVector.magnitude && tmpFloat > 0.03f)
+						{
+							// Push the player based on the direction of the zone (positive z relative to the zone)
+							finalVelocity = finalVelocity + (windVector.normalized * tmpFloat);
+							setFinalVelocity = true;
+						}
 					}
 				}
 			}
@@ -472,7 +507,8 @@ public class WingFlightPlusGlideEditor : Editor
 							+ string.Concat("\nHandsOut: ", handsOut.ToString())
 							+ string.Concat("\nDownThrust: ", downThrust.ToString())
 							+ string.Concat("\nGrounded: ", localPlayer.IsPlayerGrounded().ToString())
-							+ string.Concat("\nCannotFly: ", (cannotFlyTick > 0).ToString());
+							+ string.Concat("\nCannotFly: ", (cannotFlyTick > 0).ToString())
+							+ string.Concat("\nThing: ", GetWingArea(localPlayer, windVector.normalized).ToString());
 					}
 				}
 			}
@@ -592,6 +628,7 @@ public class WingFlightPlusGlideEditor : Editor
 			float averageAlignment = (leftArmAlignment + rightArmAlignment + leftForearmAlignment + rightForearmAlignment + leftHandAlignment + rightHandAlignment) / 6f;
 
 			return averageAlignment;
+			
 		}
 
 		// --- Helper Functions ---
