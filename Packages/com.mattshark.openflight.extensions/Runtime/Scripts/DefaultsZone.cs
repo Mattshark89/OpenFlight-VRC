@@ -7,6 +7,7 @@ namespace OpenFlightVRC.Extensions
 {
 	public class DefaultsZone : Zone
 	{
+		public OpenFlight openFlight;
 		WingFlightPlusGlide wingFlightPlusGlide;
 		public bool notifyPlayer = true; //whether or not to notify the player when they enter the zone
 
@@ -14,8 +15,10 @@ namespace OpenFlightVRC.Extensions
 		{
 			init();
 
-			//finds the OpenFlight script in the scene
-			wingFlightPlusGlide = GameObject.Find("OpenFlight").GetComponent<OpenFlight>().wingedFlight.GetComponent<WingFlightPlusGlide>();
+			//grabs the WingFlightPlusGlide script from openFlight
+			if (openFlight != null) {
+				wingFlightPlusGlide = openFlight.wingedFlight.GetComponent<WingFlightPlusGlide>();
+			} //an else block here could return an error. "Assign the OpenFlight value in the inspector"
 		}
 
 		public void OnPlayerTriggerEnter()

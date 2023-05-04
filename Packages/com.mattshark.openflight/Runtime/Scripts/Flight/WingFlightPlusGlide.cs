@@ -108,7 +108,7 @@ public class WingFlightPlusGlideEditor : Editor
 		bool bankingTurns_DEFAULT = true;
 
 		// Essential Variables
-		private VRCPlayerApi LocalPlayer;
+		private VRCPlayerApi localPlayer;
 		private double debugTemp;
 		private int timeTick = -1; // -1 until the player is valid, then this value cycles from 0-99 at 50 ticks per second
 		private Vector3 RHPos;
@@ -149,7 +149,7 @@ public class WingFlightPlusGlideEditor : Editor
 		private float oldStrafeSpeed;
 
 		// Avatar-specific properties
-		private HumanBodyBones rightUpperArmBone; // Bones won't be given a value until LocalPlayer.IsValid()
+		private HumanBodyBones rightUpperArmBone; // Bones won't be given a value until localPlayer.IsValid()
 		private HumanBodyBones leftUpperArmBone;
 		private HumanBodyBones rightLowerArmBone;
 		private HumanBodyBones leftLowerArmBone;
@@ -180,11 +180,11 @@ public class WingFlightPlusGlideEditor : Editor
 
 		public void Start()
 		{
-			LocalPlayer = Networking.LocalPlayer;
-			//oldGravityStrength = LocalPlayer.GetGravityStrength();
-			//oldWalkSpeed = LocalPlayer.GetWalkSpeed();
-			//oldRunSpeed = LocalPlayer.GetRunSpeed();
-			//oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
+			localPlayer = Networking.LocalPlayer;
+			//oldGravityStrength = localPlayer.GetGravityStrength();
+			//oldWalkSpeed = localPlayer.GetWalkSpeed();
+			//oldRunSpeed = localPlayer.GetRunSpeed();
+			//oldStrafeSpeed = localPlayer.GetStrafeSpeed();
 		}
 
 		public void OnEnable()
@@ -206,7 +206,7 @@ public class WingFlightPlusGlideEditor : Editor
 
 		public void Update()
 		{
-			if ((LocalPlayer != null) && LocalPlayer.IsValid())
+			if ((localPlayer != null) && localPlayer.IsValid())
 			{
 				dtFake = dtFake + Time.deltaTime;
 				if (dtFake >= 0.011f)
@@ -231,9 +231,9 @@ public class WingFlightPlusGlideEditor : Editor
 				//therefore the conclusion is that we must make the playspace origin orbit the player.
 				//
 				//Caching positional data and modifying a virtual origin to be translated.
-				loadBearingTransform.position = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Origin).position;
-				loadBearingTransform.rotation = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Origin).rotation;
-				playerHolder = LocalPlayer.GetPosition();
+				loadBearingTransform.position = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Origin).position;
+				loadBearingTransform.rotation = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Origin).rotation;
+				playerHolder = localPlayer.GetPosition();
 
 				//This function is strange.
 				//I am in awe of the Unity engineers that had to fix the edge case of someone wanting to rotate the parent around a child.
@@ -241,7 +241,7 @@ public class WingFlightPlusGlideEditor : Editor
 				loadBearingTransform.RotateAround(playerHolder, Vector3.up, rotSpeed * Time.deltaTime);
 
 				//Teleport based on playspace position, with an offset to place the player at the teleport location instead of the playspace origin.
-				LocalPlayer.TeleportTo(
+				localPlayer.TeleportTo(
 					playerHolder + (loadBearingTransform.position - playerHolder),
 					loadBearingTransform.rotation,
 					VRC_SceneDescriptor.SpawnOrientation.AlignRoomWithSpawnPoint,
@@ -269,9 +269,9 @@ public class WingFlightPlusGlideEditor : Editor
 			}
 			setFinalVelocity = false;
 			// Check if hands are being moved downward while above a certain Y threshold
-			// We're using LocalPlayer.GetPosition() to turn these global coordinates into local ones
-			RHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
-			LHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
+			// We're using localPlayer.GetPosition() to turn these global coordinates into local ones
+			RHPos = localPlayer.GetPosition() - localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
+			LHPos = localPlayer.GetPosition() - localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
 			if ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y) > 0)
 			{
 				downThrust = ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y)) * dt / armspan;
@@ -281,7 +281,7 @@ public class WingFlightPlusGlideEditor : Editor
 				downThrust = 0;
 			}
 			// Check if player is falling
-			if ((!LocalPlayer.IsPlayerGrounded()) && LocalPlayer.GetVelocity().y < 0)
+			if ((!localPlayer.IsPlayerGrounded()) && localPlayer.GetVelocity().y < 0)
 			{
 				fallingTick++;
 			}
@@ -292,13 +292,13 @@ public class WingFlightPlusGlideEditor : Editor
 			// Check if hands are held out
 			if (
 				Vector2.Distance(
-					new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z),
-					new Vector2(LocalPlayer.GetBonePosition(rightHandBone).x, LocalPlayer.GetBonePosition(rightHandBone).z)
+					new Vector2(localPlayer.GetBonePosition(rightUpperArmBone).x, localPlayer.GetBonePosition(rightUpperArmBone).z),
+					new Vector2(localPlayer.GetBonePosition(rightHandBone).x, localPlayer.GetBonePosition(rightHandBone).z)
 				)
 					> armspan / 3.3f
 				&& Vector2.Distance(
-					new Vector2(LocalPlayer.GetBonePosition(leftUpperArmBone).x, LocalPlayer.GetBonePosition(leftUpperArmBone).z),
-					new Vector2(LocalPlayer.GetBonePosition(leftHandBone).x, LocalPlayer.GetBonePosition(leftHandBone).z)
+					new Vector2(localPlayer.GetBonePosition(leftUpperArmBone).x, localPlayer.GetBonePosition(leftUpperArmBone).z),
+					new Vector2(localPlayer.GetBonePosition(leftHandBone).x, localPlayer.GetBonePosition(leftHandBone).z)
 				)
 					> armspan / 3.3f
 			)
@@ -315,9 +315,9 @@ public class WingFlightPlusGlideEditor : Editor
 				// Check for the beginning of a flap
 				if (
 					(isFlying ? true : handsOut)
-					&& (requireJump ? !LocalPlayer.IsPlayerGrounded() : true)
-					&& RHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(rightUpperArmBone).y
-					&& LHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(leftUpperArmBone).y
+					&& (requireJump ? !localPlayer.IsPlayerGrounded() : true)
+					&& RHPos.y < localPlayer.GetPosition().y - localPlayer.GetBonePosition(rightUpperArmBone).y
+					&& LHPos.y < localPlayer.GetPosition().y - localPlayer.GetBonePosition(leftUpperArmBone).y
 					&& downThrust > 0.0002
 				)
 				{
@@ -334,7 +334,7 @@ public class WingFlightPlusGlideEditor : Editor
 				{
 					// Calculate force to apply based on the flap
 					newVelocity = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * dt * flapStrength();
-					if (LocalPlayer.IsPlayerGrounded())
+					if (localPlayer.IsPlayerGrounded())
 					{
 						// Prevents skiing along the ground
 						newVelocity = new Vector3(0, newVelocity.y, 0);
@@ -346,7 +346,7 @@ public class WingFlightPlusGlideEditor : Editor
 						newVelocity = newVelocity * horizontalStrengthMod;
 						newVelocity.y = tmpFloat;
 					}
-					finalVelocity = LocalPlayer.GetVelocity() + newVelocity;
+					finalVelocity = localPlayer.GetVelocity() + newVelocity;
 					// Speed cap (check, then apply flapping air friction)
 					if (finalVelocity.magnitude > 0.02f * flapStrength())
 					{
@@ -370,24 +370,24 @@ public class WingFlightPlusGlideEditor : Editor
 			// (Flying starts when a player first flaps and ends when they become grounded)
 			if (isFlying)
 			{
-				if ((!isFlapping) && LocalPlayer.IsPlayerGrounded())
+				if ((!isFlapping) && localPlayer.IsPlayerGrounded())
 				{
 					Land();
 				}
 				else
 				{
 					// ---=== Run every frame while the player is "flying" ===---
-					if (LocalPlayer.GetGravityStrength() != (flightGravity()) && LocalPlayer.GetVelocity().y < 0)
+					if (localPlayer.GetGravityStrength() != (flightGravity()) && localPlayer.GetVelocity().y < 0)
 					{
-						LocalPlayer.SetGravityStrength(flightGravity());
+						localPlayer.SetGravityStrength(flightGravity());
 					}
-					LHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
-					RHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
+					LHRot = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
+					RHRot = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
 					if ((!isFlapping) && handsOut && canGlide)
 					{
 						// Gliding, banking, and steering logic
 						isGliding = true;
-						newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
+						newVelocity = setFinalVelocity ? finalVelocity : localPlayer.GetVelocity();
 						wingDirection = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.forward); // The direction the player should go based on how they've angled their wings
 						// Hotfix: Always have some form of horizontal velocity while falling. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
 						if (newVelocity.y < 0.3f && newVelocity.x == 0 && newVelocity.z == 0)
@@ -434,7 +434,7 @@ public class WingFlightPlusGlideEditor : Editor
 			LHPosLast = LHPos;
 
 			// Bug check: if avatar has been swapped, sometimes the player will be launched straight up
-			spineToChest = Vector3.Distance(LocalPlayer.GetBonePosition(chest), LocalPlayer.GetBonePosition(spine));
+			spineToChest = Vector3.Distance(localPlayer.GetBonePosition(chest), localPlayer.GetBonePosition(spine));
 			if (Mathf.Abs(spineToChest - spineToChest_last) > 0.001f)
 			{
 				cannotFlyTick = 20;
@@ -449,7 +449,7 @@ public class WingFlightPlusGlideEditor : Editor
 
 			if (setFinalVelocity)
 			{
-				LocalPlayer.SetVelocity(finalVelocity);
+				localPlayer.SetVelocity(finalVelocity);
 			}
 		}
 
@@ -471,7 +471,7 @@ public class WingFlightPlusGlideEditor : Editor
 							+ string.Concat("\nIsGliding: ", isGliding.ToString())
 							+ string.Concat("\nHandsOut: ", handsOut.ToString())
 							+ string.Concat("\nDownThrust: ", downThrust.ToString())
-							+ string.Concat("\nGrounded: ", LocalPlayer.IsPlayerGrounded().ToString())
+							+ string.Concat("\nGrounded: ", localPlayer.IsPlayerGrounded().ToString())
 							+ string.Concat("\nCannotFly: ", (cannotFlyTick > 0).ToString());
 					}
 				}
@@ -483,18 +483,18 @@ public class WingFlightPlusGlideEditor : Editor
 		{
 			if (b)
 			{
-				oldWalkSpeed = LocalPlayer.GetWalkSpeed();
-				oldRunSpeed = LocalPlayer.GetRunSpeed();
-				oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
-				LocalPlayer.SetWalkSpeed(0f);
-				LocalPlayer.SetRunSpeed(0f);
-				LocalPlayer.SetStrafeSpeed(0f);
+				oldWalkSpeed = localPlayer.GetWalkSpeed();
+				oldRunSpeed = localPlayer.GetRunSpeed();
+				oldStrafeSpeed = localPlayer.GetStrafeSpeed();
+				localPlayer.SetWalkSpeed(0f);
+				localPlayer.SetRunSpeed(0f);
+				localPlayer.SetStrafeSpeed(0f);
 			}
 			else
 			{
-				LocalPlayer.SetWalkSpeed(oldWalkSpeed);
-				LocalPlayer.SetRunSpeed(oldRunSpeed);
-				LocalPlayer.SetStrafeSpeed(oldStrafeSpeed);
+				localPlayer.SetWalkSpeed(oldWalkSpeed);
+				localPlayer.SetRunSpeed(oldRunSpeed);
+				localPlayer.SetStrafeSpeed(oldStrafeSpeed);
 			}
 		}
 
@@ -504,10 +504,10 @@ public class WingFlightPlusGlideEditor : Editor
 		{
 			// `armspan` does not include the distance between shoulders
 			armspan =
-				Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone), LocalPlayer.GetBonePosition(leftLowerArmBone))
-				+ Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone), LocalPlayer.GetBonePosition(leftHandBone))
-				+ Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone), LocalPlayer.GetBonePosition(rightLowerArmBone))
-				+ Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone), LocalPlayer.GetBonePosition(rightHandBone));
+				Vector3.Distance(localPlayer.GetBonePosition(leftUpperArmBone), localPlayer.GetBonePosition(leftLowerArmBone))
+				+ Vector3.Distance(localPlayer.GetBonePosition(leftLowerArmBone), localPlayer.GetBonePosition(leftHandBone))
+				+ Vector3.Distance(localPlayer.GetBonePosition(rightUpperArmBone), localPlayer.GetBonePosition(rightLowerArmBone))
+				+ Vector3.Distance(localPlayer.GetBonePosition(rightLowerArmBone), localPlayer.GetBonePosition(rightHandBone));
 		}
 
 		// Set necessary values for beginning flight
@@ -517,8 +517,8 @@ public class WingFlightPlusGlideEditor : Editor
 			{
 				isFlying = true;
 				CalculateStats();
-				oldGravityStrength = LocalPlayer.GetGravityStrength();
-				LocalPlayer.SetGravityStrength(flightGravity());
+				oldGravityStrength = localPlayer.GetGravityStrength();
+				localPlayer.SetGravityStrength(flightGravity());
 				if (!allowLoco)
 				{
 					ImmobilizePart(true);
@@ -535,7 +535,7 @@ public class WingFlightPlusGlideEditor : Editor
 			spinningRightRound = false;
 			rotSpeed = 0;
 			rotSpeedGoal = 0;
-			LocalPlayer.SetGravityStrength(oldGravityStrength);
+			localPlayer.SetGravityStrength(oldGravityStrength);
 			if (!allowLoco)
 			{
 				ImmobilizePart(false);
@@ -575,6 +575,23 @@ public class WingFlightPlusGlideEditor : Editor
 			{
 				return tmpFloat;
 			}
+		}
+		
+		public float GetWingArea(VRCPlayerApi localPlayer, Vector3 windDirection)
+		{
+			// Get the alignment of the player's entire arm length to a wind Vector. Basically, how much wing area is the wind impacting?
+			float leftArmAlignment = Mathf.Abs(Vector3.Dot(localPlayer.GetBoneRotation(HumanBodyBones.LeftUpperArm) * Vector3.forward, windDirection));
+			float rightArmAlignment = Mathf.Abs(Vector3.Dot(localPlayer.GetBoneRotation(HumanBodyBones.RightUpperArm) * Vector3.forward, windDirection));
+
+			float leftForearmAlignment = Mathf.Abs(Vector3.Dot(localPlayer.GetBoneRotation(HumanBodyBones.LeftLowerArm) * Vector3.forward, windDirection));
+			float rightForearmAlignment = Mathf.Abs(Vector3.Dot(localPlayer.GetBoneRotation(HumanBodyBones.RightLowerArm) * Vector3.forward, windDirection));
+
+			float leftHandAlignment = Mathf.Abs(Vector3.Dot(localPlayer.GetBoneRotation(HumanBodyBones.LeftHand) * Vector3.forward, windDirection));
+			float rightHandAlignment = Mathf.Abs(Vector3.Dot(localPlayer.GetBoneRotation(HumanBodyBones.RightHand) * Vector3.forward, windDirection));
+
+			float averageAlignment = (leftArmAlignment + rightArmAlignment + leftForearmAlignment + rightForearmAlignment + leftHandAlignment + rightHandAlignment) / 6f;
+
+			return averageAlignment;
 		}
 
 		// --- Helper Functions ---

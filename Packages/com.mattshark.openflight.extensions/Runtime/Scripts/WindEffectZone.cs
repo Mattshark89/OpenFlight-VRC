@@ -10,9 +10,12 @@ namespace OpenFlightVRC.Extensions
 	{
 		[Tooltip("This is the speed of wind a player will experience. Players velocity will be altered by how much of their wing area is exposed to the wind")]
 		public float WindSpeed = 10f;
+		public OpenFlight openFlight;
+		WingFlightPlusGlide wingFlightPlusGlide;
 
 		void Start()
 		{
+			wingFlightPlusGlide = openFlight.wingedFlight.GetComponent<WingFlightPlusGlide>();
 			init();
 		}
 
@@ -24,7 +27,7 @@ namespace OpenFlightVRC.Extensions
 			Vector3 worldSpaceDirection = transform.TransformDirection(getDirectionVector());
 
 			//get the wing area of the player
-			float wingArea = WingArea.GetWingArea(localPlayer, worldSpaceDirection);
+			float wingArea = wingFlightPlusGlide.GetWingArea(localPlayer, worldSpaceDirection);
 
 			//calculate the velocity to add based on the wing area exposed
 			//Time.deltaTime is used to make the wind speed consistent regardless of framerate (FixedUpdate in this case)
