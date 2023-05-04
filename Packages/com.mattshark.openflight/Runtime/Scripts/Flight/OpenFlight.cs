@@ -12,16 +12,13 @@ namespace OpenFlightVRC
 #if !COMPILER_UDONSHARP && UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Callbacks;
-using System.Text.Json;
-using Newtonsoft.Json;
 
 public class OpenFlightScenePostProcessor {
 	[PostProcessSceneAttribute]
 	public static void OnPostProcessScene() {
 		//get the openflight version from the package.json file
 		string packageJson = System.IO.File.ReadAllText("Packages/com.mattshark.openflight/package.json");
-		var dynamicObject = JsonConvert.DeserializeObject<dynamic>(packageJson);
-		string version = dynamicObject["version"];
+		string version = packageJson.Split(new string[] { "\"version\": \"" }, System.StringSplitOptions.None)[1].Split('"')[0];
 		//find all the OpenFlight scripts in the scene
 		OpenFlight[] openFlightScripts = Object.FindObjectsOfType<OpenFlight>();
 		foreach (OpenFlight openFlightScript in openFlightScripts)
