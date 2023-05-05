@@ -39,9 +39,6 @@ jobs:
         with: 
           fetch-depth: 0 # fetch all history
 
-      - name: Restore Timestamps
-        uses: chetan/git-restore-mtime-action@v1
-
       - uses: actions/checkout@v3 # check out automation repo
         with:
           #repository: vrchat-community/package-list-action
@@ -49,6 +46,9 @@ jobs:
           path: ${{env.pathToCi}}
           clean: false # otherwise the local repo will no longer be checked out
           
+      - name: Restore Timestamps
+        uses: chetan/git-restore-mtime-action@v1
+
       - name: Restore Cache
         uses: actions/cache@v3
         with:
