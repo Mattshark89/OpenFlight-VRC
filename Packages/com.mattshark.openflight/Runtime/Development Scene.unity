@@ -1335,7 +1335,7 @@ PrefabInstance:
     - target: {fileID: 7437470114131764005, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 300
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7437470114131764005, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
@@ -2051,6 +2051,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: VRCWorld
+      objectReference: {fileID: 0}
+    - target: {fileID: 1415578911040940289, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
+      propertyPath: _syncMethod
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1415578911040940289, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}

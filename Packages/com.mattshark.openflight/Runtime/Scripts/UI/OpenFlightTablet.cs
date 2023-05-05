@@ -63,6 +63,16 @@ namespace OpenFlightVRC
 				Vector3 Head = localPlayer.GetBonePosition(HumanBodyBones.Head);
 				float PlayerScale = totalVectorDistance(new Vector3[] { footR, LowerLegR, UpperLegR, Hips, spine, chest, Neck, Head });
 
+				//if the player scale is 0, that means the avatar uses a generic rig, placing all the bone transforms at origin
+				//set the scale to 1 to make sure the tablet is visible anyway
+				if (PlayerScale == 0)
+				{
+					PlayerScale = 1;
+				}
+
+				//if the player is too small, set the scale to 1
+				PlayerScale = Mathf.Clamp(PlayerScale, 0.1f, float.MaxValue);
+
 				//set this gameobjects scale to the players scale
 				transform.localScale = new Vector3((float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset);
 
