@@ -36,6 +36,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3 # check out this repo
+        with: 
+          fetch-depth: 0 # fetch all history
+
+      - name: Restore Timestamps
+        uses: chetan/git-restore-mtime-action@v1
+
       - uses: actions/checkout@v3 # check out automation repo
         with:
           #repository: vrchat-community/package-list-action
