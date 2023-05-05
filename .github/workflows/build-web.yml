@@ -75,7 +75,7 @@ jobs:
         with:
           source: "./docs/."
           target: "./${{env.listPublishDirectory}}/docs/"
-          flags: '-r'
+          flags: '-rp' #recursive and preserve timestamps
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
