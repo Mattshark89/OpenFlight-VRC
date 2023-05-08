@@ -29,6 +29,7 @@ namespace OpenFlightVRC.UI
 			TextCaret,
 			GraphLine,
 			GraphPoint,
+			GraphBackground,
 			ActiveTab,
 			InActiveTab,
 		}

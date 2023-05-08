@@ -76,6 +76,9 @@ namespace OpenFlightVRC.UI
 		[StyleMarkupLink(StyleClass.GraphPoint)]
 		public Color graphPoint = Color.white;
 
+		[StyleMarkupLink(StyleClass.GraphBackground)]
+		public Color graphBackground = Color.white;
+
 		[StyleMarkupLink(StyleClass.ActiveTab)]
 		public Color activeTab = Color.white;
 
