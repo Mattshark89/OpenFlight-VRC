@@ -526,13 +526,13 @@ public class WingFlightPlusGlideEditor : Editor
 			}
 		}
 
-    // Utility method to detect main menu status
-    // Technique pulled from https://github.com/Superbstingray/UdonPlayerPlatformHook
-    private bool IsMainMenuOpen()
-    {
-      int uiColliderCount = Physics.OverlapSphere(LocalPlayer.GetPosition(), 10f, 524288).Length;
-      return (uiColliderCount == 8 || uiColliderCount == 9 || uiColliderCount == 10);
-    }
+		// Utility method to detect main menu status
+		// Technique pulled from https://github.com/Superbstingray/UdonPlayerPlatformHook
+		private bool IsMainMenuOpen()
+		{
+		  int uiColliderCount = Physics.OverlapSphere(LocalPlayer.GetPosition(), 10f, 524288).Length;
+		  return (uiColliderCount == 8 || uiColliderCount == 9 || uiColliderCount == 10);
+		}
 
 		// Effectually disables all flight-related variables
 		public void Land()
