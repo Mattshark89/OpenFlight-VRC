@@ -5,12 +5,14 @@ using VRC.Udon;
 using UnityEngine.UI;
 using TMPro;
 
-namespace OpenFlightVRC
+namespace OpenFlightVRC.UI
 {
 	public class OpenFlightTablet : UdonSharpBehaviour
 	{
 		VRCPlayerApi localPlayer = null;
-		public float scalingOffset = 0.1f;
+
+		[System.NonSerialized]
+		private float scalingOffset = 0.6183768f;
 		public int fadeDistance = 10;
 		public bool allowFade = true;
 		public GameObject[] objectsToHideOnFade;
@@ -19,10 +21,8 @@ namespace OpenFlightVRC
 
 		public TextMeshProUGUI VersionInfo;
 
-		public Color activeTabColor;
-		public Color inactiveTabColor;
-
 		public Button[] tabs;
+		private int activeTab = 0;
 
 		void Start()
 		{
@@ -35,6 +35,9 @@ namespace OpenFlightVRC
 
 		void Update()
 		{
+			//continually highlight the active tab
+			SetActiveTab(activeTab);
+
 			//check if the player is within the fade distance
 			if (Vector3.Distance(localPlayer.GetPosition(), transform.position) > fadeDistance && allowFade)
 			{
@@ -107,11 +110,8 @@ namespace OpenFlightVRC
 			{
 				if (i == tab)
 				{
-					tabs[i].GetComponent<Image>().color = activeTabColor;
-				}
-				else
-				{
-					tabs[i].GetComponent<Image>().color = inactiveTabColor;
+					tabs[i].Select();
+					activeTab = i;
 				}
 			}
 		}

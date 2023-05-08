@@ -43,6 +43,7 @@ Lastly, we implore world creators to tag their world with the [`openflight`](htt
 - The VRChat team for their awesome social platform
 - `Mattshark89`: Flight/Gliding physics engine, repository manager
 - `Happyrobot33`: Avatar detection system, settings tablet, VCC package manager shenanigans, and many other small tasks
+- `Merlin`: UI Styler system
 - Github contributors: https://github.com/Mattshark89/OpenFlight-VRC/graphs/contributors
 
 ...and several others for giving suggestions and helping fix critical bugs. You all are great!

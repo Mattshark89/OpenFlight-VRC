@@ -4,7 +4,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 using UnityEngine.UI;
 
-namespace OpenFlightVRC
+namespace OpenFlightVRC.UI
 {
 	public class UIGraph : UdonSharpBehaviour
 	{

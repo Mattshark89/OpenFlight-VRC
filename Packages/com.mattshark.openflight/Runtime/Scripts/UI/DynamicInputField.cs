@@ -5,7 +5,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 using TMPro;
 
-namespace OpenFlightVRC
+namespace OpenFlightVRC.UI
 {
 	public class DynamicInputField : UdonSharpBehaviour
 	{
