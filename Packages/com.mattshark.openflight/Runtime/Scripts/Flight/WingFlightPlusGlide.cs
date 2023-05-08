@@ -1,4 +1,4 @@
-﻿using UdonSharp;
+using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
 using VRC.SDKBase;
@@ -370,7 +370,7 @@ public class WingFlightPlusGlideEditor : Editor
 			// (Flying starts when a player first flaps and ends when they become grounded)
 			if (isFlying)
 			{
-				if ((!isFlapping) && LocalPlayer.IsPlayerGrounded())
+				if (IsMainMenuOpen() || ((!isFlapping) && LocalPlayer.IsPlayerGrounded()))
 				{
 					Land();
 				}
@@ -525,6 +525,14 @@ public class WingFlightPlusGlideEditor : Editor
 				}
 			}
 		}
+
+    // Utility method to detect main menu status
+    // Technique pulled from https://github.com/Superbstingray/UdonPlayerPlatformHook
+    private bool IsMainMenuOpen()
+    {
+      int uiColliderCount = Physics.OverlapSphere(LocalPlayer.GetPosition(), 10f, 524288).Length;
+      return (uiColliderCount == 8 || uiColliderCount == 9 || uiColliderCount == 10);
+    }
 
 		// Effectually disables all flight-related variables
 		public void Land()
