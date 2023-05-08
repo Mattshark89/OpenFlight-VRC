@@ -128,6 +128,7 @@ public class WingFlightPlusGlideEditor : Editor
 		private float tmpFloat;
 		private float tmpFloatB;
 		private float tmpFloatH; // Reserved for use in helper functions
+		private Vector3 tmpV3;
 		private float dtFake = 0;
 
 		// Variables related to Velocity
@@ -463,8 +464,9 @@ public class WingFlightPlusGlideEditor : Editor
 						
 						if (tmpFloatB < windVector.magnitude && tmpFloat > 0.03f)
 						{
-							// Push the player based on the direction of the zone (positive z relative to the zone)
-							finalVelocity = finalVelocity + (windVector.normalized * tmpFloat);
+							tmpV3 = -1 * finalVelocity * GetWingArea(-1 * finalVelocity) + windVector; // The force pushing on the player's wings from simply moving combined with the force pushing on the player's wings from the wind zone
+							newVelocity = -1 * Vector3.Reflect(tmpV3, Vector3.Slerp(wingPlaneNormalL, wingPlaneNormalR, 0.5f)); // The force pushing on the wings based on its angle
+							finalVelocity = finalVelocity + (newVelocity.normalized * tmpFloat);
 							setFinalVelocity = true;
 						}
 					}
