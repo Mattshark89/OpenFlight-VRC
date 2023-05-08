@@ -9,74 +9,77 @@ this allows the tablet to be placed without also needing to place the standaolne
 feel free to add events here if you need to call them from the tablet.
 */
 
-public class ProxyUdonScript : UdonSharpBehaviour
+namespace OpenFlightVRC.UI
 {
-	public UdonBehaviour target;
-	public GameObject targetGameObject;
-
-	public void Start()
+	public class ProxyUdonScript : UdonSharpBehaviour
 	{
-		//try to initialize defaults
-		InitializeDefaults();
-	}
+		public UdonBehaviour target;
+		public GameObject targetGameObject;
 
-	public void FlightOn()
-	{
-		if (target != null)
-			target.SendCustomEvent("FlightOn");
-	}
+		public void Start()
+		{
+			//try to initialize defaults
+			InitializeDefaults();
+		}
 
-	public void FlightOff()
-	{
-		if (target != null)
-			target.SendCustomEvent("FlightOff");
-	}
+		public void FlightOn()
+		{
+			if (target != null)
+				target.SendCustomEvent("FlightOn");
+		}
 
-	public void FlightAuto()
-	{
-		if (target != null)
-			target.SendCustomEvent("FlightAuto");
-	}
+		public void FlightOff()
+		{
+			if (target != null)
+				target.SendCustomEvent("FlightOff");
+		}
 
-	public void reloadJSON()
-	{
-		if (target != null)
-			target.SendCustomEvent("reloadJSON");
-	}
+		public void FlightAuto()
+		{
+			if (target != null)
+				target.SendCustomEvent("FlightAuto");
+		}
 
-	public void showGizmo()
-	{
-		if (target != null)
-			target.SendCustomEvent("showGizmo");
-	}
+		public void reloadJSON()
+		{
+			if (target != null)
+				target.SendCustomEvent("reloadJSON");
+		}
 
-	public void hideGizmo()
-	{
-		if (target != null)
-			target.SendCustomEvent("hideGizmo");
-	}
+		public void showGizmo()
+		{
+			if (target != null)
+				target.SendCustomEvent("showGizmo");
+		}
 
-	public void OnDisable()
-	{
-		if (targetGameObject != null)
-			targetGameObject.SetActive(false);
-	}
+		public void hideGizmo()
+		{
+			if (target != null)
+				target.SendCustomEvent("hideGizmo");
+		}
 
-	public void OnEnable()
-	{
-		if (targetGameObject != null)
-			targetGameObject.SetActive(true);
-	}
+		public void OnDisable()
+		{
+			if (targetGameObject != null)
+				targetGameObject.SetActive(false);
+		}
 
-	public void RestoreDefaults()
-	{
-		if (target != null)
-			target.SendCustomEvent("RestoreDefaults");
-	}
+		public void OnEnable()
+		{
+			if (targetGameObject != null)
+				targetGameObject.SetActive(true);
+		}
 
-	public void InitializeDefaults()
-	{
-		if (target != null)
-			target.SendCustomEvent("InitializeDefaults");
+		public void RestoreDefaults()
+		{
+			if (target != null)
+				target.SendCustomEvent("RestoreDefaults");
+		}
+
+		public void InitializeDefaults()
+		{
+			if (target != null)
+				target.SendCustomEvent("InitializeDefaults");
+		}
 	}
 }

@@ -31,6 +31,7 @@ There are a few official worlds by the maintainers of OpenFlight that you can vi
 Alongside these, we maintain a list of unofficial worlds that are known to use OpenFlight, however we cannot guarantee that these worlds will always be up to date with the latest version of OpenFlight itself.
 - [Island Rest Spot](https://vrchat.com/home/world/wrld_c8ed9f99-451d-40d2-aa7e-db3751eb1ac7)
 - [Featherdale - Chipori Village](https://vrchat.com/home/world/wrld_fe48b7d3-1eb7-4e4c-9d8a-97da1d14a4e4)
+- [Literally Furry Avatars](https://vrchat.com/home/world/wrld_9cfb9bf2-d667-4740-80aa-5b5e70ba48a39)
 
 Lastly, we implore world creators to tag their world with the [`openflight`](https://vrchat.com/home/search/openflight) tag, so that users can easily find worlds that use OpenFlight. If you are a world creator, please consider doing this.
 
@@ -42,6 +43,7 @@ Lastly, we implore world creators to tag their world with the [`openflight`](htt
 - The VRChat team for their awesome social platform
 - `Mattshark89`: Flight/Gliding physics engine, repository manager
 - `Happyrobot33`: Avatar detection system, settings tablet, VCC package manager shenanigans, and many other small tasks
+- `Merlin`: UI Styler system
 - Github contributors: https://github.com/Mattshark89/OpenFlight-VRC/graphs/contributors
 
 ...and several others for giving suggestions and helping fix critical bugs. You all are great!

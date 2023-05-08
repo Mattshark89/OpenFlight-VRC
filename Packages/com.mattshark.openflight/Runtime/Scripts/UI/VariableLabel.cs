@@ -4,61 +4,64 @@ using VRC.SDKBase;
 using VRC.Udon;
 using TMPro;
 
-public class VariableLabel : UdonSharpBehaviour
+namespace OpenFlightVRC.UI
 {
-	public UdonBehaviour target;
-	public int decimalPlaces = 2;
-	public string targetVariable;
-	public string prefix = "";
-	public string suffix = "";
-	TextMeshProUGUI text;
-	bool isStringType = false;
-	bool isBoolType = false;
-
-	void Start()
+	public class VariableLabel : UdonSharpBehaviour
 	{
-		//get the real target from the proxy, if it exists
-		if (target.GetProgramVariable("target") != null)
-			target = (UdonBehaviour)target.GetProgramVariable("target");
+		public UdonBehaviour target;
+		public int decimalPlaces = 2;
+		public string targetVariable;
+		public string prefix = "";
+		public string suffix = "";
+		TextMeshProUGUI text;
+		bool isStringType = false;
+		bool isBoolType = false;
 
-		text = GetComponent<TextMeshProUGUI>();
-		//determine if the target variable is a string
-		var targetType = target.GetProgramVariableType(targetVariable);
-		if (targetType == typeof(string))
+		void Start()
 		{
-			isStringType = true;
-		}
-		//determine if the target variable is a bool
-		if (targetType == typeof(bool))
-		{
-			isBoolType = true;
-		}
-	}
+			//get the real target from the proxy, if it exists
+			if (target.GetProgramVariable("target") != null)
+				target = (UdonBehaviour)target.GetProgramVariable("target");
 
-	void Update()
-	{
-		var targetValue = target.GetProgramVariable(targetVariable);
-		//determine if it is a bool
-		if (isBoolType)
-		{
-			if ((bool)targetValue)
+			text = GetComponent<TextMeshProUGUI>();
+			//determine if the target variable is a string
+			var targetType = target.GetProgramVariableType(targetVariable);
+			if (targetType == typeof(string))
 			{
-				text.text = prefix + "True" + suffix;
+				isStringType = true;
+			}
+			//determine if the target variable is a bool
+			if (targetType == typeof(bool))
+			{
+				isBoolType = true;
+			}
+		}
+
+		void Update()
+		{
+			var targetValue = target.GetProgramVariable(targetVariable);
+			//determine if it is a bool
+			if (isBoolType)
+			{
+				if ((bool)targetValue)
+				{
+					text.text = prefix + "True" + suffix;
+				}
+				else
+				{
+					text.text = prefix + "False" + suffix;
+				}
+			}
+			else if (!isStringType)
+			{
+				float roundingModifier = Mathf.Pow(10, decimalPlaces);
+				float rounded = Mathf.Round((float)targetValue * roundingModifier) / roundingModifier;
+				text.text = prefix + rounded.ToString() + suffix;
 			}
 			else
 			{
-				text.text = prefix + "False" + suffix;
+				text.text = prefix + targetValue.ToString() + suffix;
 			}
-		}
-		else if (!isStringType)
-		{
-			float roundingModifier = Mathf.Pow(10, decimalPlaces);
-			float rounded = Mathf.Round((float)targetValue * roundingModifier) / roundingModifier;
-			text.text = prefix + rounded.ToString() + suffix;
-		}
-		else
-		{
-			text.text = prefix + targetValue.ToString() + suffix;
 		}
 	}
 }

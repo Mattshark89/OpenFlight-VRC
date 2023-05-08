@@ -21,7 +21,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 0
   hasInteractEvent: 0
-  scriptID: -5391565901956771980
+  scriptID: 4958505896611831074
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -272,7 +272,7 @@ MonoBehaviour:
       Data: 14|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: AvatarListLoader, com.mattshark.openflight
+      Data: OpenFlightVRC.AvatarListLoader, com.mattshark.openflight
     - Name: 
       Entry: 8
       Data: 
@@ -332,7 +332,7 @@ MonoBehaviour:
       Data: 18|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: OpenFlight, com.mattshark.openflight
+      Data: OpenFlightVRC.OpenFlight, com.mattshark.openflight
     - Name: 
       Entry: 8
       Data: 
@@ -386,7 +386,7 @@ MonoBehaviour:
       Data: 21|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: WingFlightPlusGlide, com.mattshark.openflight
+      Data: OpenFlightVRC.WingFlightPlusGlide, com.mattshark.openflight
     - Name: 
       Entry: 8
       Data: 
@@ -494,13 +494,13 @@ MonoBehaviour:
       Data: 27|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: Koyashiro.UdonJson.UdonJsonValue, Koyashiro.UdonJson
+      Data: VRC.SDK3.Data.DataDictionary, VRCSDK3
     - Name: 
       Entry: 8
       Data: 
     - Name: <SystemType>k__BackingField
       Entry: 9
-      Data: 15
+      Data: 27
     - Name: <SyncMode>k__BackingField
       Entry: 7
       Data: System.Nullable`1[[UdonSharp.UdonSyncMode, UdonSharp.Runtime]], mscorlib

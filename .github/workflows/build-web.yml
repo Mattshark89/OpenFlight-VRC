@@ -36,6 +36,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3 # check out this repo
+        with: 
+          fetch-depth: 0 # fetch all history
+
       - uses: actions/checkout@v3 # check out automation repo
         with:
           #repository: vrchat-community/package-list-action
@@ -43,6 +46,9 @@ jobs:
           path: ${{env.pathToCi}}
           clean: false # otherwise the local repo will no longer be checked out
           
+      - name: Restore Timestamps
+        uses: chetan/git-restore-mtime-action@v1
+
       - name: Restore Cache
         uses: actions/cache@v3
         with:
@@ -69,7 +75,7 @@ jobs:
         with:
           source: "./docs/."
           target: "./${{env.listPublishDirectory}}/docs/"
-          flags: '-r'
+          flags: '-rp' #recursive and preserve timestamps
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
