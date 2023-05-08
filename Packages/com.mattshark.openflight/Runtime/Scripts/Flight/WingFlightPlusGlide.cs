@@ -405,7 +405,7 @@ public class WingFlightPlusGlideEditor : Editor
 						wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * Vector3.forward, LHRot * Vector3.forward, 0.5f)); // The direction the player should go based on how they have angled their wings
 
 						// Hotfix: Always have some form of horizontal velocity while falling, except when windy. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
-						if ((!windy) && newVelocity.y < 0.3f && newVelocity.x == 0 && newVelocity.z == 0)
+						if (newVelocity.y < 0.3f && newVelocity.x == 0 && newVelocity.z == 0)
 						{
 							Vector2 tmpV2 = new Vector2(wingDirection.x, wingDirection.z).normalized * 0.145f;
 							newVelocity = new Vector3(Mathf.Round(tmpV2.x * 10) / 10, newVelocity.y, Mathf.Round(tmpV2.y * 10) / 10);
@@ -429,24 +429,18 @@ public class WingFlightPlusGlideEditor : Editor
 						}
 						else
 						{
-							if (!windy)
-							{
-								// Default "banking" which is just midair strafing
-								wingDirection = Quaternion.Euler(0, steering, 0) * wingDirection;
-							}
+							// Default "banking" which is just midair strafing
+							wingDirection = Quaternion.Euler(0, steering, 0) * wingDirection;
 						}
-						if (!windy)
-						{
-							// Apply wingDirection
-							// X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
-							targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(wingDirection) * newVelocity.magnitude), newVelocity.magnitude);
-							// tmpFloat == glideControl (Except if weight > 1, glideControl temporarily decreases)
-							tmpFloat = (useAvatarModifiers && weight > 1) ? glideControl - ((weight - 1) * 0.6f) : glideControl;
-							finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, dt * tmpFloat);
-							// Apply Air Friction
-							finalVelocity = finalVelocity * (1 - (airFriction * dt));
-							setFinalVelocity = true;
-						}
+						// Apply wingDirection
+						// X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
+						targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(wingDirection) * newVelocity.magnitude), newVelocity.magnitude);
+						// tmpFloat == glideControl (Except if weight > 1, glideControl temporarily decreases)
+						tmpFloat = (useAvatarModifiers && weight > 1) ? glideControl - ((weight - 1) * 0.6f) : glideControl;
+						finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, dt * tmpFloat);
+						// Apply Air Friction
+						finalVelocity = finalVelocity * (1 - (airFriction * dt));
+						setFinalVelocity = true;
 					}
 					else
 					{
@@ -466,6 +460,7 @@ public class WingFlightPlusGlideEditor : Editor
 						{
 							tmpV3 = -1 * finalVelocity * GetWingArea(-1 * finalVelocity) + windVector; // The force pushing on the player's wings from simply moving combined with the force pushing on the player's wings from the wind zone
 							newVelocity = -1 * Vector3.Reflect(tmpV3, Vector3.Slerp(wingPlaneNormalL, wingPlaneNormalR, 0.5f)); // The force pushing on the wings based on its angle
+							newVelocity = Vector3.Slerp(windVector, newVelocity, 0.5f); // Reduce midair redirection amount to improve fun factor, maybe. Needs testing. (can adjust the float from 0 to 1) to increase how much your angle of movement is affected by your wing angle
 							finalVelocity = finalVelocity + (newVelocity.normalized * tmpFloat);
 							setFinalVelocity = true;
 						}
