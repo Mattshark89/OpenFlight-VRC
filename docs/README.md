@@ -36,14 +36,17 @@ Alongside these, we maintain a list of unofficial worlds that are known to use O
 Lastly, we implore world creators to tag their world with the [`openflight`](https://vrchat.com/home/search/openflight) tag, so that users can easily find worlds that use OpenFlight. If you are a world creator, please consider doing this.
 
 ## How does it work?
-!> TODO
-
+There are quite a few systems that make up OpenFlight, so giving a concise awnser to this question is difficult. However, we will try to give a brief overview of the systems that make up OpenFlight.
+### Flight System
+The flight system is the core of OpenFlight, and is responsible for the actual flight itself. This is mainly handled by [WingFlightPlusGlide.cs](/ScriptReference/Flight/WingFlightPlusGlide.md). The calculation is quite complicated, so it wont be covered here
+### Avatar Detection
+The detection is handled by a few scripts. [AvatarDetection.cs](/ScriptReference/AvatarDetection/AvatarDetection.md) is the main script that handles the detection, using [AvatarListLoader.cs](/ScriptReference/AvatarDetection/AvatarListLoader.md) to load the avatar list from GitHub. The detection uses the currently worn avatars Spine, Chest, Head, Neck, Shoulder, Upper/Lower arm and hand bones to create a hash to compare against the list of known avatars. If a match is found, the flight system is enabled, and the avatar specific settings are loaded.
 
 ## Credits
 - The VRChat team for their awesome social platform
 - `Mattshark89`: Flight/Gliding physics engine, repository manager
 - `Happyrobot33`: Avatar detection system, settings tablet, VCC package manager shenanigans, and many other small tasks
-- `Merlin`: UI Styler system
+- `MerlinVR`: UI Styler system source code
 - Github contributors: https://github.com/Mattshark89/OpenFlight-VRC/graphs/contributors
 
 ...and several others for giving suggestions and helping fix critical bugs. You all are great!
