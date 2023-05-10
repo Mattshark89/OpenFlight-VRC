@@ -2,11 +2,15 @@
 # OpenFlight
 Welcome to the documentation for OpenFlight! Read the [Quick Start Guide](QUICKSTART.md) to jump right into using OpenFlight, or read the rest of this page if you want to learn more about OpenFlight itself. The public discord for OpenFlight is here: [OpenFlight Discord](https://discord.gg/XrJsUfwqkf)
 
+[![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/OpenFlight/donate)
+
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/unique_avatar_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/total_avatar_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/unique_hash_count)  
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/todo_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/current_release_downloads)
+
+<noscript><a href="https://liberapay.com/OpenFlight/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a></noscript>
 
 ## What is OpenFlight?
 OpenFlight is a flight system designed for VRChat worlds, allowing users to fly around just by flapping their hands! Alongside that, the system is setup to automatically detect the avatar you are wearing, allowing for the automatic enabling of flight when you put on an avatar wing arm attached wings. Ofcourse, if your avatar isnt supported, or even just doesnt have wings at all, you can still force the flight system on to enjoy it.
