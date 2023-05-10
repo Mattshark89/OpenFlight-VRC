@@ -10,7 +10,7 @@ This is used to query the Github data.json file for the list of avatars. It supp
 | URL | [VRCUrl](https://udonsharp.docs.vrchat.com/vrchat-api/#vrcurl) ||
 | Output | String ||
 | OfflineJSON | [TextAsset](https://docs.unity3d.com/ScriptReference/TextAsset.html) ||
-| useOfflineJSON |  ||
+| useOfflineJSON | bool | If true, will use the in-world json file instead of fetching from the Github |
 
 ## Public Methods
 | Method | Return Type | Description |
