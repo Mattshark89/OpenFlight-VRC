@@ -2,6 +2,8 @@
 # OpenFlight
 Welcome to the documentation for OpenFlight! Read the [Quick Start Guide](QUICKSTART.md) to jump right into using OpenFlight, or read the rest of this page if you want to learn more about OpenFlight itself. The public discord for OpenFlight is here: [OpenFlight Discord](https://discord.gg/XrJsUfwqkf)
 
+[![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/OpenFlight/donate)
+
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/unique_avatar_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/total_avatar_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/unique_hash_count)  
