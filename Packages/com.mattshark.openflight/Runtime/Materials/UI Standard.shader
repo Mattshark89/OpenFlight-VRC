@@ -17,8 +17,8 @@
                  "Queue" = "Transparent"
                  "RenderType" = "Transparent"
              }
-             Blend One Zero
-             AlphaToMask On
+             Blend SrcAlpha OneMinusSrcAlpha
+             //AlphaToMask On
              ZWrite On
              // ---
  
