@@ -3,7 +3,6 @@
      Properties
      {
          _MainTex("_MainTex", 2D) = "white" {}      // Note _MainTex is a special name: This can also be accessed from C# via mainTexture property. 
-         Colorize("Colorize", Range(0.0, 1.0)) = 1
      }
          SubShader
          {
@@ -31,7 +30,6 @@
  
              sampler2D _MainTex;
  
-             float Colorize;
              //fixed4 _Color0;
  
              // http://wiki.unity3d.com/index.php/Shader_Code : 
@@ -65,9 +63,7 @@
              
              float4 MyFragmentShaderFunction(my_v2f  i) : COLOR
              {
-                 float4 texcolor = tex2D(_MainTex, i.uv); // texture's pixel color
-                 float4 vertexcolor = i.color; // this is coming from UnityEngine.UI.Image.Color
-                 texcolor.rgb = texcolor.rgb * (1 - Colorize) + vertexcolor.rgb * Colorize;
+                 half4 texcolor = tex2D(_MainTex, i.uv) * i.color; // texture's pixel color
                  return texcolor;
              }
  
