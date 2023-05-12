@@ -232,19 +232,10 @@ namespace OpenFlightVRC.UI
         private string[] styleNames = new string[0];
         private List<UIStyle> styles = new List<UIStyle>();
 
-        internal bool dirtyPrefab = false;
-
         //This is called only when the component is first visible in the inspector
         //essentially the equivalent of Start() for the inspector
         private void OnEnable()
         {
-            //detect if this script is part of a prefab instance
-            if (PrefabUtility.IsPartOfPrefabInstance(target))
-            {
-                //if it is, then we need to set the dirtyPrefab flag to true
-                dirtyPrefab = true;
-            }
-
             colorStyleProperty = serializedObject.FindProperty(nameof(UIStyler.uiStyle));
             
 	#region Style Dropdown Initialization
@@ -299,6 +290,7 @@ namespace OpenFlightVRC.UI
 
         public override void OnInspectorGUI()
         {
+            UIStyler styler = (target as UIStyler);
             EditorGUI.BeginChangeCheck();
 
             EditorGUI.BeginChangeCheck();
@@ -307,7 +299,7 @@ namespace OpenFlightVRC.UI
             if (EditorGUI.EndChangeCheck())
             {
                 //change the dropdown to match the style variable
-                UIStyler styler = (target as UIStyler);
+                styler = (target as UIStyler);
                 for (int i = 0; i < styleNames.Length; i++)
                 {
                     if (styleNames[i] == styler.uiStyle.name)
@@ -323,7 +315,7 @@ namespace OpenFlightVRC.UI
             if (EditorGUI.EndChangeCheck())
             {
                 //change the colorStyleProperty and styler.uiStyle to match the dropdown
-                UIStyler styler = (target as UIStyler);
+                styler = (target as UIStyler);
                 styler.uiStyle = AssetDatabase.LoadAssetAtPath<UIStyle>(AssetDatabase.GetAssetPath(styles[currentStyleDropdownIndex]));
                 colorStyleProperty.objectReferenceValue = styler.uiStyle;
                 serializedObject.ApplyModifiedProperties();
@@ -332,31 +324,42 @@ namespace OpenFlightVRC.UI
             if (EditorGUI.EndChangeCheck())
             {
                 //apply the style
-                UIStyler styler = (target as UIStyler);
+                styler = (target as UIStyler);
                 styler.ApplyStyle();
             }
 
-            if (GUILayout.Button("Fix Tablet Prefab") || dirtyPrefab)
+            if (GUILayout.Button("Fix Tablet Prefab"))
             {
-                //clear the flag
-                dirtyPrefab = false;
-
-                //copy the style variable
-                SerializedProperty tempColorStyleProperty = colorStyleProperty.Copy();
+                //get a reference to the style asset itself
+                UIStyle tempColorStyleObject = AssetDatabase.LoadAssetAtPath<UIStyle>(AssetDatabase.GetAssetPath(styles[currentStyleDropdownIndex]));
 
                 //check if we are in a prefab
                 if (PrefabUtility.IsPartOfPrefabInstance(target))
                 {
-                    //loop through every child gameobject and revert to prefab
-                    foreach (Transform child in (target as UIStyler).transform)
-                    {
-                        PrefabUtility.RevertPrefabInstance(child.gameObject, InteractionMode.AutomatedAction);
+                    //get every child transform
+                    RectTransform[] children = (target as UIStyler).GetComponentsInChildren<RectTransform>(true);
+
+                    try {
+                        //start asset editing
+                        AssetDatabase.StartAssetEditing();
+
+                        foreach (RectTransform child in children)
+                        {
+                            //revert the prefab component instance
+                            PrefabUtility.RevertObjectOverride(child, InteractionMode.AutomatedAction);
+                            PrefabUtility.RecordPrefabInstancePropertyModifications(child);
+                        }
+                    }
+                    finally {
+                        //stop asset editing
+                        AssetDatabase.StopAssetEditing();
                     }
                 }
 
                 //apply the style variable
-                UIStyler styler = (target as UIStyler);
-                styler.uiStyle = tempColorStyleProperty.objectReferenceValue as UIStyle;
+                styler = (target as UIStyler);
+                styler.uiStyle = tempColorStyleObject;
+                serializedObject.ApplyModifiedProperties();
 
                 //apply the style again
                 styler.ApplyStyle();
@@ -366,6 +369,7 @@ namespace OpenFlightVRC.UI
                 {
                     LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup.transform as RectTransform);
                 }
+                return;
             }
 
             if (colorStyleProperty.objectReferenceValue is UIStyle style)
