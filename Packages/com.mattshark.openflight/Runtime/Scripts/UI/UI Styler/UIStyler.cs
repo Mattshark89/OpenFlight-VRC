@@ -24,7 +24,7 @@ namespace OpenFlightVRC.UI
 			hideFlags = HideFlags.DontSaveInBuild;
 		}
 
-		private static Dictionary<UIStyleMarkup.StyleClass, FieldInfo> GetStyleFieldMap()
+		public static Dictionary<UIStyleMarkup.StyleClass, FieldInfo> GetStyleFieldMap()
 		{
 			Dictionary<UIStyleMarkup.StyleClass, FieldInfo> fieldLookup = new Dictionary<UIStyleMarkup.StyleClass, FieldInfo>();
 
@@ -119,6 +119,15 @@ namespace OpenFlightVRC.UI
                         };
                         RecordObject(button);
                     }
+                    else
+                    {
+                        if (markup.targetGraphic != null)
+                        {
+                            Undo.RecordObject(markup.targetGraphic, "Apply UI Style");
+                            markup.targetGraphic.color = graphicColor;
+                            RecordObject(markup.targetGraphic);
+                        }
+                    }
                 }
                 else if (markup.styleClass == UIStyleMarkup.StyleClass.InActiveTab)
                 {
@@ -139,6 +148,15 @@ namespace OpenFlightVRC.UI
                         };
                         RecordObject(button);
                     }
+                    else
+                    {
+                        if (markup.targetGraphic != null)
+                        {
+                            Undo.RecordObject(markup.targetGraphic, "Apply UI Style");
+                            markup.targetGraphic.color = graphicColor;
+                            RecordObject(markup.targetGraphic);
+                        }
+                    }
                 }
                 else if (markup.styleClass == UIStyleMarkup.StyleClass.HighlightedButton)
                 {
@@ -158,6 +176,15 @@ namespace OpenFlightVRC.UI
                             selectedColor = button.colors.selectedColor
                         };
                         RecordObject(button);
+                    }
+                    else
+                    {
+                        if (markup.targetGraphic != null)
+                        {
+                            Undo.RecordObject(markup.targetGraphic, "Apply UI Style");
+                            markup.targetGraphic.color = graphicColor;
+                            RecordObject(markup.targetGraphic);
+                        }
                     }
                 }
                 else if (markup.targetGraphic != null)
@@ -190,20 +217,105 @@ namespace OpenFlightVRC.UI
     {
         private SerializedProperty colorStyleProperty;
 
+        [SerializeField]
+        private bool showUnused = false;
+
+        [SerializeField]
+        private int currentStyleDropdownIndex = 0;
+
+        private string[] styleNames = new string[0];
+        private List<UIStyle> styles = new List<UIStyle>();
+
+        //This is called only when the component is first visible in the inspector
+        //essentially the equivalent of Start() for the inspector
         private void OnEnable()
         {
             colorStyleProperty = serializedObject.FindProperty(nameof(UIStyler.uiStyle));
+            
+	#region Style Dropdown Initialization
+            //attempt to find all styles relating to the package that this script is in
+            styles = new List<UIStyle>();
+            string[] guids = AssetDatabase.FindAssets("t:UIStyle");
+            foreach (string guid in guids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                UIStyle styleAsset = AssetDatabase.LoadAssetAtPath<UIStyle>(path);
+                if (styleAsset != null)
+                {
+                    styles.Add(styleAsset);
+                }
+            }
+
+            //create a list of style names for the dropdown
+            styleNames = new string[styles.Count];
+            for (int i = 0; i < styles.Count; i++)
+            {
+                styleNames[i] = styles[i].name;
+            }
+
+            //attempt to find the index of the current style
+            UIStyler styler = (target as UIStyler);
+            for (int i = 0; i < styleNames.Length; i++)
+            {
+                try {
+                    if (styleNames[i] == styler.uiStyle.name)
+                    {
+                        currentStyleDropdownIndex = i;
+                        break;
+                    }
+                }
+                catch (UnityEngine.MissingReferenceException) {
+                    Debug.LogWarning("Previous style was deleted. Style has been reset to default.");
+                    currentStyleDropdownIndex = 0;
+                    styler.uiStyle = styles[0];
+                    colorStyleProperty.objectReferenceValue = styles[0];
+                    serializedObject.ApplyModifiedProperties();
+                    //apply the style
+                    styler.ApplyStyle();
+                    break;
+                }
+            }
+	#endregion
         }
 
         public override void OnInspectorGUI()
         {
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(colorStyleProperty);
 
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(colorStyleProperty);
             serializedObject.ApplyModifiedProperties();
+            if (EditorGUI.EndChangeCheck())
+            {
+                //change the dropdown to match the style variable
+                UIStyler styler = (target as UIStyler);
+                for (int i = 0; i < styleNames.Length; i++)
+                {
+                    if (styleNames[i] == styler.uiStyle.name)
+                    {
+                        currentStyleDropdownIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            EditorGUI.BeginChangeCheck();
+            currentStyleDropdownIndex = EditorGUILayout.Popup("Style", currentStyleDropdownIndex, styleNames);
+            if (EditorGUI.EndChangeCheck())
+            {
+                //change the colorStyleProperty and styler.uiStyle to match the dropdown
+                UIStyler styler = (target as UIStyler);
+                styler.uiStyle = AssetDatabase.LoadAssetAtPath<UIStyle>(AssetDatabase.GetAssetPath(styles[currentStyleDropdownIndex]));
+                colorStyleProperty.objectReferenceValue = styler.uiStyle;
+                serializedObject.ApplyModifiedProperties();
+            }
 
             if (EditorGUI.EndChangeCheck())
-                (target as UIStyler).ApplyStyle();
+            {
+                //apply the style
+                UIStyler styler = (target as UIStyler);
+                styler.ApplyStyle();
+            }
 
             if (GUILayout.Button("Fix Tablet Prefab"))
             {
@@ -242,15 +354,54 @@ namespace OpenFlightVRC.UI
 
                 SerializedObject styleObj = new SerializedObject(style);
 
+                var lookup = UIStyler.GetStyleFieldMap();
+                UIStyleMarkup[] markups = (target as UIStyler).GetComponentsInChildren<UIStyleMarkup>(true);
+
+                SerializedProperty[] unusedProperties = new SerializedProperty[typeof(UIStyle).GetFields(BindingFlags.Public | BindingFlags.Instance).Length];
+
                 foreach (FieldInfo field in typeof(UIStyle).GetFields(BindingFlags.Public | BindingFlags.Instance))
                 {
                     SerializedProperty property = styleObj.FindProperty(field.Name);
 
-                    if (property != null)
+                    //check if the field is used in any children
+                    bool used = false;
+                    foreach (UIStyleMarkup markup in markups)
+                    {
+                        if (lookup[markup.styleClass].Name == field.Name)
+                        {
+                            used = true;
+                            break;
+                        }
+                    }
+
+                    if (property != null && used)
                         EditorGUILayout.PropertyField(property);
+                    else if (property != null)
+                        unusedProperties[System.Array.IndexOf(styleObj.targetObject.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance), field)] = property;
                 }
 
                 styleObj.ApplyModifiedProperties();
+
+	#region Unused Properties Foldout
+                //display unused properties in a foldout
+                if (unusedProperties.Length > 0)
+                {
+                    EditorGUILayout.Space();
+                    showUnused = EditorGUILayout.Foldout(showUnused, "Unused Properties");
+                    if (showUnused)
+                    {
+                        //display a info text
+                        EditorGUILayout.HelpBox("These properties are not used in any children of this UIStyler. They are here for convenience.", MessageType.Info);
+                        EditorGUI.indentLevel++;
+                        foreach (SerializedProperty property in unusedProperties)
+                        {
+                            if (property != null)
+                                EditorGUILayout.PropertyField(property);
+                        }
+                        EditorGUI.indentLevel--;
+                    }
+                }
+	#endregion
 
                 if (EditorGUI.EndChangeCheck())
                     (target as UIStyler).ApplyStyle();

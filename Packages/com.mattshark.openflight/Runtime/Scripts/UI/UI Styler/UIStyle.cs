@@ -17,6 +17,7 @@ namespace OpenFlightVRC.UI
 		}
 	}
 
+	[CreateAssetMenu(fileName = "UIStyle", menuName = "VRC Packages/OpenFlight/UIStyle", order = 1)]
 	internal class UIStyle : ScriptableObject
 	{
 		[StyleMarkupLink(StyleClass.Background)]
