@@ -119,6 +119,7 @@ public class WingFlightPlusGlideEditor : Editor
 		private Quaternion LHRot;
 		private Quaternion playerRot;
 		private bool handsOut = false; // Are the controllers held outside of an imaginary cylinder?
+		private bool handsOpposite = false;
 		private bool isFlapping = false; // Doing the arm motion
 		private bool isFlying = false; // Currently in the air after/during a flap
 		private bool isGliding = false; // Has arms out while flying
@@ -289,7 +290,7 @@ public class WingFlightPlusGlideEditor : Editor
 			{
 				fallingTick = 0;
 			}
-			// Check if hands are held out
+			// Check if hands are held out (ie are a certain distance from the central body)
 			if (
 				Vector2.Distance(
 					new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z),
@@ -308,6 +309,10 @@ public class WingFlightPlusGlideEditor : Editor
 			else
 			{
 				handsOut = false;
+			}
+
+			if (Vector3.Angle(LHRot * Vector3.left, RHRot * Vector3.right) <= 90) {
+				handsOpposite = true;
 			}
 
 			if (!isFlapping)
@@ -361,7 +366,7 @@ public class WingFlightPlusGlideEditor : Editor
 			}
 
 			// See fallToGlide tooltip
-			if (fallToGlide && fallingTick >= 20 && handsOut && canGlide)
+			if (fallToGlide && fallingTick >= 20 && handsOut && handsOpposite && canGlide)
 			{
 				TakeOff();
 			}
@@ -383,12 +388,12 @@ public class WingFlightPlusGlideEditor : Editor
 					}
 					LHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
 					RHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
-					if ((!isFlapping) && handsOut && canGlide)
+					if ((!isFlapping) && (isGliding ? true : handsOut) && handsOpposite && canGlide)
 					{
 						// Gliding, banking, and steering logic
 						isGliding = true;
 						newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
-						wingDirection = Vector3.Normalize(Quaternion.Slerp(LHRot, RHRot, 0.5f) * Vector3.forward); // The direction the player should go based on how they've angled their wings
+						wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * Vector3.forward, LHRot * Vector3.forward, 0.5f)); // The direction the player should go based on how they've angled their wings
 						// Hotfix: Always have some form of horizontal velocity while falling. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
 						if (newVelocity.y < 0.3f && newVelocity.x == 0 && newVelocity.z == 0)
 						{
@@ -396,13 +401,13 @@ public class WingFlightPlusGlideEditor : Editor
 							newVelocity = new Vector3(Mathf.Round(tmpV2.x * 10) / 10, newVelocity.y, Mathf.Round(tmpV2.y * 10) / 10);
 						}
 						steering = (RHPos.y - LHPos.y) * 80 / armspan;
-						if (steering > 35)
+						if (steering > 45)
 						{
-							steering = 35;
+							steering = 45;
 						}
-						else if (steering < -35)
+						else if (steering < -45)
 						{
-							steering = -35;
+							steering = -45;
 						}
 						if (bankingTurns)
 						{
@@ -472,7 +477,8 @@ public class WingFlightPlusGlideEditor : Editor
 							+ string.Concat("\nHandsOut: ", handsOut.ToString())
 							+ string.Concat("\nDownThrust: ", downThrust.ToString())
 							+ string.Concat("\nGrounded: ", LocalPlayer.IsPlayerGrounded().ToString())
-							+ string.Concat("\nCannotFly: ", (cannotFlyTick > 0).ToString());
+							+ string.Concat("\nCannotFly: ", (cannotFlyTick > 0).ToString())
+							+ string.Concat("\nLeAngle: ", Vector3.Angle(LHRot * Vector3.left, RHRot * Vector3.right).ToString());
 					}
 				}
 			}
