@@ -43,6 +43,7 @@ namespace OpenFlightVRC.UI
 		public StyleClass styleClass;
 		public Graphic targetGraphic;
 		public LineRenderer targetLineRenderer;
+		public bool ignoreAlpha = false;
 #pragma warning restore CS0649
 
 		private void Reset()
@@ -50,6 +51,7 @@ namespace OpenFlightVRC.UI
 			hideFlags = HideFlags.DontSaveInBuild;
 			targetGraphic = GetComponent<Graphic>();
 			targetLineRenderer = GetComponent<LineRenderer>();
+			ignoreAlpha = false;
 
 #if UNITY_EDITOR
 			//get parent styler

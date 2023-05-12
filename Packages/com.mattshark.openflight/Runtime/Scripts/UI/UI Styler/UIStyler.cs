@@ -63,6 +63,12 @@ namespace OpenFlightVRC.UI
             {
                 Color graphicColor = GetColor(lookup[markup.styleClass]);
 
+                //check for ignore alpha flag
+                if (markup.ignoreAlpha)
+                {
+                    graphicColor.a = 1;
+                }
+
                 if (markup.styleClass == UIStyleMarkup.StyleClass.TextHighlight)
                 {
                     InputField input = markup.GetComponent<InputField>();
