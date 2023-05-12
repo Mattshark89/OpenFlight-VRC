@@ -232,10 +232,19 @@ namespace OpenFlightVRC.UI
         private string[] styleNames = new string[0];
         private List<UIStyle> styles = new List<UIStyle>();
 
+        internal bool dirtyPrefab = false;
+
         //This is called only when the component is first visible in the inspector
         //essentially the equivalent of Start() for the inspector
         private void OnEnable()
         {
+            //detect if this script is part of a prefab instance
+            if (PrefabUtility.IsPartOfPrefabInstance(target))
+            {
+                //if it is, then we need to set the dirtyPrefab flag to true
+                dirtyPrefab = true;
+            }
+
             colorStyleProperty = serializedObject.FindProperty(nameof(UIStyler.uiStyle));
             
 	#region Style Dropdown Initialization
@@ -271,10 +280,14 @@ namespace OpenFlightVRC.UI
                     }
                 }
                 catch (UnityEngine.MissingReferenceException) {
-                    Debug.LogWarning("Previous style was deleted. Style has been reset to default.");
-                    currentStyleDropdownIndex = 0;
-                    styler.uiStyle = styles[0];
-                    colorStyleProperty.objectReferenceValue = styles[0];
+                    Debug.LogWarning("Previous style was deleted. Style has been set randomly.");
+                    EditorUtility.DisplayDialog("Style Deleted", "The style that was previously set has been deleted. A random style has been set instead.", "OK");
+                    //pick a random number
+                    int randomIndex = Random.Range(0, styles.Count);
+
+                    currentStyleDropdownIndex = randomIndex;
+                    styler.uiStyle = styles[randomIndex];
+                    colorStyleProperty.objectReferenceValue = styles[randomIndex];
                     serializedObject.ApplyModifiedProperties();
                     //apply the style
                     styler.ApplyStyle();
@@ -323,8 +336,11 @@ namespace OpenFlightVRC.UI
                 styler.ApplyStyle();
             }
 
-            if (GUILayout.Button("Fix Tablet Prefab"))
+            if (GUILayout.Button("Fix Tablet Prefab") || dirtyPrefab)
             {
+                //clear the flag
+                dirtyPrefab = false;
+
                 //copy the style variable
                 SerializedProperty tempColorStyleProperty = colorStyleProperty.Copy();
 
@@ -344,6 +360,12 @@ namespace OpenFlightVRC.UI
 
                 //apply the style again
                 styler.ApplyStyle();
+
+                //rebuild all layouts
+                foreach (LayoutGroup layoutGroup in (target as UIStyler).GetComponentsInChildren<LayoutGroup>(true))
+                {
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup.transform as RectTransform);
+                }
             }
 
             if (colorStyleProperty.objectReferenceValue is UIStyle style)
