@@ -3,7 +3,7 @@
 * [Home](/)
 * [Quick Start](QUICKSTART.md)
 * [Customization](CUSTOMIZATION.md)
-<!--  * [Themes](Themes.md) -->
+  * [Themes](Themes.md)
 * [Adding Avatars](ADDINGAVATARS.md)
 * **Scripting Reference**
   * Detection
