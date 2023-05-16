@@ -93,3 +93,7 @@ In no particular order:
 - Github contributors: https://github.com/Mattshark89/OpenFlight-VRC/graphs/contributors
 
 ...and several others for giving suggestions and helping fix critical bugs. You all are great!
+
+<a href="https://github.com/Mattshark89/OpenFlight-VRC/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Mattshark89/OpenFlight-VRC" />
+</a>
