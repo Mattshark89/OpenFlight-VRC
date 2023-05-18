@@ -24,10 +24,18 @@ namespace OpenFlightVRC.UI
 		public Button[] tabs;
 		private int activeTab = 0;
 
+		//Overwritten at start
+		private Color tabBaseColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+		private Color tabActiveColor = new Color(0.5f, 0.5f, 0.5f, 1f);
+
 		void Start()
 		{
 			//get the local player
 			localPlayer = Networking.LocalPlayer;
+
+			//save the tab colors into this script
+			tabBaseColor = tabs[0].colors.normalColor;
+			tabActiveColor = tabs[0].colors.selectedColor;
 
 			//initialize the tabs
 			SetActiveTabMain();
@@ -110,8 +118,16 @@ namespace OpenFlightVRC.UI
 			{
 				if (i == tab)
 				{
-					tabs[i].Select();
+					ColorBlock colors = tabs[i].colors;
+					colors.normalColor = tabActiveColor;
+					tabs[i].colors = colors;
 					activeTab = i;
+				}
+				else
+				{
+					ColorBlock colors = tabs[i].colors;
+					colors.normalColor = tabBaseColor;
+					tabs[i].colors = colors;
 				}
 			}
 		}
