@@ -311,7 +311,8 @@ public class WingFlightPlusGlideEditor : Editor
 				handsOut = false;
 			}
 
-			if (Vector3.Angle(LHRot * Vector3.left, RHRot * Vector3.right) <= 90) {
+			if (Vector3.Angle(LHRot * Vector3.left, RHRot * Vector3.right) <= 90)
+			{
 				handsOpposite = true;
 			}
 
@@ -536,8 +537,8 @@ public class WingFlightPlusGlideEditor : Editor
 		// Technique pulled from https://github.com/Superbstingray/UdonPlayerPlatformHook
 		private bool IsMainMenuOpen()
 		{
-		  int uiColliderCount = Physics.OverlapSphere(LocalPlayer.GetPosition(), 10f, 524288).Length;
-		  return (uiColliderCount == 8 || uiColliderCount == 9 || uiColliderCount == 10);
+			int uiColliderCount = Physics.OverlapSphere(LocalPlayer.GetPosition(), 10f, 524288).Length;
+			return (uiColliderCount == 8 || uiColliderCount == 9 || uiColliderCount == 10);
 		}
 
 		// Effectually disables all flight-related variables

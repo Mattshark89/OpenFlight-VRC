@@ -93,8 +93,12 @@ namespace OpenFlightVRC.UI
 			}
 		}
 
-		//Helper function to get the total distance of a vector array
-		//this adds up all of the distances between each vector in the array in order, then returns the total distance
+		/// <summary>
+		/// Helper function to get the total distance of a vector array.
+		/// this adds up all of the distances between each vector in the array in order, then returns the total distance
+		/// </summary>
+		/// <param name="vectors">The vector array to get the total distance of</param>
+		/// <returns>The total distance of the vector array</returns>
 		public float totalVectorDistance(Vector3[] vectors)
 		{
 			float totalDistance = 0;
@@ -112,6 +116,10 @@ namespace OpenFlightVRC.UI
 			return totalDistance;
 		}
 
+		/// <summary>
+		/// Sets the active tab to the given tab number
+		/// </summary>
+		/// <param name="tab">The tab number to set active</param>
 		public void SetActiveTab(int tab)
 		{
 			for (int i = 0; i < tabs.Length; i++)

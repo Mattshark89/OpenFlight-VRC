@@ -13,6 +13,9 @@ namespace OpenFlightVRC.UI
 {
 	public class ProxyUdonScript : UdonSharpBehaviour
 	{
+		/// <summary>
+		/// The UdonBehaviour to proxy
+		/// </summary>
 		public UdonBehaviour target;
 		public GameObject targetGameObject;
 
