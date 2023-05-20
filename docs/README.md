@@ -11,7 +11,7 @@ Welcome to the documentation for OpenFlight! Read the [Quick Start Guide](QUICKS
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/current_release_downloads)
 
 ## What is OpenFlight?
-OpenFlight is a flight system designed for VRChat worlds, allowing users to fly around just by flapping their hands! Alongside that, the system is setup to automatically detect the avatar you are wearing, allowing for the automatic enabling of flight when you put on an avatar wing arm attached wings. Ofcourse, if your avatar isnt supported, or even just doesnt have wings at all, you can still force the flight system on to enjoy it.
+OpenFlight is a flight system designed for VRChat worlds, allowing users to fly around just by flapping their hands! Alongside that, the system is setup to automatically detect the avatar you are wearing, allowing for the automatic enabling of flight when you put on an avatar wing arm attached wings. Of course, if your avatar isnt supported, or even just doesnt have wings at all, you can still force the flight system on to enjoy it.
 
 ### Features
 - Automatic avatar detection
@@ -36,12 +36,12 @@ Alongside these, we maintain a list of unofficial worlds that are known to use O
 - [Featherdale - Chipori Village](https://vrchat.com/home/world/wrld_fe48b7d3-1eb7-4e4c-9d8a-97da1d14a4e4)
 - [Literally Furry Avatars](https://vrchat.com/home/world/wrld_9cfb9bf2-d667-4740-80aa-5b5e70ba48a39)
 
-Lastly, we implore world creators to tag their world with the [`openflight`](https://vrchat.com/home/search/openflight) tag, so that users can easily find worlds that use OpenFlight. If you are a world creator, please consider doing this.
+Lastly, we implore world creators to tag their world with the [`openflight`](https://vrchat.com/home/search/openflight) tag, so that users can easily find worlds that use OpenFlight. If you are a world creator, please consider doing this. It'll help other users find your world as well.
 
 ## How does it work?
 There are quite a few systems that make up OpenFlight, so giving a concise awnser to this question is difficult. However, we will try to give a brief overview of the systems that make up OpenFlight.
 ### Flight System
-The flight system is the core of OpenFlight, and is responsible for the actual flight itself. This is mainly handled by [WingFlightPlusGlide.cs](/ScriptReference/Flight/WingFlightPlusGlide.md). The calculation is quite complicated, so it wont be covered here
+The flight system is the core of OpenFlight, and is responsible for the actual flight itself. This is mainly handled by [WingFlightPlusGlide.cs](/ScriptReference/Flight/WingFlightPlusGlide.md).
 ### Avatar Detection
 The detection is handled by a few scripts. [AvatarDetection.cs](/ScriptReference/AvatarDetection/AvatarDetection.md) is the main script that handles the detection, using [AvatarListLoader.cs](/ScriptReference/AvatarDetection/AvatarListLoader.md) to load the avatar list from GitHub. The detection uses the currently worn avatars Spine, Chest, Head, Neck, Shoulder, Upper/Lower arm and hand bones to create a hash to compare against the list of known avatars. If a match is found, the flight system is enabled, and the avatar specific settings are loaded.
 

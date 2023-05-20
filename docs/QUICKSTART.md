@@ -50,16 +50,16 @@ vpm add package com.mattshark.openflight
 This will install the OpenFlight system into your project, along with any other dependencies that are required. You can now open the project and continue with the next steps.
 <!-- tabs:end -->
 
-?> Make sure you check for and update the package whenever you return to work on your world! New features and bug fixes are being added all the time, and you don't want to miss out on them
+?> Make sure you check for and update the package whenever you return to work on your world! New features and bug fixes are being added all the time, and you don't want to miss out on them.
 
 ## Adding OpenFlight to your scene
 OpenFlight currently comes with two distinct world prefabs. These can be found by navigating to the top of your unity editor window, and finding the dropdown labelled "VRC Packages". Click on this dropdown, and inside you should see a folder labelled "OpenFlight". Inside that is a folder labelled "Prefabs". Inside this folder are the two prefabs that are currently available for OpenFlight. Clicking on either of these prefabs will add them to your scene automatically.
 
 - ### Lite
-This version is purely a selector button, allowing for users to press it to cycle between ON, AUTO and OFF.
+This version is purely a selector button, allowing for users to press it to cycle between ON, AUTO and OFF. Good for a barebones implementation where users are locked to your default physics.
 
 - ### Full
-This version contains a tablet allowing for users to configure their flight settings, along with a host of debug options and the information required to add new avatars to the system
+This version contains a tablet allowing for users to configure their flight settings, along with a host of debug options and the information required to add new avatars to the system. Recommended.
 
 ## Wrapping Up
 Once you have added one of the prefabs to your scene, make sure you position it in a place that is easily accessible to your users. Once you have done this, you can either proceed to uploading your world, or learn how to [customize the settings for your world](CUSTOMIZATION.md).
