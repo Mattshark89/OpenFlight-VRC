@@ -10,8 +10,9 @@ Note that this is a World/Udon project. This system cannot be installed to an av
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/current_release_downloads)
 
 ### WIP New docs!
-These are not complete, so use this readme as a reference for now.
+We are transitioning to these new docs:
 https://mattshark89.github.io/OpenFlight-VRC/docs/#/
+This readme will retain its current format for now incase any information is missing from the new docs.
 
 ## How does it work?
 
@@ -92,3 +93,7 @@ In no particular order:
 - Github contributors: https://github.com/Mattshark89/OpenFlight-VRC/graphs/contributors
 
 ...and several others for giving suggestions and helping fix critical bugs. You all are great!
+
+<a href="https://github.com/Mattshark89/OpenFlight-VRC/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Mattshark89/OpenFlight-VRC" />
+</a>

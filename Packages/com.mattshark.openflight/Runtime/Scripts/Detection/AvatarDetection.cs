@@ -42,11 +42,11 @@ namespace OpenFlightVRC
 		public OpenFlight OpenFlight;
 		public WingFlightPlusGlide WingFlightPlusGlide;
 
-	[System.NonSerialized]
-	string jsonString = ""; //this is the JSON list in string form
-	DataDictionary json; //this is the JSON list in a serialized form, allowing for JSON commands to be used on it
-	public bool allowedToFly = false; //this is used to tell openflight if the avatar is allowed to fly
-	public bool skipLoadingAvatar = true; //this is used to skip the loading avatar, as it is not a real avatar
+		[System.NonSerialized]
+		string jsonString = ""; //this is the JSON list in string form
+		DataDictionary json; //this is the JSON list in a serialized form, allowing for JSON commands to be used on it
+		public bool allowedToFly = false; //this is used to tell openflight if the avatar is allowed to fly
+		public bool skipLoadingAvatar = true; //this is used to skip the loading avatar, as it is not a real avatar
 
 		//gizmo related stuff
 		public bool showWingTipGizmo = false;
@@ -169,34 +169,34 @@ namespace OpenFlightVRC
 			return Mathf.FloorToInt(Vector3.Distance(bone1, bone2) / (float)d_spinetochest * scalingFactor);
 		}
 
-	bool isAvatarAllowedToFly(string in_hashV1, string in_hashV2)
-	{
-		DataDictionary bases = json["Bases"].DataDictionary;
-		DataToken[] baseKeys = bases.GetKeys().ToArray();
-		for (int i = 0; i < bases.Count; i++)
+		bool isAvatarAllowedToFly(string in_hashV1, string in_hashV2)
 		{
-			DataDictionary avi_base = bases[baseKeys[i]].DataDictionary;
-			DataToken[] avi_base_keys = avi_base.GetKeys().ToArray();
-			for (int j = 0; j < avi_base.Count; j++)
+			DataDictionary bases = json["Bases"].DataDictionary;
+			DataToken[] baseKeys = bases.GetKeys().ToArray();
+			for (int i = 0; i < bases.Count; i++)
 			{
-				DataDictionary variant = avi_base[avi_base_keys[j]].DataDictionary;
-				DataToken[] avi_variant_keys = variant.GetKeys().ToArray();
-				DataToken[] hashArray = variant["Hash"].DataList.ToArray();
-				for (int k = 0; k < hashArray.Length; k++)
+				DataDictionary avi_base = bases[baseKeys[i]].DataDictionary;
+				DataToken[] avi_base_keys = avi_base.GetKeys().ToArray();
+				for (int j = 0; j < avi_base.Count; j++)
 				{
-					string hash = hashArray[k].String;
-					if (hash == in_hashV1.ToString() || hash == in_hashV2.ToString())
+					DataDictionary variant = avi_base[avi_base_keys[j]].DataDictionary;
+					DataToken[] avi_variant_keys = variant.GetKeys().ToArray();
+					DataToken[] hashArray = variant["Hash"].DataList.ToArray();
+					for (int k = 0; k < hashArray.Length; k++)
 					{
-						name = variant["Name"].String;
-						creator = variant["Creator"].String;
-						introducer = variant["Introducer"].String;
-						weight = (float)variant["Weight"].Number;
-						WingtipOffset = (float)variant["WingtipOffset"].Number;
-						return true;
+						string hash = hashArray[k].String;
+						if (hash == in_hashV1.ToString() || hash == in_hashV2.ToString())
+						{
+							name = variant["Name"].String;
+							creator = variant["Creator"].String;
+							introducer = variant["Introducer"].String;
+							weight = (float)variant["Weight"].Number;
+							WingtipOffset = (float)variant["WingtipOffset"].Number;
+							return true;
+						}
 					}
 				}
 			}
-		}
 
 			name = "Unknown";
 			creator = "Unknown";
@@ -206,25 +206,28 @@ namespace OpenFlightVRC
 			return false;
 		}
 
-	void LoadJSON()
-	{
-		if (jsonString != "" && jsonString != null)
+		void LoadJSON()
 		{
-			//purely temp variable due to needing to use out
-			DataToken jsonDataToken;
-			bool success = VRCJson.TryDeserializeFromJson(jsonString, out jsonDataToken);
-			if (!success)
+			if (jsonString != "" && jsonString != null)
 			{
-				debugInfo = "Failed to load JSON list!";
-				Debug.LogError("Failed to load JSON list! This shouldnt occur unless we messed up the JSON, or VRChat broke something!");
-				return;
+				//purely temp variable due to needing to use out
+				DataToken jsonDataToken;
+				bool success = VRCJson.TryDeserializeFromJson(jsonString, out jsonDataToken);
+				if (!success)
+				{
+					debugInfo = "Failed to load JSON list!";
+					Debug.LogError("Failed to load JSON list! This shouldnt occur unless we messed up the JSON, or VRChat broke something!");
+					return;
+				}
+				json = jsonDataToken.DataDictionary;
+				jsonVersion = json["JSON Version"].String;
+				jsonDate = json["JSON Date"].String;
 			}
-			json = jsonDataToken.DataDictionary;
-			jsonVersion = json["JSON Version"].String;
-			jsonDate = json["JSON Date"].String;
 		}
-	}
 
+		/// <summary>
+		/// 	Tells the script to reload the JSON file and then recheck your worn avatar for flight
+		/// </summary>
 		public void reloadJSON()
 		{
 			debugInfo = "Loading JSON list...";
@@ -292,6 +295,9 @@ namespace OpenFlightVRC
 		}
 
 		//this can be used for other scripts to check if the avatar is allowed to fly again
+		/// <summary>
+		/// 	Reevaluates whether or not you should be able to fly
+		/// </summary>
 		public void ReevaluateFlight()
 		{
 			d_spinetochest = 0;

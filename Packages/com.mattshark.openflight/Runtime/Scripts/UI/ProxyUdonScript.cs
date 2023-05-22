@@ -9,10 +9,13 @@ this allows the tablet to be placed without also needing to place the standaolne
 feel free to add events here if you need to call them from the tablet.
 */
 
-namespace OpenFlightVRC
+namespace OpenFlightVRC.UI
 {
 	public class ProxyUdonScript : UdonSharpBehaviour
 	{
+		/// <summary>
+		/// The UdonBehaviour to proxy
+		/// </summary>
 		public UdonBehaviour target;
 		public GameObject targetGameObject;
 

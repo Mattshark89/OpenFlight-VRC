@@ -106,7 +106,7 @@ In some cases, an avatar base may have different versions as the creator has upd
 ?> If you need more help with this, dont be afraid to reach out to us on the [Discord](https://discord.gg/XrJsUfwqkf)!
 
 ## Editing the JSON file and submitting a pull request
-!> This section needs verifying and completing, as new contributers may have a different experience.
+!> This section needs to be completed!
 
 To finalize this process, we now need to edit the actual file in the repository. To do this, follow [this link](https://github.dev/Mattshark89/OpenFlight-VRC/blob/main/Packages/com.mattshark.openflight/Runtime/data.json) to be taken to a web-based editor for the file. You may need to login to GitHub first. Once the editor and file has loaded, scroll to the bottom of the file where the last sets of `}` are.
 ```json

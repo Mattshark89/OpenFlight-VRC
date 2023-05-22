@@ -5,12 +5,14 @@ using VRC.Udon;
 using UnityEngine.UI;
 using TMPro;
 
-namespace OpenFlightVRC
+namespace OpenFlightVRC.UI
 {
 	public class OpenFlightTablet : UdonSharpBehaviour
 	{
 		VRCPlayerApi localPlayer = null;
-		public float scalingOffset = 0.1f;
+
+		[System.NonSerialized]
+		private float scalingOffset = 0.6183768f;
 		public int fadeDistance = 10;
 		public bool allowFade = true;
 		public GameObject[] objectsToHideOnFade;
@@ -19,15 +21,21 @@ namespace OpenFlightVRC
 
 		public TextMeshProUGUI VersionInfo;
 
-		public Color activeTabColor;
-		public Color inactiveTabColor;
-
 		public Button[] tabs;
+		private int activeTab = 0;
+
+		//Overwritten at start
+		private Color tabBaseColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+		private Color tabActiveColor = new Color(0.5f, 0.5f, 0.5f, 1f);
 
 		void Start()
 		{
 			//get the local player
 			localPlayer = Networking.LocalPlayer;
+
+			//save the tab colors into this script
+			tabBaseColor = tabs[0].colors.normalColor;
+			tabActiveColor = tabs[0].colors.selectedColor;
 
 			//initialize the tabs
 			SetActiveTabMain();
@@ -35,6 +43,9 @@ namespace OpenFlightVRC
 
 		void Update()
 		{
+			//continually highlight the active tab
+			SetActiveTab(activeTab);
+
 			//check if the player is within the fade distance
 			if (Vector3.Distance(localPlayer.GetPosition(), transform.position) > fadeDistance && allowFade)
 			{
@@ -63,6 +74,16 @@ namespace OpenFlightVRC
 				Vector3 Head = localPlayer.GetBonePosition(HumanBodyBones.Head);
 				float PlayerScale = totalVectorDistance(new Vector3[] { footR, LowerLegR, UpperLegR, Hips, spine, chest, Neck, Head });
 
+				//if the player scale is 0, that means the avatar uses a generic rig, placing all the bone transforms at origin
+				//set the scale to 1 to make sure the tablet is visible anyway
+				if (PlayerScale == 0)
+				{
+					PlayerScale = 1;
+				}
+
+				//if the player is too small, set the scale to 1
+				PlayerScale = Mathf.Clamp(PlayerScale, 0.1f, float.MaxValue);
+
 				//set this gameobjects scale to the players scale
 				transform.localScale = new Vector3((float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset);
 
@@ -72,8 +93,12 @@ namespace OpenFlightVRC
 			}
 		}
 
-		//Helper function to get the total distance of a vector array
-		//this adds up all of the distances between each vector in the array in order, then returns the total distance
+		/// <summary>
+		/// Helper function to get the total distance of a vector array.
+		/// this adds up all of the distances between each vector in the array in order, then returns the total distance
+		/// </summary>
+		/// <param name="vectors">The vector array to get the total distance of</param>
+		/// <returns>The total distance of the vector array</returns>
 		public float totalVectorDistance(Vector3[] vectors)
 		{
 			float totalDistance = 0;
@@ -91,17 +116,26 @@ namespace OpenFlightVRC
 			return totalDistance;
 		}
 
+		/// <summary>
+		/// Sets the active tab to the given tab number
+		/// </summary>
+		/// <param name="tab">The tab number to set active</param>
 		public void SetActiveTab(int tab)
 		{
 			for (int i = 0; i < tabs.Length; i++)
 			{
 				if (i == tab)
 				{
-					tabs[i].GetComponent<Image>().color = activeTabColor;
+					ColorBlock colors = tabs[i].colors;
+					colors.normalColor = tabActiveColor;
+					tabs[i].colors = colors;
+					activeTab = i;
 				}
 				else
 				{
-					tabs[i].GetComponent<Image>().color = inactiveTabColor;
+					ColorBlock colors = tabs[i].colors;
+					colors.normalColor = tabBaseColor;
+					tabs[i].colors = colors;
 				}
 			}
 		}

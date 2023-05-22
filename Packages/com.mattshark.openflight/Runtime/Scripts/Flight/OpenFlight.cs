@@ -33,16 +33,38 @@ public class OpenFlightScenePostProcessor {
 	public class OpenFlight : UdonSharpBehaviour
 	{
 		//this removes any override that the editor might have set through the inspector ([HideInInspector] does NOT do that)
+		/// <summary>
+		/// The version of OpenFlight that is currently installed in the world. This should not be set, as this value is set upon scene load
+		/// </summary>
 		[System.NonSerialized]
 		public string OpenFlightVersion = "?.?.?";
+
+		/// <summary>
+		/// 	The WingedFlight game object, used to enable/disable the WingedFlight script
+		/// </summary>
 		public GameObject wingedFlight;
+
+		/// <summary>
+		/// The AvatarDetection script, used to re-evaluate flight upon switching to auto
+		/// </summary>
 		public AvatarDetection avatarDetection;
+
+		/// <summary>
+		/// The current flight mode
+		/// </summary>
 		public string flightMode = "Auto";
+
 		private VRCPlayerApi LocalPlayer;
 
+		/// <summary>
+		/// If true, the player is allowed to fly
+		/// </summary>
 		[ReadOnly]
 		public bool flightAllowed = false;
 
+		/// <summary>
+		/// Turns flight off
+		/// </summary>
 		void SwitchFlight()
 		{
 			wingedFlight.SetActive(false);
@@ -58,6 +80,9 @@ public class OpenFlightScenePostProcessor {
 			}
 		}
 
+		/// <summary>
+		/// Enables flight if the player is in VR
+		/// </summary>
 		public void FlightOn()
 		{
 			if (true)
@@ -69,6 +94,9 @@ public class OpenFlightScenePostProcessor {
 			}
 		}
 
+		/// <summary>
+		/// Disables flight
+		/// </summary>
 		public void FlightOff()
 		{
 			SwitchFlight();
@@ -77,6 +105,9 @@ public class OpenFlightScenePostProcessor {
 			flightAllowed = false;
 		}
 
+		/// <summary>
+		/// Allows the avatar detection system to control if the player can fly or not
+		/// </summary>
 		public void FlightAuto()
 		{
 			if (true)
@@ -92,6 +123,10 @@ public class OpenFlightScenePostProcessor {
 			}
 		}
 
+		/// <summary>
+		/// Allows flight if flightMode is set to Auto
+		/// </summary>
+		/// <seealso cref="FlightAuto"/>
 		public void CanFly()
 		{
 			if (string.Equals(flightMode, "Auto"))
@@ -102,6 +137,9 @@ public class OpenFlightScenePostProcessor {
 			}
 		}
 
+		/// <summary>
+		/// Disables flight if flightMode is set to Auto
+		/// </summary>
 		public void CannotFly()
 		{
 			if (string.Equals(flightMode, "Auto"))

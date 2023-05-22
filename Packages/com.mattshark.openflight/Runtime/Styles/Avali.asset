@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 065ee50e0baf07b4ca9b395bc59d9503, type: 3}
+  m_Name: Avali
+  m_EditorClassIdentifier: 
+  backgroundColor: {r: 1, g: 0.5986123, b: 0, a: 0.7411765}
+  fieldBackgroundColor: {r: 1, g: 0.7684245, b: 0.3726415, a: 1}
+  buttonBackgroundColor: {r: 1, g: 0.5986123, b: 0, a: 0.7411765}
+  sliderHandle: {r: 0.9450981, g: 0.9450981, b: 0.9450981, a: 1}
+  sliderProgress: {r: 1, g: 0.6, b: 0, a: 1}
+  sliderBackground: {r: 1, g: 0.7686275, b: 0.37254903, a: 1}
+  iconColor: {r: 1, g: 1, b: 1, a: 1}
+  iconDropShadowColor: {r: 0, g: 0, b: 0, a: 1}
+  highlightedButtonColor: {r: 1, g: 0.654717, b: 0.13679248, a: 1}
+  placeholderTextColor: {r: 0.8773585, g: 0.8773585, b: 0.8773585, a: 0.49411765}
+  textColor: {r: 0, g: 0, b: 0, a: 1}
+  textDropShadowColor: {r: 0, g: 0, b: 0, a: 1}
+  invertedTextColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  redIconColor: {r: 0.6320754, g: 0.19677822, b: 0.19677822, a: 1}
+  invertedIconColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  textHighlightColor: {r: 0.84394675, g: 0.65882355, b: 1, a: 0.7529412}
+  textCaretColor: {r: 0.8962264, g: 0.8962264, b: 0.8962264, a: 1}
+  graphLine: {r: 1, g: 0.6, b: 0, a: 1}
+  graphPoint: {r: 1, g: 1, b: 1, a: 1}
+  graphBackground: {r: 1, g: 0.7686275, b: 0.37254903, a: 1}
+  activeTab: {r: 1, g: 0.6, b: 0, a: 1}
+  inActiveTab: {r: 1, g: 0.6, b: 0, a: 0.7411765}

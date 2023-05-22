@@ -31,6 +31,11 @@
   <script>
     // Docsify Configuration
     window.$docsify = {
+      timeUpdater: {
+        text: "<div align='left' width='200px' style='color:gray;font-size:16px'>Updated {docsify-updated}</div>",
+        formatUpdated: "{YYYY}-{MM}-{DD}",
+        whereToPlace: "bottom",  // "top" or "bottom", default to "bottom"
+      },
       loadSidebar: true,
       subMaxLevel: 3,
       logo: 'icon.png',
@@ -69,6 +74,8 @@
   <!-- Plugins -->
   <script src="https://cdn.jsdelivr.net/npm/docsify-example-panels"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-updated/src/time-updater.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
 </body>
 
 </html>

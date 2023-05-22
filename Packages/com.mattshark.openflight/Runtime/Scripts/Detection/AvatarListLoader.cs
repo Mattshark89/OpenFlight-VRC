@@ -11,12 +11,21 @@ namespace OpenFlightVRC
 	{
 		public VRCUrl URL = new VRCUrl("https://mattshark89.github.io/OpenFlight-VRC/Assets/OpenFlight-VRC/data.json");
 
+		/// <summary>
+		/// The output of the json file. This is set by the <see cref="LoadURL"/> method, and is done asynchronously, so make sure your script waits for output to be set. See VRCStringDownloader for more information
+		/// </summary>
 		[System.NonSerialized]
 		public string Output = "";
 		public TextAsset OfflineJSON;
+
+		/// <summary>
+		/// If true, the URL will not be loaded, and the in-world JSON will be used instead
+		/// </summary>
 		public bool useOfflineJSON = false;
 
-		//Event used to initiate a URL load
+		/// <summary>
+		/// Initiate a asynchronous URL load
+		/// </summary>
 		public void LoadURL()
 		{
 			//reset the output
