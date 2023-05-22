@@ -2039,7 +2039,7 @@ GameObject:
   - component: {fileID: 1314989468}
   - component: {fileID: 1314989467}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: ControlClientSimArmature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2057,9 +2057,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 814258a7fc6d23748ba12e8f3ecfb18b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
-  extent: 50
-  armRotationOffset: {x: 0, y: 0, z: 0}
+  speed: 7
+  extent: 80
+  originalLeftRotation: {x: 0, y: 0, z: 0, w: 1}
+  originalRightRotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!4 &1314989468
 Transform:
   m_ObjectHideFlags: 0
@@ -2072,7 +2073,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1330013381
 GameObject:
@@ -2741,6 +2742,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4190905665779482798, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
+    - target: {fileID: 4190905666689760639, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
+      propertyPath: debugOutput
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4190905666689760639, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
       propertyPath: serializationData.Prefab

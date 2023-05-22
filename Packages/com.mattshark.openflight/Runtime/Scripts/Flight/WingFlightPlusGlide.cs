@@ -186,6 +186,12 @@ public class WingFlightPlusGlideEditor : Editor
 			//oldWalkSpeed = LocalPlayer.GetWalkSpeed();
 			//oldRunSpeed = LocalPlayer.GetRunSpeed();
 			//oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
+
+			//disable banking turns if in desktop mode
+			if (!LocalPlayer.IsUserInVR())
+			{
+				bankingTurns = false;
+			}
 		}
 
 		public void OnEnable()
@@ -207,7 +213,6 @@ public class WingFlightPlusGlideEditor : Editor
 
 		public void Update()
 		{
-			Debug.Log("DownThrust: " + downThrust);
 			if ((LocalPlayer != null) && LocalPlayer.IsValid())
 			{
 				dtFake = dtFake + Time.deltaTime;

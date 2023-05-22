@@ -8,13 +8,6 @@
         "com.unity.textmeshpro": "2.1.6"
       }
     },
-    "com.spoiledcat.git": {
-      "version": "1.0.12",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://registry.spoiledcat.com"
-    },
     "com.unity.burst": {
       "version": "1.4.11",
       "depth": 1,
@@ -27,13 +20,6 @@
     "com.unity.cinemachine": {
       "version": "2.8.0",
       "depth": 1,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.collab-proxy": {
-      "version": "1.10.2",
-      "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -55,7 +41,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.11",
+      "version": "2.0.18",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -199,24 +185,6 @@
         "com.unity.postprocessing": "3.1.1",
         "com.unity.textmeshpro": "2.1.6"
       }
-    },
-    "net.koyashiro.udondictionary": {
-      "version": "file:net.koyashiro.udondictionary",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
-    },
-    "net.koyashiro.udonjson": {
-      "version": "file:net.koyashiro.udonjson",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
-    },
-    "net.koyashiro.udonlist": {
-      "version": "file:net.koyashiro.udonlist",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

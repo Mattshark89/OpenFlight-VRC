@@ -9,7 +9,8 @@ public class ClientSimArmature : MonoBehaviour
 
 	public float extent = 50f;
 
-	public Vector3 armRotationOffset = new Vector3(0, 0, 0);
+	public Quaternion originalLeftRotation = Quaternion.identity;
+	public Quaternion originalRightRotation = Quaternion.identity;
 
 	void Update()
 	{
@@ -25,16 +26,24 @@ public class ClientSimArmature : MonoBehaviour
 			//get arm transform
 			Transform L_arm = animator.GetBoneTransform(HumanBodyBones.LeftUpperArm);
 			Transform R_arm = animator.GetBoneTransform(HumanBodyBones.RightUpperArm);
+			Transform armature = animator.GetBoneTransform(HumanBodyBones.Hips);
 
-			if (armRotationOffset == Vector3.zero)
+			if (originalLeftRotation == Quaternion.identity)
 			{
-				armRotationOffset = L_arm.localEulerAngles;
+				originalLeftRotation = L_arm.localRotation;
+				originalRightRotation = R_arm.localRotation;
 			}
 
 			//rotate the elbow in a flapping motion along the x axis of the armature itself
 			float angle = ((Mathf.Sin(Time.time * speed) + 1) / 2) * extent;
-			L_arm.localRotation = Quaternion.Euler(armRotationOffset + new Vector3(-angle, 0, 0));
-			R_arm.localRotation = Quaternion.Euler(armRotationOffset + new Vector3(-angle, 0, 0));
+			//L_arm.localRotation = Quaternion.Euler(armRotationOffset + new Vector3(-angle, 0, 0));
+			//R_arm.localRotation = Quaternion.Euler(armRotationOffset + new Vector3(-angle, 0, 0));
+			//set both arms to their base rotations
+			L_arm.localRotation = originalLeftRotation;
+			R_arm.localRotation = originalRightRotation;
+			//rotate the arms along the x axis of the armature itself
+			L_arm.RotateAround(L_arm.position, armature.forward, -angle);
+			R_arm.RotateAround(R_arm.position, armature.forward, angle);
 
 			//get both hand objects
 			GameObject L_hand = GameObject.Find("DestkopTrackingData/Head/PlayerCamera/LeftHand");
