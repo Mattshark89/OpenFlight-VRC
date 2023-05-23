@@ -273,6 +273,8 @@ public class WingFlightPlusGlideEditor : Editor
 			// We're using LocalPlayer.GetPosition() to turn these global coordinates into local ones
 			RHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
 			LHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
+			LHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
+			RHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
 			if ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y) > 0)
 			{
 				downThrust = ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y)) * dt / armspan;
@@ -311,9 +313,11 @@ public class WingFlightPlusGlideEditor : Editor
 				handsOut = false;
 			}
 
-			if (Vector3.Angle(LHRot * Vector3.left, RHRot * Vector3.right) <= 90)
+			if (Vector3.Angle(LHRot * Vector3.right, RHRot * Vector3.right) > 90)
 			{
 				handsOpposite = true;
+			} else {
+				handsOpposite = false;
 			}
 
 			if (!isFlapping)
@@ -387,8 +391,6 @@ public class WingFlightPlusGlideEditor : Editor
 					{
 						LocalPlayer.SetGravityStrength(flightGravity());
 					}
-					LHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
-					RHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
 					if ((!isFlapping) && (isGliding ? true : handsOut) && handsOpposite && canGlide)
 					{
 						// Gliding, banking, and steering logic
@@ -479,7 +481,7 @@ public class WingFlightPlusGlideEditor : Editor
 							+ string.Concat("\nDownThrust: ", downThrust.ToString())
 							+ string.Concat("\nGrounded: ", LocalPlayer.IsPlayerGrounded().ToString())
 							+ string.Concat("\nCannotFly: ", (cannotFlyTick > 0).ToString())
-							+ string.Concat("\nLeAngle: ", Vector3.Angle(LHRot * Vector3.left, RHRot * Vector3.right).ToString());
+							+ string.Concat("\nLeAngle: ", Vector3.Angle(LHRot * Vector3.right, RHRot * Vector3.right).ToString());
 					}
 				}
 			}
