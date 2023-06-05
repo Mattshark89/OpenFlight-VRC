@@ -31,6 +31,22 @@
   <script>
     // Docsify Configuration
     window.$docsify = {
+      executeScript: true,
+      vueComponents: {
+        'utcdate': {
+          template: "{{ formatDate() }}",
+          methods: {
+            formatDate() {
+              date = new Date();
+              day = date.getDate();
+              month = date.getMonth() + 1;
+              year = date.getFullYear();
+
+              return `${year}-${month}-${day}`;
+            }
+          },
+        }
+      },
       timeUpdater: {
         text: "<div align='left' width='200px' style='color:gray;font-size:16px'>Updated {docsify-updated}</div>",
         formatUpdated: "{YYYY}-{MM}-{DD}",
@@ -76,6 +92,7 @@
   <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify-updated/src/time-updater.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
 </body>
 
 </html>

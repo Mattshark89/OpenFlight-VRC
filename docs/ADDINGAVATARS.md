@@ -130,7 +130,7 @@ You will also need to make sure you increment the version number at the top of t
 
 ?> We use [Semantic Versioning](https://semver.org/) for our version numbers, so make sure you follow the rules for that. For our purposes, avatar additions are considered a minor version update, so increment that field, and set the patch field to 0 if it isnt already.
 
-?> Our date format is `YYYY-MM-DD`, so make sure you follow that format.
+?> Our date format is `YYYY-MM-DD`, based on UTC Time, so make sure you follow that format, and not your local timezone. The date for right now is <utcdate></utcdate>
 
 After doing this, save the file using `Ctrl+S`, and then use the key combination `Ctrl+Shift+G` to access source control. Once there, fill in the message field with `[Avatar Addition] Avatar Name`, replacing `Avatar Name` with the name(s) of the avatar(s) you are adding.
 
