@@ -9,7 +9,7 @@ namespace OpenFlightVRC
 {
 	public class AvatarListLoader : UdonSharpBehaviour
 	{
-		public VRCUrl URL = new VRCUrl("https://mattshark89.github.io/OpenFlight-VRC/Assets/OpenFlight-VRC/data.json");
+		public VRCUrl URL = new VRCUrl("https://mattshark89.github.io/OpenFlight-VRC/data.json");
 
 		/// <summary>
 		/// The output of the json file. This is set by the <see cref="LoadURL"/> method, and is done asynchronously, so make sure your script waits for output to be set. See VRCStringDownloader for more information
