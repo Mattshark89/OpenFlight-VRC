@@ -27,5 +27,5 @@ This is the script that is responsible for the automatic avatar detection. It ha
 ## Public Methods
 | Method | Return Type | Description |
 |-|-|-|
-| reloadJSON | void | Tells the script to reload the JSON file and then recheck your worn avatar for flight |
+| ReloadJSON | void | Tells the script to reload the JSON file and then recheck your worn avatar for flight |
 | ReevaluateFlight | void | Reevaluates whether or not you should be able to fly |
