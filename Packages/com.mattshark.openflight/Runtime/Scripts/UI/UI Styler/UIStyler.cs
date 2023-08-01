@@ -13,7 +13,7 @@ using UdonSharpEditor;
 namespace OpenFlightVRC.UI
 {
 	[AddComponentMenu("OpenFlight/UI/Styler")]
-	internal class UIStyler : MonoBehaviour
+    internal class UIStyler : MonoBehaviour, VRC.SDKBase.IEditorOnly
 	{
 #pragma warning disable CS0649
 		public UIStyle uiStyle;

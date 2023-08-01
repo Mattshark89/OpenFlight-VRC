@@ -83,7 +83,7 @@ namespace OpenFlightVRC
         {
             if (player.isLocal)
             {
-                Logger.Log("Avatar Changed, reevaluating flight...");
+                Debug.Log("[OpenFlight] Avatar Changed, reevaluating flight...");
                 RunDetection();
             }
         }
