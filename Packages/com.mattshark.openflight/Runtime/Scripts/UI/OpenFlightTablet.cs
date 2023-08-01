@@ -70,7 +70,7 @@ namespace OpenFlightVRC.UI
 
             void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight)
             {
-                if (player == localPlayer)
+                if (player.isLocal)
                 {
                     Logger.Log("Player eye height changed, updating tablet scale");
                     UpdateTabletScale();

@@ -81,7 +81,7 @@ namespace OpenFlightVRC
 
         void OnAvatarChanged(VRCPlayerApi player)
         {
-            if (player == localPlayer)
+            if (player.isLocal)
             {
                 Logger.Log("Avatar Changed, reevaluating flight...");
                 RunDetection();
