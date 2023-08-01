@@ -16,29 +16,29 @@ namespace OpenFlightVRC
 		VRCPlayerApi localPlayer = null;
 		public string debugInfo = ""; //Contains all the debug info about avatar detection
 
-        /*
-        Spine to Chest: XXX
-        Head to Neck: XXX
-        Chest to Neck: XXX
-        Left Shoulder to Left Upper Arm: XXX
-        Left Upper Arm to Left Lower Arm: XXX
-        Left Lower Arm to Left Hand: XXX
-        Combined Bone Info: XXX
-        Hash: XXX
-        Allowed to Fly: XXX
-        Detected Avatar Info:
-        Name: XXX
-        Creator: XXX
-        Introducer: XXX
-        Weight: XXX
-        Wingtip Offset: XXX
-        */
+  /*
+  Spine to Chest: XXX
+  Head to Neck: XXX
+  Chest to Neck: XXX
+  Left Shoulder to Left Upper Arm: XXX
+  Left Upper Arm to Left Lower Arm: XXX
+  Left Lower Arm to Left Hand: XXX
+  Combined Bone Info: XXX
+  Hash: XXX
+  Allowed to Fly: XXX
+  Detected Avatar Info:
+  Name: XXX
+  Creator: XXX
+  Introducer: XXX
+  Weight: XXX
+  Wingtip Offset: XXX
+  */
 
-        double d_spinetochest = 0; //used to calculate the avatar scale
+		double d_spinetochest = 0; //used to calculate the avatar scale
 
-        //external JSON list stuff
-        public AvatarListLoader JSONLoader; //this is the script that loads the JSON list
-        public OpenFlight OpenFlight;
+		//external JSON list stuff
+		public AvatarListLoader JSONLoader; //this is the script that loads the JSON list
+		public OpenFlight OpenFlight;
 		public WingFlightPlusGlide WingFlightPlusGlide;
 
 		[System.NonSerialized]
@@ -71,32 +71,34 @@ namespace OpenFlightVRC
 
 			debugInfo = "Loading JSON list...";
 			JSONLoader.LoadURL(); //tell the JSON loader to try to load the JSON list from the github
+			//set the callback of the jsonloader to rehash
+			JSONLoader.SetCallback(this, "LoadJSON");
 		}
 
-        void Update()
-        {
-            //gizmo stuff
-            VisualizeWingTips();
-        }
+		void Update()
+		{
+			//gizmo stuff
+			VisualizeWingTips();
+		}
 
-        void OnAvatarChanged(VRCPlayerApi player)
-        {
-            if (player.isLocal)
-            {
-                Debug.Log("[OpenFlight] Avatar Changed, reevaluating flight...");
-                RunDetection();
-            }
-        }
-
-        void RunDetection()
-        {
-            //if the JSON list is empty, then return
-            if (jsonString.Length == 0 || jsonString == null)
+		void OnAvatarChanged(VRCPlayerApi player)
+		{
+			if (player.isLocal)
 			{
-				jsonString = (string)JSONLoader.Output;
-				LoadJSON();
+				Debug.Log("[OpenFlight] Avatar Changed, reevaluating flight...");
+				RunDetection();
+			}
+		}
+
+		void RunDetection()
+		{
+			//if the JSON list is empty, then return
+			if (jsonString.Length == 0 || jsonString == null)
+			{
+				Debug.Log("[OpenFlight] JSON list is empty, returning...");
 				return;
 			}
+			Debug.Log("[OpenFlight] Running Detection...");
 
 			//get spine and hips first, as they are used to calculate the avatar scale
 			Vector3 spine = localPlayer.GetBonePosition(HumanBodyBones.Spine);
@@ -108,72 +110,75 @@ namespace OpenFlightVRC
 			WingFlightPlusGlide.wingtipOffset = WingtipOffset;
 			WingFlightPlusGlide.weight = weight;
 
-            //get all the bones
-            Vector3 head = localPlayer.GetBonePosition(HumanBodyBones.Head);
-            Vector3 neck = localPlayer.GetBonePosition(HumanBodyBones.Neck);
-            Vector3 leftShoulder = localPlayer.GetBonePosition(HumanBodyBones.LeftShoulder);
-            Vector3 LeftUpperArm = localPlayer.GetBonePosition(HumanBodyBones.LeftUpperArm);
-            Vector3 LeftLowerArm = localPlayer.GetBonePosition(HumanBodyBones.LeftLowerArm);
-            Vector3 LeftHand = localPlayer.GetBonePosition(HumanBodyBones.LeftHand);
+			//get all the bones
+			Vector3 head = localPlayer.GetBonePosition(HumanBodyBones.Head);
+			Vector3 neck = localPlayer.GetBonePosition(HumanBodyBones.Neck);
+			Vector3 leftShoulder = localPlayer.GetBonePosition(HumanBodyBones.LeftShoulder);
+			Vector3 LeftUpperArm = localPlayer.GetBonePosition(HumanBodyBones.LeftUpperArm);
+			Vector3 LeftLowerArm = localPlayer.GetBonePosition(HumanBodyBones.LeftLowerArm);
+			Vector3 LeftHand = localPlayer.GetBonePosition(HumanBodyBones.LeftHand);
 
-            Vector3[] boneVectors = { chest, head, neck, leftShoulder, LeftUpperArm, LeftLowerArm, LeftHand };
-            hashV1 = GetHash(boneVectors, 1);
-            hashV2 = GetHash(boneVectors, 2);
+			Vector3[] boneVectors = { chest, head, neck, leftShoulder, LeftUpperArm, LeftLowerArm, LeftHand };
+			hashV1 = GetHash(boneVectors, 1);
+			hashV2 = GetHash(boneVectors, 2);
 
-            //check if the hash is the loading avatar, and if it is then dont check if the avatar is allowed to fly
-            if (hashV2 == "1439458325v2" && skipLoadingAvatar)
-            {
-                debugInfo = "Loading Avatar Detected, ignoring...";
-                name = "Loading Avatar";
-                creator = "Loading Avatar";
-                introducer = "Loading Avatar";
-                weight = 1;
-                WingtipOffset = 0;
-                return;
-            }
+			//check if the hash is the loading avatar, and if it is then dont check if the avatar is allowed to fly
+			if (hashV2 == "1439458325v2" && skipLoadingAvatar)
+			{
+				debugInfo = "Loading Avatar Detected, ignoring...";
+				name = "Loading Avatar";
+				creator = "Loading Avatar";
+				introducer = "Loading Avatar";
+				weight = 1;
+				WingtipOffset = 0;
+				Debug.Log("[OpenFlight] Loading Avatar Detected, ignoring...");
+				return;
+			}
 
-            //check if the avatar is allowed to fly
-            allowedToFly = IsAvatarAllowedToFly(hashV1, hashV2);
+			//check if the avatar is allowed to fly
+			allowedToFly = IsAvatarAllowedToFly(hashV1, hashV2);
 
-            //tell openflight if the avatar is allowed to fly
-            if (allowedToFly)
-            {
-                OpenFlight.CanFly();
-            }
-            else
-            {
-                OpenFlight.CannotFly();
-                WingFlightPlusGlide.wingtipOffset = 0;
-                WingFlightPlusGlide.weight = 1;
-            }
+			//tell openflight if the avatar is allowed to fly
+			if (allowedToFly)
+			{
+				OpenFlight.CanFly();
+				Debug.Log("[OpenFlight] Avatar is allowed to fly!");
+			}
+			else
+			{
+				OpenFlight.CannotFly();
+				WingFlightPlusGlide.wingtipOffset = 0;
+				WingFlightPlusGlide.weight = 1;
+				Debug.Log("[OpenFlight] Avatar is not allowed to fly!");
+			}
 
-            //print all the info to the text
-            debugInfo =
-                "HashV1 (Do not submit): "
-                + hashV1
-                + "\nHashV2: "
-                + hashV2
-                + "\nAllowed to Fly: "
-                + allowedToFly
-                + "\n\nDetected Avatar Info: "
-                + "\nName: "
-                + name
-                + "\nCreator: "
-                + creator
-                + "\nIntroduced by: "
-                + introducer
-                + "\nWeight: "
-                + weight
-                + "\nWingtip Offset: "
-                + WingtipOffset;
-        }
+			//print all the info to the text
+			debugInfo =
+				"HashV1 (Do not submit): "
+				+ hashV1
+				+ "\nHashV2: "
+				+ hashV2
+				+ "\nAllowed to Fly: "
+				+ allowedToFly
+				+ "\n\nDetected Avatar Info: "
+				+ "\nName: "
+				+ name
+				+ "\nCreator: "
+				+ creator
+				+ "\nIntroduced by: "
+				+ introducer
+				+ "\nWeight: "
+				+ weight
+				+ "\nWingtip Offset: "
+				+ WingtipOffset;
+		}
 
-        int GetBoneDistance(Vector3 bone1, Vector3 bone2, int scalingFactor)
+		int GetBoneDistance(Vector3 bone1, Vector3 bone2, int scalingFactor)
 		{
 			return Mathf.FloorToInt(Vector3.Distance(bone1, bone2) / (float)d_spinetochest * scalingFactor);
 		}
 
-        bool IsAvatarAllowedToFly(string in_hashV1, string in_hashV2)
+		bool IsAvatarAllowedToFly(string in_hashV1, string in_hashV2)
 		{
 			DataDictionary bases = json["Bases"].DataDictionary;
 			DataToken[] baseKeys = bases.GetKeys().ToArray();
@@ -184,12 +189,12 @@ namespace OpenFlightVRC
 				for (int j = 0; j < avi_base.Count; j++)
 				{
 					DataDictionary variant = avi_base[avi_base_keys[j]].DataDictionary;
-                    //DataToken[] avi_variant_keys = variant.GetKeys().ToArray();
-                    DataToken[] hashArray = variant["Hash"].DataList.ToArray();
+					//DataToken[] avi_variant_keys = variant.GetKeys().ToArray();
+					DataToken[] hashArray = variant["Hash"].DataList.ToArray();
 					for (int k = 0; k < hashArray.Length; k++)
 					{
 						string hash = hashArray[k].String;
-                        if (hash == in_hashV1 || hash == in_hashV2)
+						if (hash == in_hashV1 || hash == in_hashV2)
 						{
 							name = variant["Name"].String;
 							creator = variant["Creator"].String;
@@ -210,28 +215,28 @@ namespace OpenFlightVRC
 			return false;
 		}
 
-		void LoadJSON()
+		public void LoadJSON()
 		{
-			if (jsonString != "" && jsonString != null)
+			Debug.Log("[OpenFlight] Deserializing JSON list...");
+			jsonString = JSONLoader.Output;
+			//purely temp variable due to needing to use out
+			bool success = VRCJson.TryDeserializeFromJson(jsonString, out DataToken jsonDataToken);
+			if (!success)
 			{
-                //purely temp variable due to needing to use out
-                bool success = VRCJson.TryDeserializeFromJson(jsonString, out DataToken jsonDataToken);
-                if (!success)
-				{
-					debugInfo = "Failed to load JSON list!";
-					Debug.LogError("Failed to load JSON list! This shouldnt occur unless we messed up the JSON, or VRChat broke something!");
-					return;
-				}
-				json = jsonDataToken.DataDictionary;
-				jsonVersion = json["JSON Version"].String;
-				jsonDate = json["JSON Date"].String;
+				debugInfo = "Failed to load JSON list!";
+				Debug.LogError("Failed to load JSON list! This shouldnt occur unless we messed up the JSON, or VRChat broke something!");
+				return;
 			}
+			json = jsonDataToken.DataDictionary;
+			jsonVersion = json["JSON Version"].String;
+			jsonDate = json["JSON Date"].String;
+			RunDetection();
 		}
 
-        /// <summary>
-        /// 	Tells the script to reload the JSON file and then recheck your worn avatar for flight
-        /// </summary>
-        public void ReloadJSON()
+		/// <summary>
+		/// 	Tells the script to reload the JSON file and then recheck your worn avatar for flight
+		/// </summary>
+		public void reloadJSON()
 		{
 			debugInfo = "Loading JSON list...";
 			//get the JSON list
@@ -239,11 +244,10 @@ namespace OpenFlightVRC
 
 			jsonString = "";
 			d_spinetochest = 0;
-            RunDetection();
 		}
 
-        //bonePositions [chest, head, neck, leftShoulder, LeftUpperArm, LeftLowerArm, LeftHand]
-        string GetHash(Vector3[] bonePositions, int version)
+		//bonePositions [chest, head, neck, leftShoulder, LeftUpperArm, LeftLowerArm, LeftHand]
+		string GetHash(Vector3[] bonePositions, int version)
 		{
 			int scalingFactor;
 			int d_necktohead;
@@ -256,21 +260,21 @@ namespace OpenFlightVRC
 			{
 				case 1:
 					scalingFactor = 1000;
-                    d_necktohead = GetBoneDistance(bonePositions[2], bonePositions[1], scalingFactor);
-                    d_chesttoneck = GetBoneDistance(bonePositions[0], bonePositions[2], scalingFactor);
-                    d_leftshouldertoleftupperarm = GetBoneDistance(bonePositions[3], bonePositions[4], scalingFactor);
-                    d_leftupperarmtoleftlowerarm = GetBoneDistance(bonePositions[4], bonePositions[5], scalingFactor);
-                    d_leftlowertolefthand = GetBoneDistance(bonePositions[5], bonePositions[6], scalingFactor);
+					d_necktohead = GetBoneDistance(bonePositions[2], bonePositions[1], scalingFactor);
+					d_chesttoneck = GetBoneDistance(bonePositions[0], bonePositions[2], scalingFactor);
+					d_leftshouldertoleftupperarm = GetBoneDistance(bonePositions[3], bonePositions[4], scalingFactor);
+					d_leftupperarmtoleftlowerarm = GetBoneDistance(bonePositions[4], bonePositions[5], scalingFactor);
+					d_leftlowertolefthand = GetBoneDistance(bonePositions[5], bonePositions[6], scalingFactor);
 
 					boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
 					return boneInfo.GetHashCode().ToString();
 				case 2:
 					scalingFactor = 100;
-                    d_necktohead = GetBoneDistance(bonePositions[2], bonePositions[1], scalingFactor);
-                    d_chesttoneck = GetBoneDistance(bonePositions[0], bonePositions[2], scalingFactor);
-                    d_leftshouldertoleftupperarm = GetBoneDistance(bonePositions[3], bonePositions[4], scalingFactor);
-                    d_leftupperarmtoleftlowerarm = GetBoneDistance(bonePositions[4], bonePositions[5], scalingFactor);
-                    d_leftlowertolefthand = GetBoneDistance(bonePositions[5], bonePositions[6], scalingFactor);
+					d_necktohead = GetBoneDistance(bonePositions[2], bonePositions[1], scalingFactor);
+					d_chesttoneck = GetBoneDistance(bonePositions[0], bonePositions[2], scalingFactor);
+					d_leftshouldertoleftupperarm = GetBoneDistance(bonePositions[3], bonePositions[4], scalingFactor);
+					d_leftupperarmtoleftlowerarm = GetBoneDistance(bonePositions[4], bonePositions[5], scalingFactor);
+					d_leftlowertolefthand = GetBoneDistance(bonePositions[5], bonePositions[6], scalingFactor);
 
 					boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
 					return boneInfo.GetHashCode().ToString() + "v2";
@@ -280,8 +284,8 @@ namespace OpenFlightVRC
 			}
 		}
 
-        //TODO: Clean up this code so it isnt so segmented
-        void VisualizeWingTips()
+		//TODO: Clean up this code so it isnt so segmented
+		void VisualizeWingTips()
 		{
 			//reset the wingtip gizmo rotation
 			wingtipGizmo.transform.rotation = Quaternion.identity;
@@ -304,7 +308,7 @@ namespace OpenFlightVRC
 		public void ReevaluateFlight()
 		{
 			d_spinetochest = 0;
-            RunDetection();
+			RunDetection();
 			//Debug.Log("Reevaluating flight");
 		}
 	}

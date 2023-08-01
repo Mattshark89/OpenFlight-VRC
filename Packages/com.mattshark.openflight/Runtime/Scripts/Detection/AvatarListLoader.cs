@@ -34,12 +34,21 @@ namespace OpenFlightVRC
 			if (useOfflineJSON)
 			{
 				Output = OfflineJSON.text;
-                Debug.Log("[OpenFlight] Using in-world JSON instead.");
+				Debug.Log("[OpenFlight] Using in-world JSON instead.");
 				return;
 			}
 			//load the URL
 			VRCStringDownloader.LoadUrl(URL, (VRC.Udon.Common.Interfaces.IUdonEventReceiver)this);
-            Debug.Log("[OpenFlight] Loading URL...");
+			Debug.Log("[OpenFlight] Loading URL...");
+		}
+
+		UdonSharpBehaviour callbackBehaviour;
+		string callbackFuncName;
+
+		internal void SetCallback(UdonSharpBehaviour behaviour, string callback)
+		{
+			callbackBehaviour = behaviour;
+			callbackFuncName = callback;
 		}
 
 		//if the URL successfully loads
@@ -47,14 +56,15 @@ namespace OpenFlightVRC
 		{
 			string result = data.Result;
 			Output = result;
-            Debug.Log("[OpenFlight] Loaded URL successfully!");
+			Debug.Log("[OpenFlight] Loaded URL successfully!");
+			callbackBehaviour.SendCustomEvent(callbackFuncName);
 		}
 
 		//if the URL fails to load, fallback to the in-world stored JSON instead
 		public override void OnStringLoadError(IVRCStringDownload data)
 		{
 			Output = OfflineJSON.text;
-            Debug.Log("[OpenFlight] Failed to load URL! Using in-world JSON instead.");
+			Debug.Log("[OpenFlight] Failed to load URL! Using in-world JSON instead.");
 		}
 	}
 }
