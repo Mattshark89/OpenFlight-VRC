@@ -43,7 +43,7 @@ There are quite a few systems that make up OpenFlight, so giving a concise awnse
 ### Flight System
 The flight system is the core of OpenFlight, and is responsible for the actual flight itself. This is mainly handled by [WingFlightPlusGlide.cs](/ScriptReference/Flight/WingFlightPlusGlide.md).
 ### Avatar Detection
-The detection is handled by a few scripts. [AvatarDetection.cs](/ScriptReference/AvatarDetection/AvatarDetection.md) is the main script that handles the detection, using [AvatarListLoader.cs](/ScriptReference/AvatarDetection/AvatarListLoader.md) to load the avatar list from GitHub. The detection uses the currently worn avatars Spine, Chest, Head, Neck, Shoulder, Upper/Lower arm and hand bones to create a hash to compare against the list of known avatars. If a match is found, the flight system is enabled, and the avatar specific settings are loaded.
+The detection is handled by a few scripts. [AvatarDetection.cs](/ScriptReference/Detection/AvatarDetection.md) is the main script that handles the detection, using [AvatarListLoader.cs](/ScriptReference/Detection/AvatarListLoader.md) to load the avatar list from GitHub. The detection uses the currently worn avatars Spine, Chest, Head, Neck, Shoulder, Upper/Lower arm and hand bones to create a hash to compare against the list of known avatars. If a match is found, the flight system is enabled, and the avatar specific settings are loaded.
 
 ## Credits
 - The VRChat team for their awesome social platform
