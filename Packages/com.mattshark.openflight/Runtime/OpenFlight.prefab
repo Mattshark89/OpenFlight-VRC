@@ -326,9 +326,9 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 4190905666689760636}
-  flapStrengthBase: 225
-  flightGravityBase: 0.3
-  requireJump: 0
+  flapStrengthBase: 285
+  flightGravityBase: 0.5
+  requireJump: 1
   allowLoco: 0
   useAvatarModifiers: 1
   canGlide: 1

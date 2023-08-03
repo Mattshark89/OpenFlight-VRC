@@ -38,18 +38,18 @@ public class WingFlightPlusGlideEditor : Editor
 	{
 		[Header("Basic Settings")]
 		// Both of these "base" values are by default affected by the avatar's armspan. See sizeCurve.
-		[Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 225)")]
+		[Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 285)")]
 		[Range(100, 800)]
-		public int flapStrengthBase = 225;
-		int flapStrengthBase_DEFAULT = 225;
+		public int flapStrengthBase = 285;
+		int flapStrengthBase_DEFAULT = 285;
 
-		[Tooltip("Base gravity while flying (Default: 0.3)")]
-		public float flightGravityBase = 0.3f;
-		float flightGravityBase_DEFAULT = 0.3f;
+		[Tooltip("Base gravity while flying (Default: 0.5)")]
+		public float flightGravityBase = 0.5f;
+		float flightGravityBase_DEFAULT = 0.5f;
 
-		[Tooltip("Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident. (Default: false)")]
-		public bool requireJump = false;
-		bool requireJump_DEFAULT = false;
+		[Tooltip("Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident. (Default: true) CURRENTLY HAS NO EFFECT.")]
+		public bool requireJump = true;
+		bool requireJump_DEFAULT = true;
 
 		[Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
 		public bool allowLoco = false;
@@ -124,7 +124,7 @@ public class WingFlightPlusGlideEditor : Editor
 		private bool isFlying = false; // Currently in the air after/during a flap
 		private bool isGliding = false; // Has arms out while flying
 		private int cannotFlyTick = 0; // If >0, disables flight then decreases itself by one
-		private int fallingTick = 0; // Increased by one every tick one's y velocity > 0
+		private int fallingTick = 0; // Increased by one every tick one's y velocity < 0
 		private float tmpFloat;
 		private float dtFake = 0;
 
@@ -142,6 +142,7 @@ public class WingFlightPlusGlideEditor : Editor
 		private bool spinningRightRound = false; // Can't get that Protogen animation out of my head
 		private float rotSpeed = 0;
 		private float rotSpeedGoal = 0;
+		private float glideDelay = 0; // Minus one per tick, upon hitting ten gliding will gradually come into effect. Zero means gliding functions fully
 
 		// "old" values are the world's defaults (recorded immediately before they are modified)
 		private float oldGravityStrength;
@@ -160,6 +161,7 @@ public class WingFlightPlusGlideEditor : Editor
 		private HumanBodyBones chest;
 		private float spineToChest = 0; // These two vars are only used to check if an avi has been recently swapped/scaled
 		private float spineToChest_last = 0;
+		private float shoulderDistance = 0; // Distance between the two shoulders
 
 		[HideInInspector]
 		public float armspan = 1f;
@@ -190,7 +192,7 @@ public class WingFlightPlusGlideEditor : Editor
 
 		public void OnEnable()
 		{
-			timeTick = -5;
+			timeTick = -20;
 			isFlapping = false;
 			isFlying = false;
 			isGliding = false;
@@ -313,7 +315,8 @@ public class WingFlightPlusGlideEditor : Editor
 				handsOut = false;
 			}
 
-			if (Vector3.Angle(LHRot * Vector3.right, RHRot * Vector3.right) > 90)
+			//if (Vector3.Angle(LHRot * Vector3.right, RHRot * Vector3.right) > 90)
+			if ((Vector3.Distance(LocalPlayer.GetBonePosition(leftHandBone), LocalPlayer.GetBonePosition(rightHandBone)) > ((armspan / 3.3) * 2) + shoulderDistance))
 			{
 				handsOpposite = true;
 			} else {
@@ -325,7 +328,8 @@ public class WingFlightPlusGlideEditor : Editor
 				// Check for the beginning of a flap
 				if (
 					(isFlying ? true : handsOut)
-					&& (requireJump ? !LocalPlayer.IsPlayerGrounded() : true)
+					// && (requireJump ? !LocalPlayer.IsPlayerGrounded() : true)
+					&& (!LocalPlayer.IsPlayerGrounded())
 					&& RHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(rightUpperArmBone).y
 					&& LHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(leftUpperArmBone).y
 					&& downThrust > 0.0002
@@ -394,9 +398,15 @@ public class WingFlightPlusGlideEditor : Editor
 					if ((!isFlapping) && (isGliding ? true : handsOut) && handsOpposite && canGlide)
 					{
 						// Gliding, banking, and steering logic
+						if (LocalPlayer.GetVelocity().y > -1f && (!isGliding)) {glideDelay = 3;}
 						isGliding = true;
 						newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
-						wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * Vector3.forward, LHRot * Vector3.forward, 0.5f)); // The direction the player should go based on how they've angled their wings
+						if (glideDelay <= 1) {
+							wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * Vector3.forward, LHRot * Vector3.forward, 0.5f)); // The direction the player should go based on how they've angled their wings
+						} else {
+							wingDirection = newVelocity.normalized;
+							glideDelay = glideDelay - (5 * dt);
+						}
 						// Hotfix: Always have some form of horizontal velocity while falling. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
 						if (newVelocity.y < 0.3f && newVelocity.x == 0 && newVelocity.z == 0)
 						{
@@ -426,6 +436,8 @@ public class WingFlightPlusGlideEditor : Editor
 						targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(wingDirection) * newVelocity.magnitude), newVelocity.magnitude);
 						// tmpFloat == glideControl (Except if weight > 1, glideControl temporarily decreases)
 						tmpFloat = (useAvatarModifiers && weight > 1) ? glideControl - ((weight - 1) * 0.6f) : glideControl;
+						if (glideDelay > 0) {glideDelay = glideDelay - (5 * dt);}
+						tmpFloat = tmpFloat * ((1 - glideDelay) / 1);
 						finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, dt * tmpFloat);
 						// Apply Air Friction
 						finalVelocity = finalVelocity * (1 - (airFriction * dt));
@@ -435,6 +447,7 @@ public class WingFlightPlusGlideEditor : Editor
 					{
 						isGliding = false;
 						rotSpeedGoal = 0;
+						glideDelay = 0;
 					}
 				}
 			}
@@ -473,15 +486,19 @@ public class WingFlightPlusGlideEditor : Editor
 					CalculateStats();
 					if (debugOutput != null)
 					{
+						Vector3 ye = (RHRot.eulerAngles.normalized) + (LHRot.eulerAngles.normalized);
 						debugOutput.text =
 							string.Concat("\nIsFlying: ", isFlying.ToString())
 							+ string.Concat("\nIsFlapping: ", isFlapping.ToString())
 							+ string.Concat("\nIsGliding: ", isGliding.ToString())
 							+ string.Concat("\nHandsOut: ", handsOut.ToString())
 							+ string.Concat("\nDownThrust: ", downThrust.ToString())
-							+ string.Concat("\nGrounded: ", LocalPlayer.IsPlayerGrounded().ToString())
 							+ string.Concat("\nCannotFly: ", (cannotFlyTick > 0).ToString())
-							+ string.Concat("\nLeAngle: ", Vector3.Angle(LHRot * Vector3.right, RHRot * Vector3.right).ToString());
+							+ string.Concat("\nGlideDelay: ", glideDelay.ToString())
+							+ string.Concat("\neulerR: ", RHRot.eulerAngles.normalized.ToString())
+							+ string.Concat("\nmag: ", LocalPlayer.GetVelocity().y.ToString())
+							//+ string.Concat("\nLeAngle: ", Quaternion.Angle(mehl, mehr).ToString())
+							+ string.Concat("\nCanDoIt: ", ((Vector3.Distance(LocalPlayer.GetBonePosition(leftHandBone), LocalPlayer.GetBonePosition(rightHandBone)) > ((armspan / 3.3) * 2) + Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone), LocalPlayer.GetBonePosition(rightUpperArmBone))).ToString()));
 					}
 				}
 			}
@@ -517,6 +534,7 @@ public class WingFlightPlusGlideEditor : Editor
 				+ Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone), LocalPlayer.GetBonePosition(leftHandBone))
 				+ Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone), LocalPlayer.GetBonePosition(rightLowerArmBone))
 				+ Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone), LocalPlayer.GetBonePosition(rightHandBone));
+			shoulderDistance = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone), LocalPlayer.GetBonePosition(rightUpperArmBone));
 		}
 
 		// Set necessary values for beginning flight
