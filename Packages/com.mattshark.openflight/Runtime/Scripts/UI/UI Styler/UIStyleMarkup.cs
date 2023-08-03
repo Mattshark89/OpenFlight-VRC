@@ -11,9 +11,10 @@ using UdonSharpEditor;
 namespace OpenFlightVRC.UI
 {
 	[AddComponentMenu("Udon Sharp/Video/UI/Style Markup")]
-	internal class UIStyleMarkup : MonoBehaviour
+    internal class UIStyleMarkup : MonoBehaviour, VRC.SDKBase.IEditorOnly
 	{
-		public enum StyleClass
+
+        public enum StyleClass
 		{
 			Background,
 			FieldBackground,
