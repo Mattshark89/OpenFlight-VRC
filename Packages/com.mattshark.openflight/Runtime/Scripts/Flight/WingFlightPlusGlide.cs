@@ -207,6 +207,11 @@ public class WingFlightPlusGlideEditor : Editor
 			}
 		}
 
+		public void OnAvatarEyeHeightChanged() // According to the docs, this also runs upon changing avatars
+		{
+			CalculateStats();
+		}
+
 		public void Update()
 		{
 			if ((LocalPlayer != null) && LocalPlayer.IsValid())
@@ -479,11 +484,10 @@ public class WingFlightPlusGlideEditor : Editor
 			if (timeTick >= 0)
 			{
 				timeTick = timeTick + 1;
-				// Automatically CalculateStats() every second (assuming VRChat uses the Unity default of 50 ticks per second)
+				// Automatically update the debug output every 0.2 seconds (assuming VRChat uses the Unity default of 50 ticks per second)
 				if (timeTick > 9)
 				{
 					timeTick = 0;
-					CalculateStats();
 					if (debugOutput != null)
 					{
 						Vector3 ye = (RHRot.eulerAngles.normalized) + (LHRot.eulerAngles.normalized);
@@ -543,7 +547,6 @@ public class WingFlightPlusGlideEditor : Editor
 			if (!isFlying)
 			{
 				isFlying = true;
-				CalculateStats();
 				oldGravityStrength = LocalPlayer.GetGravityStrength();
 				LocalPlayer.SetGravityStrength(flightGravity());
 				if (!allowLoco)
