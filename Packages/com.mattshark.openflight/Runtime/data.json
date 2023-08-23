@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "1.9.2",
-  "JSON Date": "2023-08-16",
+  "JSON Version": "1.10.0",
+  "JSON Date": "2023-08-23",
   "Bases": {
     "Kitavali": {
       "Original": {
@@ -777,6 +777,16 @@
         "Hash": ["-1218197994v2"],
         "Weight": 1,
         "WingtipOffset": 1
+      }
+    },
+    "Sear Wyvern": {
+      "Original": {
+        "Name": "Sear Wyvern",
+        "Creator": "Damodragon",
+        "Introducer": "Damodragon",
+        "Hash": ["722027325v2"],
+        "Weight": 1,
+        "WingtipOffset": 9.5
       }
     }
   }
