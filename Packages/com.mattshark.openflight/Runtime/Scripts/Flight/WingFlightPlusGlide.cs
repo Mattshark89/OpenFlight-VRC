@@ -207,8 +207,15 @@ public class WingFlightPlusGlideEditor : Editor
 			}
 		}
 
-		public void OnAvatarEyeHeightChanged() // According to the docs, this also runs upon changing avatars
+		public void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight) // According to the docs, this also runs upon changing avatars
 		{
+			if (player == LocalPlayer)
+			{
+				// Bug check: if avatar has been swapped, sometimes the player will be launched straight up
+				cannotFlyTick = 20;
+				setFinalVelocity = false;
+			}
+
 			CalculateStats();
 		}
 
@@ -468,17 +475,6 @@ public class WingFlightPlusGlideEditor : Editor
 			if (setFinalVelocity)
 			{
 				LocalPlayer.SetVelocity(finalVelocity);
-			}
-		}
-
-		//bug fix for avatar swap issue
-		void OnAvatarChanged(VRCPlayerApi player)
-		{
-			if (player == LocalPlayer)
-			{
-				// Bug check: if avatar has been swapped, sometimes the player will be launched straight up
-				cannotFlyTick = 20;
-				setFinalVelocity = false;
 			}
 		}
 
