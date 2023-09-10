@@ -459,23 +459,26 @@ public class WingFlightPlusGlideEditor : Editor
 			RHPosLast = RHPos;
 			LHPosLast = LHPos;
 
-			// Bug check: if avatar has been swapped, sometimes the player will be launched straight up
-			spineToChest = Vector3.Distance(LocalPlayer.GetBonePosition(chest), LocalPlayer.GetBonePosition(spine));
-			if (Mathf.Abs(spineToChest - spineToChest_last) > 0.001f)
-			{
-				cannotFlyTick = 20;
-			}
 			if (cannotFlyTick > 0)
 			{
 				setFinalVelocity = false;
 				cannotFlyTick--;
 			}
-			spineToChest_last = spineToChest;
-			// end Bug Check
 
 			if (setFinalVelocity)
 			{
 				LocalPlayer.SetVelocity(finalVelocity);
+			}
+		}
+
+		//bug fix for avatar swap issue
+		void OnAvatarChanged(VRCPlayerApi player)
+		{
+			if (player == LocalPlayer)
+			{
+				// Bug check: if avatar has been swapped, sometimes the player will be launched straight up
+				cannotFlyTick = 20;
+				setFinalVelocity = false;
 			}
 		}
 
