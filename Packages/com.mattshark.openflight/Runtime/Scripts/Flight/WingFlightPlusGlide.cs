@@ -157,10 +157,6 @@ public class WingFlightPlusGlideEditor : Editor
 		private HumanBodyBones leftLowerArmBone;
 		private HumanBodyBones rightHandBone;
 		private HumanBodyBones leftHandBone;
-		private HumanBodyBones spine;
-		private HumanBodyBones chest;
-		private float spineToChest = 0; // These two vars are only used to check if an avi has been recently swapped/scaled
-		private float spineToChest_last = 0;
 		private float shoulderDistance = 0; // Distance between the two shoulders
 
 		[HideInInspector]
@@ -278,8 +274,6 @@ public class WingFlightPlusGlideEditor : Editor
 				rightUpperArmBone = HumanBodyBones.RightUpperArm;
 				leftHandBone = HumanBodyBones.LeftHand;
 				rightHandBone = HumanBodyBones.RightHand;
-				spine = HumanBodyBones.Spine;
-				chest = HumanBodyBones.Chest;
 				CalculateStats();
 			}
 			setFinalVelocity = false;
