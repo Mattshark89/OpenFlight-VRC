@@ -22,6 +22,7 @@ This is the script that dictates the velocity and movement of flight itself.
 | gravityCurve | [AnimationCurve](https://docs.unity3d.com/ScriptReference/AnimationCurve.html) | Similar to Size Curve, but instead of modifying Flap Strength, it only affects Gravity. This value is ignored (Size Curve will be used instead) unless Use Gravity Curve is enabled |
 | debugOutput | [TextMeshProUGUI](https://docs.unity3d.com/Packages/com.unity.textmeshpro@1.1/api/TMPro.TextMeshProUGUI.html) | If a GameObject with a TextMeshPro component is attached here, debug some basic info into it |
 | bankingTurns | bool | Allows for players to tilt their arms to turn left or right while gliding |
+| dynamicGravity | bool | If enabled, gravity will be saved each time the user takes off, instead of just at the start of the world. |
 | armspan | float | The armspan of the player |
 | wingtipOffset | float | The wingtip offset of the player. Usually set by [AvatarDetection](/ScriptReference/Detection/AvatarDetection.md) |
 | weight | float | The weight of the player. Usually set by [AvatarDetection](/ScriptReference/Detection/AvatarDetection.md) |
@@ -32,5 +33,6 @@ This is the script that dictates the velocity and movement of flight itself.
 |-|-|-|
 | EnableBetaFeatures | void | Enables beta features such as banking turns |
 | DisableBetaFeatures | void | Disables beta features such as banking turns |
+| UpdateGravity | void | Calling this function tells the script to pull in a new world gravity value. This is useful if you have a world that changes gravity often, but still want water systems to work. This function is only useful if dynamic gravity is disabled. Otherwise, it will do nothing. |
 | InitializeDefaults | void | Tells the script to store its default values internally. This should only be done once upon world load |
 | RestoreDefaults | void | Restores the default values of the script into itself. This will reset the script to the defaults that were set in unity itself, not the packages defaults |

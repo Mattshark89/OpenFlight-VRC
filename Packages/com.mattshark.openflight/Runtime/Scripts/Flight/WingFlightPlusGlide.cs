@@ -107,6 +107,9 @@ public class WingFlightPlusGlideEditor : Editor
 		public bool bankingTurns = true;
 		bool bankingTurns_DEFAULT = true;
 
+		[Tooltip("If enabled, gravity will be saved each time the user takes off, instead of just at the start of the world. (Default: false)")]
+		public bool dynamicGravity = false;
+
 		// Essential Variables
 		private VRCPlayerApi LocalPlayer;
 		private double debugTemp;
@@ -180,10 +183,11 @@ public class WingFlightPlusGlideEditor : Editor
 		public void Start()
 		{
 			LocalPlayer = Networking.LocalPlayer;
-			//oldGravityStrength = LocalPlayer.GetGravityStrength();
-			//oldWalkSpeed = LocalPlayer.GetWalkSpeed();
-			//oldRunSpeed = LocalPlayer.GetRunSpeed();
-			//oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
+			//save the user gravity if dynamic gravity is disabled
+			if (!dynamicGravity)
+			{
+				oldGravityStrength = LocalPlayer.GetGravityStrength();
+			}
 		}
 
 		public void OnEnable()
@@ -283,14 +287,13 @@ public class WingFlightPlusGlideEditor : Editor
 			LHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
 			LHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
 			RHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
+
+			downThrust = 0;
 			if ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y) > 0)
 			{
 				downThrust = ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y)) * dt / armspan;
 			}
-			else
-			{
-				downThrust = 0;
-			}
+
 			// Check if player is falling
 			if ((!LocalPlayer.IsPlayerGrounded()) && LocalPlayer.GetVelocity().y < 0)
 			{
@@ -300,7 +303,9 @@ public class WingFlightPlusGlideEditor : Editor
 			{
 				fallingTick = 0;
 			}
+
 			// Check if hands are held out (ie are a certain distance from the central body)
+			handsOut = false;
 			if (
 				Vector2.Distance(
 					new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z),
@@ -316,18 +321,11 @@ public class WingFlightPlusGlideEditor : Editor
 			{
 				handsOut = true;
 			}
-			else
-			{
-				handsOut = false;
-			}
 
 			//if (Vector3.Angle(LHRot * Vector3.right, RHRot * Vector3.right) > 90)
-			if ((Vector3.Distance(LocalPlayer.GetBonePosition(leftHandBone), LocalPlayer.GetBonePosition(rightHandBone)) > ((armspan / 3.3) * 2) + shoulderDistance))
-			{
-				handsOpposite = true;
-			} else {
-				handsOpposite = false;
-			}
+			handsOpposite = (
+				Vector3.Distance(LocalPlayer.GetBonePosition(leftHandBone), LocalPlayer.GetBonePosition(rightHandBone)) > ((armspan / 3.3) * 2) + shoulderDistance
+			);
 
 			if (!isFlapping)
 			{
@@ -404,30 +402,35 @@ public class WingFlightPlusGlideEditor : Editor
 					if ((!isFlapping) && (isGliding ? true : handsOut) && handsOpposite && canGlide)
 					{
 						// Gliding, banking, and steering logic
-						if (LocalPlayer.GetVelocity().y > -1f && (!isGliding)) {glideDelay = 3;}
+						if (LocalPlayer.GetVelocity().y > -1f && (!isGliding))
+						{
+							glideDelay = 3;
+						}
+
 						isGliding = true;
 						newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
-						if (glideDelay <= 1) {
+
+						if (glideDelay <= 1)
+						{
 							wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * Vector3.forward, LHRot * Vector3.forward, 0.5f)); // The direction the player should go based on how they've angled their wings
-						} else {
+						}
+						else
+						{
 							wingDirection = newVelocity.normalized;
 							glideDelay = glideDelay - (5 * dt);
 						}
-						// Hotfix: Always have some form of horizontal velocity while falling. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
+
+						// Hotfix: Always have some form of horizontal velocity while falling. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding due to falling animation
 						if (newVelocity.y < 0.3f && newVelocity.x == 0 && newVelocity.z == 0)
 						{
 							Vector2 tmpV2 = new Vector2(wingDirection.x, wingDirection.z).normalized * 0.145f;
 							newVelocity = new Vector3(Mathf.Round(tmpV2.x * 10) / 10, newVelocity.y, Mathf.Round(tmpV2.y * 10) / 10);
 						}
+
 						steering = (RHPos.y - LHPos.y) * 80 / armspan;
-						if (steering > 45)
-						{
-							steering = 45;
-						}
-						else if (steering < -45)
-						{
-							steering = -45;
-						}
+						//clamp steering to 45 degrees
+						steering = Mathf.Clamp(steering, -45, 45);
+
 						if (bankingTurns)
 						{
 							spinningRightRound = true;
@@ -438,13 +441,19 @@ public class WingFlightPlusGlideEditor : Editor
 							// Default "banking" which is just midair strafing
 							wingDirection = Quaternion.Euler(0, steering, 0) * wingDirection;
 						}
+
 						// X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
 						targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(wingDirection) * newVelocity.magnitude), newVelocity.magnitude);
+
 						// tmpFloat == glideControl (Except if weight > 1, glideControl temporarily decreases)
 						tmpFloat = (useAvatarModifiers && weight > 1) ? glideControl - ((weight - 1) * 0.6f) : glideControl;
-						if (glideDelay > 0) {glideDelay = glideDelay - (5 * dt);}
+						if (glideDelay > 0)
+						{
+							glideDelay = glideDelay - (5 * dt);
+						}
 						tmpFloat = tmpFloat * ((1 - glideDelay) / 1);
 						finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, dt * tmpFloat);
+
 						// Apply Air Friction
 						finalVelocity = finalVelocity * (1 - (airFriction * dt));
 						setFinalVelocity = true;
@@ -495,7 +504,16 @@ public class WingFlightPlusGlideEditor : Editor
 							+ string.Concat("\neulerR: ", RHRot.eulerAngles.normalized.ToString())
 							+ string.Concat("\nmag: ", LocalPlayer.GetVelocity().y.ToString())
 							//+ string.Concat("\nLeAngle: ", Quaternion.Angle(mehl, mehr).ToString())
-							+ string.Concat("\nCanDoIt: ", ((Vector3.Distance(LocalPlayer.GetBonePosition(leftHandBone), LocalPlayer.GetBonePosition(rightHandBone)) > ((armspan / 3.3) * 2) + Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone), LocalPlayer.GetBonePosition(rightUpperArmBone))).ToString()));
+							+ string.Concat(
+								"\nCanDoIt: ",
+								(
+									(
+										Vector3.Distance(LocalPlayer.GetBonePosition(leftHandBone), LocalPlayer.GetBonePosition(rightHandBone))
+										> ((armspan / 3.3) * 2)
+											+ Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone), LocalPlayer.GetBonePosition(rightUpperArmBone))
+									).ToString()
+								)
+							);
 					}
 				}
 			}
@@ -540,7 +558,10 @@ public class WingFlightPlusGlideEditor : Editor
 			if (!isFlying)
 			{
 				isFlying = true;
-				oldGravityStrength = LocalPlayer.GetGravityStrength();
+				if (dynamicGravity)
+				{
+					oldGravityStrength = LocalPlayer.GetGravityStrength();
+				}
 				LocalPlayer.SetGravityStrength(flightGravity());
 				if (!allowLoco)
 				{
@@ -549,15 +570,19 @@ public class WingFlightPlusGlideEditor : Editor
 			}
 		}
 
-		// Utility method to detect main menu status
-		// Technique pulled from https://github.com/Superbstingray/UdonPlayerPlatformHook
+		/// <summary>
+		/// Utility method to detect main menu status. Technique pulled from <see href="https://github.com/Superbstingray/UdonPlayerPlatformHook">UdonPlayerPlatformHook</see>
+		/// </summary>
+		/// <returns>True if the main menu is open, false otherwise</returns>
 		private bool IsMainMenuOpen()
 		{
 			int uiColliderCount = Physics.OverlapSphere(LocalPlayer.GetPosition(), 10f, 524288).Length;
 			return (uiColliderCount == 8 || uiColliderCount == 9 || uiColliderCount == 10);
 		}
 
-		// Effectually disables all flight-related variables
+		/// <summary>
+		/// Effectually disables all flight-related variables
+		/// </summary>
 		public void Land()
 		{
 			isFlying = false;
@@ -620,6 +645,26 @@ public class WingFlightPlusGlideEditor : Editor
 			bankingTurns = false;
 		}
 
+		/// <summary>
+		/// Calling this function tells the script to pull in a new world gravity value. This is useful if you have a world that changes gravity often, but still want water systems to work.
+		/// </summary>
+		/// <remarks>
+		/// This function is only useful if dynamic gravity is disabled. Otherwise, it will do nothing.
+		/// </remarks>
+		public void UpdateGravity()
+		{
+			if (!dynamicGravity)
+			{
+				oldGravityStrength = LocalPlayer.GetGravityStrength();
+				Logger.Log("Gravity updated.");
+			}
+			else {
+				Logger.Log("Dynamic gravity is enabled. Gravity will be updated automatically.");
+			}
+		}
+		/// <summary>
+		/// Initializes all default values. This should not be called by end users in most cases.
+		/// </summary>
 		public void InitializeDefaults()
 		{
 			flapStrengthBase_DEFAULT = flapStrengthBase;
@@ -637,6 +682,9 @@ public class WingFlightPlusGlideEditor : Editor
 			bankingTurns_DEFAULT = bankingTurns;
 		}
 
+		/// <summary>
+		/// Restores all values to their prefab defaults
+		/// </summary>
 		public void RestoreDefaults()
 		{
 			flapStrengthBase = flapStrengthBase_DEFAULT;

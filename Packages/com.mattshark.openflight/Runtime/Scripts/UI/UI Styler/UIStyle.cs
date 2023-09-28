@@ -5,7 +5,7 @@ using static OpenFlightVRC.UI.UIStyleMarkup;
 namespace OpenFlightVRC.UI
 {
 	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-    internal class StyleMarkupLinkAttribute : Attribute, VRC.SDKBase.IEditorOnly
+	internal class StyleMarkupLinkAttribute : Attribute, VRC.SDKBase.IEditorOnly
 	{
 		public StyleClass Class { get; private set; }
 
@@ -18,7 +18,7 @@ namespace OpenFlightVRC.UI
 	}
 
 	[CreateAssetMenu(fileName = "UIStyle", menuName = "VRC Packages/OpenFlight/UIStyle", order = 1)]
-    internal class UIStyle : ScriptableObject, VRC.SDKBase.IEditorOnly
+	internal class UIStyle : ScriptableObject, VRC.SDKBase.IEditorOnly
 	{
 		[StyleMarkupLink(StyleClass.Background)]
 		public Color backgroundColor = Color.black;

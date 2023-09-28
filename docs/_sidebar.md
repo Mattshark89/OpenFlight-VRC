@@ -27,4 +27,5 @@
     * [VariableLabel.cs](ScriptReference/UI/VariableLabel.md)
   * Utils
     * [SaferRespawn.cs](ScriptReference/Utils/SaferRespawn.md)
+    * [Logger.cs](ScriptReference/Utils/Logger.md)
 <!-- * [Old Readme](READMEOLD.md) -->
