@@ -107,8 +107,8 @@ public class WingFlightPlusGlideEditor : Editor
 		public bool bankingTurns = true;
 		bool bankingTurns_DEFAULT = true;
 
-		[Tooltip("If enabled, gravity will be saved each time the user takes off, instead of just at the start of the world. (Default: false)")]
-		public bool dynamicGravity = false;
+		[Tooltip("If enabled, gravity and movement will be saved each time the user takes off, instead of just at the start of the world. (Default: false)")]
+		public bool dynamicPlayerPhysics = false;
 
 		// Essential Variables
 		private VRCPlayerApi LocalPlayer;
@@ -184,9 +184,12 @@ public class WingFlightPlusGlideEditor : Editor
 		{
 			LocalPlayer = Networking.LocalPlayer;
 			//save the user gravity if dynamic gravity is disabled
-			if (!dynamicGravity)
+			if (!dynamicPlayerPhysics)
 			{
 				oldGravityStrength = LocalPlayer.GetGravityStrength();
+				oldWalkSpeed = LocalPlayer.GetWalkSpeed();
+				oldRunSpeed = LocalPlayer.GetRunSpeed();
+				oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
 			}
 		}
 
@@ -524,9 +527,12 @@ public class WingFlightPlusGlideEditor : Editor
 		{
 			if (b)
 			{
-				oldWalkSpeed = LocalPlayer.GetWalkSpeed();
-				oldRunSpeed = LocalPlayer.GetRunSpeed();
-				oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
+				if(dynamicPlayerPhysics)
+				{
+					oldWalkSpeed = LocalPlayer.GetWalkSpeed();
+					oldRunSpeed = LocalPlayer.GetRunSpeed();
+					oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
+				}
 				LocalPlayer.SetWalkSpeed(0f);
 				LocalPlayer.SetRunSpeed(0f);
 				LocalPlayer.SetStrafeSpeed(0f);
@@ -558,7 +564,7 @@ public class WingFlightPlusGlideEditor : Editor
 			if (!isFlying)
 			{
 				isFlying = true;
-				if (dynamicGravity)
+				if (dynamicPlayerPhysics)
 				{
 					oldGravityStrength = LocalPlayer.GetGravityStrength();
 				}
@@ -646,20 +652,23 @@ public class WingFlightPlusGlideEditor : Editor
 		}
 
 		/// <summary>
-		/// Calling this function tells the script to pull in a new world gravity value. This is useful if you have a world that changes gravity often, but still want water systems to work.
+		/// Calling this function tells the script to pull in the worlds values for player physics. This is useful if you have a world that changes gravity or movement often, but still want water systems to work.
 		/// </summary>
 		/// <remarks>
-		/// This function is only useful if dynamic gravity is disabled. Otherwise, it will do nothing.
+		/// This function is only useful if dynamic player physics is disabled. Otherwise, it will do nothing.
 		/// </remarks>
-		public void UpdateGravity()
+		public void UpdatePlayerPhysics()
 		{
-			if (!dynamicGravity)
+			if (!dynamicPlayerPhysics)
 			{
 				oldGravityStrength = LocalPlayer.GetGravityStrength();
-				Logger.Log("Gravity updated.");
+				oldWalkSpeed = LocalPlayer.GetWalkSpeed();
+				oldRunSpeed = LocalPlayer.GetRunSpeed();
+				oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
+				Logger.Log("Player Physics updated.");
 			}
 			else {
-				Logger.Log("Dynamic gravity is enabled. Gravity will be updated automatically.");
+				Logger.Log("Dynamic Player Physics is enabled. Player Physics will be updated automatically.");
 			}
 		}
 		/// <summary>

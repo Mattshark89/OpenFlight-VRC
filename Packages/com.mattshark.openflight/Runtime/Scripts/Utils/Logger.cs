@@ -15,7 +15,7 @@ namespace OpenFlightVRC
 			Log("Logging started");
 		}
 
-        const string color = "#FFA500";
+        const string color = "orange";
 		const string prefix = "[" + "<color=" + color + ">" + "OpenFlight" + "</color>" + "] ";
 
         /// <summary>
