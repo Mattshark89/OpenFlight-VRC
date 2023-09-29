@@ -190,6 +190,7 @@ public class WingFlightPlusGlideEditor : Editor
 				oldWalkSpeed = LocalPlayer.GetWalkSpeed();
 				oldRunSpeed = LocalPlayer.GetRunSpeed();
 				oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
+				Logger.Log("Player Physics saved.");
 			}
 		}
 
@@ -208,6 +209,7 @@ public class WingFlightPlusGlideEditor : Editor
 			{
 				Land();
 			}
+			Logger.Log("Disabled.");
 		}
 
 		public void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight) // According to the docs, this also runs upon changing avatars
@@ -556,6 +558,7 @@ public class WingFlightPlusGlideEditor : Editor
 				+ Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone), LocalPlayer.GetBonePosition(rightLowerArmBone))
 				+ Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone), LocalPlayer.GetBonePosition(rightHandBone));
 			shoulderDistance = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone), LocalPlayer.GetBonePosition(rightUpperArmBone));
+			Logger.Log("Armspan: " + armspan.ToString() + " Shoulder Distance: " + shoulderDistance.ToString());
 		}
 
 		// Set necessary values for beginning flight
@@ -568,19 +571,42 @@ public class WingFlightPlusGlideEditor : Editor
 				{
 					oldGravityStrength = LocalPlayer.GetGravityStrength();
 				}
-				LocalPlayer.SetGravityStrength(flightGravity());
+				else
+                {
+                    CheckPhysicsUnChanged();
+                }
+                LocalPlayer.SetGravityStrength(flightGravity());
 				if (!allowLoco)
 				{
 					ImmobilizePart(true);
 				}
+				Logger.Log("Took off.");
 			}
 		}
 
 		/// <summary>
-		/// Utility method to detect main menu status. Technique pulled from <see href="https://github.com/Superbstingray/UdonPlayerPlatformHook">UdonPlayerPlatformHook</see>
+		/// Checks if the world gravity or player movement has changed from the saved values and throws a warning if so.
 		/// </summary>
-		/// <returns>True if the main menu is open, false otherwise</returns>
-		private bool IsMainMenuOpen()
+        private void CheckPhysicsUnChanged()
+        {
+            //if the world gravity is different than what we have saved, throw a warning
+            if (LocalPlayer.GetGravityStrength() != oldGravityStrength)
+            {
+                Logger.LogWarning("World gravity is different than the saved gravity, this may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new world gravity using UpdatePlayerPhysics().");
+            }
+
+            //if the player movement is different than what we have saved, throw a warning
+            if (LocalPlayer.GetWalkSpeed() != oldWalkSpeed || LocalPlayer.GetRunSpeed() != oldRunSpeed || LocalPlayer.GetStrafeSpeed() != oldStrafeSpeed)
+            {
+                Logger.LogWarning("Player movement is different than the saved movement, this may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new player movement using UpdatePlayerPhysics().");
+            }
+        }
+
+        /// <summary>
+        /// Utility method to detect main menu status. Technique pulled from <see href="https://github.com/Superbstingray/UdonPlayerPlatformHook">UdonPlayerPlatformHook</see>
+        /// </summary>
+        /// <returns>True if the main menu is open, false otherwise</returns>
+        private bool IsMainMenuOpen()
 		{
 			int uiColliderCount = Physics.OverlapSphere(LocalPlayer.GetPosition(), 10f, 524288).Length;
 			return (uiColliderCount == 8 || uiColliderCount == 9 || uiColliderCount == 10);
@@ -598,10 +624,12 @@ public class WingFlightPlusGlideEditor : Editor
 			rotSpeed = 0;
 			rotSpeedGoal = 0;
 			LocalPlayer.SetGravityStrength(oldGravityStrength);
+			CheckPhysicsUnChanged();
 			if (!allowLoco)
 			{
 				ImmobilizePart(false);
 			}
+			Logger.Log("Landed.");
 		}
 
 		private float flapStrength()
@@ -644,11 +672,13 @@ public class WingFlightPlusGlideEditor : Editor
 		public void EnableBetaFeatures()
 		{
 			bankingTurns = true;
+			Logger.Log("Beta Features enabled.");
 		}
 
 		public void DisableBetaFeatures()
 		{
 			bankingTurns = false;
+			Logger.Log("Beta Features disabled.");
 		}
 
 		/// <summary>
@@ -689,6 +719,7 @@ public class WingFlightPlusGlideEditor : Editor
 			airFriction_DEFAULT = airFriction;
 			useGravityCurve_DEFAULT = useGravityCurve;
 			bankingTurns_DEFAULT = bankingTurns;
+			Logger.Log("Defaults initialized.");
 		}
 
 		/// <summary>
@@ -709,6 +740,7 @@ public class WingFlightPlusGlideEditor : Editor
 			airFriction = airFriction_DEFAULT;
 			useGravityCurve = useGravityCurve_DEFAULT;
 			bankingTurns = bankingTurns_DEFAULT;
+			Logger.Log("Defaults restored.");
 		}
 	}
 }

@@ -78,6 +78,9 @@ public class OpenFlightScenePostProcessor {
 			{
 				FlightOff();
 			}
+
+			//log openflight version
+			Logger.Log("OpenFlight version " + OpenFlightVersion);
 		}
 
 		/// <summary>
@@ -91,6 +94,11 @@ public class OpenFlightScenePostProcessor {
 				wingedFlight.SetActive(true);
 				flightMode = "On";
 				flightAllowed = true;
+				Logger.Log("Flight turned on");
+			}
+			else
+			{
+				Logger.Log("Flight cannot be turned on because the player is not in VR");
 			}
 		}
 
@@ -103,6 +111,7 @@ public class OpenFlightScenePostProcessor {
 			wingedFlight.SetActive(false);
 			flightMode = "Off";
 			flightAllowed = false;
+			Logger.Log("Flight turned off");
 		}
 
 		/// <summary>
@@ -120,6 +129,11 @@ public class OpenFlightScenePostProcessor {
 				{
 					avatarDetection.ReevaluateFlight();
 				}
+				Logger.Log("Flight set to auto");
+			}
+			else
+			{
+				Logger.Log("Flight cannot be set to auto because the player is not in VR");
 			}
 		}
 

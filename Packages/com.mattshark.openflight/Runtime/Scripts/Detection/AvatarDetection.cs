@@ -122,6 +122,9 @@ namespace OpenFlightVRC
 			hashV1 = GetHash(boneVectors, 1);
 			hashV2 = GetHash(boneVectors, 2);
 
+			Logger.Log("HashV1: " + hashV1);
+			Logger.Log("HashV2: " + hashV2);
+
 			//check if the hash is the loading avatar, and if it is then dont check if the avatar is allowed to fly
 			if (hashV2 == "1439458325v2" && skipLoadingAvatar)
 			{
