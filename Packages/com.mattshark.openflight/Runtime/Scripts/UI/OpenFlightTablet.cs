@@ -28,6 +28,8 @@ namespace OpenFlightVRC.UI
 		private Color tabBaseColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
 		private Color tabActiveColor = new Color(0.5f, 0.5f, 0.5f, 1f);
 
+		//the reason this is needed is stupid, but essentially if there isnt a delay between start going into update, the tablet will immediately hide itself breaking all the children UI scripts
+		private int fadeTimeout = 2;
 		void Start()
 		{
 			//get the local player
@@ -46,26 +48,36 @@ namespace OpenFlightVRC.UI
 			//continually highlight the active tab
 			SetActiveTab(activeTab);
 
-			//check if the player is within the fade distance
-			if (Vector3.Distance(localPlayer.GetPosition(), transform.position) > fadeDistance && allowFade)
+			//wait for udon to startup
+			if (fadeTimeout <= 0)
 			{
-				//disable all the objects that should be hidden
-				foreach (GameObject obj in objectsToHideOnFade)
+				//check if the player is within the fade distance
+				if (Vector3.Distance(localPlayer.GetPosition(), transform.position) > fadeDistance && allowFade)
 				{
-					obj.SetActive(false);
+					//disable all the objects that should be hidden
+					foreach (GameObject obj in objectsToHideOnFade)
+					{
+						obj.SetActive(false);
+					}
+				}
+				else
+				{
+					//enable all the objects that should be hidden
+					foreach (GameObject obj in objectsToHideOnFade)
+					{
+						obj.SetActive(true);
+					}
+
+					//set the version info text
+					VersionInfo.text =
+						"Open-Flight Ver " + OpenFlight.OpenFlightVersion + "\nJSON Ver " + AvatarDetection.jsonVersion + "\nJSON Date " + AvatarDetection.jsonDate;
 				}
 			}
-			else
-			{
-				//enable all the objects that should be hidden
-				foreach (GameObject obj in objectsToHideOnFade)
-				{
-					obj.SetActive(true);
-				}
 
-				//set the version info text
-				VersionInfo.text =
-					"Open-Flight Ver " + OpenFlight.OpenFlightVersion + "\nJSON Ver " + AvatarDetection.jsonVersion + "\nJSON Date " + AvatarDetection.jsonDate;
+			//decrement the fade timeout
+			if (fadeTimeout > 0)
+			{
+				fadeTimeout--;
 			}
 		}
 
