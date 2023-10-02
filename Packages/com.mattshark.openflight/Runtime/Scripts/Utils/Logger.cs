@@ -21,28 +21,28 @@ namespace OpenFlightVRC
         /// <summary>
         /// Logs a message to the console
         /// </summary>
-        /// <param name="v"></param>
-		internal static void Log(string v)
+        /// <param name="text">The text to print to the console</param>
+		internal static void Log(string text)
 		{
-			Debug.Log(prefix + v);
+            Debug.Log(prefix + text);
 		}
 
         /// <summary>
         /// Logs a warning to the console
         /// </summary>
-        /// <param name="v"></param>
-        internal static void LogWarning(string v)
+        /// <param name="text">The text to print to the console</param>
+        internal static void LogWarning(string text)
         {
-            Debug.LogWarning(prefix + v);
+            Debug.LogWarning(prefix + text);
         }
 
         /// <summary>
         /// Logs an error to the console
         /// </summary>
-        /// <param name="v"></param>
-        internal static void LogError(string v)
+        /// <param name="text">The text to print to the console</param>
+        internal static void LogError(string text)
         {
-            Debug.LogError(prefix + v);
+            Debug.LogError(prefix + text);
         }
 	}
 }
