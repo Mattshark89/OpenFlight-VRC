@@ -16,6 +16,7 @@ namespace OpenFlightVRC.UI
 		public int fadeDistance = 10;
 		public bool allowFade = true;
 		public GameObject[] objectsToHideOnFade;
+        public GameObject[] objectsToShowOnFade;
 		public OpenFlight OpenFlight;
 		public AvatarDetection AvatarDetection;
 
@@ -53,20 +54,14 @@ namespace OpenFlightVRC.UI
 			{
 				//check if the player is within the fade distance
 				if (Vector3.Distance(localPlayer.GetPosition(), transform.position) > fadeDistance && allowFade)
+                {
+                    //disable all the objects that should be hidden
+                    SetFadeState(false);
+                }
+                else
 				{
-					//disable all the objects that should be hidden
-					foreach (GameObject obj in objectsToHideOnFade)
-					{
-						obj.SetActive(false);
-					}
-				}
-				else
-				{
-					//enable all the objects that should be hidden
-					foreach (GameObject obj in objectsToHideOnFade)
-					{
-						obj.SetActive(true);
-					}
+                    //enable all the objects that should be hidden
+                    SetFadeState(true);
 
 					//set the version info text
 					VersionInfo.text =
@@ -81,7 +76,23 @@ namespace OpenFlightVRC.UI
 			}
 		}
 
-		void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight)
+        /// <summary>
+        /// Controls the fade state of the tablet
+        /// </summary>
+        /// <param name="state">The state to set the tablet to</param>
+        private void SetFadeState(bool state)
+        {
+            foreach (GameObject obj in objectsToHideOnFade)
+            {
+                obj.SetActive(state);
+            }
+            foreach (GameObject obj in objectsToShowOnFade)
+            {
+                obj.SetActive(!state);
+            }
+        }
+
+        void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight)
 		{
 			if (player.isLocal)
 			{
@@ -90,7 +101,7 @@ namespace OpenFlightVRC.UI
 			}
 		}
 
-		void UpdateTabletScale()
+        private void UpdateTabletScale()
 		{
 			//change the scale of the gameobject based on the players scale
 			//add up all of the bone distances from the foot to the head
@@ -118,13 +129,13 @@ namespace OpenFlightVRC.UI
 			transform.localScale = new Vector3((float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset);
 		}
 
-		/// <summary>
-		/// Helper function to get the total distance of a vector array.
-		/// this adds up all of the distances between each vector in the array in order, then returns the total distance
-		/// </summary>
-		/// <param name="vectors">The vector array to get the total distance of</param>
-		/// <returns>The total distance of the vector array</returns>
-		public float TotalVectorDistance(Vector3[] vectors)
+        /// <summary>
+        /// Helper function to get the total distance of a vector array.
+        /// this adds up all of the distances between each vector in the array in order, then returns the total distance
+        /// </summary>
+        /// <param name="vectors">The vector array to get the total distance of</param>
+        /// <returns>The total distance of the vector array</returns>
+        private float TotalVectorDistance(Vector3[] vectors)
 		{
 			float totalDistance = 0;
 			for (int i = 0; i < vectors.Length; i++)
