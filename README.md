@@ -9,11 +9,13 @@ Note that this is a World/Udon project. This system cannot be installed to an av
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/todo_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/current_release_downloads)
 
-### WIP New docs!
-We are transitioning to these new docs:
-https://mattshark89.github.io/OpenFlight-VRC/docs/#/
-This readme will retain its current format for now incase any information is missing from the new docs.
+### Docs Page
+Check here for the latest docs: https://mattshark89.github.io/OpenFlight-VRC/docs/#/
 
+# Old Docs
+These docs are preserved just incase we missed something in the new docs. They should not be usually used as reference however.
+<details>
+<summary>Old Preserved Docs</summary>
 ## How does it work?
 
 At its base level, winged avatars are permitted to fly in the world. Flight is performed by jumping and immediately flapping one's arms like a bird. Optionally, one can also hold their arms straight out to glide. Additional features and settings can be enabled within the Unity inspector or on the provided in-world settings tablet.
@@ -81,6 +83,7 @@ In no particular order:
 - Setup/Settings guide, basic API for hooking in other plugins
 - Equippable props (such as mechanical wings) for players that manually enable flight
 
+</details>
 
 ## Credits
 
