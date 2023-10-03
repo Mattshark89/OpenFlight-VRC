@@ -9,6 +9,12 @@
       "type": "string",
       "format": "date"
     },
+    "Contributers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "Bases": {
       "type": "object",
       "additionalProperties": {

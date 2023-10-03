@@ -6,7 +6,6 @@ using VRC.Udon;
 using VRC.SDK3.StringLoading;
 using TMPro;
 using VRC.SDK3.Data;
-using OpenFlightVRC.UI;
 
 namespace OpenFlightVRC
 {
