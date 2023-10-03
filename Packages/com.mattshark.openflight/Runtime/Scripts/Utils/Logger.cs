@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UdonSharp;
+using VRC.Udon;
 
 namespace OpenFlightVRC
 {
@@ -12,37 +13,101 @@ namespace OpenFlightVRC
 	{
 		void Start()
 		{
-			Log("Logging started");
+            Log("Logging started", this);
 		}
 
-        const string color = "orange";
-		const string prefix = "[" + "<color=" + color + ">" + "OpenFlight" + "</color>" + "] ";
+        const string packageColor = "orange";
+
+        private static string Prefix()
+        {
+            return "[" + ColorText("OpenFlight", packageColor) + "]";
+        }
 
         /// <summary>
         /// Logs a message to the console
         /// </summary>
         /// <param name="text">The text to print to the console</param>
-		internal static void Log(string text)
+        /// <param name="self">The UdonSharpBehaviour that is logging the text</param>
+		internal static void Log(string text, UdonSharpBehaviour self)
 		{
-            Debug.Log(prefix + text);
+            Debug.Log(Format(text, self));
 		}
 
         /// <summary>
         /// Logs a warning to the console
         /// </summary>
         /// <param name="text">The text to print to the console</param>
-        internal static void LogWarning(string text)
+        /// <param name="self">The UdonSharpBehaviour that is logging the text</param>
+        internal static void LogWarning(string text, UdonSharpBehaviour self)
         {
-            Debug.LogWarning(prefix + text);
+            Debug.LogWarning(Format(text, self));
         }
 
         /// <summary>
         /// Logs an error to the console
         /// </summary>
         /// <param name="text">The text to print to the console</param>
-        internal static void LogError(string text)
+        /// <param name="self">The UdonSharpBehaviour that is logging the text</param>
+        internal static void LogError(string text, UdonSharpBehaviour self)
         {
-            Debug.LogError(prefix + text);
+            Debug.LogError(Format(text, self));
+        }
+
+        /// <summary>
+        /// Formats the text to be logged
+        /// </summary>
+        /// <param name="text">The text to format</param>
+        /// <param name="self">The UdonSharpBehaviour that is logging the text</param>
+        /// <returns>The formatted text</returns>
+        private static string Format(string text, UdonSharpBehaviour self)
+        {
+            return Prefix() + " [" + ColorText(self.name, ChooseColor(self)) + "] " + text;
+        }
+
+        /// <summary>
+        /// Colors a string
+        /// </summary>
+        /// <param name="text">The text to color</param>
+        /// <param name="color">The color to color the text</param>
+        /// <returns>The colored text</returns>
+        private static string ColorText(string text, string color)
+        {
+            return "<color=" + color + ">" + text + "</color>";
+        }
+
+        /// <summary>
+        /// Chooses a color based on the name of the UdonSharpBehaviour
+        /// </summary>
+        /// <param name="self">The UdonSharpBehaviour to choose a color for</param>
+        /// <returns>The color to use</returns>
+        private static string ChooseColor(UdonSharpBehaviour self)
+        {
+            //set random seed to hash of name
+            Random.InitState(self.name.GetHashCode());
+
+            float Saturation = 1f;
+            float Brightness = 1f;
+
+            Random random = new Random();
+            float hue = Random.Range(0.0f, 1.0f);
+
+            Color color = Color.HSVToRGB(hue, Saturation, Brightness);
+
+            return ColorToHTML(color);
+        }
+
+        /// <summary>
+        /// Converts RGB to HTML
+        /// </summary>
+        /// <param name="color">The color to convert</param>
+        /// <returns>The HTML color</returns>
+        private static string ColorToHTML(Color color)
+        {
+            string RHex = ((int)(color.r * 255)).ToString("X2");
+            string GHex = ((int)(color.g * 255)).ToString("X2");
+            string BHex = ((int)(color.b * 255)).ToString("X2");
+
+            return "#" + RHex + GHex + BHex;
         }
 	}
 }

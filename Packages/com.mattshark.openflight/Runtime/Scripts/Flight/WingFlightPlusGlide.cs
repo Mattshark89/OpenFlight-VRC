@@ -190,7 +190,7 @@ public class WingFlightPlusGlideEditor : Editor
 				oldWalkSpeed = LocalPlayer.GetWalkSpeed();
 				oldRunSpeed = LocalPlayer.GetRunSpeed();
 				oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
-				Logger.Log("Player Physics saved.");
+                Logger.Log("Player Physics saved.", this);
 			}
 		}
 
@@ -209,7 +209,7 @@ public class WingFlightPlusGlideEditor : Editor
 			{
 				Land();
 			}
-			Logger.Log("Disabled.");
+            Logger.Log("Disabled.", this);
 		}
 
 		public void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight) // According to the docs, this also runs upon changing avatars
@@ -558,7 +558,7 @@ public class WingFlightPlusGlideEditor : Editor
 				+ Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone), LocalPlayer.GetBonePosition(rightLowerArmBone))
 				+ Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone), LocalPlayer.GetBonePosition(rightHandBone));
 			shoulderDistance = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone), LocalPlayer.GetBonePosition(rightUpperArmBone));
-			Logger.Log("Armspan: " + armspan.ToString() + " Shoulder Distance: " + shoulderDistance.ToString());
+            Logger.Log("Armspan: " + armspan.ToString() + " Shoulder Distance: " + shoulderDistance.ToString(), this);
 		}
 
 		// Set necessary values for beginning flight
@@ -580,7 +580,7 @@ public class WingFlightPlusGlideEditor : Editor
 				{
 					ImmobilizePart(true);
 				}
-				Logger.Log("Took off.");
+                Logger.Log("Took off.", this);
 			}
 		}
 
@@ -592,13 +592,13 @@ public class WingFlightPlusGlideEditor : Editor
             //if the world gravity is different than what we have saved, throw a warning
             if (LocalPlayer.GetGravityStrength() != oldGravityStrength)
             {
-                Logger.LogWarning("World gravity is different than the saved gravity, this may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new world gravity using UpdatePlayerPhysics().");
+                Logger.LogWarning("World gravity is different than the saved gravity, this may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new world gravity using UpdatePlayerPhysics().", this);
             }
 
             //if the player movement is different than what we have saved, throw a warning
             if (LocalPlayer.GetWalkSpeed() != oldWalkSpeed || LocalPlayer.GetRunSpeed() != oldRunSpeed || LocalPlayer.GetStrafeSpeed() != oldStrafeSpeed)
             {
-                Logger.LogWarning("Player movement is different than the saved movement, this may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new player movement using UpdatePlayerPhysics().");
+                Logger.LogWarning("Player movement is different than the saved movement, this may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new player movement using UpdatePlayerPhysics().", this);
             }
         }
 
@@ -629,7 +629,7 @@ public class WingFlightPlusGlideEditor : Editor
 			{
 				ImmobilizePart(false);
 			}
-			Logger.Log("Landed.");
+            Logger.Log("Landed.", this);
 		}
 
 		private float flapStrength()
@@ -672,13 +672,13 @@ public class WingFlightPlusGlideEditor : Editor
 		public void EnableBetaFeatures()
 		{
 			bankingTurns = true;
-			Logger.Log("Beta Features enabled.");
+            Logger.Log("Beta Features enabled.", this);
 		}
 
 		public void DisableBetaFeatures()
 		{
 			bankingTurns = false;
-			Logger.Log("Beta Features disabled.");
+            Logger.Log("Beta Features disabled.", this);
 		}
 
 		/// <summary>
@@ -695,10 +695,10 @@ public class WingFlightPlusGlideEditor : Editor
 				oldWalkSpeed = LocalPlayer.GetWalkSpeed();
 				oldRunSpeed = LocalPlayer.GetRunSpeed();
 				oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
-				Logger.Log("Player Physics updated.");
+                Logger.Log("Player Physics updated.", this);
 			}
 			else {
-				Logger.Log("Dynamic Player Physics is enabled. Player Physics will be updated automatically.");
+                Logger.Log("Dynamic Player Physics is enabled. Player Physics will be updated automatically.", this);
 			}
 		}
 		/// <summary>
@@ -719,7 +719,7 @@ public class WingFlightPlusGlideEditor : Editor
 			airFriction_DEFAULT = airFriction;
 			useGravityCurve_DEFAULT = useGravityCurve;
 			bankingTurns_DEFAULT = bankingTurns;
-			Logger.Log("Defaults initialized.");
+            Logger.Log("Defaults initialized.", this);
 		}
 
 		/// <summary>
@@ -740,7 +740,7 @@ public class WingFlightPlusGlideEditor : Editor
 			airFriction = airFriction_DEFAULT;
 			useGravityCurve = useGravityCurve_DEFAULT;
 			bankingTurns = bankingTurns_DEFAULT;
-			Logger.Log("Defaults restored.");
+            Logger.Log("Defaults restored.", this);
 		}
 	}
 }

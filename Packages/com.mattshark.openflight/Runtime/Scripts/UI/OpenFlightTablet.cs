@@ -96,7 +96,7 @@ namespace OpenFlightVRC.UI
 		{
 			if (player.isLocal)
 			{
-				Logger.Log("Player eye height changed, updating tablet scale");
+                Logger.Log("Player eye height changed, updating tablet scale", this);
 				UpdateTabletScale();
 			}
 		}
@@ -187,5 +187,10 @@ namespace OpenFlightVRC.UI
 		{
 			SetActiveTab(2);
 		}
+
+        public void SetActiveTabChangeLog()
+        {
+            SetActiveTab(3);
+        }
 	}
 }

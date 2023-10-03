@@ -4,6 +4,8 @@ using VRC.SDKBase;
 using VRC.SDK3;
 using VRC.SDK3.StringLoading;
 using VRC.Udon;
+using VRC.SDK3.Data;
+using System;
 
 namespace OpenFlightVRC
 {
@@ -34,37 +36,58 @@ namespace OpenFlightVRC
 			if (useOfflineJSON)
 			{
 				Output = OfflineJSON.text;
-				Logger.Log("Using in-world JSON instead.");
+                Logger.Log("Using in-world JSON instead.", this);
 				return;
 			}
 			//load the URL
 			VRCStringDownloader.LoadUrl(URL, (VRC.Udon.Common.Interfaces.IUdonEventReceiver)this);
-			Logger.Log("Loading URL...");
+            Logger.Log("Loading Avatar List URL...", this);
 		}
 
-		UdonSharpBehaviour callbackBehaviour;
-		string callbackFuncName;
+        UdonSharpBehaviour[] callbackBehaviours = new UdonSharpBehaviour[0];
+        string[] callbackFuncNames = new string[0];
 
-		internal void SetCallback(UdonSharpBehaviour behaviour, string callback)
-		{
-			callbackBehaviour = behaviour;
-			callbackFuncName = callback;
-		}
+        internal void AddCallback(UdonSharpBehaviour behaviour, string callback)
+        {
+            //add the callback to the array
+            callbackBehaviours = callbackBehaviours.Append(behaviour);
+            callbackFuncNames = callbackFuncNames.Append(callback);
+        }
 
 		//if the URL successfully loads
 		public override void OnStringLoadSuccess(IVRCStringDownload data)
 		{
 			string result = data.Result;
 			Output = result;
-			Logger.Log("Loaded URL successfully!");
-			callbackBehaviour.SendCustomEvent(callbackFuncName);
-		}
+            Logger.Log("Loaded Avatar List URL!", this);
+            for (int i = 0; i < callbackBehaviours.Length; i++)
+            {
+                callbackBehaviours[i].SendCustomEvent(callbackFuncNames[i]);
+            }
+        }
 
 		//if the URL fails to load, fallback to the in-world stored JSON instead
 		public override void OnStringLoadError(IVRCStringDownload data)
 		{
 			Output = OfflineJSON.text;
-			Logger.Log("Failed to load URL! Using in-world JSON instead.");
+            Logger.Log("Failed to load Avatar List URL! Using in-world JSON instead.", this);
+        }
+    }
+
+    //array extension to append
+    public static class ArrayExtensions
+    {
+        public static T[] Append<T>(this T[] array, T item)
+        {
+            if (array == null)
+            {
+                return new T[] { item };
+            }
+
+            T[] result = new T[array.Length + 1];
+            array.CopyTo(result, 0);
+            result[array.Length] = item;
+            return result;
 		}
 	}
 }

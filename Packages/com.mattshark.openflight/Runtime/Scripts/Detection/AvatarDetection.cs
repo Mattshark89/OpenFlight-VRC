@@ -71,8 +71,8 @@ namespace OpenFlightVRC
 
 			debugInfo = "Loading JSON list...";
 			JSONLoader.LoadURL(); //tell the JSON loader to try to load the JSON list from the github
-			//set the callback of the jsonloader to rehash
-			JSONLoader.SetCallback(this, "LoadJSON");
+                                  //set the callback of the jsonloader to rehash
+            JSONLoader.AddCallback(this, "LoadJSON");
 		}
 
 		void Update()
@@ -85,7 +85,7 @@ namespace OpenFlightVRC
 		{
 			if (player.isLocal)
 			{
-				Logger.Log("Avatar Changed, reevaluating flight...");
+                Logger.Log("Avatar Changed, reevaluating flight...", this);
 				RunDetection();
 			}
 		}
@@ -95,10 +95,10 @@ namespace OpenFlightVRC
 			//if the JSON list is empty, then return
 			if (jsonString.Length == 0 || jsonString == null)
 			{
-				Logger.Log("JSON list is empty, returning...");
+                Logger.Log("JSON list is empty, returning...", this);
 				return;
 			}
-			Logger.Log("Running Detection...");
+            Logger.Log("Running Detection...", this);
 
 			//get spine and hips first, as they are used to calculate the avatar scale
 			Vector3 spine = localPlayer.GetBonePosition(HumanBodyBones.Spine);
@@ -122,8 +122,8 @@ namespace OpenFlightVRC
 			hashV1 = GetHash(boneVectors, 1);
 			hashV2 = GetHash(boneVectors, 2);
 
-			Logger.Log("HashV1: " + hashV1);
-			Logger.Log("HashV2: " + hashV2);
+            Logger.Log("HashV1: " + hashV1, this);
+            Logger.Log("HashV2: " + hashV2, this);
 
 			//check if the hash is the loading avatar, and if it is then dont check if the avatar is allowed to fly
 			if (hashV2 == "1439458325v2" && skipLoadingAvatar)
@@ -134,7 +134,7 @@ namespace OpenFlightVRC
 				introducer = "Loading Avatar";
 				weight = 1;
 				WingtipOffset = 0;
-				Logger.Log("Loading Avatar Detected, ignoring...");
+                Logger.Log("Loading Avatar Detected, ignoring...", this);
 				return;
 			}
 
@@ -145,14 +145,14 @@ namespace OpenFlightVRC
 			if (allowedToFly)
 			{
 				OpenFlight.CanFly();
-				Logger.Log("Avatar is allowed to fly!");
+                Logger.Log("Avatar is allowed to fly!", this);
 			}
 			else
 			{
 				OpenFlight.CannotFly();
 				WingFlightPlusGlide.wingtipOffset = 0;
 				WingFlightPlusGlide.weight = 1;
-				Logger.Log("Avatar is not allowed to fly!");
+                Logger.Log("Avatar is not allowed to fly!", this);
 			}
 
 			//print all the info to the text
@@ -220,14 +220,14 @@ namespace OpenFlightVRC
 
 		public void LoadJSON()
 		{
-			Logger.Log("Deserializing JSON list...");
+            Logger.Log("Deserializing JSON list...", this);
 			jsonString = JSONLoader.Output;
 			//purely temp variable due to needing to use out
 			bool success = VRCJson.TryDeserializeFromJson(jsonString, out DataToken jsonDataToken);
 			if (!success)
 			{
 				debugInfo = "Failed to load JSON list!";
-				Logger.LogError("Failed to load JSON list! This shouldnt occur unless we messed up the JSON, or VRChat broke something!");
+                Logger.LogError("Failed to load JSON list! This shouldnt occur unless we messed up the JSON, or VRChat broke something!", this);
 				return;
 			}
 			json = jsonDataToken.DataDictionary;
@@ -282,7 +282,7 @@ namespace OpenFlightVRC
 					boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
 					return boneInfo.GetHashCode().ToString() + "v2";
 				default:
-					Logger.LogError("Invalid Hash Version Sent");
+                    Logger.LogError("Invalid Hash Version Sent", this);
 					return "0";
 			}
 		}
