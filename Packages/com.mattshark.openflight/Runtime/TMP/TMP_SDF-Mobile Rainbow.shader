@@ -118,6 +118,12 @@ SubShader {
 			#endif
 		};
 
+		float3 HSVToRGB( float3 c )
+		{
+			float4 K = float4( 1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0 );
+			float3 p = abs( frac( c.xxx + K.xyz ) * 6.0 - K.www );
+			return c.z * lerp( K.xxx, saturate( p - K.xxx ), c.y );
+		}
 
 		pixel_t VertShader(vertex_t input)
 		{
@@ -158,10 +164,11 @@ SubShader {
 
 			//generate rainbow color over time to overwrite the face color
 			const float rainbowSpeed = 1;
-			fixed4 rainbow = fixed4(rainbowSpeed * _SinTime.x, rainbowSpeed * _SinTime.y, rainbowSpeed * _SinTime.z, 1.0);
-			fixed4 _FaceColor = rainbow;
+			float rainbowTime = _Time.x * rainbowSpeed;
+			fixed4 rainbow = fixed4(HSVToRGB(float3(rainbowTime, 1, 1)), opacity);
 
-			fixed4 faceColor = fixed4(input.color.rgb, opacity) * _FaceColor;
+			//fixed4 faceColor = fixed4(input.color.rgb, opacity) * _FaceColor;
+			fixed4 faceColor = rainbow;
 			faceColor.rgb *= faceColor.a;
 
 			fixed4 outlineColor = _OutlineColor;
