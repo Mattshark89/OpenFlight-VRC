@@ -36,7 +36,8 @@ namespace OpenFlightVRC
 			if (useOfflineJSON)
 			{
 				Output = OfflineJSON.text;
-                Logger.Log("Using in-world JSON instead.", this);
+                Logger.Log("Force-using in-world JSON list", this);
+                RunCallbacks();
 				return;
 			}
 			//load the URL
@@ -56,18 +57,27 @@ namespace OpenFlightVRC
 
 		//if the URL successfully loads
 		public override void OnStringLoadSuccess(IVRCStringDownload data)
-		{
-			string result = data.Result;
-			Output = result;
+        {
+            string result = data.Result;
+            Output = result;
             Logger.Log("Loaded Avatar List URL!", this);
+            RunCallbacks();
+        }
+
+        /// <summary>
+        /// Runs all callbacks
+        /// </summary>
+        private void RunCallbacks()
+        {
             for (int i = 0; i < callbackBehaviours.Length; i++)
             {
+                Logger.Log("Triggering callback {" + Logger.ColorizeFunction(callbackBehaviours[i], callbackFuncNames[i]) + "} on [" + Logger.ColorizeScript(callbackBehaviours[i]) + "]", this);
                 callbackBehaviours[i].SendCustomEvent(callbackFuncNames[i]);
             }
         }
 
-		//if the URL fails to load, fallback to the in-world stored JSON instead
-		public override void OnStringLoadError(IVRCStringDownload data)
+        //if the URL fails to load, fallback to the in-world stored JSON instead
+        public override void OnStringLoadError(IVRCStringDownload data)
 		{
 			Output = OfflineJSON.text;
             Logger.Log("Failed to load Avatar List URL! Using in-world JSON instead.", this);

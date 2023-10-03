@@ -61,7 +61,31 @@ namespace OpenFlightVRC
         /// <returns>The formatted text</returns>
         private static string Format(string text, UdonSharpBehaviour self)
         {
-            return Prefix() + " [" + ColorText(self.name, ChooseColor(self)) + "] " + text;
+            return Prefix() + " [" + ColorizeScript(self) + "] " + text;
+        }
+
+        /// <summary>
+        /// Returns a colored string of the UdonSharpBehaviour's name
+        /// </summary>
+        /// <param name="script">The UdonSharpBehaviour to colorize</param>
+        /// <returns>The colored name</returns>
+        public static string ColorizeScript(UdonSharpBehaviour script)
+        {
+            return ColorText(script.name, ChooseColor(script));
+        }
+
+        /// <summary>
+        /// Returns a colored string of the UdonSharpBehaviour's function
+        /// </summary>
+        /// <param name="script">The UdonSharpBehaviour to colorize</param>
+        /// <param name="function">The function to colorize</param>
+        /// <returns>The colored function</returns>
+        public static string ColorizeFunction(UdonSharpBehaviour script, string function)
+        {
+            string colorized = ColorText(function, ChooseColor(script));
+
+            //italicise it to denote that it is a function
+            return "<i>" + colorized + "</i>";
         }
 
         /// <summary>
