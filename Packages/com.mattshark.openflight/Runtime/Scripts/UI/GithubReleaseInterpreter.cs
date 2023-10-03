@@ -18,6 +18,7 @@ namespace OpenFlightVRC
         public string outputText = "";
         public bool onLatestRelease = false;
         public string releasesBehind = "0";
+        public string latestReleaseVersion = "?.?.?";
         public OpenFlight OF;
         public AvatarListLoader AvatarListLoader;
         void Start()
@@ -70,8 +71,8 @@ namespace OpenFlightVRC
             //check if on latest release
             string releaseVersion = releases[0]["tag_name"].ToString();
             //remove "OpenFlight-"
-            releaseVersion = releaseVersion.Substring(11);
-            onLatestRelease = releaseVersion == OF.OpenFlightVersion.ToString();
+            latestReleaseVersion = releaseVersion.Substring(11);
+            onLatestRelease = latestReleaseVersion == OF.OpenFlightVersion.ToString();
 
             //check how many releases behind
             int behind = 0;
