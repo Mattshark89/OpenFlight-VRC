@@ -69,11 +69,12 @@ namespace OpenFlightVRC
 			//get the local player
 			localPlayer = Networking.LocalPlayer;
 
-			debugInfo = "Loading JSON list...";
-			JSONLoader.LoadURL(); //tell the JSON loader to try to load the JSON list from the github
-                                  //set the callback of the jsonloader to rehash
+            debugInfo = "Loading JSON list...";
+            //set the callback of the jsonloader to rehash
             JSONLoader.AddCallback(this, "LoadJSON");
-		}
+
+            JSONLoader.LoadURL(); //tell the JSON loader to try to load the JSON list from the github
+        }
 
 		void Update()
 		{
