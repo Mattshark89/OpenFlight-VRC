@@ -26,22 +26,12 @@ namespace OpenFlightVRC.UI
             {
                 //turn the TMP on
                 text.enabled = true;
-                //set the text to rainbow
-                text.color = TimedRainbow(1);
             }
             else
             {
                 //turn the TMP off
                 text.enabled = false;
             }
-        }
-
-        private Color TimedRainbow(float speed)
-        {
-            float t = Time.time * speed;
-            return new Color(Mathf.Sin(t) * 0.5f + 0.5f,
-                             Mathf.Sin(t + 2 * Mathf.PI / 3) * 0.5f + 0.5f,
-                             Mathf.Sin(t + 4 * Mathf.PI / 3) * 0.5f + 0.5f);
         }
     }
 }
