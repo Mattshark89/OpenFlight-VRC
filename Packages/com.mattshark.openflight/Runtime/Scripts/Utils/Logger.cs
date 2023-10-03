@@ -112,7 +112,6 @@ namespace OpenFlightVRC
             float Saturation = 1f;
             float Brightness = 1f;
 
-            Random random = new Random();
             float hue = Random.Range(0.0f, 1.0f);
 
             Color color = Color.HSVToRGB(hue, Saturation, Brightness);
