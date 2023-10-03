@@ -77,6 +77,13 @@ namespace OpenFlightVRC
     //array extension to append
     public static class ArrayExtensions
     {
+        /// <summary>
+        /// Appends an item to an array
+        /// </summary>
+        /// <typeparam name="T">The type of the array</typeparam>
+        /// <param name="array">The array to append to</param>
+        /// <param name="item">The item to append</param>
+        /// <returns>The new array with the item appended</returns>
         public static T[] Append<T>(this T[] array, T item)
         {
             if (array == null)
