@@ -20,7 +20,7 @@ namespace OpenFlightVRC
 			this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0, 0.75f));
 		}
 
-		void Interact()
+        public override void Interact()
 		{
 			setting++;
 			if (setting > 2)

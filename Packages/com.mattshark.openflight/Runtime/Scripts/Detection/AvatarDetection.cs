@@ -81,7 +81,7 @@ namespace OpenFlightVRC
 			VisualizeWingTips();
 		}
 
-		void OnAvatarChanged(VRCPlayerApi player)
+        public override void OnAvatarChanged(VRCPlayerApi player)
 		{
 			if (player.isLocal)
 			{

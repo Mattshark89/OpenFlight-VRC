@@ -92,7 +92,7 @@ namespace OpenFlightVRC.UI
             }
         }
 
-        void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight)
+        public override void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight)
 		{
 			if (player.isLocal)
 			{

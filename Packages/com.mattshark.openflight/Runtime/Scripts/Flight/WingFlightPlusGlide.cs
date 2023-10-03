@@ -212,8 +212,8 @@ public class WingFlightPlusGlideEditor : Editor
             Logger.Log("Disabled.", this);
 		}
 
-		public void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight) // According to the docs, this also runs upon changing avatars
-		{
+        public override void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight) // According to the docs, this also runs upon changing avatars
+        {
 			if (player == LocalPlayer)
 			{
 				// Bug check: if avatar has been swapped, sometimes the player will be launched straight up
