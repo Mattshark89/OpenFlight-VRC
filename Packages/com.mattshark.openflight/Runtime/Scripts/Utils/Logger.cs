@@ -36,14 +36,14 @@ namespace OpenFlightVRC
         {
             GameObject logObject = GameObject.Find(log);
 
+            //get udonbehaviour
+            UdonBehaviour logUdon = logObject.GetComponent<UdonBehaviour>();
+
             if (logObject == null)
             {
                 Debug.LogWarning("Could not find log object!");
                 return;
             }
-
-            //find TMPro object
-            TMPro.TextMeshProUGUI textMesh = logObject.GetComponent<TMPro.TextMeshProUGUI>();
 
             switch (LT)
             {
@@ -58,14 +58,20 @@ namespace OpenFlightVRC
                     break;
             }
 
+            //get text
+            string logString = (string)logUdon.GetProgramVariable("log");
+
             //add text
-            textMesh.text += text + "\n";
+            logString += text + "\n";
 
             //trim text if too many lines
-            if (textMesh.text.Split('\n').Length > maxLogLength)
+            if (logString.Split('\n').Length > maxLogLength)
             {
-                textMesh.text = textMesh.text.Substring(textMesh.text.IndexOf('\n') + 1);
+                logString = logString.Substring(logString.IndexOf('\n') + 1);
             }
+
+            //set text back
+            logUdon.SetProgramVariable("log", logString);
         }
 
         /// <summary>
