@@ -11,6 +11,10 @@ namespace OpenFlightVRC.UI
     {
         public AvatarListLoader AvatarListLoader;
         public bool contributerInWorld = false;
+        /// <summary>
+        /// A formatted list of all the openflight contributers
+        /// </summary>
+        public string contributersString = "";
         void Start()
         {
             //subscribe to the avatar list loader callback
@@ -25,6 +29,12 @@ namespace OpenFlightVRC.UI
         public override void OnPlayerLeft(VRCPlayerApi player)
         {
             CheckForContributers(player);
+        }
+
+        //for whatever dumb reason this is needed since the callback doesnt work if it has a optional parameter??????
+        public void CheckForContributers()
+        {
+            CheckForContributers(null);
         }
 
         /// <summary>
@@ -47,6 +57,13 @@ namespace OpenFlightVRC.UI
 
             //grab the Contributers array
             DataList contributers = json.DataDictionary["Contributers"].DataList;
+
+            //format them into a string
+            contributersString = "";
+            for (int i = 0; i < contributers.Count; i++)
+            {
+                contributersString += contributers[i].String + ", ";
+            }
 
             //populate our player list
             VRCPlayerApi[] players = new VRCPlayerApi[VRCPlayerApi.GetPlayerCount()];
