@@ -27,6 +27,9 @@ namespace OpenFlightVRC.UI
                 time = 0;
             }
             time += Time.deltaTime * scaledSpeed;
+
+            //wrap time so it doesnt overflow
+            time = time % 1;
         }
 
         /// <summary>
@@ -37,11 +40,8 @@ namespace OpenFlightVRC.UI
         /// <returns></returns>
         private float CalculatePosition(RectTransform t, float percentage)
         {
-            //make sure it wraps around if it goes too far
-            percentage = percentage % 1;
-
             //calculate the position
-            float position = Mathf.Lerp(-t.rect.width, 0, percentage);
+            float position = Mathf.Lerp(t.rect.width, 0, percentage);
 
             //prevent NAN
             if (float.IsNaN(position))

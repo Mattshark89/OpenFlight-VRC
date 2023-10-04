@@ -4411,7 +4411,7 @@ GameObject:
   - component: {fileID: 8316983538260651393}
   - component: {fileID: 2049535500769255370}
   m_Layer: 5
-  m_Name: Right Text
+  m_Name: Left Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4435,7 +4435,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 20}
-  m_Pivot: {x: -1, y: 1}
+  m_Pivot: {x: 1, y: 1}
 --- !u!222 &321962251335812121
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4571,7 +4571,7 @@ MonoBehaviour:
   target: {fileID: 4598422286817120621}
   decimalPlaces: 2
   targetVariable: contributersString
-  prefix: ' '
+  prefix: 
   suffix: 
 --- !u!114 &2049535500769255370
 MonoBehaviour:
@@ -19444,7 +19444,7 @@ MonoBehaviour:
   target: {fileID: 4598422286817120621}
   decimalPlaces: 2
   targetVariable: contributersString
-  prefix: 
+  prefix: ' '
   suffix: 
 --- !u!114 &6185221123171015398
 MonoBehaviour:
