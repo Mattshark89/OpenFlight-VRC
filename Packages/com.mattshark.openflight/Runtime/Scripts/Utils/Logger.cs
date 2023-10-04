@@ -6,11 +6,20 @@ using VRC.Udon;
 
 namespace OpenFlightVRC
 {
+    enum LogType
+    {
+        Log,
+        Warning,
+        Error
+    };
+
     /// <summary>
     /// A simple logger that prefixes all messages with [OpenFlight]
     /// </summary>
-	public class Logger : UdonSharpBehaviour
+    public class Logger : UdonSharpBehaviour
 	{
+        const string log = "OpenFlightLogObject";
+        const int maxLogLength = 30;
 		void Start()
 		{
             Log("Logging started", this);
@@ -23,6 +32,42 @@ namespace OpenFlightVRC
             return "[" + ColorText("OpenFlight", packageColor) + "]";
         }
 
+        private static void WriteToUILog(string text, LogType LT)
+        {
+            GameObject logObject = GameObject.Find(log);
+
+            if (logObject == null)
+            {
+                Debug.LogWarning("Could not find log object!");
+                return;
+            }
+
+            //find TMPro object
+            TMPro.TextMeshProUGUI textMesh = logObject.GetComponent<TMPro.TextMeshProUGUI>();
+
+            switch (LT)
+            {
+                case LogType.Log:
+                    text = "[" + ColorText("Log", "white") + "] " + text;
+                    break;
+                case LogType.Warning:
+                    text = "[" + ColorText("Warning", "yellow") + "] " + text;
+                    break;
+                case LogType.Error:
+                    text = "[" + ColorText("Error", "red") + "] " + text;
+                    break;
+            }
+
+            //add text
+            textMesh.text += text + "\n";
+
+            //trim text if too many lines
+            if (textMesh.text.Split('\n').Length > maxLogLength)
+            {
+                textMesh.text = textMesh.text.Substring(textMesh.text.IndexOf('\n') + 1);
+            }
+        }
+
         /// <summary>
         /// Logs a message to the console
         /// </summary>
@@ -31,6 +76,7 @@ namespace OpenFlightVRC
 		internal static void Log(string text, UdonSharpBehaviour self)
 		{
             Debug.Log(Format(text, self));
+            WriteToUILog(Format(text, self, false), LogType.Log);
 		}
 
         /// <summary>
@@ -41,6 +87,7 @@ namespace OpenFlightVRC
         internal static void LogWarning(string text, UdonSharpBehaviour self)
         {
             Debug.LogWarning(Format(text, self));
+            WriteToUILog(Format(text, self, false), LogType.Warning);
         }
 
         /// <summary>
@@ -51,6 +98,7 @@ namespace OpenFlightVRC
         internal static void LogError(string text, UdonSharpBehaviour self)
         {
             Debug.LogError(Format(text, self));
+            WriteToUILog(Format(text, self, false), LogType.Error);
         }
 
         /// <summary>
@@ -58,10 +106,12 @@ namespace OpenFlightVRC
         /// </summary>
         /// <param name="text">The text to format</param>
         /// <param name="self">The UdonSharpBehaviour that is logging the text</param>
+        /// <param name="includePrefix">Whether or not to include the prefix</param>
         /// <returns>The formatted text</returns>
-        private static string Format(string text, UdonSharpBehaviour self)
+        private static string Format(string text, UdonSharpBehaviour self, bool includePrefix = true)
         {
-            return Prefix() + " [" + ColorizeScript(self) + "] " + text;
+            //return Prefix() + " [" + ColorizeScript(self) + "] " + text;
+            return (includePrefix ? Prefix() + " " : "") + ColorizeScript(self) + " " + text;
         }
 
         /// <summary>
