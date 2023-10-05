@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEditor;
 using VRC.SDK3.Editor;
@@ -8,6 +9,7 @@ using UnityEditor.UIElements;
 using VRC.SDKBase.Editor.Api;
 using VRC.Core;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 //this script literally is just here to notify the world creator at upload that we recommend adding the openflight tag to the world
 namespace OpenFlightVRC.Editor
@@ -131,11 +133,9 @@ namespace OpenFlightVRC.Editor
         /// <returns>The number of tags that can be added to the world</returns>
         private static int getTagLimit()
         {
-            //create a dummy TagsField object
-            TagsField tagsField = new TagsField();
-
-            //get the tag limit
-            return tagsField.TagLimit;
+            //use reflection to get the TagLimit variable without calling the constructor
+            FieldInfo tagsFieldInfo = typeof(TagsField).GetField("TagLimit", BindingFlags.Public | BindingFlags.Instance);
+            return (int)tagsFieldInfo.GetValue(new TagsField());
         }
 
         /// <summary>
