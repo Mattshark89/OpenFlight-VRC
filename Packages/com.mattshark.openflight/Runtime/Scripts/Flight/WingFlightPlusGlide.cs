@@ -584,9 +584,9 @@ public class WingFlightPlusGlideEditor : Editor
 			}
 		}
 
-		/// <summary>
-		/// Checks if the world gravity or player movement has changed from the saved values and throws a warning if so.
-		/// </summary>
+        /// <summary>
+        /// Checks if the world gravity or player movement has changed from the saved values and throws a warning if so.
+        /// </summary>
         private void CheckPhysicsUnChanged()
         {
             //if the world gravity is different than what we have saved, throw a warning

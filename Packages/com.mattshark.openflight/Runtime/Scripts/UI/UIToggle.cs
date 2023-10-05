@@ -11,7 +11,8 @@ namespace OpenFlightVRC.UI
 		Toggle toggle; // The toggle component
 		public UdonBehaviour target; // The target UdonBehaviour
 		public string targetVariable; // The target variable
-		bool value; // The value of variable
+        public bool invert = false; // If true, the toggle will be inverted
+        bool value; // The value of variable
 
 		void Start()
 		{
@@ -20,7 +21,7 @@ namespace OpenFlightVRC.UI
 				target = (UdonBehaviour)target.GetProgramVariable("target");
 
 			toggle = GetComponent<Toggle>();
-			value = (bool)target.GetProgramVariable(targetVariable);
+            value = (bool)target.GetProgramVariable(targetVariable) ^ invert;
 			toggle.isOn = value;
 		}
 
@@ -30,14 +31,14 @@ namespace OpenFlightVRC.UI
 			//check if the toggle has been changed
 			if (toggle.isOn != value)
 			{
-				target.SetProgramVariable(targetVariable, toggle.isOn);
+                target.SetProgramVariable(targetVariable, toggle.isOn ^ invert);
 				value = toggle.isOn;
 			}
 
 			//check if the target variable has been changed
 			if ((bool)target.GetProgramVariable(targetVariable) != toggle.isOn)
 			{
-				toggle.isOn = (bool)target.GetProgramVariable(targetVariable);
+                toggle.isOn = (bool)target.GetProgramVariable(targetVariable) ^ invert;
 			}
 		}
 	}

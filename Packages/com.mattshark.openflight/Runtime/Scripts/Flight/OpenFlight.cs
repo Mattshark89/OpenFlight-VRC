@@ -62,19 +62,36 @@ public class OpenFlightScenePostProcessor {
 		[ReadOnly]
 		public bool flightAllowed = false;
 
-		/// <summary>
-		/// Turns flight off
-		/// </summary>
-		void SwitchFlight()
+        /// <summary>
+        /// If true, the system will ignore the VR check and allow flight even if the player is not in VR
+        /// </summary>
+        /// <remarks>
+        /// You REALLY should not turn this on. This is purely for testing purposes
+        /// </remarks>
+        public bool ignoreVRCheck = false;
+
+        /// <summary>
+        /// Turns flight off
+        /// </summary>
+        void SwitchFlight()
 		{
 			wingedFlight.SetActive(false);
 			flightAllowed = false;
 		}
 
-		public void Start()
+        private bool inVR()
+        {
+            if (ignoreVRCheck)
+            {
+                Logger.LogWarning("VR check is being ignored! This should not be enabled in a production build!", this);
+            }
+            return LocalPlayer.IsUserInVR() || ignoreVRCheck;
+        }
+
+        public void Start()
 		{
 			LocalPlayer = Networking.LocalPlayer;
-			if (!LocalPlayer.IsUserInVR())
+            if (!inVR())
 			{
 				FlightOff();
 			}
@@ -88,7 +105,7 @@ public class OpenFlightScenePostProcessor {
 		/// </summary>
 		public void FlightOn()
 		{
-			if (LocalPlayer.IsUserInVR())
+            if (inVR())
 			{
 				SwitchFlight();
 				wingedFlight.SetActive(true);
@@ -119,7 +136,7 @@ public class OpenFlightScenePostProcessor {
 		/// </summary>
 		public void FlightAuto()
 		{
-			if (LocalPlayer.IsUserInVR())
+            if (inVR())
 			{
 				flightMode = "Auto";
 				flightAllowed = false;
