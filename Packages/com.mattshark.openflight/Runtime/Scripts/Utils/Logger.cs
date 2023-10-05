@@ -19,7 +19,7 @@ namespace OpenFlightVRC
     public class Logger : UdonSharpBehaviour
 	{
         const string log = "OpenFlightLogObject";
-        const int maxLogLength = 30;
+        const int maxLogLength = 50;
 		void Start()
 		{
             Log("Logging started", this);
