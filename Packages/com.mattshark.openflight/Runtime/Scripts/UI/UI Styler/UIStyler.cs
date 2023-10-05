@@ -4,9 +4,9 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using VRC.SDK3.Components;
-using UnityEditor.Callbacks;
 
 #if UNITY_EDITOR
+using UnityEditor.Callbacks;
 using UnityEditor;
 using UdonSharpEditor;
 #endif
