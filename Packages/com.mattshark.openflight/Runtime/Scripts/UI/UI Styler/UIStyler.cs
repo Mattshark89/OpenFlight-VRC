@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using VRC.SDK3.Components;
+using UnityEditor.Callbacks;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -12,40 +13,40 @@ using UdonSharpEditor;
 
 namespace OpenFlightVRC.UI
 {
-	[AddComponentMenu("OpenFlight/UI/Styler")]
-	internal class UIStyler : MonoBehaviour, VRC.SDKBase.IEditorOnly
-	{
+    [AddComponentMenu("OpenFlight/UI/Styler")]
+    internal class UIStyler : MonoBehaviour, VRC.SDKBase.IEditorOnly
+    {
 #pragma warning disable CS0649
-		public UIStyle uiStyle;
+        public UIStyle uiStyle;
 #pragma warning restore CS0649
 
-		private void Reset()
-		{
-			hideFlags = HideFlags.DontSaveInBuild;
-		}
+        private void Reset()
+        {
+            hideFlags = HideFlags.DontSaveInBuild;
+        }
 
-		public static Dictionary<UIStyleMarkup.StyleClass, FieldInfo> GetStyleFieldMap()
-		{
-			Dictionary<UIStyleMarkup.StyleClass, FieldInfo> fieldLookup = new Dictionary<UIStyleMarkup.StyleClass, FieldInfo>();
+        public static Dictionary<UIStyleMarkup.StyleClass, FieldInfo> GetStyleFieldMap()
+        {
+            Dictionary<UIStyleMarkup.StyleClass, FieldInfo> fieldLookup = new Dictionary<UIStyleMarkup.StyleClass, FieldInfo>();
 
-			foreach (FieldInfo field in typeof(UIStyle).GetFields(BindingFlags.Public | BindingFlags.Instance))
-			{
-				if (field.FieldType == typeof(Color))
-				{
-					StyleMarkupLinkAttribute markupAttr = field.GetCustomAttribute<StyleMarkupLinkAttribute>();
+            foreach (FieldInfo field in typeof(UIStyle).GetFields(BindingFlags.Public | BindingFlags.Instance))
+            {
+                if (field.FieldType == typeof(Color))
+                {
+                    StyleMarkupLinkAttribute markupAttr = field.GetCustomAttribute<StyleMarkupLinkAttribute>();
 
-					if (markupAttr != null)
-					{
-						fieldLookup.Add(markupAttr.Class, field);
-					}
-				}
-			}
+                    if (markupAttr != null)
+                    {
+                        fieldLookup.Add(markupAttr.Class, field);
+                    }
+                }
+            }
 
-			return fieldLookup;
-		}
+            return fieldLookup;
+        }
 
 #if UNITY_EDITOR
-    private Color GetColor(FieldInfo field)
+        private Color GetColor(FieldInfo field)
         {
             return (Color)field.GetValue(uiStyle);
         }
@@ -214,8 +215,26 @@ namespace OpenFlightVRC.UI
             if (PrefabUtility.IsPartOfPrefabInstance(comp))
                 PrefabUtility.RecordPrefabInstancePropertyModifications(comp);
         }
+
+        //This is setup like this because doing so avoids a massive ammount of warning spam that occurs upon joining a world otherwise
+        //TLDR: This removes the styling components completely from the build
+        [PostProcessSceneAttribute]
+        public static void OnPostProcessScene()
+        {
+            //find all style markup components
+            UIStyleMarkup[] markups = GameObject.FindObjectsOfType<UIStyleMarkup>();
+
+            //destroy the markup component itself
+            foreach (UIStyleMarkup markup in markups)
+            {
+                Object.DestroyImmediate(markup);
+            }
+
+            //destroy self component
+            Object.DestroyImmediate(GameObject.FindObjectOfType<UIStyler>());
+        }
 #endif
-	}
+    }
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(UIStyler))]
@@ -237,8 +256,8 @@ namespace OpenFlightVRC.UI
         private void OnEnable()
         {
             colorStyleProperty = serializedObject.FindProperty(nameof(UIStyler.uiStyle));
-            
-	#region Style Dropdown Initialization
+
+            #region Style Dropdown Initialization
             //attempt to find all styles relating to the package that this script is in
             styles = new List<UIStyle>();
             string[] guids = AssetDatabase.FindAssets("t:UIStyle");
@@ -263,14 +282,16 @@ namespace OpenFlightVRC.UI
             UIStyler styler = (target as UIStyler);
             for (int i = 0; i < styleNames.Length; i++)
             {
-                try {
+                try
+                {
                     if (styleNames[i] == styler.uiStyle.name)
                     {
                         currentStyleDropdownIndex = i;
                         break;
                     }
                 }
-                catch (UnityEngine.MissingReferenceException) {
+                catch (UnityEngine.MissingReferenceException)
+                {
                     Debug.LogWarning("Previous style was deleted. Style has been set randomly.");
                     EditorUtility.DisplayDialog("Style Deleted", "The style that was previously set has been deleted. A random style has been set instead.", "OK");
                     //pick a random number
@@ -285,7 +306,7 @@ namespace OpenFlightVRC.UI
                     break;
                 }
             }
-	#endregion
+            #endregion
         }
 
         public override void OnInspectorGUI()
@@ -339,7 +360,8 @@ namespace OpenFlightVRC.UI
                     //get every child transform
                     RectTransform[] children = (target as UIStyler).GetComponentsInChildren<RectTransform>(true);
 
-                    try {
+                    try
+                    {
                         //start asset editing
                         AssetDatabase.StartAssetEditing();
 
@@ -350,7 +372,8 @@ namespace OpenFlightVRC.UI
                             PrefabUtility.RecordPrefabInstancePropertyModifications(child);
                         }
                     }
-                    finally {
+                    finally
+                    {
                         //stop asset editing
                         AssetDatabase.StopAssetEditing();
                     }
@@ -414,7 +437,7 @@ namespace OpenFlightVRC.UI
 
                 styleObj.ApplyModifiedProperties();
 
-	#region Unused Properties Foldout
+                #region Unused Properties Foldout
                 //display unused properties in a foldout
                 if (unusedProperties.Length > 0)
                 {
@@ -433,7 +456,7 @@ namespace OpenFlightVRC.UI
                         EditorGUI.indentLevel--;
                     }
                 }
-	#endregion
+                #endregion
 
                 if (EditorGUI.EndChangeCheck())
                     (target as UIStyler).ApplyStyle();
