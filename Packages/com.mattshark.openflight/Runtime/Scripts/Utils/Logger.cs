@@ -41,7 +41,8 @@ namespace OpenFlightVRC
 
             if (logObject == null)
             {
-                Debug.LogWarning("Could not find log object!");
+                //Commented out as it will cause issues with non-tablet setups
+                //Debug.LogWarning("Could not find log object!");
                 return;
             }
 
