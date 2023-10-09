@@ -8,6 +8,7 @@ using TMPro;
 
 namespace OpenFlightVRC.Net
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class TemporaryQuery : UdonSharpBehaviour
     {
         public CyanPlayerObjectAssigner Assigner;

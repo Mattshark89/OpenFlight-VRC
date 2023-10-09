@@ -30,6 +30,7 @@ public class OpenFlightScenePostProcessor {
 }
 #endif
 
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class OpenFlight : UdonSharpBehaviour
 	{
 		//this removes any override that the editor might have set through the inspector ([HideInInspector] does NOT do that)

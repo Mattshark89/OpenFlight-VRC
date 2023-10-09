@@ -9,6 +9,7 @@ using OpenFlightVRC.UI;
 // This script is used to initialize the local player's store so it has the correct references
 namespace OpenFlightVRC.Net
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class LocalStoreInitializer : UdonSharpBehaviour
     {
         public CyanPlayerObjectAssigner Assigner;

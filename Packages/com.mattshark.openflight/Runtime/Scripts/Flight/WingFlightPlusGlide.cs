@@ -34,6 +34,7 @@ public class WingFlightPlusGlideEditor : Editor
 }
 #endif
 
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class WingFlightPlusGlide : UdonSharpBehaviour
 	{
 		[Header("Basic Settings")]

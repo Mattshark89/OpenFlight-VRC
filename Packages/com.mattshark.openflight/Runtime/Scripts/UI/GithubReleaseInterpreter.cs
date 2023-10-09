@@ -9,6 +9,7 @@ using VRC.SDK3.Data;
 
 namespace OpenFlightVRC
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class GithubReleaseInterpreter : UdonSharpBehaviour
     {
         private VRCUrl URL = new VRCUrl("https://api.github.com/repos/Mattshark89/OpenFlight-VRC/releases?per_page=20");

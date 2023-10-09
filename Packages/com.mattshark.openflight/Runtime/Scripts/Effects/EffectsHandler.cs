@@ -10,6 +10,7 @@ using VRC.Udon;
 // allow them to be disabled in the settings
 namespace OpenFlightVRC.Effects
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class EffectsHandler : UdonSharpBehaviour
     {
         public PlayerInfoStore _playerInfoStore;

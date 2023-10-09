@@ -16,6 +16,7 @@ namespace OpenFlightVRC
     /// <summary>
     /// A simple logger that prefixes all messages with [OpenFlight]
     /// </summary>
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class Logger : UdonSharpBehaviour
 	{
         const string log = "OpenFlightLogObject";

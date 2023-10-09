@@ -6,6 +6,7 @@ using VRC.Udon;
 
 namespace OpenFlightVRC
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class SaferRespawn : UdonSharpBehaviour
 	{
 		public override void OnPlayerRespawn(VRCPlayerApi player)

@@ -5,6 +5,7 @@ using VRC.Udon;
 
 namespace OpenFlightVRC
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class ToggleWingedFlight : UdonSharpBehaviour
 	{
 		// Settings:

@@ -6,6 +6,7 @@ using TMPro;
 
 namespace OpenFlightVRC.UI
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class VariableLabel : UdonSharpBehaviour
 	{
 		public UdonBehaviour target;

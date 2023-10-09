@@ -11,6 +11,7 @@ feel free to add events here if you need to call them from the tablet.
 
 namespace OpenFlightVRC.UI
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class ProxyUdonScript : UdonSharpBehaviour
 	{
 		/// <summary>

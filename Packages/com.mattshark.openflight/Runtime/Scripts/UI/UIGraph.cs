@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 namespace OpenFlightVRC.UI
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class UIGraph : UdonSharpBehaviour
 	{
 		AnimationCurve curve; // The curve to graph

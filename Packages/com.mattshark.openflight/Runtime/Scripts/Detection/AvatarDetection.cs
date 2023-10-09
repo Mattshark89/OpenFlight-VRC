@@ -11,6 +11,7 @@ using VRC.SDK3.Data;
 
 namespace OpenFlightVRC
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class AvatarDetection : UdonSharpBehaviour
 	{
 		VRCPlayerApi localPlayer = null;

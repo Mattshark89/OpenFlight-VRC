@@ -7,6 +7,7 @@ using TMPro;
 
 namespace OpenFlightVRC.UI
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class OpenFlightTablet : UdonSharpBehaviour
 	{
 		VRCPlayerApi localPlayer = null;

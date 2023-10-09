@@ -9,6 +9,7 @@ using System;
 
 namespace OpenFlightVRC
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class AvatarListLoader : UdonSharpBehaviour
 	{
 		public VRCUrl URL = new VRCUrl("https://mattshark89.github.io/OpenFlight-VRC/data.json");
