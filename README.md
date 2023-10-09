@@ -8,6 +8,7 @@ Note that this is a World/Udon project. This system cannot be installed to an av
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/unique_hash_count)  
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/todo_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/current_release_downloads)
+![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/lifetime_release_downloads)
 
 ### Docs Page
 Check here for the latest docs: https://mattshark89.github.io/OpenFlight-VRC/docs/#/

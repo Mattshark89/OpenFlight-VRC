@@ -9,6 +9,7 @@ Welcome to the documentation for OpenFlight! Read the [Quick Start Guide](QUICKS
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/unique_hash_count)  
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/todo_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/current_release_downloads)
+![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/lifetime_release_downloads)
 
 ## What is OpenFlight?
 OpenFlight is a flight system designed for VRChat worlds, allowing users to fly around just by flapping their hands! Alongside that, the system is setup to automatically detect the avatar you are wearing, allowing for the automatic enabling of flight when you put on an avatar wing arm attached wings. Of course, if your avatar isnt supported, or even just doesnt have wings at all, you can still force the flight system on to enjoy it.
