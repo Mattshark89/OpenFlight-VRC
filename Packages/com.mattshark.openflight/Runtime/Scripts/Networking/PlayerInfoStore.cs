@@ -12,7 +12,7 @@ namespace OpenFlightVRC.Net
         public VRCPlayerApi Owner;
 
         [UdonSynced]
-        public float WingtipOffset = 5;
+        public float WingtipOffset = 0;
         [UdonSynced]
         public bool isFlying = false;
         [UdonSynced]
