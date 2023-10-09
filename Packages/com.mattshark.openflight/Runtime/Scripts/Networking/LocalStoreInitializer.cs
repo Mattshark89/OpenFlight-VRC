@@ -5,6 +5,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 using Cyan.PlayerObjectPool;
 
+// This script is used to initialize the local player's store so it has the correct references
 namespace OpenFlightVRC.Net
 {
     public class LocalStoreInitializer : UdonSharpBehaviour
