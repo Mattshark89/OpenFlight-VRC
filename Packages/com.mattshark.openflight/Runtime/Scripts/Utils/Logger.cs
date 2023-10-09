@@ -118,8 +118,9 @@ namespace OpenFlightVRC
         /// <returns>The formatted text</returns>
         private static string Format(string text, UdonSharpBehaviour self, bool includePrefix = true)
         {
-            //return Prefix() + " [" + ColorizeScript(self) + "] " + text;
-            return (includePrefix ? Prefix() + " " : "") + ColorizeScript(self) + " " + text;
+            string prefix = (includePrefix ? Prefix() + " " : "");
+            return prefix + "[" + ColorizeScript(self) + "] " + text;
+            //return (includePrefix ? Prefix() + " " : "") + ColorizeScript(self) + " " + text;
         }
 
         /// <summary>
