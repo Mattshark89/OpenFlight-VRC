@@ -12,11 +12,33 @@ namespace OpenFlightVRC.Net
 {
     public class PlayerStatusCollector : UdonSharpBehaviour
     {
-        /// <summary> The ID of the player that owns this script. This gets set statically when the world is built </summary>
-        public int ID;
+        public bool readyForUse = false;
         void Start()
         {
-            Logger.Log("PlayerStatusCollector started, ID: " + ID, this);
+            //Logger.Log("PlayerStatusCollector started, ID: " + ID, this);
+        }
+
+        void Update()
+        {
+
+        }
+
+        public void OnOwnershipTransferred(VRCPlayerApi player)
+        {
+            Logger.Log("Ownership transferred to " + Networking.GetOwner(gameObject).displayName, this);
+            GainOwner(player);
+        }
+
+        public void GainOwner(VRCPlayerApi player)
+        {
+            Logger.Log("Gained owner", this);
+            readyForUse = true;
+        }
+
+        public void LoseOwner()
+        {
+            Logger.Log("Lost owner", this);
+            readyForUse = false;
         }
     }
 }
