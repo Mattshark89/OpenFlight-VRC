@@ -11,6 +11,7 @@ namespace OpenFlightVRC.UI
     {
         public AvatarListLoader AvatarListLoader;
         public bool contributerInWorld = false;
+        public bool localPlayerIsContributer = false;
         /// <summary>
         /// A formatted list of all the openflight contributers
         /// </summary>
@@ -68,6 +69,15 @@ namespace OpenFlightVRC.UI
             //populate our player list
             VRCPlayerApi[] players = new VRCPlayerApi[VRCPlayerApi.GetPlayerCount()];
             VRCPlayerApi.GetPlayers(players);
+
+            //Quickly check if the local player is a contributer
+            if (contributers.Contains(Networking.LocalPlayer.displayName))
+            {
+                localPlayerIsContributer = true;
+                Logger.Log("Local player is a contributer!", this);
+                contributerInWorld = true;
+                return;
+            }
 
             //loop through each user in the instance and check if they are a contributer
             foreach (VRCPlayerApi player in players)

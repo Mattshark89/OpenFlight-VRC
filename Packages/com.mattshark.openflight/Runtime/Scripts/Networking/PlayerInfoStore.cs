@@ -1,4 +1,5 @@
 ﻿
+using OpenFlightVRC.UI;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
@@ -23,11 +24,14 @@ namespace OpenFlightVRC.Net
         public bool isFlapping = false;
         [UdonSynced]
         public string flightMode = "Auto";
+        [UdonSynced]
+        public bool isContributer = false;
 
         [Header("References set by Local Store Initializer")]
         public AvatarDetection _avatarDetection;
         public WingFlightPlusGlide _wingFlightPlusGlide;
         public OpenFlight _openFlight;
+        public ContributerDetection _contributerDetection;
 
         void Start()
         {
@@ -51,6 +55,7 @@ namespace OpenFlightVRC.Net
                 isGliding = _wingFlightPlusGlide.isGliding;
                 isFlapping = _wingFlightPlusGlide.isFlapping;
                 flightMode = _openFlight.flightMode;
+                isContributer = _contributerDetection.localPlayerIsContributer;
             }
         }
 

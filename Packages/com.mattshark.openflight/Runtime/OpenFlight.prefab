@@ -56,6 +56,7 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 3806941778669093534}
   AvatarListLoader: {fileID: 4190905665610937113}
   contributerInWorld: 0
+  localPlayerIsContributer: 0
   contributersString: 
 --- !u!114 &3806941778669093534
 MonoBehaviour:
@@ -3502,6 +3503,10 @@ PrefabInstance:
       propertyPath: _wingFlightPlusGlide
       value: 
       objectReference: {fileID: 4190905666689760639}
+    - target: {fileID: 1302261693, guid: c6e19cc039f204e4bbc4bce2efa43771, type: 3}
+      propertyPath: _contributerDetection
+      value: 
+      objectReference: {fileID: 2986383786320253808}
     - target: {fileID: 1302261693, guid: c6e19cc039f204e4bbc4bce2efa43771, type: 3}
       propertyPath: serializationData.Prefab
       value: 

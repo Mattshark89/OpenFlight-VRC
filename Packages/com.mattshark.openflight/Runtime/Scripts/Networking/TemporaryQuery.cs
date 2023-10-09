@@ -52,6 +52,7 @@ namespace OpenFlightVRC.Net
                 "isFlapping: " + store.isFlapping + "\n" +
                 "flightMode: " + store.flightMode + "\n" +
                 "d_spinetochest: " + store.d_spinetochest + "\n" +
+                "isContributer: " + store.isContributer + "\n" +
                 "-------";
         }
     }
