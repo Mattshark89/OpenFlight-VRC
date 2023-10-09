@@ -43,6 +43,22 @@ jobs:
       - name: Current Release Downloads #use this api endpoint to get the latest release https://api.github.com/repos/Mattshark89/OpenFlight-VRC/releases?per_page=1
         id: current_release_downloads
         run: echo value=$(echo $(curl -s https://api.github.com/repos/Mattshark89/OpenFlight-VRC/releases?per_page=1) | jq '.[0].assets[] | select(.name | endswith(".zip")) | .download_count') >> $GITHUB_OUTPUT
+      - name: Lifetime Release Downloads
+        id: lifetime_release_downloads
+        run: |
+          json=$(echo $(curl -s https://api.github.com/repos/Mattshark89/OpenFlight-VRC/releases))
+          totalDownloads=0
+          for row in $(echo "${json}" | jq -r '.[] | @base64'); do
+              _jq() {
+              echo ${row} | base64 --decode | jq -r ${1}
+              }
+            assets=$(_jq '.assets[]')
+            downloads=$(echo $assets | jq 'select(.name | endswith(".zip")) | .download_count')
+            totalDownloads=$(($downloads + $totalDownloads))
+          done
+          echo value=$totalDownloads >> $GITHUB_OUTPUT
+
+        
 
       #Put badge creation here
       - name: Create Unique Avatar Count Badge
@@ -83,5 +99,13 @@ jobs:
           NAME: current_release_downloads
           LABEL: 'Current Release Downloads'
           STATUS: ${{ steps.current_release_downloads.outputs.value }}
+          COLOR: green
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Lifetime Release Downloads Badge
+        uses: RubbaBoy/BYOB@v1.3.0
+        with:
+          NAME: lifetime_release_downloads
+          LABEL: 'LifeTime Release Downloads'
+          STATUS: ${{ steps.lifetime_release_downloads.outputs.value }}
           COLOR: green
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
