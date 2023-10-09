@@ -16,28 +16,28 @@ namespace OpenFlightVRC
 		VRCPlayerApi localPlayer = null;
 		public string debugInfo = ""; //Contains all the debug info about avatar detection
 
-  /*
-  Spine to Chest: XXX
-  Head to Neck: XXX
-  Chest to Neck: XXX
-  Left Shoulder to Left Upper Arm: XXX
-  Left Upper Arm to Left Lower Arm: XXX
-  Left Lower Arm to Left Hand: XXX
-  Combined Bone Info: XXX
-  Hash: XXX
-  Allowed to Fly: XXX
-  Detected Avatar Info:
-  Name: XXX
-  Creator: XXX
-  Introducer: XXX
-  Weight: XXX
-  Wingtip Offset: XXX
-  */
+        /*
+        Spine to Chest: XXX
+        Head to Neck: XXX
+        Chest to Neck: XXX
+        Left Shoulder to Left Upper Arm: XXX
+        Left Upper Arm to Left Lower Arm: XXX
+        Left Lower Arm to Left Hand: XXX
+        Combined Bone Info: XXX
+        Hash: XXX
+        Allowed to Fly: XXX
+        Detected Avatar Info:
+        Name: XXX
+        Creator: XXX
+        Introducer: XXX
+        Weight: XXX
+        Wingtip Offset: XXX
+        */
 
-		double d_spinetochest = 0; //used to calculate the avatar scale
+        public double d_spinetochest = 0; //used to calculate the avatar scale
 
-		//external JSON list stuff
-		public AvatarListLoader JSONLoader; //this is the script that loads the JSON list
+        //external JSON list stuff
+        public AvatarListLoader JSONLoader; //this is the script that loads the JSON list
 		public OpenFlight OpenFlight;
 		public WingFlightPlusGlide WingFlightPlusGlide;
 

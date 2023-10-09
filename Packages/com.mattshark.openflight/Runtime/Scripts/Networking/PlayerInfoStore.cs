@@ -14,6 +14,8 @@ namespace OpenFlightVRC.Net
         [UdonSynced]
         public float WingtipOffset = 0;
         [UdonSynced]
+        public double d_spinetochest = 0;
+        [UdonSynced]
         public bool isFlying = false;
         [UdonSynced]
         public bool isGliding = false;
@@ -22,9 +24,11 @@ namespace OpenFlightVRC.Net
         [UdonSynced]
         public string flightMode = "Auto";
 
+        [Header("References set by Local Store Initializer")]
         public AvatarDetection _avatarDetection;
         public WingFlightPlusGlide _wingFlightPlusGlide;
         public OpenFlight _openFlight;
+
         void Start()
         {
 
@@ -42,6 +46,7 @@ namespace OpenFlightVRC.Net
             if (Networking.LocalPlayer == Owner)
             {
                 WingtipOffset = _avatarDetection.WingtipOffset;
+                d_spinetochest = _avatarDetection.d_spinetochest;
                 isFlying = _wingFlightPlusGlide.isFlying;
                 isGliding = _wingFlightPlusGlide.isGliding;
                 isFlapping = _wingFlightPlusGlide.isFlapping;
