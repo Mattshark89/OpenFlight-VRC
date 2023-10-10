@@ -48,10 +48,6 @@ namespace OpenFlightVRC
 		public bool allowedToFly = false; //this is used to tell openflight if the avatar is allowed to fly
 		public bool skipLoadingAvatar = true; //this is used to skip the loading avatar, as it is not a real avatar
 
-		//gizmo related stuff
-		public bool showWingTipGizmo = false;
-		public GameObject wingtipGizmo; //this shows the wingtip offset as a sphere in game. Only works in VR due to implementation
-
 		//information about the avatar that has been detected
 		public string hashV1 = "0";
 		public string hashV2 = "0";
@@ -76,12 +72,6 @@ namespace OpenFlightVRC
 
             JSONLoader.LoadURL(); //tell the JSON loader to try to load the JSON list from the github
         }
-
-		void Update()
-		{
-			//gizmo stuff
-			VisualizeWingTips();
-		}
 
         public override void OnAvatarChanged(VRCPlayerApi player)
 		{
@@ -178,11 +168,6 @@ namespace OpenFlightVRC
 				+ WingtipOffset;
 		}
 
-		int GetBoneDistance(Vector3 bone1, Vector3 bone2, int scalingFactor)
-		{
-			return Mathf.FloorToInt(Vector3.Distance(bone1, bone2) / (float)d_spinetochest * scalingFactor);
-		}
-
 		bool IsAvatarAllowedToFly(string in_hashV1, string in_hashV2)
 		{
 			DataDictionary bases = json["Bases"].DataDictionary;
@@ -261,25 +246,28 @@ namespace OpenFlightVRC
 			int d_leftupperarmtoleftlowerarm;
 			int d_leftlowertolefthand;
 			string boneInfo;
+            float newFactor;
 			switch (version)
 			{
 				case 1:
 					scalingFactor = 1000;
-					d_necktohead = GetBoneDistance(bonePositions[2], bonePositions[1], scalingFactor);
-					d_chesttoneck = GetBoneDistance(bonePositions[0], bonePositions[2], scalingFactor);
-					d_leftshouldertoleftupperarm = GetBoneDistance(bonePositions[3], bonePositions[4], scalingFactor);
-					d_leftupperarmtoleftlowerarm = GetBoneDistance(bonePositions[4], bonePositions[5], scalingFactor);
-					d_leftlowertolefthand = GetBoneDistance(bonePositions[5], bonePositions[6], scalingFactor);
+                    newFactor = (float)d_spinetochest * scalingFactor;
+                    d_necktohead = Util.GetBoneDistance(bonePositions[2], bonePositions[1], newFactor);
+                    d_chesttoneck = Util.GetBoneDistance(bonePositions[0], bonePositions[2], newFactor);
+                    d_leftshouldertoleftupperarm = Util.GetBoneDistance(bonePositions[3], bonePositions[4], newFactor);
+                    d_leftupperarmtoleftlowerarm = Util.GetBoneDistance(bonePositions[4], bonePositions[5], newFactor);
+                    d_leftlowertolefthand = Util.GetBoneDistance(bonePositions[5], bonePositions[6], newFactor);
 
 					boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
 					return boneInfo.GetHashCode().ToString();
 				case 2:
 					scalingFactor = 100;
-					d_necktohead = GetBoneDistance(bonePositions[2], bonePositions[1], scalingFactor);
-					d_chesttoneck = GetBoneDistance(bonePositions[0], bonePositions[2], scalingFactor);
-					d_leftshouldertoleftupperarm = GetBoneDistance(bonePositions[3], bonePositions[4], scalingFactor);
-					d_leftupperarmtoleftlowerarm = GetBoneDistance(bonePositions[4], bonePositions[5], scalingFactor);
-					d_leftlowertolefthand = GetBoneDistance(bonePositions[5], bonePositions[6], scalingFactor);
+                    newFactor = (float)d_spinetochest * scalingFactor;
+                    d_necktohead = Util.GetBoneDistance(bonePositions[2], bonePositions[1], newFactor);
+                    d_chesttoneck = Util.GetBoneDistance(bonePositions[0], bonePositions[2], newFactor);
+                    d_leftshouldertoleftupperarm = Util.GetBoneDistance(bonePositions[3], bonePositions[4], newFactor);
+                    d_leftupperarmtoleftlowerarm = Util.GetBoneDistance(bonePositions[4], bonePositions[5], newFactor);
+                    d_leftlowertolefthand = Util.GetBoneDistance(bonePositions[5], bonePositions[6], newFactor);
 
 					boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
 					return boneInfo.GetHashCode().ToString() + "v2";
@@ -287,23 +275,6 @@ namespace OpenFlightVRC
                     Logger.LogError("Invalid Hash Version Sent", this);
 					return "0";
 			}
-		}
-
-		//TODO: Clean up this code so it isnt so segmented
-		void VisualizeWingTips()
-		{
-			//reset the wingtip gizmo rotation
-			wingtipGizmo.transform.rotation = Quaternion.identity;
-
-			//move a gameobject to the visualize the wingtips
-			Vector3 rightHandPosition = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
-			Quaternion rightHandRotation = localPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
-
-			//calculate the wingtip position by adding the offset to the right hand position in the direction of the right hand rotation
-			Vector3 WingTipPosition = rightHandPosition + (rightHandRotation * Vector3.forward * new Vector3(0, 0, (float)WingtipOffset * (float)d_spinetochest).z);
-
-			wingtipGizmo.transform.position = WingTipPosition;
-			wingtipGizmo.transform.RotateAround(rightHandPosition, rightHandRotation * Vector3.up, 70);
 		}
 
 		//this can be used for other scripts to check if the avatar is allowed to fly again

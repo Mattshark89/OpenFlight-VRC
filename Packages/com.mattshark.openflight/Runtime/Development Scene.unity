@@ -697,12 +697,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1387480281}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &272027971 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7515417092449959591, guid: 83a1dcf8462378640b7615b3011c0c6f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1387480281}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &293610865
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7613,6 +7607,11 @@ PrefabInstance:
       propertyPath: m_fontColor.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3923155326339433850, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
+      propertyPath: _syncMethod
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4001134077778957385, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
       propertyPath: _syncMethod
@@ -7905,6 +7904,12 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 5410975419091710309, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
+    - target: {fileID: 5476738284662189840, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 5476738284662189840, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
     - target: {fileID: 5492164451974503695, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
@@ -10016,6 +10021,12 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8527374230993517475, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 8527374230993517475, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
     - target: {fileID: 8539953010403203967, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
       propertyPath: m_Color.b
@@ -13378,7 +13389,7 @@ PrefabInstance:
         type: 3}
       propertyPath: NetworkIDs.Array.data[37].gameObject
       value: 
-      objectReference: {fileID: 272027971}
+      objectReference: {fileID: 0}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.data[38].gameObject

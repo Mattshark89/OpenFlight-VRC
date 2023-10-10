@@ -10,10 +10,7 @@ namespace OpenFlightVRC.UI
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class OpenFlightTablet : UdonSharpBehaviour
 	{
-		VRCPlayerApi localPlayer = null;
-
-		[System.NonSerialized]
-		private float scalingOffset = 0.6183768f;
+        VRCPlayerApi localPlayer = null;
 		public int fadeDistance = 10;
 		public bool allowFade = true;
 		public GameObject[] objectsToHideOnFade;
@@ -98,55 +95,8 @@ namespace OpenFlightVRC.UI
 			if (player.isLocal)
 			{
                 Logger.Log("Player eye height changed, updating tablet scale", this);
-				UpdateTabletScale();
-			}
-		}
-
-        private void UpdateTabletScale()
-		{
-			//change the scale of the gameobject based on the players scale
-			//add up all of the bone distances from the foot to the head
-			Vector3 footR = localPlayer.GetBonePosition(HumanBodyBones.RightFoot);
-			Vector3 LowerLegR = localPlayer.GetBonePosition(HumanBodyBones.RightLowerLeg);
-			Vector3 UpperLegR = localPlayer.GetBonePosition(HumanBodyBones.RightUpperLeg);
-			Vector3 Hips = localPlayer.GetBonePosition(HumanBodyBones.Hips);
-			Vector3 spine = localPlayer.GetBonePosition(HumanBodyBones.Spine);
-			Vector3 chest = localPlayer.GetBonePosition(HumanBodyBones.Chest);
-			Vector3 Neck = localPlayer.GetBonePosition(HumanBodyBones.Neck);
-			Vector3 Head = localPlayer.GetBonePosition(HumanBodyBones.Head);
-			float PlayerScale = TotalVectorDistance(new Vector3[] { footR, LowerLegR, UpperLegR, Hips, spine, chest, Neck, Head });
-
-			//if the player scale is 0, that means the avatar uses a generic rig, placing all the bone transforms at origin
-			//set the scale to 1 to make sure the tablet is visible anyway
-			if (PlayerScale == 0)
-			{
-				PlayerScale = 1;
-			}
-
-			//if the player is too small, set the scale to 1
-			PlayerScale = Mathf.Clamp(PlayerScale, 0.1f, float.MaxValue);
-
-			//set this gameobjects scale to the players scale
-			transform.localScale = new Vector3((float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset, (float)PlayerScale * scalingOffset);
-		}
-
-        /// <summary>
-        /// Helper function to get the total distance of a vector array.
-        /// this adds up all of the distances between each vector in the array in order, then returns the total distance
-        /// </summary>
-        /// <param name="vectors">The vector array to get the total distance of</param>
-        /// <returns>The total distance of the vector array</returns>
-        private float TotalVectorDistance(Vector3[] vectors)
-		{
-			float totalDistance = 0;
-			for (int i = 0; i < vectors.Length; i++)
-			{
-				if (i != 0)
-				{
-					totalDistance += Vector3.Distance(vectors[i], vectors[i - 1]);
-				}
-			}
-			return totalDistance;
+                transform.localScale = new Vector3(Util.ScaleModifier(), Util.ScaleModifier(), Util.ScaleModifier());
+            }
 		}
 
 		/// <summary>

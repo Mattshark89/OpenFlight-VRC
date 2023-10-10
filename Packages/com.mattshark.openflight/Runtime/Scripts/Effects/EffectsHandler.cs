@@ -79,24 +79,14 @@ namespace OpenFlightVRC.Effects
                 StartPlaying(LeftWingTrail);
                 StartPlaying(RightWingTrail);
 
-                SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject);
-                SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject);
+                Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject, playerInfoStore.WingtipOffset, playerInfoStore.d_spinetochest);
+                Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, playerInfoStore.WingtipOffset, playerInfoStore.d_spinetochest);
             }
             else
             {
                 LeftWingTrail.Stop();
                 RightWingTrail.Stop();
             }
-        }
-
-        private void SetWingtipTransform(VRCPlayerApi.TrackingData data, GameObject wingtip)
-        {
-            Vector3 position = data.position;
-            Quaternion rotation = data.rotation;
-
-            Vector3 WingTipPosition = position + (rotation * new Vector3(0, 0, (float)playerInfoStore.WingtipOffset * (float)playerInfoStore.d_spinetochest));
-
-            wingtip.transform.position = WingTipPosition;
         }
 
         /// <summary>
