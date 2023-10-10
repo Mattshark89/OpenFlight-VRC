@@ -19,6 +19,21 @@ namespace OpenFlightVRC.Net
         public OpenFlight openFlight;
         public ContributerDetection contributerDetection;
 
+        public bool SFX = true;
+        public bool VFX = true;
+
+        private EffectsHandler[] EffectHandlers = new EffectsHandler[0];
+
+        void Update()
+        {
+            //set the variables of each effect handler
+            foreach (EffectsHandler handler in EffectHandlers)
+            {
+                handler.SFX = SFX;
+                handler.VFX = VFX;
+            }
+        }
+
         public void _OnLocalPlayerAssigned()
         {
             //get the local player's store
@@ -31,6 +46,24 @@ namespace OpenFlightVRC.Net
             store.wingFlightPlusGlide = wingFlightPlusGlide;
             store.openFlight = openFlight;
             store.contributerDetection = contributerDetection;
+
+            #region Effects Handler Array Initialization
+            //get every pooled udon object
+            Component[] behaviours = Assigner.pooledUdon;
+
+            //init the effect handlers array
+            EffectHandlers = new EffectsHandler[behaviours.Length];
+
+            //loop through each one
+            foreach (Component b in behaviours)
+            {
+                //get effect handler underneath them
+                EffectsHandler handler = b.GetComponentInChildren<EffectsHandler>();
+
+                //add it to the array
+                EffectHandlers[System.Array.IndexOf(behaviours, b)] = handler;
+            }
+            #endregion
         }
     }
 }

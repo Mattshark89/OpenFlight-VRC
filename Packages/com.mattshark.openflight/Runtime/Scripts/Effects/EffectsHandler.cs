@@ -1,4 +1,5 @@
 ﻿
+using System;
 using OpenFlightVRC.Net;
 using UdonSharp;
 using UnityEngine;
@@ -21,16 +22,19 @@ namespace OpenFlightVRC.Effects
         public ParticleSystem RightWingTrail;
 
         [Header("Sounds")]
-        public bool Sounds = true;
+        public bool SFX = true;
         public AudioSource FlapSound;
-        public AudioSource GlideSound;
 
+        public AudioSource GlideSound;
+        public float minGlidePitch = 0.5f;
+        public float maxGlidePitch = 1.5f;
+        public float minGlideVelocity = 5f;
+        public float maxGlideVelocity = 20f;
+
+        //TODO: Make this not so fucking horrible. This organizationally and likely performance wise is HORRIBLE and I hate looking at it like this
+        //Ideally, we should switch this entire system over to some form of event based setup. Not sure if that is possible though
         void Update()
         {
-            //if every performance control is off just completely skip
-            if (!VFX && !Sounds)
-                return;
-
             //if we dont have a player then return
             if (playerInfoStore.Owner == null)
                 return;
@@ -38,35 +42,51 @@ namespace OpenFlightVRC.Effects
             //continually move ourselves to the player's position
             transform.position = playerInfoStore.Owner.GetPosition();
 
-            #region Gliding
-            //if gliding, play the trails
-            if (playerInfoStore.isGliding)
+            if (playerInfoStore.isFlapping && SFX)
             {
-                #region Trails
-                if (VFX)
+                StartPlaying(FlapSound);
+            }
+            else
+            {
+                FlapSound.Stop();
+            }
+
+            if (playerInfoStore.isGliding && SFX)
+            {
+                //check if the player is going fast enough for the gliding sound to play
+                float playerVelocity = playerInfoStore.Owner.GetVelocity().magnitude;
+
+                if (playerVelocity > minGlideVelocity)
                 {
-                    StartPlaying(LeftWingTrail);
-                    StartPlaying(RightWingTrail);
-
-                    SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject);
-                    SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject);
-                }
-                #endregion
-
-                #region Sounds
-                if (Sounds)
+                    //set the pitch of the glide sound based on the player's velocity
+                    float pitch = Mathf.Lerp(minGlidePitch, maxGlidePitch, Mathf.InverseLerp(minGlideVelocity, maxGlideVelocity, playerVelocity));
+                    GlideSound.pitch = pitch;
                     StartPlaying(GlideSound);
-                #endregion
+                }
+                else
+                {
+                    GlideSound.Stop();
+                }
+            }
+            else
+            {
+                GlideSound.Stop();
+            }
+
+            //if gliding, play the trails
+            if (playerInfoStore.isGliding && VFX)
+            {
+                StartPlaying(LeftWingTrail);
+                StartPlaying(RightWingTrail);
+
+                SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject);
+                SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject);
             }
             else
             {
                 LeftWingTrail.Stop();
                 RightWingTrail.Stop();
-
-                //TODO: Make the audio fade out instead of stopping
-                GlideSound.Stop();
             }
-            #endregion
         }
 
         private void SetWingtipTransform(VRCPlayerApi.TrackingData data, GameObject wingtip)
@@ -85,18 +105,25 @@ namespace OpenFlightVRC.Effects
         /// <param name="effect"></param>
         private void StartPlaying(Component effect)
         {
-            switch (effect)
+            Type type = effect.GetType();
+
+            if (type == typeof(ParticleSystem))
             {
-                case ParticleSystem particleSystem:
-                    if (!particleSystem.isPlaying)
-                        particleSystem.Play();
-                    break;
-                case AudioSource audioSource:
-                    if (!audioSource.isPlaying)
-                        audioSource.Play();
-                    break;
-                default:
-                    break;
+                ParticleSystem particleSystem = (ParticleSystem)effect;
+
+                if (!particleSystem.isPlaying)
+                {
+                    particleSystem.Play();
+                }
+            }
+            else if (type == typeof(AudioSource))
+            {
+                AudioSource audioSource = (AudioSource)effect;
+
+                if (!audioSource.isPlaying)
+                {
+                    audioSource.Play();
+                }
             }
         }
     }

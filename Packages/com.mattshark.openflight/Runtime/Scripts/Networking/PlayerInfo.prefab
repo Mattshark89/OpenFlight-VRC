@@ -234,9 +234,13 @@ MonoBehaviour:
   VFX: 1
   LeftWingTrail: {fileID: 4831116287091766749}
   RightWingTrail: {fileID: 108134917997573697}
-  Sounds: 1
+  SFX: 1
   FlapSound: {fileID: 8871352057497442225}
   GlideSound: {fileID: 20076026291783297}
+  minGlidePitch: 0.5
+  maxGlidePitch: 1.5
+  minGlideVelocity: 5
+  maxGlideVelocity: 20
 --- !u!114 &1200833383092323075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -352,6 +356,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2654302987735955342}
   - component: {fileID: 20076026291783297}
+  - component: {fileID: 1911302912793272285}
   m_Layer: 0
   m_Name: Glide
   m_TagString: Untagged
@@ -383,13 +388,13 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 8300000, guid: e5b06ce60743eed41b901a72199e66a6, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
-  Spatialize: 0
+  Spatialize: 1
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
@@ -429,7 +434,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -469,6 +474,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1911302912793272285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4046406449638771918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -617992517, guid: 661092b4961be7145bfbe56e1e62337b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gain: 10
+  Far: 40
+  Near: 0
+  VolumetricRadius: 0
+  EnableSpatialization: 1
+  UseAudioSourceVolumeCurve: 0
 --- !u!1 &5199516506176534230
 GameObject:
   m_ObjectHideFlags: 0
@@ -5233,6 +5256,7 @@ GameObject:
   m_Component:
   - component: {fileID: 47951345602719738}
   - component: {fileID: 8871352057497442225}
+  - component: {fileID: 5049167287257031496}
   m_Layer: 0
   m_Name: Flap
   m_TagString: Untagged
@@ -5264,13 +5288,13 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 8300000, guid: 1a42d31c87065da4dacb144ea8088a81, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
-  Spatialize: 0
+  Spatialize: 1
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
@@ -5310,7 +5334,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -5350,6 +5374,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5049167287257031496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5482292499643120073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -617992517, guid: 661092b4961be7145bfbe56e1e62337b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gain: 10
+  Far: 40
+  Near: 0
+  VolumetricRadius: 0
+  EnableSpatialization: 1
+  UseAudioSourceVolumeCurve: 0
 --- !u!1 &6254035354710672106
 GameObject:
   m_ObjectHideFlags: 0
