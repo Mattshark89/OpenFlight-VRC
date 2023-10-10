@@ -124,12 +124,18 @@ public class WingFlightPlusGlideEditor : Editor
 		private Quaternion playerRot;
 		private bool handsOut = false; // Are the controllers held outside of an imaginary cylinder?
 		private bool handsOpposite = false;
+
+        [HideInInspector]
         /// <summary> If true, the player is currently in the process of flapping. </summary>
         public bool isFlapping = false; // Doing the arm motion
+        [HideInInspector]
         /// <summary> If true, the player is currently flying. </summary>
         public bool isFlying = false; // Currently in the air after/during a flap
+        [HideInInspector]
         /// <summary> If true, the player is currently gliding. </summary>
         public bool isGliding = false; // Has arms out while flying
+
+
         private int cannotFlyTick = 0; // If >0, disables flight then decreases itself by one
         private int fallingTick = 0; // Increased by one every tick one's y velocity < 0
 		private float tmpFloat;

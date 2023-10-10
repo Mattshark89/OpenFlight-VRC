@@ -13,35 +13,60 @@ namespace OpenFlightVRC.Effects
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class EffectsHandler : UdonSharpBehaviour
     {
-        public PlayerInfoStore _playerInfoStore;
+        public PlayerInfoStore playerInfoStore;
 
+        [Header("VFX")]
+        public bool VFX = true;
         public ParticleSystem LeftWingTrail;
         public ParticleSystem RightWingTrail;
-        void Start()
-        {
 
-        }
+        [Header("Sounds")]
+        public bool Sounds = true;
+        public AudioSource FlapSound;
+        public AudioSource GlideSound;
 
         void Update()
         {
-            //if gliding, play the trails
-            if (_playerInfoStore.isGliding)
-            {
-                //if not playing
-                if (!LeftWingTrail.isPlaying)
-                {
-                    LeftWingTrail.Play();
-                    RightWingTrail.Play();
-                }
+            //if every performance control is off just completely skip
+            if (!VFX && !Sounds)
+                return;
 
-                SetWingtipTransform(_playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject);
-                SetWingtipTransform(_playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject);
+            //if we dont have a player then return
+            if (playerInfoStore.Owner == null)
+                return;
+
+            //continually move ourselves to the player's position
+            transform.position = playerInfoStore.Owner.GetPosition();
+
+            #region Gliding
+            //if gliding, play the trails
+            if (playerInfoStore.isGliding)
+            {
+                #region Trails
+                if (VFX)
+                {
+                    StartPlaying(LeftWingTrail);
+                    StartPlaying(RightWingTrail);
+
+                    SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject);
+                    SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject);
+                }
+                #endregion
+
+                #region Sounds
+                if (Sounds)
+                    StartPlaying(GlideSound);
+                #endregion
             }
             else
             {
                 LeftWingTrail.Stop();
                 RightWingTrail.Stop();
+
+                //TODO: Make the audio fade out instead of stopping
+                GlideSound.Stop();
             }
+            #endregion
         }
 
         private void SetWingtipTransform(VRCPlayerApi.TrackingData data, GameObject wingtip)
@@ -49,9 +74,30 @@ namespace OpenFlightVRC.Effects
             Vector3 position = data.position;
             Quaternion rotation = data.rotation;
 
-            Vector3 WingTipPosition = position + (rotation * new Vector3(0, 0, (float)_playerInfoStore.WingtipOffset * (float)_playerInfoStore.d_spinetochest));
+            Vector3 WingTipPosition = position + (rotation * new Vector3(0, 0, (float)playerInfoStore.WingtipOffset * (float)playerInfoStore.d_spinetochest));
 
             wingtip.transform.position = WingTipPosition;
+        }
+
+        /// <summary>
+        /// This can take in a particle system or audio source, and will start it playing if it is not already, otherwise it does nothing
+        /// </summary>
+        /// <param name="effect"></param>
+        private void StartPlaying(Component effect)
+        {
+            switch (effect)
+            {
+                case ParticleSystem particleSystem:
+                    if (!particleSystem.isPlaying)
+                        particleSystem.Play();
+                    break;
+                case AudioSource audioSource:
+                    if (!audioSource.isPlaying)
+                        audioSource.Play();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

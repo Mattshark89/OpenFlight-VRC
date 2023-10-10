@@ -27,11 +27,14 @@ namespace OpenFlightVRC.Net
         [UdonSynced]
         public bool isContributer = false;
 
-        [Header("References set by Local Store Initializer")]
-        public AvatarDetection _avatarDetection;
-        public WingFlightPlusGlide _wingFlightPlusGlide;
-        public OpenFlight _openFlight;
-        public ContributerDetection _contributerDetection;
+        [HideInInspector]
+        public AvatarDetection avatarDetection;
+        [HideInInspector]
+        public WingFlightPlusGlide wingFlightPlusGlide;
+        [HideInInspector]
+        public OpenFlight openFlight;
+        [HideInInspector]
+        public ContributerDetection contributerDetection;
 
         void Start()
         {
@@ -41,7 +44,7 @@ namespace OpenFlightVRC.Net
         void Update()
         {
             //check to make sure both scripts are available. If they arent, return
-            if (_avatarDetection == null || _wingFlightPlusGlide == null || _openFlight == null)
+            if (avatarDetection == null || wingFlightPlusGlide == null || openFlight == null)
             {
                 return;
             }
@@ -49,13 +52,13 @@ namespace OpenFlightVRC.Net
             //if the local player owns this object, update the values
             if (Networking.LocalPlayer == Owner)
             {
-                WingtipOffset = _avatarDetection.WingtipOffset;
-                d_spinetochest = _avatarDetection.d_spinetochest;
-                isFlying = _wingFlightPlusGlide.isFlying;
-                isGliding = _wingFlightPlusGlide.isGliding;
-                isFlapping = _wingFlightPlusGlide.isFlapping;
-                flightMode = _openFlight.flightMode;
-                isContributer = _contributerDetection.localPlayerIsContributer;
+                WingtipOffset = avatarDetection.WingtipOffset;
+                d_spinetochest = avatarDetection.d_spinetochest;
+                isFlying = wingFlightPlusGlide.isFlying;
+                isGliding = wingFlightPlusGlide.isGliding;
+                isFlapping = wingFlightPlusGlide.isFlapping;
+                flightMode = openFlight.flightMode;
+                isContributer = contributerDetection.localPlayerIsContributer;
             }
         }
 

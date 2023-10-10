@@ -5,18 +5,20 @@ using VRC.SDKBase;
 using VRC.Udon;
 using Cyan.PlayerObjectPool;
 using OpenFlightVRC.UI;
+using OpenFlightVRC.Effects;
 
 // This script is used to initialize the local player's store so it has the correct references
 namespace OpenFlightVRC.Net
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class LocalStoreInitializer : UdonSharpBehaviour
+    public class PoolController : UdonSharpBehaviour
     {
         public CyanPlayerObjectAssigner Assigner;
-        public AvatarDetection _avatarDetection;
-        public WingFlightPlusGlide _wingFlightPlusGlide;
-        public OpenFlight _openFlight;
-        public ContributerDetection _contributerDetection;
+        public AvatarDetection avatarDetection;
+        public WingFlightPlusGlide wingFlightPlusGlide;
+        public OpenFlight openFlight;
+        public ContributerDetection contributerDetection;
+
         public void _OnLocalPlayerAssigned()
         {
             //get the local player's store
@@ -25,10 +27,10 @@ namespace OpenFlightVRC.Net
             PlayerInfoStore store = (PlayerInfoStore)behaviour;
 
             //set the values
-            store._avatarDetection = _avatarDetection;
-            store._wingFlightPlusGlide = _wingFlightPlusGlide;
-            store._openFlight = _openFlight;
-            store._contributerDetection = _contributerDetection;
+            store.avatarDetection = avatarDetection;
+            store.wingFlightPlusGlide = wingFlightPlusGlide;
+            store.openFlight = openFlight;
+            store.contributerDetection = contributerDetection;
         }
     }
 }

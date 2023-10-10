@@ -28,19 +28,18 @@ namespace OpenFlightVRC.UI
 
 		//allow the toggle to be set both by the UI button and by the target variable
 		void Update()
-		{
-			//check if the toggle has been changed
-			if (toggle.isOn != value)
-			{
-                target.SetProgramVariable(targetVariable, toggle.isOn ^ invert);
-				value = toggle.isOn;
-			}
-
+        {
 			//check if the target variable has been changed
 			if ((bool)target.GetProgramVariable(targetVariable) != toggle.isOn)
 			{
                 toggle.isOn = (bool)target.GetProgramVariable(targetVariable) ^ invert;
 			}
 		}
+
+        //called by the button
+        public void Toggle()
+        {
+            target.SetProgramVariable(targetVariable, toggle.isOn ^ invert);
+        }
 	}
 }
