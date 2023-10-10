@@ -12,15 +12,16 @@ namespace OpenFlightVRC
     public class Util : UdonSharpBehaviour
     {
         /// <summary>
-        /// Returns the distance between two bones, modified by the scaling factor
+        /// Returns the distance between two bones, modified by the scaling factor and spine
         /// </summary>
         /// <param name="bone1">The first bone</param>
         /// <param name="bone2">The second bone</param>
         /// <param name="scalingFactor">The scaling factor</param>
+        /// <param name="d_spinetochest">The distance between the spine and the chest</param>
         /// <returns></returns>
-        public static int GetBoneDistance(Vector3 bone1, Vector3 bone2, float scalingFactor)
+        public static int GetBoneDistance(Vector3 bone1, Vector3 bone2, int scalingFactor, float d_spinetochest)
         {
-            return Mathf.FloorToInt(Vector3.Distance(bone1, bone2) / scalingFactor);
+            return Mathf.FloorToInt(Vector3.Distance(bone1, bone2) / d_spinetochest * scalingFactor);
         }
 
         /// <summary>
