@@ -2666,7 +2666,18 @@ MonoBehaviour:
   m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4356436881126994583}
+        m_MethodName: SendCustomEvent
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Changed
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &6818693144404976182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7863,7 +7874,18 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7208189647518073207}
+        m_MethodName: SendCustomEvent
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Changed
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1972798215616805119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8931,7 +8953,18 @@ MonoBehaviour:
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2130592238938436907}
+        m_MethodName: SendCustomEvent
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Changed
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &5933198504048357698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13022,7 +13055,18 @@ MonoBehaviour:
   m_Value: 0.1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6124323176737751583}
+        m_MethodName: SendCustomEvent
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Changed
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &6124323176737751568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17093,7 +17137,18 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6124323177965004999}
+        m_MethodName: SendCustomEvent
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Changed
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &6124323177965005048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19214,7 +19269,18 @@ MonoBehaviour:
   m_Value: 0.1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6196912771390024924}
+        m_MethodName: SendCustomEvent
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Changed
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2508409385491772911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20315,7 +20381,18 @@ MonoBehaviour:
   m_Value: 3
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6388080327894332988}
+        m_MethodName: SendCustomEvent
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Changed
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &7585313039057377351
 MonoBehaviour:
   m_ObjectHideFlags: 0
