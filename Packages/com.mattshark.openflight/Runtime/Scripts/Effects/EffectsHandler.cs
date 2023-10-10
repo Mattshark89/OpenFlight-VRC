@@ -33,7 +33,7 @@ namespace OpenFlightVRC.Effects
 
         //TODO: Make this not so fucking horrible. This organizationally and likely performance wise is HORRIBLE and I hate looking at it like this
         //Ideally, we should switch this entire system over to some form of event based setup. Not sure if that is possible though
-        void Update()
+        void PostLateUpdate()
         {
             //if we dont have a player then return
             if (playerInfoStore.Owner == null)
