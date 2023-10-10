@@ -237,9 +237,9 @@ MonoBehaviour:
   SFX: 1
   FlapSound: {fileID: 8871352057497442225}
   GlideSound: {fileID: 20076026291783297}
-  minGlidePitch: 0.5
-  maxGlidePitch: 1.5
-  minGlideVelocity: 5
+  minGlidePitch: 0.1
+  maxGlidePitch: 4
+  minGlideVelocity: 1
   maxGlideVelocity: 20
 --- !u!114 &1200833383092323075
 MonoBehaviour:
