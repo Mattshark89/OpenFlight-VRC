@@ -19,7 +19,7 @@ namespace OpenFlightVRC.Gizmos
 
         }
 
-        void PostLateUpdate()
+        public override void PostLateUpdate()
         {
             //scale self to match to the player 
             transform.localScale = new Vector3(Util.ScaleModifier(), Util.ScaleModifier(), Util.ScaleModifier());

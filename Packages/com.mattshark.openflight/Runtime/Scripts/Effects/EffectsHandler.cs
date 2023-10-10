@@ -31,6 +31,35 @@ namespace OpenFlightVRC.Effects
         public float minGlideVelocity = 5f;
         public float maxGlideVelocity = 20f;
 
+        private ParticleSystem.MinMaxGradient gradient;
+        void Start()
+        {
+            //generate a rainbow gradient
+            Gradient rainbowGradient = new Gradient();
+            //make the gradient loop nicely
+            rainbowGradient.SetKeys(
+                GenerateRainbow(),
+                new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f) }
+            );
+
+            gradient = new ParticleSystem.MinMaxGradient(rainbowGradient);
+            gradient.mode = ParticleSystemGradientMode.Gradient;
+        }
+
+        private GradientColorKey[] GenerateRainbow()
+        {
+            //make sure the gradient loops back to the starting color
+            GradientColorKey[] rainbow = new GradientColorKey[8];
+
+            for (int i = 0; i < 8; i++)
+            {
+                var color = Color.HSVToRGB(i / 7f, 1, 1);
+                rainbow[i] = new GradientColorKey(color, i / 7f);
+            }
+
+            return rainbow;
+        }
+
         //TODO: Make this not so fucking horrible. This organizationally and likely performance wise is HORRIBLE and I hate looking at it like this
         //Ideally, we should switch this entire system over to some form of event based setup. Not sure if that is possible though
         void PostLateUpdate()
@@ -38,6 +67,23 @@ namespace OpenFlightVRC.Effects
             //if we dont have a player then return
             if (playerInfoStore.Owner == null)
                 return;
+
+            //check if contributer
+            if (playerInfoStore.isContributer)
+            {
+                //set the trail particles to rainbow start color
+                ParticleSystem.MainModule psmain = LeftWingTrail.main;
+                psmain.startColor = gradient;
+
+                psmain = RightWingTrail.main;
+                psmain.startColor = gradient;
+            }
+            else
+            {
+                //set to white
+                ParticleSystem.MainModule psmain = LeftWingTrail.main;
+                psmain.startColor = new ParticleSystem.MinMaxGradient(Color.white);
+            }
 
             //continually move ourselves to the player's position
             transform.position = playerInfoStore.Owner.GetPosition();
