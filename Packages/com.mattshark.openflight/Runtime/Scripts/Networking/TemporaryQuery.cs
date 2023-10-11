@@ -47,12 +47,10 @@ namespace OpenFlightVRC.Net
             string playerHeader = "<b>" + player.displayName + "</b>";
 
             return playerHeader + "\n" +
-                "WingtipOffset: " + store.WingtipOffset + "\n" +
                 "isFlying: " + store.isFlying + "\n" +
                 "isGliding: " + store.isGliding + "\n" +
                 "isFlapping: " + store.isFlapping + "\n" +
                 "flightMode: " + store.flightMode + "\n" +
-                "d_spinetochest: " + store.d_spinetochest + "\n" +
                 "isContributer: " + store.isContributer + "\n" +
                 "-------";
         }

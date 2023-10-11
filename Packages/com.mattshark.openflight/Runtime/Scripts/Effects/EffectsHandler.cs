@@ -3,6 +3,7 @@ using System;
 using OpenFlightVRC.Net;
 using UdonSharp;
 using UnityEngine;
+using VRC.SDK3.Components;
 using VRC.SDKBase;
 using VRC.Udon;
 
@@ -15,7 +16,6 @@ namespace OpenFlightVRC.Effects
     public class EffectsHandler : UdonSharpBehaviour
     {
         public PlayerInfoStore playerInfoStore;
-        public GameObject FollowPlayer;
 
         [Header("VFX")]
         public bool VFX = true;
@@ -32,7 +32,6 @@ namespace OpenFlightVRC.Effects
         public float minGlideVelocity = 5f;
         public float maxGlideVelocity = 20f;
 
-        public GameObject XYZGizmo;
 
         private ParticleSystem.MinMaxGradient gradient;
         void Start()
@@ -71,10 +70,6 @@ namespace OpenFlightVRC.Effects
             if (playerInfoStore.Owner == null)
                 return;
 
-            //move XYZ gizmo onto hand
-            XYZGizmo.transform.position = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
-            XYZGizmo.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
-
             //check if contributer
             if (playerInfoStore.isContributer)
             {
@@ -96,8 +91,7 @@ namespace OpenFlightVRC.Effects
             }
 
             //continually move ourselves to the player's position
-            FollowPlayer.transform.position = playerInfoStore.Owner.GetPosition();
-            //transform.position = playerInfoStore.Owner.GetPosition();
+            transform.position = playerInfoStore.Owner.GetPosition();
 
             if (playerInfoStore.isFlapping && SFX)
             {
@@ -136,17 +130,19 @@ namespace OpenFlightVRC.Effects
                 StartPlaying(LeftWingTrail);
                 StartPlaying(RightWingTrail);
 
-                Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject, playerInfoStore.WingtipOffset, playerInfoStore.d_spinetochest);
-                Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, playerInfoStore.WingtipOffset, playerInfoStore.d_spinetochest);
+                //local player only. We use VRC Object syncs on the trails
+                //This is stupidly needed because we cant get the tracking data of remote players, it just returns the bone data instead
+                if (playerInfoStore.Owner.isLocal)
+                {
+                    //set the wingtip transforms
+                    Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
+                    Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
+                }
             }
             else
             {
                 LeftWingTrail.Stop();
                 RightWingTrail.Stop();
-
-                //TEMPORARY!!!! DELETE!!!
-                Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject, playerInfoStore.WingtipOffset, playerInfoStore.d_spinetochest);
-                Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, playerInfoStore.WingtipOffset, playerInfoStore.d_spinetochest);
             }
         }
 

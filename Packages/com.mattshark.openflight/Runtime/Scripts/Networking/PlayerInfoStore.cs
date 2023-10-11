@@ -1,4 +1,5 @@
 ﻿
+using OpenFlightVRC.Effects;
 using OpenFlightVRC.UI;
 using UdonSharp;
 using UnityEngine;
@@ -12,10 +13,6 @@ namespace OpenFlightVRC.Net
         /// <summary> Current player on this object, null if none </summary>
         public VRCPlayerApi Owner;
 
-        [UdonSynced]
-        public float WingtipOffset = 0;
-        [UdonSynced]
-        public double d_spinetochest = 0;
         [UdonSynced]
         public bool isFlying = false;
         [UdonSynced]
@@ -52,8 +49,6 @@ namespace OpenFlightVRC.Net
             //if the local player owns this object, update the values
             if (Networking.LocalPlayer == Owner)
             {
-                WingtipOffset = avatarDetection.WingtipOffset;
-                d_spinetochest = avatarDetection.d_spinetochest;
                 isFlying = wingFlightPlusGlide.isFlying;
                 isGliding = wingFlightPlusGlide.isGliding;
                 isFlapping = wingFlightPlusGlide.isFlapping;
