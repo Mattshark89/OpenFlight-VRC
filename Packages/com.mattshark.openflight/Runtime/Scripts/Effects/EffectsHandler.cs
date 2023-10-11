@@ -15,6 +15,7 @@ namespace OpenFlightVRC.Effects
     public class EffectsHandler : UdonSharpBehaviour
     {
         public PlayerInfoStore playerInfoStore;
+        public GameObject FollowPlayer;
 
         [Header("VFX")]
         public bool VFX = true;
@@ -30,6 +31,8 @@ namespace OpenFlightVRC.Effects
         public float maxGlidePitch = 1.5f;
         public float minGlideVelocity = 5f;
         public float maxGlideVelocity = 20f;
+
+        public GameObject XYZGizmo;
 
         private ParticleSystem.MinMaxGradient gradient;
         void Start()
@@ -62,11 +65,15 @@ namespace OpenFlightVRC.Effects
 
         //TODO: Make this not so fucking horrible. This organizationally and likely performance wise is HORRIBLE and I hate looking at it like this
         //Ideally, we should switch this entire system over to some form of event based setup. Not sure if that is possible though
-        void PostLateUpdate()
+        void Update()
         {
             //if we dont have a player then return
             if (playerInfoStore.Owner == null)
                 return;
+
+            //move XYZ gizmo onto hand
+            XYZGizmo.transform.position = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
+            XYZGizmo.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
 
             //check if contributer
             if (playerInfoStore.isContributer)
@@ -83,10 +90,14 @@ namespace OpenFlightVRC.Effects
                 //set to white
                 ParticleSystem.MainModule psmain = LeftWingTrail.main;
                 psmain.startColor = new ParticleSystem.MinMaxGradient(Color.white);
+
+                psmain = RightWingTrail.main;
+                psmain.startColor = new ParticleSystem.MinMaxGradient(Color.white);
             }
 
             //continually move ourselves to the player's position
-            transform.position = playerInfoStore.Owner.GetPosition();
+            FollowPlayer.transform.position = playerInfoStore.Owner.GetPosition();
+            //transform.position = playerInfoStore.Owner.GetPosition();
 
             if (playerInfoStore.isFlapping && SFX)
             {
@@ -132,6 +143,10 @@ namespace OpenFlightVRC.Effects
             {
                 LeftWingTrail.Stop();
                 RightWingTrail.Stop();
+
+                //TEMPORARY!!!! DELETE!!!
+                Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject, playerInfoStore.WingtipOffset, playerInfoStore.d_spinetochest);
+                Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, playerInfoStore.WingtipOffset, playerInfoStore.d_spinetochest);
             }
         }
 

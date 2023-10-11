@@ -33,10 +33,11 @@ namespace OpenFlightVRC
         /// <param name="d_spinetochest">The distance between the spine and the chest</param>
         public static void SetWingtipTransform(VRCPlayerApi.TrackingData bone, GameObject objectToMove, float WingtipOffset, double d_spinetochest)
         {
+            objectToMove.transform.rotation = Quaternion.identity;
             Vector3 position = bone.position;
             Quaternion rotation = bone.rotation;
 
-            Vector3 WingTipPosition = position + (rotation * new Vector3(0, 0, WingtipOffset * (float)d_spinetochest));
+            Vector3 WingTipPosition = position + (rotation * Vector3.forward * new Vector3(0, 0, WingtipOffset * (float)d_spinetochest).z);
 
             objectToMove.transform.position = WingTipPosition;
 
