@@ -34,7 +34,6 @@ namespace OpenFlightVRC.Effects
         public float minGlideVelocity = 5f;
         public float maxGlideVelocity = 20f;
 
-
         private ParticleSystem.MinMaxGradient gradient;
         void Start()
         {
@@ -66,7 +65,6 @@ namespace OpenFlightVRC.Effects
 
             return rainbow;
         }
-
 
         public void OwnerChanged()
         {
@@ -134,7 +132,6 @@ namespace OpenFlightVRC.Effects
                 float pitch = Mathf.Lerp(minGlidePitch, maxGlidePitch, Mathf.InverseLerp(minGlideVelocity, maxGlideVelocity, playerVelocity));
                 GlideSound.pitch = pitch;
             }
-
         }
     }
 }

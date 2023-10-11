@@ -4,17 +4,18 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 
-public class CustomAnimationEvent : UdonSharpBehaviour
+namespace OpenFlightVRC.Effects
 {
-    private AudioSource audioSource;
-
-    void OnEnable()
+    public class CustomAnimationEvent : UdonSharpBehaviour
     {
-        GetComponent<AudioSource>().Play();
-    }
+        void OnEnable()
+        {
+            GetComponent<AudioSource>().Play();
+        }
 
-    void OnDisable()
-    {
-        GetComponent<AudioSource>().Stop();
+        void OnDisable()
+        {
+            GetComponent<AudioSource>().Stop();
+        }
     }
 }
