@@ -2,6 +2,7 @@
 using System;
 using OpenFlightVRC.Net;
 using UdonSharp;
+using UnityEditor.Animations;
 using UnityEngine;
 using VRC.SDK3.Components;
 using VRC.SDKBase;
@@ -16,6 +17,7 @@ namespace OpenFlightVRC.Effects
     public class EffectsHandler : UdonSharpBehaviour
     {
         public PlayerInfoStore playerInfoStore;
+        private Animator animatorController;
 
         [Header("VFX")]
         public bool VFX = true;
@@ -46,6 +48,9 @@ namespace OpenFlightVRC.Effects
 
             gradient = new ParticleSystem.MinMaxGradient(rainbowGradient);
             gradient.mode = ParticleSystemGradientMode.Gradient;
+
+            //get the animator controller
+            animatorController = GetComponent<Animator>();
         }
 
         private GradientColorKey[] GenerateRainbow()
@@ -93,85 +98,36 @@ namespace OpenFlightVRC.Effects
             //continually move ourselves to the player's position
             transform.position = playerInfoStore.Owner.GetPosition();
 
-            if (playerInfoStore.isFlapping && SFX)
+            //if gliding, play the trails
+            //make sure this is before the animator updates so the trails teleport BEFORE emitting
+            //local player only. We use VRC Object syncs on the trails
+            //This is stupidly needed because we cant get the tracking data of remote players, it just returns the bone data instead
+            if (playerInfoStore.Owner.isLocal)
             {
-                StartPlaying(FlapSound);
+                //set the wingtip transforms
+                Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
+                Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
             }
-            else
-            {
-                FlapSound.Stop();
-            }
+
+            //Push the values into the animator controller
+            animatorController.SetBool("isFlapping", playerInfoStore.isFlapping);
+            animatorController.SetBool("isGliding", playerInfoStore.isGliding);
+            animatorController.SetBool("isFlying", playerInfoStore.isFlying);
+            animatorController.SetBool("SFX", SFX);
+            animatorController.SetBool("VFX", VFX);
+            //animatorController.SetBool("isContributer", playerInfoStore.isContributer);
+
+            animatorController.SetFloat("minGlideVelocity", minGlideVelocity);
+            float playerVelocity = playerInfoStore.Owner.GetVelocity().magnitude;
+            animatorController.SetFloat("playerVelocity", playerVelocity);
 
             if (playerInfoStore.isGliding && SFX)
             {
-                //check if the player is going fast enough for the gliding sound to play
-                float playerVelocity = playerInfoStore.Owner.GetVelocity().magnitude;
-
-                if (playerVelocity > minGlideVelocity)
-                {
-                    //set the pitch of the glide sound based on the player's velocity
-                    float pitch = Mathf.Lerp(minGlidePitch, maxGlidePitch, Mathf.InverseLerp(minGlideVelocity, maxGlideVelocity, playerVelocity));
-                    GlideSound.pitch = pitch;
-                    StartPlaying(GlideSound);
-                }
-                else
-                {
-                    GlideSound.Stop();
-                }
-            }
-            else
-            {
-                GlideSound.Stop();
+                //set the pitch of the glide sound based on the player's velocity
+                float pitch = Mathf.Lerp(minGlidePitch, maxGlidePitch, Mathf.InverseLerp(minGlideVelocity, maxGlideVelocity, playerVelocity));
+                GlideSound.pitch = pitch;
             }
 
-            //if gliding, play the trails
-            if (playerInfoStore.isGliding && VFX)
-            {
-                StartPlaying(LeftWingTrail);
-                StartPlaying(RightWingTrail);
-
-                //local player only. We use VRC Object syncs on the trails
-                //This is stupidly needed because we cant get the tracking data of remote players, it just returns the bone data instead
-                if (playerInfoStore.Owner.isLocal)
-                {
-                    //set the wingtip transforms
-                    Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
-                    Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
-                }
-            }
-            else
-            {
-                LeftWingTrail.Stop();
-                RightWingTrail.Stop();
-            }
-        }
-
-        /// <summary>
-        /// This can take in a particle system or audio source, and will start it playing if it is not already, otherwise it does nothing
-        /// </summary>
-        /// <param name="effect"></param>
-        private void StartPlaying(Component effect)
-        {
-            Type type = effect.GetType();
-
-            if (type == typeof(ParticleSystem))
-            {
-                ParticleSystem particleSystem = (ParticleSystem)effect;
-
-                if (!particleSystem.isPlaying)
-                {
-                    particleSystem.Play();
-                }
-            }
-            else if (type == typeof(AudioSource))
-            {
-                AudioSource audioSource = (AudioSource)effect;
-
-                if (!audioSource.isPlaying)
-                {
-                    audioSource.Play();
-                }
-            }
         }
     }
 }
