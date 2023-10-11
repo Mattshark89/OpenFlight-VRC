@@ -125,9 +125,8 @@ namespace OpenFlightVRC.Effects
             animatorController.SetBool("VFX", VFX);
             //animatorController.SetBool("isContributer", playerInfoStore.isContributer);
 
-            animatorController.SetFloat("minGlideVelocity", minGlideVelocity);
             float playerVelocity = playerInfoStore.Owner.GetVelocity().magnitude;
-            animatorController.SetFloat("playerVelocity", playerVelocity);
+            animatorController.SetBool("aboveGlideVelocity", playerVelocity > minGlideVelocity);
 
             if (playerInfoStore.isGliding && SFX)
             {
