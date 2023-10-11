@@ -2,7 +2,6 @@
 using System;
 using OpenFlightVRC.Net;
 using UdonSharp;
-using UnityEditor.Animations;
 using UnityEngine;
 using VRC.SDK3.Components;
 using VRC.SDKBase;
