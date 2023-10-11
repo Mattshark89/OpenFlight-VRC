@@ -67,6 +67,14 @@ namespace OpenFlightVRC.Effects
             return rainbow;
         }
 
+
+        public void OwnerChanged()
+        {
+            //set the owner of the trail objects
+            Networking.SetOwner(playerInfoStore.Owner, LeftWingTrail.gameObject);
+            Networking.SetOwner(playerInfoStore.Owner, RightWingTrail.gameObject);
+        }
+
         //TODO: Make this not so fucking horrible. This organizationally and likely performance wise is HORRIBLE and I hate looking at it like this
         //Ideally, we should switch this entire system over to some form of event based setup. Not sure if that is possible though
         void Update()

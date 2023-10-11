@@ -32,6 +32,7 @@ namespace OpenFlightVRC.Net
         public OpenFlight openFlight;
         [HideInInspector]
         public ContributerDetection contributerDetection;
+        public EffectsHandler effectsHandler;
 
         void Start()
         {
@@ -60,6 +61,7 @@ namespace OpenFlightVRC.Net
         public void _OnOwnerSet()
         {
             Logger.Log("Owner set to " + Owner.displayName, this);
+            effectsHandler.OwnerChanged();
         }
 
         public void _OnCleanup()
