@@ -24,14 +24,10 @@ namespace OpenFlightVRC.Net
         [UdonSynced]
         public bool isContributer = false;
 
-        [HideInInspector]
-        public AvatarDetection avatarDetection;
-        [HideInInspector]
-        public WingFlightPlusGlide wingFlightPlusGlide;
-        [HideInInspector]
-        public OpenFlight openFlight;
-        [HideInInspector]
-        public ContributerDetection contributerDetection;
+        internal AvatarDetection avatarDetection;
+        internal WingFlightPlusGlide wingFlightPlusGlide;
+        internal OpenFlight openFlight;
+        internal ContributerDetection contributerDetection;
         public EffectsHandler effectsHandler;
 
         void Start()
