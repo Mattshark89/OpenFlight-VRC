@@ -6,6 +6,7 @@ using UnityEngine;
 using VRC.SDK3.Components;
 using VRC.SDKBase;
 using VRC.Udon;
+using static OpenFlightVRC.Util;
 
 // future random idea im storing here
 // if you are a openflight contributer, use rainbow particles instead of the default
@@ -39,30 +40,8 @@ namespace OpenFlightVRC.Effects
         private ParticleSystem.MinMaxGradient gradient;
         void Start()
         {
-            //generate a rainbow gradient
-            Gradient rainbowGradient = new Gradient();
-            //make the gradient loop nicely
-            rainbowGradient.SetKeys(
-                GenerateRainbow(),
-                new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f) }
-            );
-
-            gradient = new ParticleSystem.MinMaxGradient(rainbowGradient);
+            gradient = new ParticleSystem.MinMaxGradient(GetRainbowGradient());
             gradient.mode = ParticleSystemGradientMode.Gradient;
-        }
-
-        private GradientColorKey[] GenerateRainbow()
-        {
-            //make sure the gradient loops back to the starting color
-            GradientColorKey[] rainbow = new GradientColorKey[8];
-
-            for (int i = 0; i < 8; i++)
-            {
-                var color = Color.HSVToRGB(i / 7f, 1, 1);
-                rainbow[i] = new GradientColorKey(color, i / 7f);
-            }
-
-            return rainbow;
         }
 
         public void OwnerChanged()
@@ -117,8 +96,8 @@ namespace OpenFlightVRC.Effects
                     if (playerInfoStore.Owner.isLocal)
                     {
                         //set the wingtip transforms
-                        Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
-                        Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
+                        SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
+                        SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
                     }
                 }
             }

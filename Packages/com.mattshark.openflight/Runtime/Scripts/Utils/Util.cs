@@ -96,5 +96,26 @@ namespace OpenFlightVRC
 
             return PlayerScale * scalingOffset;
         }
+
+        /// <summary>
+        /// Creates and returns a rainbow gradient for use in particle systems
+        /// </summary>
+        /// <returns>A rainbow gradient</returns>
+        public static Gradient GetRainbowGradient()
+        {
+            GradientColorKey[] rainbow = new GradientColorKey[8];
+
+            for (int i = 0; i < 8; i++)
+            {
+                var color = Color.HSVToRGB(i / 7f, 1, 1);
+                rainbow[i] = new GradientColorKey(color, i / 7f);
+            }
+
+            Gradient gradient = new Gradient();
+
+            gradient.colorKeys = rainbow;
+
+            return gradient;
+        }
     }
 }

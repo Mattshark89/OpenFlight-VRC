@@ -8,6 +8,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 using VRC.SDK3;
 using VRC.SDK3.Data;
+using static OpenFlightVRC.Util;
 
 namespace OpenFlightVRC
 {
@@ -250,21 +251,21 @@ namespace OpenFlightVRC
 			{
 				case 1:
 					scalingFactor = 1000;
-                    d_necktohead = Util.GetBoneDistance(bonePositions[2], bonePositions[1], scalingFactor, (float)d_spinetochest);
-                    d_chesttoneck = Util.GetBoneDistance(bonePositions[0], bonePositions[2], scalingFactor, (float)d_spinetochest);
-                    d_leftshouldertoleftupperarm = Util.GetBoneDistance(bonePositions[3], bonePositions[4], scalingFactor, (float)d_spinetochest);
-                    d_leftupperarmtoleftlowerarm = Util.GetBoneDistance(bonePositions[4], bonePositions[5], scalingFactor, (float)d_spinetochest);
-                    d_leftlowertolefthand = Util.GetBoneDistance(bonePositions[5], bonePositions[6], scalingFactor, (float)d_spinetochest);
+                    d_necktohead = GetBoneDistance(bonePositions[2], bonePositions[1], scalingFactor, (float)d_spinetochest);
+                    d_chesttoneck = GetBoneDistance(bonePositions[0], bonePositions[2], scalingFactor, (float)d_spinetochest);
+                    d_leftshouldertoleftupperarm = GetBoneDistance(bonePositions[3], bonePositions[4], scalingFactor, (float)d_spinetochest);
+                    d_leftupperarmtoleftlowerarm = GetBoneDistance(bonePositions[4], bonePositions[5], scalingFactor, (float)d_spinetochest);
+                    d_leftlowertolefthand = GetBoneDistance(bonePositions[5], bonePositions[6], scalingFactor, (float)d_spinetochest);
 
 					boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
 					return boneInfo.GetHashCode().ToString();
 				case 2:
 					scalingFactor = 100;
-                    d_necktohead = Util.GetBoneDistance(bonePositions[2], bonePositions[1], scalingFactor, (float)d_spinetochest);
-                    d_chesttoneck = Util.GetBoneDistance(bonePositions[0], bonePositions[2], scalingFactor, (float)d_spinetochest);
-                    d_leftshouldertoleftupperarm = Util.GetBoneDistance(bonePositions[3], bonePositions[4], scalingFactor, (float)d_spinetochest);
-                    d_leftupperarmtoleftlowerarm = Util.GetBoneDistance(bonePositions[4], bonePositions[5], scalingFactor, (float)d_spinetochest);
-                    d_leftlowertolefthand = Util.GetBoneDistance(bonePositions[5], bonePositions[6], scalingFactor, (float)d_spinetochest);
+                    d_necktohead = GetBoneDistance(bonePositions[2], bonePositions[1], scalingFactor, (float)d_spinetochest);
+                    d_chesttoneck = GetBoneDistance(bonePositions[0], bonePositions[2], scalingFactor, (float)d_spinetochest);
+                    d_leftshouldertoleftupperarm = GetBoneDistance(bonePositions[3], bonePositions[4], scalingFactor, (float)d_spinetochest);
+                    d_leftupperarmtoleftlowerarm = GetBoneDistance(bonePositions[4], bonePositions[5], scalingFactor, (float)d_spinetochest);
+                    d_leftlowertolefthand = GetBoneDistance(bonePositions[5], bonePositions[6], scalingFactor, (float)d_spinetochest);
 
 					boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
 					return boneInfo.GetHashCode().ToString() + "v2";

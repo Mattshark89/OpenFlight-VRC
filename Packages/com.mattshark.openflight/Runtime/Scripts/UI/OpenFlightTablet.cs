@@ -4,6 +4,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 using UnityEngine.UI;
 using TMPro;
+using static OpenFlightVRC.Util;
 
 namespace OpenFlightVRC.UI
 {
@@ -95,7 +96,7 @@ namespace OpenFlightVRC.UI
 			if (player.isLocal)
 			{
                 Logger.Log("Player eye height changed, updating tablet scale", this);
-                transform.localScale = new Vector3(Util.ScaleModifier(), Util.ScaleModifier(), Util.ScaleModifier());
+                transform.localScale = new Vector3(ScaleModifier(), ScaleModifier(), ScaleModifier());
             }
 		}
 
