@@ -16,7 +16,6 @@ namespace OpenFlightVRC.Effects
     public class EffectsHandler : UdonSharpBehaviour
     {
         public PlayerInfoStore playerInfoStore;
-        private Animator animatorController;
 
         [Header("VFX")]
         public bool VFX = true;
@@ -33,6 +32,10 @@ namespace OpenFlightVRC.Effects
         public float minGlideVelocity = 5f;
         public float maxGlideVelocity = 20f;
 
+        //Previous Frame Data
+        private bool wasGliding = false;
+        private bool wasFlapping = false;
+
         private ParticleSystem.MinMaxGradient gradient;
         void Start()
         {
@@ -46,9 +49,6 @@ namespace OpenFlightVRC.Effects
 
             gradient = new ParticleSystem.MinMaxGradient(rainbowGradient);
             gradient.mode = ParticleSystemGradientMode.Gradient;
-
-            //get the animator controller
-            animatorController = GetComponent<Animator>();
         }
 
         private GradientColorKey[] GenerateRainbow()
@@ -80,56 +80,109 @@ namespace OpenFlightVRC.Effects
             if (playerInfoStore.Owner == null)
                 return;
 
-            //check if contributer
-            if (playerInfoStore.isContributer)
-            {
-                //set the trail particles to rainbow start color
-                ParticleSystem.MainModule psmain = LeftWingTrail.main;
-                psmain.startColor = gradient;
-
-                psmain = RightWingTrail.main;
-                psmain.startColor = gradient;
-            }
-            else
-            {
-                //set to white
-                ParticleSystem.MainModule psmain = LeftWingTrail.main;
-                psmain.startColor = new ParticleSystem.MinMaxGradient(Color.white);
-
-                psmain = RightWingTrail.main;
-                psmain.startColor = new ParticleSystem.MinMaxGradient(Color.white);
-            }
-
             //continually move ourselves to the player's position
             transform.position = playerInfoStore.Owner.GetPosition();
 
-            //if gliding, play the trails
-            //make sure this is before the animator updates so the trails teleport BEFORE emitting
-            //local player only. We use VRC Object syncs on the trails
-            //This is stupidly needed because we cant get the tracking data of remote players, it just returns the bone data instead
-            if (playerInfoStore.Owner.isLocal)
+            #region VFX
+            SetParticleSystemEmission(LeftWingTrail, VFX && playerInfoStore.isGliding);
+            SetParticleSystemEmission(RightWingTrail, VFX && playerInfoStore.isGliding);
+            if (VFX)
             {
-                //set the wingtip transforms
-                Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
-                Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
+                //check if contributer
+                if (playerInfoStore.isContributer)
+                {
+                    //set the trail particles to rainbow start color
+                    ParticleSystem.MainModule psmain = LeftWingTrail.main;
+                    psmain.startColor = gradient;
+
+                    psmain = RightWingTrail.main;
+                    psmain.startColor = gradient;
+                }
+                else
+                {
+                    //set to white
+                    ParticleSystem.MainModule psmain = LeftWingTrail.main;
+                    psmain.startColor = new ParticleSystem.MinMaxGradient(Color.white);
+
+                    psmain = RightWingTrail.main;
+                    psmain.startColor = new ParticleSystem.MinMaxGradient(Color.white);
+                }
+
+                if (playerInfoStore.isGliding)
+                {
+                    //if gliding, play the trails
+                    //make sure this is before the animator updates so the trails teleport BEFORE emitting
+                    //local player only. We use VRC Object syncs on the trails
+                    //This is stupidly needed because we cant get the tracking data of remote players, it just returns the bone data instead
+                    if (playerInfoStore.Owner.isLocal)
+                    {
+                        //set the wingtip transforms
+                        Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
+                        Util.SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
+                    }
+                }
             }
+            #endregion
 
-            //Push the values into the animator controller
-            animatorController.SetBool("isFlapping", playerInfoStore.isFlapping);
-            animatorController.SetBool("isGliding", playerInfoStore.isGliding);
-            animatorController.SetBool("isFlying", playerInfoStore.isFlying);
-            animatorController.SetBool("SFX", SFX);
-            animatorController.SetBool("VFX", VFX);
-            //animatorController.SetBool("isContributer", playerInfoStore.isContributer);
-
-            float playerVelocity = playerInfoStore.Owner.GetVelocity().magnitude;
-            animatorController.SetBool("aboveGlideVelocity", playerVelocity > minGlideVelocity);
-
-            if (playerInfoStore.isGliding && SFX)
+            #region SFX
+            ControlSound(GlideSound, playerInfoStore.isGliding && SFX);
+            if (SFX)
             {
-                //set the pitch of the glide sound based on the player's velocity
-                float pitch = Mathf.Lerp(minGlidePitch, maxGlidePitch, Mathf.InverseLerp(minGlideVelocity, maxGlideVelocity, playerVelocity));
-                GlideSound.pitch = pitch;
+                float playerVelocity = playerInfoStore.Owner.GetVelocity().magnitude;
+
+                if (playerInfoStore.isGliding)
+                {
+                    //set the pitch of the glide sound based on the player's velocity
+                    float pitch = Mathf.Lerp(minGlidePitch, maxGlidePitch, Mathf.InverseLerp(minGlideVelocity, maxGlideVelocity, playerVelocity));
+                    GlideSound.pitch = pitch;
+                }
+
+                //we need to watch for the rising edge of the flap boolean
+                if (playerInfoStore.isFlapping && !wasFlapping)
+                {
+                    //play the flap sound
+                    FlapSound.PlayOneShot(FlapSound.clip);
+                }
+            }
+            #endregion
+
+            #region Store Previous Frame Data
+            wasGliding = playerInfoStore.isGliding;
+            wasFlapping = playerInfoStore.isFlapping;
+            #endregion
+        }
+
+        /// <summary>
+        /// Sets the emission of a particle system
+        /// </summary>
+        /// <param name="ps">The particle system to set the emission of</param>
+        /// <param name="enabled">If the particle system should be emitting or not</param>
+        private void SetParticleSystemEmission(ParticleSystem ps, bool enabled)
+        {
+            ParticleSystem.EmissionModule emission = ps.emission;
+            emission.enabled = enabled;
+        }
+
+        /// <summary>
+        /// Controls the sound of an audio source, taking into account if it is already playing or not
+        /// </summary>
+        /// <param name="source">The audio source to control</param>
+        /// <param name="enabled">If the audio source should be playing or not</param>
+        private void ControlSound(AudioSource source, bool enabled)
+        {
+            if (enabled)
+            {
+                if (!source.isPlaying)
+                {
+                    source.Play();
+                }
+            }
+            else
+            {
+                if (source.isPlaying)
+                {
+                    source.Stop();
+                }
             }
         }
     }
