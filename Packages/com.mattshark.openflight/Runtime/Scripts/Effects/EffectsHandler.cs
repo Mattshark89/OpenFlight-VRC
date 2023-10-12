@@ -8,9 +8,6 @@ using VRC.SDKBase;
 using VRC.Udon;
 using static OpenFlightVRC.Util;
 
-// future random idea im storing here
-// if you are a openflight contributer, use rainbow particles instead of the default
-// allow them to be disabled in the settings
 namespace OpenFlightVRC.Effects
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]

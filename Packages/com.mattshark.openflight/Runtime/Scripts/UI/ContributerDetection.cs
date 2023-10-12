@@ -12,7 +12,29 @@ namespace OpenFlightVRC.UI
     {
         public AvatarListLoader AvatarListLoader;
         public bool contributerInWorld = false;
-        public bool localPlayerIsContributer = false;
+        private bool _localPlayerIsContributer = false;
+        public bool localPlayerIsContributer
+        {
+            get
+            {
+                //check if we should hide the local player's contributer status
+                if (hideLocalPlayerContributerStatus)
+                {
+                    return false;
+                }
+
+                return _localPlayerIsContributer;
+            }
+            set
+            {
+                _localPlayerIsContributer = value;
+            }
+        }
+
+        /// <summary> If true, the local player will not have their contributer status broadcasted to everyone else </summary>
+        /// <remarks> This does not affect the contributer in world boolean, but does affect the <see cref="localPlayerIsContributer"/> boolean </remarks>
+        public bool hideLocalPlayerContributerStatus = false;
+
         /// <summary>
         /// A formatted list of all the openflight contributers
         /// </summary>
