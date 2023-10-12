@@ -107,8 +107,9 @@ namespace OpenFlightVRC
 
             for (int i = 0; i < 8; i++)
             {
-                var color = Color.HSVToRGB(i / 7f, 1, 1);
-                rainbow[i] = new GradientColorKey(color, i / 7f);
+                float hue = Mathf.InverseLerp(0, 7, i);
+                var color = Color.HSVToRGB(hue, 1, 1);
+                rainbow[i] = new GradientColorKey(color, hue);
             }
 
             Gradient gradient = new Gradient();
@@ -116,6 +117,45 @@ namespace OpenFlightVRC
             gradient.colorKeys = rainbow;
 
             return gradient;
+        }
+
+
+        /// <summary>
+        /// Sets the emission of a particle system
+        /// </summary>
+        /// <param name="ps">The particle system to set the emission of</param>
+        /// <param name="enabled">If the particle system should be emitting or not</param>
+        public static void SetParticleSystemEmission(ParticleSystem ps, bool enabled)
+        {
+            ParticleSystem.EmissionModule emission = ps.emission;
+            emission.enabled = enabled;
+        }
+
+        /// <summary>
+        /// Controls the sound of an audio source, taking into account if it is already playing or not
+        /// </summary>
+        /// <param name="source">The audio source to control</param>
+        /// <param name="enabled">If the audio source should be playing or not</param>
+        /// <returns>If the audio source was changed</returns>
+        public static bool ControlSound(AudioSource source, bool enabled)
+        {
+            if (enabled)
+            {
+                if (!source.isPlaying)
+                {
+                    source.Play();
+                    return true;
+                }
+            }
+            else
+            {
+                if (source.isPlaying)
+                {
+                    source.Stop();
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

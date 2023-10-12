@@ -130,39 +130,5 @@ namespace OpenFlightVRC.Effects
             wasFlapping = playerInfoStore.isFlapping;
             #endregion
         }
-
-        /// <summary>
-        /// Sets the emission of a particle system
-        /// </summary>
-        /// <param name="ps">The particle system to set the emission of</param>
-        /// <param name="enabled">If the particle system should be emitting or not</param>
-        private void SetParticleSystemEmission(ParticleSystem ps, bool enabled)
-        {
-            ParticleSystem.EmissionModule emission = ps.emission;
-            emission.enabled = enabled;
-        }
-
-        /// <summary>
-        /// Controls the sound of an audio source, taking into account if it is already playing or not
-        /// </summary>
-        /// <param name="source">The audio source to control</param>
-        /// <param name="enabled">If the audio source should be playing or not</param>
-        private void ControlSound(AudioSource source, bool enabled)
-        {
-            if (enabled)
-            {
-                if (!source.isPlaying)
-                {
-                    source.Play();
-                }
-            }
-            else
-            {
-                if (source.isPlaying)
-                {
-                    source.Stop();
-                }
-            }
-        }
     }
 }
