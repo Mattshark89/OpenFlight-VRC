@@ -1,4 +1,5 @@
 ﻿
+using TMPro;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
@@ -15,6 +16,12 @@ namespace OpenFlightVRC.Gizmos
         [Header("Gizmo Objects")]
         public GameObject wingtipGizmo;
         public LineRenderer wingtipLine;
+
+        public TextMeshProUGUI NeckDistanceText;
+        public TextMeshProUGUI ChestDistanceText;
+        public TextMeshProUGUI LeftShoulderDistanceText;
+        public TextMeshProUGUI LeftElbowDistanceText;
+        public TextMeshProUGUI LeftWristDistanceText;
         void Start()
         {
 
@@ -33,6 +40,24 @@ namespace OpenFlightVRC.Gizmos
             SetWingtipTransform(Networking.LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), wingtipGizmo, avatarDetection.WingtipOffset, avatarDetection.d_spinetochest);
             //set the line renderer start to the hand and end to the wingtip
             wingtipLine.SetPositions(new Vector3[] { Networking.LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position, wingtipGizmo.transform.position });
+
+            #region Bone Debug Info
+            NeckDistanceText.text = FormatDistances(new float[] { avatarDetection.hashV1Distances[0], avatarDetection.hashV2Distances[0] });
+            ChestDistanceText.text = FormatDistances(new float[] { avatarDetection.hashV1Distances[1], avatarDetection.hashV2Distances[1] });
+            LeftShoulderDistanceText.text = FormatDistances(new float[] { avatarDetection.hashV1Distances[2], avatarDetection.hashV2Distances[2] });
+            LeftElbowDistanceText.text = FormatDistances(new float[] { avatarDetection.hashV1Distances[3], avatarDetection.hashV2Distances[3] });
+            LeftWristDistanceText.text = FormatDistances(new float[] { avatarDetection.hashV1Distances[4], avatarDetection.hashV2Distances[4] });
+            #endregion
+        }
+
+        private string FormatDistances(float[] distances)
+        {
+            string output = "";
+            for (int i = 0; i < distances.Length; i++)
+            {
+                output += "v" + (i + 1) + ": " + distances[i].ToString() + "\n";
+            }
+            return output;
         }
     }
 }

@@ -681,12 +681,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 52008883}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &60957870 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8133079262838529219, guid: 83a1dcf8462378640b7615b3011c0c6f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1387480281}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &68094014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10533,6 +10527,11 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.44705886
       objectReference: {fileID: 0}
+    - target: {fileID: 5918996668902578221, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6014910027071921721, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
       propertyPath: _syncMethod
@@ -10646,6 +10645,12 @@ PrefabInstance:
       propertyPath: _syncMethod
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6405410659339929893, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 6405410659339929893, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
     - target: {fileID: 6428012978595012594, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
       propertyPath: _syncMethod
@@ -18175,7 +18180,7 @@ PrefabInstance:
         type: 3}
       propertyPath: NetworkIDs.Array.data[71].gameObject
       value: 
-      objectReference: {fileID: 60957870}
+      objectReference: {fileID: 0}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.data[72].gameObject

@@ -51,7 +51,9 @@ namespace OpenFlightVRC
 
 		//information about the avatar that has been detected
 		public string hashV1 = "0";
+        internal float[] hashV1Distances = new float[5];
 		public string hashV2 = "0";
+        internal float[] hashV2Distances = new float[5];
 		public float weight = 1;
 		public float WingtipOffset = 0;
 		public string name = ""; //this is the name of the avatar base
@@ -257,7 +259,13 @@ namespace OpenFlightVRC
                     d_leftupperarmtoleftlowerarm = GetBoneDistance(bonePositions[4], bonePositions[5], scalingFactor, (float)d_spinetochest);
                     d_leftlowertolefthand = GetBoneDistance(bonePositions[5], bonePositions[6], scalingFactor, (float)d_spinetochest);
 
-					boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
+                    hashV1Distances[0] = d_necktohead;
+                    hashV1Distances[1] = d_chesttoneck;
+                    hashV1Distances[2] = d_leftshouldertoleftupperarm;
+                    hashV1Distances[3] = d_leftupperarmtoleftlowerarm;
+                    hashV1Distances[4] = d_leftlowertolefthand;
+
+                    boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
 					return boneInfo.GetHashCode().ToString();
 				case 2:
 					scalingFactor = 100;
@@ -267,7 +275,13 @@ namespace OpenFlightVRC
                     d_leftupperarmtoleftlowerarm = GetBoneDistance(bonePositions[4], bonePositions[5], scalingFactor, (float)d_spinetochest);
                     d_leftlowertolefthand = GetBoneDistance(bonePositions[5], bonePositions[6], scalingFactor, (float)d_spinetochest);
 
-					boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
+                    hashV2Distances[0] = d_necktohead;
+                    hashV2Distances[1] = d_chesttoneck;
+                    hashV2Distances[2] = d_leftshouldertoleftupperarm;
+                    hashV2Distances[3] = d_leftupperarmtoleftlowerarm;
+                    hashV2Distances[4] = d_leftlowertolefthand;
+
+                    boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
 					return boneInfo.GetHashCode().ToString() + "v2";
 				default:
                     Logger.LogError("Invalid Hash Version Sent", this);
