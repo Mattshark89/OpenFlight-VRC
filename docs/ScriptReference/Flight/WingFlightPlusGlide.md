@@ -27,6 +27,9 @@ This is the script that dictates the velocity and movement of flight itself.
 | wingtipOffset | float | The wingtip offset of the player. Usually set by [AvatarDetection](/ScriptReference/Detection/AvatarDetection.md) |
 | weight | float | The weight of the player. Usually set by [AvatarDetection](/ScriptReference/Detection/AvatarDetection.md) |
 | loadBearingTransform | [Transform](https://docs.unity3d.com/ScriptReference/Transform.html) | This needs to be set to a static empty gameobject somewhere in the world. This is purely used as a helper |
+| isFlapping | bool | If true, User is currently Flapping. Only read from this |
+| isFlying | bool | If true, User is currently Flying. Only read from this |
+| isGliding | bool | If true, User is currently Gliding. Only read from this |
 
 ## Public Methods
 | Method | Return Type | Description |

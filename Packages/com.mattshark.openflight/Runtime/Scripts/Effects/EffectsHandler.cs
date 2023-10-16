@@ -39,7 +39,7 @@ namespace OpenFlightVRC.Effects
             gradient.mode = ParticleSystemGradientMode.Gradient;
         }
 
-        public void OwnerChanged()
+        internal void OwnerChanged()
         {
             //set the owner of the trail objects
             Networking.SetOwner(playerInfoStore.Owner, LeftWingTrail.gameObject);
@@ -50,7 +50,7 @@ namespace OpenFlightVRC.Effects
         /// Called when the player's gliding variable changes
         /// </summary>
         /// <param name="boolState">The state of the gliding bool for the player</param>
-        public void OnGlideChanged(bool boolState)
+        internal void OnGlideChanged(bool boolState)
         {
             ControlSound(GlideSound, SFX && boolState);
 
@@ -62,7 +62,7 @@ namespace OpenFlightVRC.Effects
         /// Called when the player's flap variable changes
         /// </summary>
         /// <param name="boolState">The state of the flapping bool for the player</param>
-        public void OnFlappingChanged(bool boolState)
+        internal void OnFlappingChanged(bool boolState)
         {
             //if SFX is on and rising edge of flapping
             if (SFX && boolState)
@@ -76,7 +76,7 @@ namespace OpenFlightVRC.Effects
         /// Called when the player's contributer variable changes
         /// </summary>
         /// <param name="boolState">The state of the contributer bool for the player</param>
-        public void OnContributerChanged(bool boolState)
+        internal void OnContributerChanged(bool boolState)
         {
             //check if contributer
             if (boolState)
@@ -129,6 +129,11 @@ namespace OpenFlightVRC.Effects
                     GlideSound.pitch = pitch;
                 }
             }
+            else
+            {
+                //if SFX is off, stop the glide sound
+                GlideSound.Stop();
+            }
 
             if (VFX)
             {
@@ -143,6 +148,12 @@ namespace OpenFlightVRC.Effects
                         SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingtip, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
                     }
                 }
+            }
+            else
+            {
+                //if VFX is off, stop the glide sound
+                LeftWingTrail.Stop();
+                RightWingTrail.Stop();
             }
         }
 

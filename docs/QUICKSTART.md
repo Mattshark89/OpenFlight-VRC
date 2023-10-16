@@ -19,6 +19,8 @@ Before reading the rest of this guide, it is important to understand the termino
   - For MacOS and Linux, the only available version that VRChat provides is the [CLI Version](https://vcc.docs.vrchat.com/vpm/cli)
 - World project is already migrated into the VCC.
   - This guide assumes you have already migrated your world project into the VCC. If you have not done this yet, please follow the [VCC Migration Guide](https://vcc.docs.vrchat.com/vpm/migrating) before continuing.
+- [CyanPlayerObjectPool](https://github.com/CyanLaser/CyanPlayerObjectPool) is installed in your project.
+  - This is a dependency of OpenFlight, and is required for it to function properly. If you do not have this installed, use this to add it [Add To VCC](vcc://vpm/addRepo?url=https://CyanLaser.github.io/CyanPlayerObjectPool/index.json)
 
 ## Adding the OpenFlight Repository to the VCC
 The steps for loading the OpenFlight repository into the VCC are different depending on the type of VCC install you are using. This process only needs to be done once, and will allow you to use the OpenFlight system in any of your projects.
