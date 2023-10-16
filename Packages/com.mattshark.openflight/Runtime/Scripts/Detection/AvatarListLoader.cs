@@ -82,6 +82,7 @@ namespace OpenFlightVRC
 		{
 			Output = OfflineJSON.text;
             Logger.Log("Failed to load Avatar List URL! Using in-world JSON instead.", this);
+            RunCallbacks();
         }
     }
 
