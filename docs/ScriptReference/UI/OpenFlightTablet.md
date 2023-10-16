@@ -22,5 +22,3 @@ Controls the Tablet scale based on the players height, handles the fading logic 
 | SetActiveTabMain | void | Sets the active tab on the tablet to the main tab |
 | SetActiveTabSettings | void | Sets the active tab on the tablet to the settings tab |
 | SetActiveTabDebug | void | Sets the active tab on the tablet to the debug tab |
-| SetActiveTabChangeLog | void | Sets the active tab on the tablet to the changelog tab |
-| SetActiveTabNetworking | void | Sets the active tab on the tablet to the networking tab |

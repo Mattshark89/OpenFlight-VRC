@@ -12,7 +12,6 @@ This script is responsible for the enabling and disabling of the system itself.
 | avatarDetection | [AvatarDetection](/ScriptReference/Detection/AvatarDetection.md) | The AvatarDetection script, used to re-evaluate flight upon switching to auto |
 | flightMode | string | The current flight mode |
 | flightAllowed | bool | Whether or not flight is allowed |
-| ignoreVRCheck | bool | Ignores the check of if you are in VR. Shouldnt be used, but is there for testing purposes |
 
 ## Public Methods
 | Method | Return Type | Description |
