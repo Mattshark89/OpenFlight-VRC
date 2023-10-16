@@ -223,7 +223,9 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 1200833383092323075}
   playerInfoStore: {fileID: 4548817697373630809}
   VFX: 1
+  LeftWingtip: {fileID: 6927260368602326750}
   LeftWingTrail: {fileID: 4831116287091766749}
+  RightWingtip: {fileID: 6173974890504099203}
   RightWingTrail: {fileID: 108134917997573697}
   SFX: 1
   FlapSound: {fileID: 8871352057497442225}
@@ -514,8 +516,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6859745423044646395}
-  m_Father: {fileID: 5526248897789359388}
-  m_RootOrder: 1
+  m_Father: {fileID: 1676077968923798148}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!199 &5222100670322822959
 ParticleSystemRenderer:
@@ -5397,6 +5399,37 @@ MonoBehaviour:
   VolumetricRadius: 1
   EnableSpatialization: 1
   UseAudioSourceVolumeCurve: 1
+--- !u!1 &6173974890504099203
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1676077968923798148}
+  m_Layer: 0
+  m_Name: R Time Travel Adjust
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1676077968923798148
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6173974890504099203}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 7495964075748234979}
+  m_Father: {fileID: 5526248897789359388}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6254035354710672106
 GameObject:
   m_ObjectHideFlags: 0
@@ -5428,7 +5461,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6342128965813116871}
-  m_Father: {fileID: 5526248897789359388}
+  m_Father: {fileID: 4358095635844046119}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!199 &397161130939867019
@@ -10165,6 +10198,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AllowCollisionOwnershipTransfer: 0
+--- !u!1 &6927260368602326750
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4358095635844046119}
+  m_Layer: 0
+  m_Name: L Time Travel Adjust
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4358095635844046119
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6927260368602326750}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 7749339471289527629}
+  m_Father: {fileID: 5526248897789359388}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8700027428081760879
 GameObject:
   m_ObjectHideFlags: 0
@@ -10192,8 +10256,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 7749339471289527629}
-  - {fileID: 7495964075748234979}
+  - {fileID: 4358095635844046119}
+  - {fileID: 1676077968923798148}
   m_Father: {fileID: 4169111826343461638}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

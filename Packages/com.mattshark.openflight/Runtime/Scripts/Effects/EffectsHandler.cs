@@ -17,7 +17,9 @@ namespace OpenFlightVRC.Effects
 
         [Header("VFX")]
         public bool VFX = true;
+        public GameObject LeftWingtip;
         public ParticleSystem LeftWingTrail;
+        public GameObject RightWingtip;
         public ParticleSystem RightWingTrail;
 
         [Header("Sounds")]
@@ -103,8 +105,8 @@ namespace OpenFlightVRC.Effects
             if (playerInfoStore.Owner == null)
                 return;
 
-            //continually move ourselves to the player's position
-            transform.position = playerInfoStore.Owner.GetPosition();
+            //continually move ourselves to the player's chest
+            transform.position = playerInfoStore.Owner.GetBonePosition(HumanBodyBones.Chest);
 
             //Audio Changing
             if (SFX)
@@ -127,11 +129,39 @@ namespace OpenFlightVRC.Effects
                     if (playerInfoStore.Owner.isLocal)
                     {
                         //set the wingtip transforms
-                        SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
-                        SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
+                        SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingtip, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
+                        SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingtip, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
+                    }
+                    else
+                    {
+                        AccountForNetworkTimeTravel(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject, LeftWingtip);
+                        AccountForNetworkTimeTravel(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, RightWingtip);
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Accounts for VRCObjectSync time travelling forward / backwards in time relative to remote players.
+        /// We account for this by essentially teleporting the wingtip to the correct position but still keeping the offset that the player has sent us in the VRCObjectSync
+        /// </summary>
+        /// <remarks>This does NOT account for the rotation desync, but this should be way less noticable compared to the position desync</remarks>
+        /// <param name="bone">The tracking data of the bone</param>
+        /// <param name="EffectEndpoint">The wingtip transform</param>
+        /// <param name="SyncedObject">The VRCObjectSync object</param>
+        private void AccountForNetworkTimeTravel(VRCPlayerApi.TrackingData bone, GameObject EffectEndpoint, GameObject SyncedObject)
+        {
+            //get the current position of the networked object
+            Vector3 currentPos = SyncedObject.transform.position;
+
+            //get the position of the bone
+            Vector3 bonePos = bone.position;
+
+            //calculate the difference between the two
+            Vector3 difference = bonePos - currentPos;
+
+            //offset the wingtip by the difference
+            EffectEndpoint.transform.position += difference;
         }
     }
 }
