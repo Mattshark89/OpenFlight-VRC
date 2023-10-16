@@ -142,10 +142,6 @@ MonoBehaviour:
   isFlapping: 0
   flightMode: Auto
   isContributer: 0
-  avatarDetection: {fileID: 0}
-  wingFlightPlusGlide: {fileID: 0}
-  openFlight: {fileID: 0}
-  contributerDetection: {fileID: 0}
   effectsHandler: {fileID: 1249273843356016464}
 --- !u!114 &-8444781059147605421
 MonoBehaviour:
@@ -387,7 +383,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: e5b06ce60743eed41b901a72199e66a6, type: 3}
+  m_audioClip: {fileID: 8300000, guid: c4fcfba0e3e569f44b215bd35a7d4a8f, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
