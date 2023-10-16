@@ -603,12 +603,14 @@ public class WingFlightPlusGlideEditor : Editor
             if (LocalPlayer.GetGravityStrength() != oldGravityStrength)
             {
                 Logger.LogWarning("World gravity is different than the saved gravity, this may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new world gravity using UpdatePlayerPhysics().", this);
+                Logger.LogWarning("Saved Gravity: " + oldGravityStrength.ToString(), this);
             }
 
             //if the player movement is different than what we have saved, throw a warning
             if (LocalPlayer.GetWalkSpeed() != oldWalkSpeed || LocalPlayer.GetRunSpeed() != oldRunSpeed || LocalPlayer.GetStrafeSpeed() != oldStrafeSpeed)
             {
                 Logger.LogWarning("Player movement is different than the saved movement, this may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new player movement using UpdatePlayerPhysics().", this);
+                Logger.LogWarning("Saved Walk Speed: " + oldWalkSpeed.ToString() + " Saved Run Speed: " + oldRunSpeed.ToString() + " Saved Strafe Speed: " + oldStrafeSpeed.ToString(), this);
             }
         }
 
@@ -633,12 +635,15 @@ public class WingFlightPlusGlideEditor : Editor
 			spinningRightRound = false;
 			rotSpeed = 0;
 			rotSpeedGoal = 0;
-			LocalPlayer.SetGravityStrength(oldGravityStrength);
-			CheckPhysicsUnChanged();
+            LocalPlayer.SetGravityStrength(oldGravityStrength);
 			if (!allowLoco)
 			{
 				ImmobilizePart(false);
 			}
+            if (!dynamicPlayerPhysics)
+            {
+                CheckPhysicsUnChanged();
+            }
             Logger.Log("Landed.", this);
 		}
 
