@@ -484,9 +484,9 @@ MonoBehaviour:
   Gain: 10
   Far: 40
   Near: 0
-  VolumetricRadius: 0
+  VolumetricRadius: 1
   EnableSpatialization: 1
-  UseAudioSourceVolumeCurve: 0
+  UseAudioSourceVolumeCurve: 1
 --- !u!1 &5199516506176534230
 GameObject:
   m_ObjectHideFlags: 0
@@ -5398,9 +5398,9 @@ MonoBehaviour:
   Gain: 10
   Far: 40
   Near: 0
-  VolumetricRadius: 0
+  VolumetricRadius: 1
   EnableSpatialization: 1
-  UseAudioSourceVolumeCurve: 0
+  UseAudioSourceVolumeCurve: 1
 --- !u!1 &6254035354710672106
 GameObject:
   m_ObjectHideFlags: 0
