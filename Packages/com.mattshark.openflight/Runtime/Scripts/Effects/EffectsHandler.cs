@@ -30,10 +30,6 @@ namespace OpenFlightVRC.Effects
         public float minGlideVelocity = 5f;
         public float maxGlideVelocity = 20f;
 
-        //Previous Frame Data
-        private bool wasGliding = false;
-        private bool wasFlapping = false;
-
         private ParticleSystem.MinMaxGradient gradient;
         void Start()
         {
@@ -48,8 +44,59 @@ namespace OpenFlightVRC.Effects
             Networking.SetOwner(playerInfoStore.Owner, RightWingTrail.gameObject);
         }
 
-        //TODO: Make this not so fucking horrible. This organizationally and likely performance wise is HORRIBLE and I hate looking at it like this
-        //Ideally, we should switch this entire system over to some form of event based setup. Not sure if that is possible though
+        /// <summary>
+        /// Called when the player's gliding variable changes
+        /// </summary>
+        /// <param name="boolState">The state of the gliding bool for the player</param>
+        public void OnGlideChanged(bool boolState)
+        {
+            ControlSound(GlideSound, SFX && boolState);
+
+            SetParticleSystemEmission(LeftWingTrail, VFX && boolState);
+            SetParticleSystemEmission(RightWingTrail, VFX && boolState);
+        }
+
+        /// <summary>
+        /// Called when the player's flap variable changes
+        /// </summary>
+        /// <param name="boolState">The state of the flapping bool for the player</param>
+        public void OnFlappingChanged(bool boolState)
+        {
+            //if SFX is on and rising edge of flapping
+            if (SFX && boolState)
+            {
+                //play the flap sound
+                FlapSound.PlayOneShot(FlapSound.clip);
+            }
+        }
+
+        /// <summary>
+        /// Called when the player's contributer variable changes
+        /// </summary>
+        /// <param name="boolState">The state of the contributer bool for the player</param>
+        public void OnContributerChanged(bool boolState)
+        {
+            //check if contributer
+            if (boolState)
+            {
+                //set the trail particles to rainbow start color
+                ParticleSystem.MainModule psmain = LeftWingTrail.main;
+                psmain.startColor = gradient;
+
+                psmain = RightWingTrail.main;
+                psmain.startColor = gradient;
+            }
+            else
+            {
+                //set to white
+                ParticleSystem.MainModule psmain = LeftWingTrail.main;
+                psmain.startColor = new ParticleSystem.MinMaxGradient(Color.white);
+
+                psmain = RightWingTrail.main;
+                psmain.startColor = new ParticleSystem.MinMaxGradient(Color.white);
+            }
+        }
+
         void Update()
         {
             //if we dont have a player then return
@@ -59,35 +106,22 @@ namespace OpenFlightVRC.Effects
             //continually move ourselves to the player's position
             transform.position = playerInfoStore.Owner.GetPosition();
 
-            #region VFX
-            SetParticleSystemEmission(LeftWingTrail, VFX && playerInfoStore.isGliding);
-            SetParticleSystemEmission(RightWingTrail, VFX && playerInfoStore.isGliding);
-            if (VFX)
+            //Audio Changing
+            if (SFX)
             {
-                //check if contributer
-                if (playerInfoStore.isContributer)
-                {
-                    //set the trail particles to rainbow start color
-                    ParticleSystem.MainModule psmain = LeftWingTrail.main;
-                    psmain.startColor = gradient;
-
-                    psmain = RightWingTrail.main;
-                    psmain.startColor = gradient;
-                }
-                else
-                {
-                    //set to white
-                    ParticleSystem.MainModule psmain = LeftWingTrail.main;
-                    psmain.startColor = new ParticleSystem.MinMaxGradient(Color.white);
-
-                    psmain = RightWingTrail.main;
-                    psmain.startColor = new ParticleSystem.MinMaxGradient(Color.white);
-                }
-
+                float playerVelocity = playerInfoStore.Owner.GetVelocity().magnitude;
                 if (playerInfoStore.isGliding)
                 {
-                    //if gliding, play the trails
-                    //make sure this is before the animator updates so the trails teleport BEFORE emitting
+                    //set the pitch of the glide sound based on the player's velocity
+                    float pitch = Mathf.Lerp(minGlidePitch, maxGlidePitch, Mathf.InverseLerp(minGlideVelocity, maxGlideVelocity, playerVelocity));
+                    GlideSound.pitch = pitch;
+                }
+            }
+
+            if (VFX)
+            {
+                if (playerInfoStore.isGliding)
+                {
                     //local player only. We use VRC Object syncs on the trails
                     //This is stupidly needed because we cant get the tracking data of remote players, it just returns the bone data instead
                     if (playerInfoStore.Owner.isLocal)
@@ -98,34 +132,6 @@ namespace OpenFlightVRC.Effects
                     }
                 }
             }
-            #endregion
-
-            #region SFX
-            ControlSound(GlideSound, playerInfoStore.isGliding && SFX);
-            if (SFX)
-            {
-                float playerVelocity = playerInfoStore.Owner.GetVelocity().magnitude;
-
-                if (playerInfoStore.isGliding)
-                {
-                    //set the pitch of the glide sound based on the player's velocity
-                    float pitch = Mathf.Lerp(minGlidePitch, maxGlidePitch, Mathf.InverseLerp(minGlideVelocity, maxGlideVelocity, playerVelocity));
-                    GlideSound.pitch = pitch;
-                }
-
-                //we need to watch for the rising edge of the flap boolean
-                if (playerInfoStore.isFlapping && !wasFlapping)
-                {
-                    //play the flap sound
-                    FlapSound.PlayOneShot(FlapSound.clip);
-                }
-            }
-            #endregion
-
-            #region Store Previous Frame Data
-            wasGliding = playerInfoStore.isGliding;
-            wasFlapping = playerInfoStore.isFlapping;
-            #endregion
         }
     }
 }

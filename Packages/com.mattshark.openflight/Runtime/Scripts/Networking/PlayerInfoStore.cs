@@ -13,16 +13,57 @@ namespace OpenFlightVRC.Net
         /// <summary> Current player on this object, null if none </summary>
         public VRCPlayerApi Owner;
 
-        [UdonSynced]
-        public bool isFlying = false;
-        [UdonSynced]
-        public bool isGliding = false;
-        [UdonSynced]
-        public bool isFlapping = false;
+        [UdonSynced, FieldChangeCallback(nameof(isFlying))]
+        private bool _isFlying;
+        public bool isFlying
+        {
+            get { return _isFlying; }
+            set
+            {
+                _isFlying = value;
+            }
+        }
+        [UdonSynced, FieldChangeCallback(nameof(isGliding))]
+        private bool _isGliding;
+        public bool isGliding
+        {
+            get { return _isGliding; }
+            set
+            {
+                _isGliding = value;
+
+                //forward the event to the effects handler
+                effectsHandler.OnGlideChanged(value);
+            }
+        }
+
+        [UdonSynced, FieldChangeCallback(nameof(isFlapping))]
+        private bool _isFlapping;
+        public bool isFlapping
+        {
+            get { return _isFlapping; }
+            set
+            {
+                _isFlapping = value;
+
+                //forward the event to the effects handler
+                effectsHandler.OnFlappingChanged(value);
+            }
+        }
         [UdonSynced]
         public string flightMode = "Auto";
-        [UdonSynced]
-        public bool isContributer = false;
+        [UdonSynced, FieldChangeCallback(nameof(isContributer))]
+        private bool _isContributer;
+        public bool isContributer
+        {
+            get { return _isContributer; }
+            set
+            {
+                _isContributer = value;
+
+                effectsHandler.OnContributerChanged(value);
+            }
+        }
 
         internal AvatarDetection avatarDetection;
         internal WingFlightPlusGlide wingFlightPlusGlide;
