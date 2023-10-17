@@ -30,6 +30,11 @@ namespace OpenFlightVRC.Net
             get { return _isGliding; }
             set
             {
+                //if the value is the same, return instead of setting it
+                if (value == _isGliding)
+                {
+                    return;
+                }
                 _isGliding = value;
 
                 //forward the event to the effects handler
@@ -44,6 +49,11 @@ namespace OpenFlightVRC.Net
             get { return _isFlapping; }
             set
             {
+                //if the value is the same, return instead of setting it
+                if (value == _isFlapping)
+                {
+                    return;
+                }
                 _isFlapping = value;
 
                 //forward the event to the effects handler
@@ -59,6 +69,11 @@ namespace OpenFlightVRC.Net
             get { return _isContributer; }
             set
             {
+                //if the value is the same, return instead of setting it
+                if (value == _isContributer)
+                {
+                    return;
+                }
                 _isContributer = value;
 
                 effectsHandler.OnContributerChanged(value);
