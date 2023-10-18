@@ -27,10 +27,13 @@ namespace OpenFlightVRC.Effects
         public AudioSource FlapSound;
 
         public AudioSource GlideSound;
-        public float minGlidePitch = 0.5f;
-        public float maxGlidePitch = 1.5f;
-        public float minGlideVelocity = 5f;
-        public float maxGlideVelocity = 20f;
+        [Tooltip("Controls the pitch of the glide sound based on the player's velocity. Horizontal axis is velocity, vertical axis is pitch")]
+        public AnimationCurve glidePitchCurve;
+        //public float minGlidePitch = 0.5f;
+        //public float maxGlidePitch = 1.5f;
+        //public float minGlideVelocity = 5f;
+        //public float maxGlideVelocity = 20f;
+        public AnimationCurve trailParticleSizeCurve;
 
         private ParticleSystem.MinMaxGradient gradient;
         void Start()
@@ -138,7 +141,8 @@ namespace OpenFlightVRC.Effects
                 if (playerInfoStore.isGliding)
                 {
                     //set the pitch of the glide sound based on the player's velocity
-                    float pitch = Mathf.Lerp(minGlidePitch, maxGlidePitch, Mathf.InverseLerp(minGlideVelocity, maxGlideVelocity, playerVelocity));
+                    //float pitch = Mathf.Lerp(minGlidePitch, maxGlidePitch, Mathf.InverseLerp(minGlideVelocity, maxGlideVelocity, playerVelocity));
+                    float pitch = glidePitchCurve.Evaluate(playerVelocity);
                     GlideSound.pitch = pitch;
                 }
             }
@@ -152,6 +156,14 @@ namespace OpenFlightVRC.Effects
             {
                 if (playerInfoStore.isGliding)
                 {
+                    //adjust the start size of the trails based on the player's velocity
+                    float playerVelocity = playerInfoStore.Owner.GetVelocity().magnitude;
+                    float size = trailParticleSizeCurve.Evaluate(playerVelocity);
+                    ParticleSystem.MainModule psmain = LeftWingTrail.main;
+                    psmain.startSize = size;
+                    psmain = RightWingTrail.main;
+                    psmain.startSize = size;
+
                     //local player only. We use VRC Object syncs on the trails
                     //This is stupidly needed because we cant get the tracking data of remote players, it just returns the bone data instead
                     if (playerInfoStore.Owner.isLocal)
