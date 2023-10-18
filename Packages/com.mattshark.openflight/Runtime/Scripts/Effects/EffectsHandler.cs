@@ -17,9 +17,7 @@ namespace OpenFlightVRC.Effects
 
         [Header("VFX")]
         public bool VFX = true;
-        public GameObject LeftWingtip;
         public ParticleSystem LeftWingTrail;
-        public GameObject RightWingtip;
         public ParticleSystem RightWingTrail;
 
         [Header("Sounds")]
@@ -29,10 +27,6 @@ namespace OpenFlightVRC.Effects
         public AudioSource GlideSound;
         [Tooltip("Controls the pitch of the glide sound based on the player's velocity. Horizontal axis is velocity, vertical axis is pitch")]
         public AnimationCurve glidePitchCurve;
-        //public float minGlidePitch = 0.5f;
-        //public float maxGlidePitch = 1.5f;
-        //public float minGlideVelocity = 5f;
-        //public float maxGlideVelocity = 20f;
         public AnimationCurve trailParticleSizeCurve;
 
         private ParticleSystem.MinMaxGradient gradient;
@@ -169,8 +163,8 @@ namespace OpenFlightVRC.Effects
                     if (playerInfoStore.Owner.isLocal)
                     {
                         //set the wingtip transforms
-                        SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingtip, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
-                        SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingtip, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
+                        SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
+                        SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
                     }
                 }
             }
