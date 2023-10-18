@@ -28,6 +28,8 @@ namespace OpenFlightVRC.Effects
         [Tooltip("Controls the pitch of the glide sound based on the player's velocity. Horizontal axis is velocity, vertical axis is pitch")]
         public AnimationCurve glidePitchCurve;
         public AnimationCurve trailParticleSizeCurve;
+        [Tooltip("Controls the start speed of the trail particles based on the player's velocity. Horizontal axis is velocity, vertical axis is start speed")]
+        public AnimationCurve startSpeedCurve;
 
         private ParticleSystem.MinMaxGradient gradient;
         void Start()
@@ -153,10 +155,16 @@ namespace OpenFlightVRC.Effects
                     //adjust the start size of the trails based on the player's velocity
                     float playerVelocity = playerInfoStore.Owner.GetVelocity().magnitude;
                     float size = trailParticleSizeCurve.Evaluate(playerVelocity);
+                    //adjust the start speed of the trails based on the player's velocity
+                    float startSpeed = startSpeedCurve.Evaluate(playerVelocity);
+
                     ParticleSystem.MainModule psmain = LeftWingTrail.main;
                     psmain.startSize = size;
+                    psmain.startSpeed = startSpeed;
+
                     psmain = RightWingTrail.main;
                     psmain.startSize = size;
+                    psmain.startSpeed = startSpeed;
 
                     //local player only. We use VRC Object syncs on the trails
                     //This is stupidly needed because we cant get the tracking data of remote players, it just returns the bone data instead
