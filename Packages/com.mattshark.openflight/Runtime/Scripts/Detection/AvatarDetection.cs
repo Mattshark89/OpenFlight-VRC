@@ -175,6 +175,8 @@ namespace OpenFlightVRC
 		{
 			DataDictionary bases = json["Bases"].DataDictionary;
 			DataToken[] baseKeys = bases.GetKeys().ToArray();
+            DataToken hashV1 = new DataToken(in_hashV1);
+            DataToken hashV2 = new DataToken(in_hashV2);
 			for (int i = 0; i < bases.Count; i++)
 			{
 				DataDictionary avi_base = bases[baseKeys[i]].DataDictionary;
@@ -182,22 +184,17 @@ namespace OpenFlightVRC
 				for (int j = 0; j < avi_base.Count; j++)
 				{
 					DataDictionary variant = avi_base[avi_base_keys[j]].DataDictionary;
-					//DataToken[] avi_variant_keys = variant.GetKeys().ToArray();
-					DataToken[] hashArray = variant["Hash"].DataList.ToArray();
-					for (int k = 0; k < hashArray.Length; k++)
-					{
-						string hash = hashArray[k].String;
-						if (hash == in_hashV1 || hash == in_hashV2)
-						{
-							name = variant["Name"].String;
-							creator = variant["Creator"].String;
-							introducer = variant["Introducer"].String;
-							weight = (float)variant["Weight"].Number;
-							WingtipOffset = (float)variant["WingtipOffset"].Number;
-							return true;
-						}
+
+                    if (variant["Hash"].DataList.Contains(new DataToken(hashV1)) || variant["Hash"].DataList.Contains(new DataToken(hashV2)))
+                    {
+                        name = variant["Name"].String;
+                        creator = variant["Creator"].String;
+                        introducer = variant["Introducer"].String;
+                        weight = (float)variant["Weight"].Number;
+                        WingtipOffset = (float)variant["WingtipOffset"].Number;
+                        return true;
 					}
-				}
+                }
 			}
 
 			name = "Unknown";
