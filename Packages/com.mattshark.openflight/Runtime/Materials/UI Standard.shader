@@ -1,4 +1,4 @@
-﻿ Shader "Colorize"
+﻿ Shader "OpenFlight/Colorize"
  {
      Properties
      {
