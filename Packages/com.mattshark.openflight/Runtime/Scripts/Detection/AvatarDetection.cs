@@ -185,7 +185,7 @@ namespace OpenFlightVRC
 				{
 					DataDictionary variant = avi_base[avi_base_keys[j]].DataDictionary;
 
-                    if (variant["Hash"].DataList.Contains(new DataToken(hashV1)) || variant["Hash"].DataList.Contains(new DataToken(hashV2)))
+                    if (variant["Hash"].DataList.Contains(hashV1) || variant["Hash"].DataList.Contains(hashV2))
                     {
                         name = variant["Name"].String;
                         creator = variant["Creator"].String;
