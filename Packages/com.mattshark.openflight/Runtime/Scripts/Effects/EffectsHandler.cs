@@ -113,7 +113,8 @@ namespace OpenFlightVRC.Effects
             if (queueEmission)
             {
                 //if we have queued emission, enable it
-                OnGlideChanged(true);
+                SetParticleSystemEmission(LeftWingTrail, VFX);
+                SetParticleSystemEmission(RightWingTrail, VFX);
 
                 //reset the queue
                 queueEmission = false;
