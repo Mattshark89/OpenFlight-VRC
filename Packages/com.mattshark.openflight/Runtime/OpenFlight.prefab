@@ -1254,7 +1254,7 @@ MonoBehaviour:
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 4190905666689760636}
   flapStrengthBase: 285
-  flightGravityBase: 0.5
+  flightGravityBase: 0.4
   requireJump: 1
   allowLoco: 0
   useAvatarModifiers: 1
@@ -1294,7 +1294,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   horizontalStrengthMod: 1.5
-  glideControl: 2.3
+  glideControl: 2.5
   airFriction: 0.02
   useGravityCurve: 0
   gravityCurve:
