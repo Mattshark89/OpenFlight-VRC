@@ -143,10 +143,10 @@ MonoBehaviour:
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1200833383092323075}
   playerInfoStore: {fileID: 4548817697373630809}
-  VFX: 1
+  VFX: 0
   LeftWingTrail: {fileID: 4831116287091766749}
   RightWingTrail: {fileID: 108134917997573697}
-  SFX: 1
+  SFX: 0
   FlapSound: {fileID: 8871352057497442225}
   GlideSound: {fileID: 20076026291783297}
   glidePitchCurve:
@@ -164,6 +164,30 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 20
       value: 1.5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  glideVolumeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 15
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 136

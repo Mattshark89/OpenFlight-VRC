@@ -27,6 +27,7 @@ namespace OpenFlightVRC.Effects
         public AudioSource GlideSound;
         [Tooltip("Controls the pitch of the glide sound based on the player's velocity. Horizontal axis is velocity, vertical axis is pitch")]
         public AnimationCurve glidePitchCurve;
+        public AnimationCurve glideVolumeCurve;
         public AnimationCurve trailParticleSizeCurve;
         [Tooltip("Controls the start speed of the trail particles based on the player's velocity. Horizontal axis is velocity, vertical axis is start speed")]
         public AnimationCurve startSpeedCurve;
@@ -46,12 +47,21 @@ namespace OpenFlightVRC.Effects
         }
 
         /// <summary>
+        /// Called when the player's flying variable changes
+        /// </summary>
+        /// <param name="boolState">The state of the flying bool for the player</param>
+        internal void OnFlyingChanged(bool boolState)
+        {
+            ControlSound(GlideSound, SFX && boolState);
+        }
+
+        /// <summary>
         /// Called when the player's gliding variable changes
         /// </summary>
         /// <param name="boolState">The state of the gliding bool for the player</param>
         internal void OnGlideChanged(bool boolState)
         {
-            ControlSound(GlideSound, SFX && boolState);
+            //ControlSound(GlideSound, SFX && boolState);
 
             SetParticleSystemEmission(LeftWingTrail, VFX && boolState);
             SetParticleSystemEmission(RightWingTrail, VFX && boolState);
@@ -117,6 +127,11 @@ namespace OpenFlightVRC.Effects
                     //float pitch = Mathf.Lerp(minGlidePitch, maxGlidePitch, Mathf.InverseLerp(minGlideVelocity, maxGlideVelocity, playerVelocity));
                     float pitch = glidePitchCurve.Evaluate(playerVelocity);
                     GlideSound.pitch = pitch;
+
+                    //set the volume of the glide sound based on the player's velocity
+                    //float volume = Mathf.Lerp(minGlideVolume, maxGlideVolume, Mathf.InverseLerp(minGlideVelocity, maxGlideVelocity, playerVelocity));
+                    float volume = glideVolumeCurve.Evaluate(playerVelocity);
+                    GlideSound.volume = volume;
                 }
             }
             else

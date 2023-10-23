@@ -73,6 +73,8 @@ public class WingFlightPlusGlideEditor : Editor
 		bool fallToGlide_DEFAULT = false;
 
 		[Header("Advanced Settings (Only for specialized use!)")]
+        [Tooltip("Angle to offset the gliding direction by from your hands. (Default: 0)")]
+        public float glideAngleOffset = 0f;
 		[Tooltip(
 			"How much Flap Strength and Flight Gravity are affected by an avatar's armspan. Default values will make smaller avis feel lighter and larger avis heavier."
 		)]
@@ -427,8 +429,10 @@ public class WingFlightPlusGlideEditor : Editor
 
 						if (glideDelay <= 1)
 						{
-							wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * Vector3.forward, LHRot * Vector3.forward, 0.5f)); // The direction the player should go based on how they've angled their wings
-						}
+                            //rotate Vector3.forward by the gliding angle offset
+                            Vector3 newForward = Quaternion.Euler(0, glideAngleOffset, 0) * Vector3.forward;
+                            wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * newForward, LHRot * newForward, 0.5f)); // The direction the player should go based on how they've angled their wings
+                        }
 						else
 						{
 							wingDirection = newVelocity.normalized;

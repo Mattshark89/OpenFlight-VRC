@@ -20,7 +20,14 @@ namespace OpenFlightVRC.Net
             get { return _isFlying; }
             set
             {
+                if (value == _isFlying)
+                {
+                    return;
+                }
                 _isFlying = value;
+
+                //forward the event to the effects handler
+                effectsHandler.OnFlyingChanged(value);
             }
         }
         [UdonSynced, FieldChangeCallback(nameof(isGliding))]
