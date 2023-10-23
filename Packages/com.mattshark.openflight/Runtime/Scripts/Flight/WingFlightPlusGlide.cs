@@ -151,8 +151,8 @@ public class WingFlightPlusGlideEditor : Editor
 		private float downThrust = 0f;
 		private float flapAirFriction = 0.04f; // Prevents the gain of infinite speed while flapping. Set to 0 to remove this feature. THIS IS NOT A MAX SPEED
 
-		// Variables related to gliding
-		private Vector3 wingDirection;
+        // Variables related to gliding
+        internal Vector3 wingDirection;
 		private float steering;
 		private bool spinningRightRound = false; // Can't get that Protogen animation out of my head
 		private float rotSpeed = 0;
