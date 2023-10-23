@@ -19,6 +19,7 @@ namespace OpenFlightVRC.Effects
         public bool VFX = true;
         public ParticleSystem LeftWingTrail;
         public ParticleSystem RightWingTrail;
+        public ParticleSystem LandingParticles;
 
         [Header("Sounds")]
         public bool SFX = true;
@@ -53,6 +54,13 @@ namespace OpenFlightVRC.Effects
         internal void OnFlyingChanged(bool boolState)
         {
             ControlSound(GlideSound, SFX && boolState);
+
+            //if we exit flying, play the landing particles
+            if (VFX && !boolState)
+            {
+                //trigger burst particles
+                LandingParticles.Emit(50);
+            }
         }
 
         /// <summary>
@@ -96,6 +104,12 @@ namespace OpenFlightVRC.Effects
 
                 psmain = RightWingTrail.main;
                 psmain.startColor = gradient;
+
+                psmain = LandingParticles.main;
+                //make a copy of gradient
+                ParticleSystem.MinMaxGradient rainbowGradient = gradient;
+                rainbowGradient.mode = ParticleSystemGradientMode.RandomColor;
+                psmain.startColor = rainbowGradient;
             }
             else
             {
@@ -104,6 +118,9 @@ namespace OpenFlightVRC.Effects
                 psmain.startColor = new ParticleSystem.MinMaxGradient(Color.white);
 
                 psmain = RightWingTrail.main;
+                psmain.startColor = new ParticleSystem.MinMaxGradient(Color.white);
+
+                psmain = LandingParticles.main;
                 psmain.startColor = new ParticleSystem.MinMaxGradient(Color.white);
             }
         }
@@ -116,6 +133,8 @@ namespace OpenFlightVRC.Effects
 
             //continually move ourselves to the player's chest
             transform.position = playerInfoStore.Owner.GetBonePosition(HumanBodyBones.Chest);
+            //place the landing particles at the player's feet
+            LandingParticles.transform.position = playerInfoStore.Owner.GetPosition();
 
             //Audio Changing
             if (SFX)
