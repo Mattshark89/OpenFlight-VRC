@@ -17,7 +17,7 @@ namespace OpenFlightVRC.Effects
 
         [Header("VFX")]
         [FieldChangeCallback(nameof(VFX))]
-        private bool _VFX = true;
+        private bool _VFX;
         public bool VFX
         {
             get { return _VFX; }
@@ -53,7 +53,7 @@ namespace OpenFlightVRC.Effects
 
         [Header("Sounds")]
         [FieldChangeCallback(nameof(SFX))]
-        private bool _SFX = true;
+        private bool _SFX;
         public bool SFX
         {
             get { return _SFX; }
@@ -64,12 +64,7 @@ namespace OpenFlightVRC.Effects
                     return;
                 }
 
-                //stop sound effect if turned off
-                if (!value)
-                {
-                    FlapSound.Stop();
-                    GlideSound.Stop();
-                }
+                ControlSound(GlideSound, value && playerInfoStore.isGliding);
 
                 _SFX = value;
             }
@@ -89,6 +84,9 @@ namespace OpenFlightVRC.Effects
         {
             gradient = new ParticleSystem.MinMaxGradient(GetRainbowGradient());
             gradient.mode = ParticleSystemGradientMode.Gradient;
+
+            SFX = true;
+            VFX = true;
         }
 
         internal void OwnerChanged()
