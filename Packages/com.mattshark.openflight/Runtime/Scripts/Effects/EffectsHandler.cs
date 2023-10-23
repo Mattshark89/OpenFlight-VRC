@@ -64,6 +64,13 @@ namespace OpenFlightVRC.Effects
                     return;
                 }
 
+                //stop sound effect if turned off
+                if (!value)
+                {
+                    FlapSound.Stop();
+                    GlideSound.Stop();
+                }
+
                 _SFX = value;
             }
         }
@@ -196,11 +203,6 @@ namespace OpenFlightVRC.Effects
                     float volume = glideVolumeCurve.Evaluate(playerVelocity);
                     GlideSound.volume = volume;
                 }
-            }
-            else
-            {
-                //if SFX is turned off, stop the glide sound
-                GlideSound.Stop();
             }
 
             if (VFX)
