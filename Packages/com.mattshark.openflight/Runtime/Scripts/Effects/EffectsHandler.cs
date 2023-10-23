@@ -16,13 +16,57 @@ namespace OpenFlightVRC.Effects
         public PlayerInfoStore playerInfoStore;
 
         [Header("VFX")]
-        public bool VFX = true;
+        [FieldChangeCallback(nameof(VFX))]
+        private bool _VFX = true;
+        public bool VFX
+        {
+            get { return _VFX; }
+            set
+            {
+                if (value == _VFX)
+                {
+                    return;
+                }
+
+                //if rising edge, we need to see if we need to reinitialize the particles
+                if (value && playerInfoStore.isFlying)
+                {
+                    //start the particles
+                    LeftWingTrail.Play();
+                    RightWingTrail.Play();
+                }
+
+                //if falling edge
+                if (!value)
+                {
+                    //stop the particles
+                    LeftWingTrail.Stop();
+                    RightWingTrail.Stop();
+                }
+
+                _VFX = value;
+            }
+        }
         public ParticleSystem LeftWingTrail;
         public ParticleSystem RightWingTrail;
         public ParticleSystem LandingParticles;
 
         [Header("Sounds")]
-        public bool SFX = true;
+        [FieldChangeCallback(nameof(SFX))]
+        private bool _SFX = true;
+        public bool SFX
+        {
+            get { return _SFX; }
+            set
+            {
+                if (value == _SFX)
+                {
+                    return;
+                }
+
+                _SFX = value;
+            }
+        }
         public AudioSource FlapSound;
 
         public AudioSource GlideSound;
@@ -155,7 +199,7 @@ namespace OpenFlightVRC.Effects
             }
             else
             {
-                //if SFX is off, stop the glide sound
+                //if SFX is turned off, stop the glide sound
                 GlideSound.Stop();
             }
 
@@ -163,9 +207,6 @@ namespace OpenFlightVRC.Effects
             {
                 if (playerInfoStore.isGliding)
                 {
-                    LeftWingTrail.Play();
-                    RightWingTrail.Play();
-
                     //adjust the start size of the trails based on the player's velocity
                     float playerVelocity = playerInfoStore.Owner.GetVelocity().magnitude;
                     float size = trailParticleSizeCurve.Evaluate(playerVelocity);
@@ -189,12 +230,6 @@ namespace OpenFlightVRC.Effects
                         SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
                     }
                 }
-            }
-            else
-            {
-                //if VFX is off, stop the glide sound
-                LeftWingTrail.Stop();
-                RightWingTrail.Stop();
             }
         }
     }
