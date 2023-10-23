@@ -67,7 +67,8 @@ namespace OpenFlightVRC.Gizmos
             }
             arrow.SetActive(true);
             arrow.transform.rotation = Quaternion.LookRotation(velocity);
-            arrow.transform.localScale = new Vector3(velocity.magnitude, velocity.magnitude, velocity.magnitude);
+            //arrow.transform.localScale = new Vector3(velocity.magnitude, velocity.magnitude, velocity.magnitude);
+            arrow.transform.localScale = new Vector3(1, 1, velocity.magnitude);
             arrow.GetComponentInChildren<MeshRenderer>().material.color = color;
         }
 

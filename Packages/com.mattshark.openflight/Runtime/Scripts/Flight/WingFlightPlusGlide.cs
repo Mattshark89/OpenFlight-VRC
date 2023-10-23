@@ -75,6 +75,7 @@ public class WingFlightPlusGlideEditor : Editor
 		[Header("Advanced Settings (Only for specialized use!)")]
         [Tooltip("Angle to offset the gliding direction by from your hands. (Default: 0)")]
         public float glideAngleOffset = 0f;
+        float glideAngleOffset_DEFAULT = 0f;
 		[Tooltip(
 			"How much Flap Strength and Flight Gravity are affected by an avatar's armspan. Default values will make smaller avis feel lighter and larger avis heavier."
 		)]
@@ -739,6 +740,7 @@ public class WingFlightPlusGlideEditor : Editor
 			airFriction_DEFAULT = airFriction;
 			useGravityCurve_DEFAULT = useGravityCurve;
 			bankingTurns_DEFAULT = bankingTurns;
+            glideAngleOffset_DEFAULT = glideAngleOffset;
             Logger.Log("Defaults initialized.", this);
 		}
 
@@ -760,6 +762,7 @@ public class WingFlightPlusGlideEditor : Editor
 			airFriction = airFriction_DEFAULT;
 			useGravityCurve = useGravityCurve_DEFAULT;
 			bankingTurns = bankingTurns_DEFAULT;
+            glideAngleOffset = glideAngleOffset_DEFAULT;
             Logger.Log("Defaults restored.", this);
 		}
 	}
