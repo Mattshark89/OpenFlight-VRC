@@ -430,8 +430,9 @@ public class WingFlightPlusGlideEditor : Editor
 						if (glideDelay <= 1)
 						{
                             //rotate Vector3.forward by the gliding angle offset
-                            Vector3 newForward = Quaternion.Euler(0, glideAngleOffset, 0) * Vector3.forward;
-                            wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * newForward, LHRot * newForward, 0.5f)); // The direction the player should go based on how they've angled their wings
+                            Vector3 newForwardRight = Quaternion.Euler(glideAngleOffset, 0, 0) * Vector3.forward;
+                            Vector3 newForwardLeft = Quaternion.Euler(-glideAngleOffset, 0, 0) * Vector3.forward;
+                            wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * newForwardRight, LHRot * newForwardLeft, 0.5f)); // The direction the player should go based on how they've angled their wings
                         }
 						else
 						{

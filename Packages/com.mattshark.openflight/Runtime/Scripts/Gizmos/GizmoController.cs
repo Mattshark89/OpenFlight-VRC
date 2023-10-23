@@ -24,7 +24,6 @@ namespace OpenFlightVRC.Gizmos
         public TextMeshProUGUI LeftElbowDistanceText;
         public TextMeshProUGUI LeftWristDistanceText;
         [Header("Velocity Arrows")]
-        public GameObject velocityArrowsRoot;
         public GameObject wingDirectionGizmo;
         public GameObject playerVelocityGizmo;
         void Start()
@@ -55,13 +54,12 @@ namespace OpenFlightVRC.Gizmos
             #endregion
 
             //Wing direction gizmo
-            ScaleArrow(wingDirectionGizmo, velocityArrowsRoot.transform.position, wingFlightPlusGlide.wingDirection, Color.red);
-            ScaleArrow(playerVelocityGizmo, velocityArrowsRoot.transform.position, Networking.LocalPlayer.GetVelocity(), Color.blue);
+            ScaleArrow(wingDirectionGizmo, wingFlightPlusGlide.wingDirection, Color.red);
+            ScaleArrow(playerVelocityGizmo, Networking.LocalPlayer.GetVelocity(), Color.blue);
         }
 
-        private void ScaleArrow(GameObject arrow, Vector3 root, Vector3 velocity, Color color)
+        private void ScaleArrow(GameObject arrow, Vector3 velocity, Color color)
         {
-            arrow.transform.position = root;
             if (velocity.magnitude < 0.01f)
             {
                 arrow.SetActive(false);
