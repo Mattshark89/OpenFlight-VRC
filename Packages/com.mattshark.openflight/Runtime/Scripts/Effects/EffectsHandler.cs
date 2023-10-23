@@ -163,6 +163,9 @@ namespace OpenFlightVRC.Effects
             {
                 if (playerInfoStore.isGliding)
                 {
+                    LeftWingTrail.Play();
+                    RightWingTrail.Play();
+
                     //adjust the start size of the trails based on the player's velocity
                     float playerVelocity = playerInfoStore.Owner.GetVelocity().magnitude;
                     float size = trailParticleSizeCurve.Evaluate(playerVelocity);
