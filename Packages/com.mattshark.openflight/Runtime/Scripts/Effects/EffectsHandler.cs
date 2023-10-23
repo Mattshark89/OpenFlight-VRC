@@ -98,9 +98,6 @@ namespace OpenFlightVRC.Effects
             }
         }
 
-        /// <summary> Used to detect teleporting </summary>
-        Vector3 PlayerPos;
-        bool queueEmission = false;
         void Update()
         {
             //if we dont have a player then return
@@ -109,27 +106,6 @@ namespace OpenFlightVRC.Effects
 
             //continually move ourselves to the player's chest
             transform.position = playerInfoStore.Owner.GetBonePosition(HumanBodyBones.Chest);
-
-            if (queueEmission)
-            {
-                //if we have queued emission, enable it
-                SetParticleSystemEmission(LeftWingTrail, VFX);
-                SetParticleSystemEmission(RightWingTrail, VFX);
-
-                //reset the queue
-                queueEmission = false;
-            }
-
-            //detect if the player has been teleported by checking for a large enough delta between the player's position and our position
-            if (Vector3.Distance(PlayerPos, transform.position) > 1f)
-            {
-                //save state of the emission
-                queueEmission = LeftWingTrail.emission.enabled;
-
-                //disable emission
-                SetParticleSystemEmission(LeftWingTrail, false);
-                SetParticleSystemEmission(RightWingTrail, false);
-            }
 
             //Audio Changing
             if (SFX)
@@ -183,12 +159,6 @@ namespace OpenFlightVRC.Effects
                 LeftWingTrail.Stop();
                 RightWingTrail.Stop();
             }
-        }
-
-        void PostLateUpdate()
-        {
-            //save the player position
-            PlayerPos = transform.position;
         }
     }
 }
