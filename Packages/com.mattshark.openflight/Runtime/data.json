@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "1.17.0",
-  "JSON Date": "2023-10-21",
+  "JSON Version": "1.18.0",
+  "JSON Date": "2023-10-24",
   "Contributers": ["Happyrobot33", "Mattshark89", "DatGek", "Heather May", "mackandelius", "Morghus", "Krazen", "fundale", "Literally Marty", "Roimu", "Daernaro"],
   "Bases": {
     "Kitavali": {
@@ -854,6 +854,46 @@
         "Hash": ["-1364962744v2"],
         "Weight": 1,
         "WingtipOffset": 5
+      }
+    },
+    "Female Bat": {
+      "Original": {
+        "Name": "Female Bat",
+        "Creator": "Ximmer",
+        "Introducer": "Heather May",
+        "Hash": ["372563141v2"],
+        "Weight": 1,
+        "WingtipOffset": 3.5
+      }
+    },
+    "Feilong": {
+      "Original": {
+        "Name": "Feilong",
+        "Creator": "FLASTORE",
+        "Introducer": "Heather May",
+        "Hash": ["-582424562v2"],
+        "Weight": 1,
+        "WingtipOffset": 5.5
+      }
+    },
+    "Microbat": {
+      "Original": {
+        "Name": "Microbat",
+        "Creator": "Neops",
+        "Introducer": "Heather May",
+        "Hash": ["1412374679v2"],
+        "Weight": 1,
+        "WingtipOffset": 6.6
+      }
+    },
+    "Toastacuga": {
+      "Original": {
+        "Name": "Toastacuga",
+        "Creator": "Toastador",
+        "Introducer": "Heather May",
+        "Hash": ["291460065v2"],
+        "Weight": 1,
+        "WingtipOffset": 0
       }
     }
   }
