@@ -15,7 +15,6 @@ namespace OpenFlightVRC.Effects
     {
         public PlayerInfoStore playerInfoStore;
 
-        [Header("VFX")]
         [FieldChangeCallback(nameof(VFX))]
         private bool _VFX;
         public bool VFX
@@ -51,7 +50,6 @@ namespace OpenFlightVRC.Effects
         public ParticleSystem RightWingTrail;
         public ParticleSystem LandingParticles;
 
-        [Header("Sounds")]
         [FieldChangeCallback(nameof(SFX))]
         private bool _SFX;
         public bool SFX
@@ -80,6 +78,9 @@ namespace OpenFlightVRC.Effects
         public AnimationCurve startSpeedCurve;
 
         private ParticleSystem.MinMaxGradient gradient;
+        [Header("Helpers")]
+        public GameObject LeftHandRotation;
+        public GameObject RightHandRotation;
         void Start()
         {
             gradient = new ParticleSystem.MinMaxGradient(GetRainbowGradient());
@@ -229,10 +230,24 @@ namespace OpenFlightVRC.Effects
                     //This is stupidly needed because we cant get the tracking data of remote players, it just returns the bone data instead
                     if (playerInfoStore.Owner.isLocal)
                     {
-                        //set the wingtip transforms
-                        SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand), LeftWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
-                        SetWingtipTransform(playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand), RightWingTrail.gameObject, playerInfoStore.avatarDetection.WingtipOffset, playerInfoStore.avatarDetection.d_spinetochest);
+                        //set the rotation store objects to the player's hand rotation
+                        LeftHandRotation.transform.position = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
+                        LeftHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
+                        RightHandRotation.transform.position = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
+                        RightHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
                     }
+
+                    //copy the rotational information from the rotation store objects to the trail objects
+                    //instead of copying the position, we use the bone data so the position is always accurate
+                    //this implementation DOES mean the rotation will still lag ahead/behind the player, but it should be less noticeable than the position
+                    LeftWingTrail.transform.position = playerInfoStore.Owner.GetBonePosition(HumanBodyBones.LeftHand);
+                    LeftWingTrail.transform.rotation = LeftHandRotation.transform.rotation;
+                    RightWingTrail.transform.position = playerInfoStore.Owner.GetBonePosition(HumanBodyBones.RightHand);
+                    RightWingTrail.transform.rotation = RightHandRotation.transform.rotation;
+
+                    //set the wingtip transforms
+                    SetWingtipTransform(LeftWingTrail.gameObject, playerInfoStore.WingtipOffset, playerInfoStore.d_spinetochest);
+                    SetWingtipTransform(RightWingTrail.gameObject, playerInfoStore.WingtipOffset, playerInfoStore.d_spinetochest);
                 }
             }
         }
