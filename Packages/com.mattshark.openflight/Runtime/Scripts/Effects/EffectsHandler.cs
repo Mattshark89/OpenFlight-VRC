@@ -93,8 +93,8 @@ namespace OpenFlightVRC.Effects
         internal void OwnerChanged()
         {
             //set the owner of the trail objects
-            Networking.SetOwner(playerInfoStore.Owner, LeftWingTrail.gameObject);
-            Networking.SetOwner(playerInfoStore.Owner, RightWingTrail.gameObject);
+            Networking.SetOwner(playerInfoStore.Owner, LeftHandRotation);
+            Networking.SetOwner(playerInfoStore.Owner, RightHandRotation);
         }
 
         /// <summary>
@@ -231,9 +231,7 @@ namespace OpenFlightVRC.Effects
                     if (playerInfoStore.Owner.isLocal)
                     {
                         //set the rotation store objects to the player's hand rotation
-                        LeftHandRotation.transform.position = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
                         LeftHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
-                        RightHandRotation.transform.position = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
                         RightHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
                     }
 
