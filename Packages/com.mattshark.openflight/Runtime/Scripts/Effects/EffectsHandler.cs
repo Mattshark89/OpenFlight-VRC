@@ -110,6 +110,9 @@ namespace OpenFlightVRC.Effects
                 //trigger burst particles
                 LandingParticles.Emit(50);
             }
+
+            SetParticleSystemEmission(LeftWingTrail, VFX && boolState);
+            SetParticleSystemEmission(RightWingTrail, VFX && boolState);
         }
 
         /// <summary>
@@ -120,8 +123,8 @@ namespace OpenFlightVRC.Effects
         {
             //ControlSound(GlideSound, SFX && boolState);
 
-            SetParticleSystemEmission(LeftWingTrail, VFX && boolState);
-            SetParticleSystemEmission(RightWingTrail, VFX && boolState);
+            //SetParticleSystemEmission(LeftWingTrail, VFX && boolState);
+            //SetParticleSystemEmission(RightWingTrail, VFX && boolState);
         }
 
         /// <summary>
