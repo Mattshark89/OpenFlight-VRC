@@ -68,9 +68,7 @@ namespace OpenFlightVRC.UI
 
             return playerHeader + "\n" +
                 "isFlying: " + store.isFlying + "\n" +
-                "isGliding: " + store.isGliding + "\n" +
                 "isFlapping: " + store.isFlapping + "\n" +
-                "flightMode: " + store.flightMode + "\n" +
                 "isContributer: " + store.isContributer + "\n" +
                 "latency (ms): " + latency + "\n" +
                 "-------";

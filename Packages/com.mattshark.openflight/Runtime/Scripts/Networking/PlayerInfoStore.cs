@@ -30,24 +30,26 @@ namespace OpenFlightVRC.Net
                 effectsHandler.OnFlyingChanged(value);
             }
         }
-        [UdonSynced, FieldChangeCallback(nameof(isGliding))]
-        private bool _isGliding;
-        public bool isGliding
-        {
-            get { return _isGliding; }
-            set
-            {
-                //if the value is the same, return instead of setting it
-                if (value == _isGliding)
+        /*
+                [UdonSynced, FieldChangeCallback(nameof(isGliding))]
+                private bool _isGliding;
+                public bool isGliding
                 {
-                    return;
-                }
-                _isGliding = value;
+                    get { return _isGliding; }
+                    set
+                    {
+                        //if the value is the same, return instead of setting it
+                        if (value == _isGliding)
+                        {
+                            return;
+                        }
+                        _isGliding = value;
 
-                //forward the event to the effects handler
-                effectsHandler.OnGlideChanged(value);
-            }
-        }
+                        //forward the event to the effects handler
+                        effectsHandler.OnGlideChanged(value);
+                    }
+                }
+        */
 
         [UdonSynced, FieldChangeCallback(nameof(isFlapping))]
         private bool _isFlapping;
@@ -67,8 +69,6 @@ namespace OpenFlightVRC.Net
                 effectsHandler.OnFlappingChanged(value);
             }
         }
-        [UdonSynced]
-        public string flightMode = "Auto";
         [UdonSynced, FieldChangeCallback(nameof(isContributer))]
         private bool _isContributer;
         public bool isContributer
@@ -110,9 +110,8 @@ namespace OpenFlightVRC.Net
             if (Networking.LocalPlayer == Owner)
             {
                 isFlying = wingFlightPlusGlide.isFlying;
-                isGliding = wingFlightPlusGlide.isGliding;
+                //isGliding = wingFlightPlusGlide.isGliding;
                 isFlapping = wingFlightPlusGlide.isFlapping;
-                flightMode = openFlight.flightMode;
                 isContributer = contributerDetection.localPlayerIsContributer;
             }
         }
