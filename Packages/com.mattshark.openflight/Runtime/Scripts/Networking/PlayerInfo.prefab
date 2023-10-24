@@ -58,6 +58,8 @@ MonoBehaviour:
       Entry: 6
       Data: 
   _udonSharpBackingUdonBehaviour: {fileID: -8444781059147605421}
+  WingtipOffset: 0
+  d_spinetochest: 0
   effectsHandler: {fileID: 1249273843356016464}
 --- !u!114 &-8444781059147605421
 MonoBehaviour:
@@ -1696,7 +1698,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 6000
     size3D: 0
     rotation3D: 0
     gravityModifier:
@@ -6628,7 +6630,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 6000
     size3D: 0
     rotation3D: 0
     gravityModifier:
