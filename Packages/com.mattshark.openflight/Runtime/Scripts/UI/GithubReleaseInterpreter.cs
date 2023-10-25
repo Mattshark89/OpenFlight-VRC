@@ -68,8 +68,22 @@ namespace OpenFlightVRC
 
             outputText = "";
 
-            //check if on latest release
+            //check if the release we are on is a prerelease
+            bool isPrerelease = IsPrerelease(OF.OpenFlightVersion.ToString());
+            Logger.Log("World is on prerelease: " + isPrerelease, this);
+
+            //check if on latest release. If the world is on a prerelease, this compares to those. if it isnt, we want to find the latest release that isnt a prerelease
+            //string releaseVersion = releases[0]["tag_name"].ToString();
             string releaseVersion = releases[0]["tag_name"].ToString();
+            for (int i = 0; i < releases.Length; i++)
+            {
+                if (!isPrerelease && IsPrerelease(releases[i]["tag_name"].ToString()))
+                {
+                    continue;
+                }
+                releaseVersion = releases[i]["tag_name"].ToString();
+                break;
+            }
             //remove "OpenFlight-"
             latestReleaseVersion = releaseVersion.Substring(11);
             onLatestRelease = latestReleaseVersion == OF.OpenFlightVersion.ToString();
@@ -87,6 +101,13 @@ namespace OpenFlightVRC
                     releasesBehind = behind.ToString();
                     foundRelease = true;
                     break;
+                }
+
+                //if the world is on a prerelease, show all prereleases aswell. Otherwise, skip prereleases
+                if (!isPrerelease && IsPrerelease(release["tag_name"].ToString()))
+                {
+                    Logger.Log("Skipping prerelease " + release["tag_name"].ToString(), this);
+                    continue;
                 }
 
                 outputText += "<b>" + release["name"].ToString() + "</b>\n";
@@ -109,6 +130,16 @@ namespace OpenFlightVRC
                 outputText = "You are on the latest release!";
                 Logger.Log("On latest release!", this);
             }
+        }
+
+        /// <summary>
+        /// Checks if a release version is a prerelease.
+        /// </summary>
+        /// <param name="releaseVersion">The release version to check.</param>
+        /// <returns>True if the release version is a prerelease, false otherwise.</returns>
+        private bool IsPrerelease(string releaseVersion)
+        {
+            return releaseVersion.Contains("beta") || releaseVersion.Contains("alpha") || releaseVersion.Contains("rc");
         }
 
         /// <summary>
