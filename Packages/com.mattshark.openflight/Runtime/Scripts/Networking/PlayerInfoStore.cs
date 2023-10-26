@@ -87,6 +87,7 @@ namespace OpenFlightVRC.Net
             }
         }
 
+        //TODO: Merge these into a single world-relative float instead to save on network traffic
         [UdonSynced]
         public float WingtipOffset = 0f;
         [UdonSynced]
