@@ -38,7 +38,11 @@ namespace OpenFlightVRC
             Quaternion rotation = bone.rotation;
 
             Vector3 WingTipPosition = position + (rotation * Vector3.forward * new Vector3(0, 0, WingtipOffset * (float)d_spinetochest).z);
+            FinalizeWingtipPosition(objectToMove, position, rotation, WingTipPosition);
+        }
 
+        private static void FinalizeWingtipPosition(GameObject objectToMove, Vector3 position, Quaternion rotation, Vector3 WingTipPosition)
+        {
             objectToMove.transform.position = WingTipPosition;
 
             //rotate so it goes in the correct direction
@@ -49,19 +53,15 @@ namespace OpenFlightVRC
         /// Moves a gameobject to a wingtip position, but based on the object to moves current rotation and position
         /// </summary>
         /// <param name="objectToMove">The wingtip gameobject</param>
-        /// <param name="WingtipOffset">The offset of the wingtip</param>
-        /// <param name="d_spinetochest">The distance between the spine and the chest</param>
-        public static void SetWingtipTransform(GameObject objectToMove, float WingtipOffset, double d_spinetochest)
+        /// <param name="WorldWingtipOffset">The offset of the wingtip, in world space</param>
+        public static void SetWingtipTransform(GameObject objectToMove, float WorldWingtipOffset)
         {
             Vector3 position = objectToMove.transform.position;
             Quaternion rotation = objectToMove.transform.rotation;
 
-            Vector3 WingTipPosition = position + (rotation * Vector3.forward * new Vector3(0, 0, WingtipOffset * (float)d_spinetochest).z);
+            Vector3 WingTipPosition = position + (rotation * Vector3.forward * new Vector3(0, 0, WorldWingtipOffset).z);
 
-            objectToMove.transform.position = WingTipPosition;
-
-            //rotate so it goes in the correct direction
-            objectToMove.transform.RotateAround(position, rotation * Vector3.up, 70);
+            FinalizeWingtipPosition(objectToMove, position, rotation, WingTipPosition);
         }
 
         /// <summary>

@@ -244,8 +244,8 @@ namespace OpenFlightVRC.Effects
                     RightWingTrail.transform.rotation = RightHandRotation.transform.rotation;
 
                     //set the wingtip transforms
-                    SetWingtipTransform(LeftWingTrail.gameObject, playerInfoStore.WingtipOffset, playerInfoStore.d_spinetochest);
-                    SetWingtipTransform(RightWingTrail.gameObject, playerInfoStore.WingtipOffset, playerInfoStore.d_spinetochest);
+                    SetWingtipTransform(LeftWingTrail.gameObject, playerInfoStore.WorldWingtipOffset);
+                    SetWingtipTransform(RightWingTrail.gameObject, playerInfoStore.WorldWingtipOffset);
                 }
             }
         }

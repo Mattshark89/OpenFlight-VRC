@@ -70,8 +70,7 @@ namespace OpenFlightVRC.UI
                 "isFlying: " + store.isFlying + "\n" +
                 "isFlapping: " + store.isFlapping + "\n" +
                 "isContributer: " + store.isContributer + "\n" +
-                "wingtipOffset: " + store.WingtipOffset + "\n" +
-                "d_spinetochest: " + store.d_spinetochest + "\n" +
+                "WorldWingtipOffset: " + store.WorldWingtipOffset + "\n" +
                 "latency (ms): " + latency + "\n" +
                 "-------";
         }

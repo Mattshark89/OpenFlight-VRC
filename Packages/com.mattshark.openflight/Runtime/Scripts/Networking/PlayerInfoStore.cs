@@ -87,11 +87,8 @@ namespace OpenFlightVRC.Net
             }
         }
 
-        //TODO: Merge these into a single world-relative float instead to save on network traffic
         [UdonSynced]
-        public float WingtipOffset = 0f;
-        [UdonSynced]
-        public double d_spinetochest = 0f;
+        public float WorldWingtipOffset = 0f;
 
         internal AvatarDetection avatarDetection;
         internal WingFlightPlusGlide wingFlightPlusGlide;
@@ -119,8 +116,7 @@ namespace OpenFlightVRC.Net
                 //isGliding = wingFlightPlusGlide.isGliding;
                 isFlapping = wingFlightPlusGlide.isFlapping;
                 isContributer = contributerDetection.localPlayerIsContributer;
-                WingtipOffset = avatarDetection.WingtipOffset;
-                d_spinetochest = avatarDetection.d_spinetochest;
+                WorldWingtipOffset = avatarDetection.WingtipOffset * (float)avatarDetection.d_spinetochest;
             }
         }
 
