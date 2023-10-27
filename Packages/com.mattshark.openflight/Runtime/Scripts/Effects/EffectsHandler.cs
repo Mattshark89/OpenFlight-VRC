@@ -28,7 +28,7 @@ namespace OpenFlightVRC.Effects
                 }
 
                 //if rising edge, we need to see if we need to reinitialize the particles
-                if (value && playerInfoStore.isFlying)
+                if (value && playerInfoStore.IsFlying)
                 {
                     //start the particles
                     LeftWingTrail.Play();
@@ -62,7 +62,7 @@ namespace OpenFlightVRC.Effects
                     return;
                 }
 
-                ControlSound(GlideSound, value && playerInfoStore.isFlying);
+                ControlSound(GlideSound, value && playerInfoStore.IsFlying);
 
                 _SFX = value;
             }
@@ -116,19 +116,6 @@ namespace OpenFlightVRC.Effects
             SetParticleSystemEmission(RightWingTrail, VFX && boolState);
         }
 
-        /*
-                /// <summary>
-                /// Called when the player's gliding variable changes
-                /// </summary>
-                /// <param name="boolState">The state of the gliding bool for the player</param>
-                internal void OnGlideChanged(bool boolState)
-                {
-                    //ControlSound(GlideSound, SFX && boolState);
-
-                    //SetParticleSystemEmission(LeftWingTrail, VFX && boolState);
-                    //SetParticleSystemEmission(RightWingTrail, VFX && boolState);
-                }
-        */
         /// <summary>
         /// Called when the player's flap variable changes
         /// </summary>
@@ -194,7 +181,7 @@ namespace OpenFlightVRC.Effects
             if (SFX)
             {
                 float playerVelocity = playerInfoStore.Owner.GetVelocity().magnitude;
-                if (playerInfoStore.isFlying)
+                if (playerInfoStore.IsFlying)
                 {
                     //set the pitch of the glide sound based on the player's velocity
                     //float pitch = Mathf.Lerp(minGlidePitch, maxGlidePitch, Mathf.InverseLerp(minGlideVelocity, maxGlideVelocity, playerVelocity));
@@ -210,7 +197,7 @@ namespace OpenFlightVRC.Effects
 
             if (VFX)
             {
-                if (playerInfoStore.isFlying)
+                if (playerInfoStore.IsFlying)
                 {
                     //adjust the start size of the trails based on the player's velocity
                     float playerVelocity = playerInfoStore.Owner.GetVelocity().magnitude;

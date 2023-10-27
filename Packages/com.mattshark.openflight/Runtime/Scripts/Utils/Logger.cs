@@ -165,8 +165,16 @@ namespace OpenFlightVRC
         /// <returns>The color to use</returns>
         private static string ChooseColor(UdonSharpBehaviour self)
         {
-            //set random seed to hash of name
-            Random.InitState(self.name.GetHashCode());
+            //if the script is null, init to a constant
+            if (self == null)
+            {
+                Random.InitState(0);
+            }
+            else
+            {
+                //set random seed to hash of name
+                Random.InitState(self.name.GetHashCode());
+            }
 
             float Saturation = 1f;
             float Brightness = 1f;

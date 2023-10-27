@@ -6,6 +6,7 @@ using VRC.Udon;
 using Cyan.PlayerObjectPool;
 using TMPro;
 using OpenFlightVRC.Net;
+using System;
 
 namespace OpenFlightVRC.UI
 {
@@ -66,13 +67,21 @@ namespace OpenFlightVRC.UI
             //round it
             latency = Mathf.Round(latency);
 
+            //get the packed data in a bit string
+            string packedData = Convert.ToString(store.PackedData, 2).PadLeft(8, '0');
+
+            const string tab = "  ";
+
             return playerHeader + "\n" +
-                "isFlying: " + store.isFlying + "\n" +
-                "isFlapping: " + store.isFlapping + "\n" +
-                "isContributer: " + store.isContributer + "\n" +
-                "WorldWingtipOffset: " + store.WorldWingtipOffset + "\n" +
-                "latency (ms): " + latency + "\n" +
-                "-------";
+                tab + "latency (ms): " + latency + "\n" +
+                tab + "Extracted Data:\n" +
+                tab + tab + "isFlying: " + store.IsFlying + "\n" +
+                tab + tab + "isFlapping: " + store.IsFlapping + "\n" +
+                tab + tab + "isContributer: " + store.IsContributer + "\n" +
+                tab + "Synched Data:\n" +
+                tab + tab + "Packed Data: " + "0b" + packedData + "\n" +
+                tab + tab + "WorldWingtipOffset: " + store.WorldWingtipOffset + "\n" +
+                "---------------------";
         }
     }
 }

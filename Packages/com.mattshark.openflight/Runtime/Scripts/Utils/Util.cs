@@ -12,6 +12,46 @@ namespace OpenFlightVRC
     public class Util : UdonSharpBehaviour
     {
         /// <summary>
+        /// Returns a a byte that is made up of the bools in the array
+        /// </summary>
+        /// <param name="bools">The bools to pack into a byte</param>
+        /// <returns>A byte made up of the bools in the array</returns>
+        public static byte BitPackBool(params bool[] bools)
+        {
+            if (bools.Length > 8)
+            {
+                Logger.LogError("Too many bools to pack into a byte!", null);
+                return 0;
+            }
+
+            byte result = 0;
+            int length = bools.Length;
+            for (int i = 0; i < length; i++)
+            {
+                if (bools[i])
+                {
+                    result |= (byte)(1 << i);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Returns an array of bools that are made up of the bits in the byte
+        /// </summary>
+        /// <param name="b">The byte to unpack</param>
+        /// <returns>An array of bools made up of the bits in the byte</returns>
+        public static bool[] BitUnpackBool(byte b)
+        {
+            bool[] result = new bool[8];
+            for (int i = 0; i < 8; i++)
+            {
+                result[i] = (b & (1 << i)) != 0;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Returns the distance between two bones, modified by the scaling factor and spine
         /// </summary>
         /// <param name="bone1">The first bone</param>
@@ -70,7 +110,7 @@ namespace OpenFlightVRC
         /// </summary>
         /// <param name="vectors">The vector array to get the total distance of</param>
         /// <returns>The total distance of the vector array</returns>
-        public static float TotalVectorDistance(Vector3[] vectors)
+        public static float TotalVectorDistance(params Vector3[] vectors)
         {
             float totalDistance = 0;
             for (int i = 0; i < vectors.Length; i++)
@@ -104,7 +144,7 @@ namespace OpenFlightVRC
             Vector3 chest = localPlayer.GetBonePosition(HumanBodyBones.Chest);
             Vector3 Neck = localPlayer.GetBonePosition(HumanBodyBones.Neck);
             Vector3 Head = localPlayer.GetBonePosition(HumanBodyBones.Head);
-            float PlayerScale = TotalVectorDistance(new Vector3[] { footR, LowerLegR, UpperLegR, Hips, spine, chest, Neck, Head });
+            float PlayerScale = TotalVectorDistance(footR, LowerLegR, UpperLegR, Hips, spine, chest, Neck, Head);
 
             //if the player is too small, set the scale to 0.1
             PlayerScale = Mathf.Max(PlayerScale, 0.1f);

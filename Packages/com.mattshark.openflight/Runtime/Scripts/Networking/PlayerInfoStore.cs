@@ -1,4 +1,5 @@
 ﻿
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Engines;
 using OpenFlightVRC.Effects;
 using OpenFlightVRC.UI;
 using UdonSharp;
@@ -8,14 +9,15 @@ using VRC.Udon;
 
 namespace OpenFlightVRC.Net
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class PlayerInfoStore : UdonSharpBehaviour
     {
         /// <summary> Current player on this object, null if none </summary>
         public VRCPlayerApi Owner;
 
-        [UdonSynced, FieldChangeCallback(nameof(isFlying))]
+        [FieldChangeCallback(nameof(IsFlying))]
         private bool _isFlying;
-        public bool isFlying
+        public bool IsFlying
         {
             get { return _isFlying; }
             set
@@ -30,30 +32,10 @@ namespace OpenFlightVRC.Net
                 effectsHandler.OnFlyingChanged(value);
             }
         }
-        /*
-                [UdonSynced, FieldChangeCallback(nameof(isGliding))]
-                private bool _isGliding;
-                public bool isGliding
-                {
-                    get { return _isGliding; }
-                    set
-                    {
-                        //if the value is the same, return instead of setting it
-                        if (value == _isGliding)
-                        {
-                            return;
-                        }
-                        _isGliding = value;
 
-                        //forward the event to the effects handler
-                        effectsHandler.OnGlideChanged(value);
-                    }
-                }
-        */
-
-        [UdonSynced, FieldChangeCallback(nameof(isFlapping))]
+        [FieldChangeCallback(nameof(IsFlapping))]
         private bool _isFlapping;
-        public bool isFlapping
+        public bool IsFlapping
         {
             get { return _isFlapping; }
             set
@@ -69,9 +51,9 @@ namespace OpenFlightVRC.Net
                 effectsHandler.OnFlappingChanged(value);
             }
         }
-        [UdonSynced, FieldChangeCallback(nameof(isContributer))]
+        [FieldChangeCallback(nameof(IsContributer))]
         private bool _isContributer;
-        public bool isContributer
+        public bool IsContributer
         {
             get { return _isContributer; }
             set
@@ -87,8 +69,62 @@ namespace OpenFlightVRC.Net
             }
         }
 
-        [UdonSynced]
-        public float WorldWingtipOffset = 0f;
+        [FieldChangeCallback(nameof(WorldWingtipOffset))]
+        private float _WorldWingtipOffset;
+        public float WorldWingtipOffset
+        {
+            get { return _WorldWingtipOffset; }
+            set
+            {
+                //if the value is the same, return instead of setting it
+                if (value == _WorldWingtipOffset)
+                {
+                    return;
+                }
+                _WorldWingtipOffset = value;
+            }
+        }
+
+        [UdonSynced, FieldChangeCallback(nameof(PackedData))]
+        private byte _packedData;
+        /// <summary>
+        /// The packed data for this player. When set, it will unpack the data and set the values accordingly, and request serialization
+        /// </summary>
+        /// <remarks>
+        /// The data is packed as follows:
+        /// 0: IsFlying
+        /// 1: IsFlapping
+        /// 2: IsContributer
+        /// </remarks>
+        public byte PackedData
+        {
+            get { return _packedData; }
+            set
+            {
+                //if the value is the same, return instead of setting it
+                if (value == _packedData)
+                {
+                    return;
+                }
+                _packedData = value;
+
+                //unpack the data
+                bool[] unpackedData = Util.BitUnpackBool(_packedData);
+
+                //set the values
+                IsFlying = unpackedData[0];
+                IsFlapping = unpackedData[1];
+                IsContributer = unpackedData[2];
+
+                //if local player, request serialization
+                if (_isLocalPlayer)
+                {
+                    RequestSerialization();
+                }
+            }
+        }
+
+        private bool _isLocalPlayer;
 
         internal AvatarDetection avatarDetection;
         internal WingFlightPlusGlide wingFlightPlusGlide;
@@ -96,10 +132,7 @@ namespace OpenFlightVRC.Net
         internal ContributerDetection contributerDetection;
         public EffectsHandler effectsHandler;
 
-        void Start()
-        {
-
-        }
+        void Start() { }
 
         void Update()
         {
@@ -110,12 +143,12 @@ namespace OpenFlightVRC.Net
             }
 
             //if the local player owns this object, update the values
-            if (Networking.LocalPlayer == Owner)
+            if (_isLocalPlayer)
             {
-                isFlying = wingFlightPlusGlide.isFlying;
-                //isGliding = wingFlightPlusGlide.isGliding;
-                isFlapping = wingFlightPlusGlide.isFlapping;
-                isContributer = contributerDetection.localPlayerIsContributer;
+                //IsFlying = wingFlightPlusGlide.isFlying;
+                //IsFlapping = wingFlightPlusGlide.isFlapping;
+                //IsContributer = contributerDetection.localPlayerIsContributer;
+                PackedData = Util.BitPackBool(wingFlightPlusGlide.isFlying, wingFlightPlusGlide.isFlapping, contributerDetection.localPlayerIsContributer);
                 WorldWingtipOffset = avatarDetection.WingtipOffset * (float)avatarDetection.d_spinetochest;
             }
         }
@@ -124,6 +157,7 @@ namespace OpenFlightVRC.Net
         {
             Logger.Log("Owner set to " + Owner.displayName, this);
             effectsHandler.OwnerChanged();
+            _isLocalPlayer = Networking.LocalPlayer == Owner;
         }
 
         public void _OnCleanup()
