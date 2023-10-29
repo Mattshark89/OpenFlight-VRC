@@ -27,8 +27,8 @@ namespace OpenFlightVRC.Effects
                     return;
                 }
 
-                //if rising edge, we need to see if we need to reinitialize the particles
-                if (value && playerInfoStore.IsFlying)
+                //if rising edge, allow the particles to play
+                if (value)
                 {
                     //start the particles
                     LeftWingTrail.Play();
@@ -41,6 +41,9 @@ namespace OpenFlightVRC.Effects
                     //stop the particles
                     LeftWingTrail.Stop();
                     RightWingTrail.Stop();
+                    //remove all particles
+                    LeftWingTrail.Clear();
+                    RightWingTrail.Clear();
                 }
 
                 _VFX = value;
