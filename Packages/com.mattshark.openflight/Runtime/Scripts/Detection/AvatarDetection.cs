@@ -85,6 +85,18 @@ namespace OpenFlightVRC
 			}
 		}
 
+		//detect when the avatars player scale changes and re save the spine to chest distance
+		public override void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight)
+		{
+			Logger.Log("Avatar Scale Changed, reevaluating d_spinetochest...", this);
+			//get spine and hips first, as they are used to calculate the avatar scale
+			Vector3 spine = localPlayer.GetBonePosition(HumanBodyBones.Spine);
+			Vector3 chest = localPlayer.GetBonePosition(HumanBodyBones.Chest);
+
+			//calculate the avatar scale using the distance from hips to spine
+			d_spinetochest = Vector3.Distance(chest, spine);
+		}
+
 		void RunDetection()
 		{
 			//if the JSON list is empty, then return
