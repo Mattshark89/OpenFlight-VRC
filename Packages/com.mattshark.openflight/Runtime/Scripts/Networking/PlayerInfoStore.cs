@@ -69,7 +69,7 @@ namespace OpenFlightVRC.Net
             }
         }
 
-        [FieldChangeCallback(nameof(WorldWingtipOffset))]
+        [UdonSynced, FieldChangeCallback(nameof(WorldWingtipOffset))]
         private float _WorldWingtipOffset;
         public float WorldWingtipOffset
         {
@@ -81,7 +81,14 @@ namespace OpenFlightVRC.Net
                 {
                     return;
                 }
+
                 _WorldWingtipOffset = value;
+
+                //if local player, request serialization
+                if (_isLocalPlayer)
+                {
+                    RequestSerialization();
+                }
             }
         }
 

@@ -58,8 +58,6 @@ MonoBehaviour:
       Entry: 6
       Data: 
   _udonSharpBackingUdonBehaviour: {fileID: -8444781059147605421}
-  WingtipOffset: 0
-  d_spinetochest: 0
   effectsHandler: {fileID: 1249273843356016464}
 --- !u!114 &-8444781059147605421
 MonoBehaviour:
@@ -80,7 +78,7 @@ MonoBehaviour:
   SynchronizePosition: 0
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
-  _syncMethod: 2
+  _syncMethod: 3
   serializedProgramAsset: {fileID: 11400000, guid: d1d2e2fae87f2dd458aa624b78347999,
     type: 2}
   programSource: {fileID: 11400000, guid: cac308b897ff0244092e63a1a9138aa8, type: 2}
@@ -718,6 +716,7 @@ MonoBehaviour:
   LeftWingTrail: {fileID: 4831116287091766749}
   RightWingTrail: {fileID: 108134917997573697}
   LandingParticles: {fileID: 2889740770237252602}
+  SoundObject: {fileID: 8772166183296685430}
   FlapSound: {fileID: 8871352057497442225}
   GlideSound: {fileID: 20076026291783297}
   glidePitchCurve:

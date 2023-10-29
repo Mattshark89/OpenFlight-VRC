@@ -67,6 +67,7 @@ namespace OpenFlightVRC.Effects
                 _SFX = value;
             }
         }
+        public GameObject SoundObject;
         public AudioSource FlapSound;
 
         public AudioSource GlideSound;
@@ -95,6 +96,9 @@ namespace OpenFlightVRC.Effects
             //set the owner of the trail objects
             Networking.SetOwner(playerInfoStore.Owner, LeftHandRotation);
             Networking.SetOwner(playerInfoStore.Owner, RightHandRotation);
+
+            //initialize to asleep state
+            sleeping = true;
         }
 
         /// <summary>
@@ -103,17 +107,60 @@ namespace OpenFlightVRC.Effects
         /// <param name="boolState">The state of the flying bool for the player</param>
         internal void OnFlyingChanged(bool boolState)
         {
+            //wakeup / sleep logic
+            if (boolState)
+            {
+                sleeping = false;
+
+                HandleWingtips();
+            }
+            else
+            {
+                sleeping = true;
+            }
+
             ControlSound(GlideSound, SFX && boolState);
 
             //if we exit flying, play the landing particles
+            float secondsToWait = Time.realtimeSinceStartup - Networking.SimulationTime(playerInfoStore.Owner);
+            //cap it at 3 seconds due to the editor being odd
+            secondsToWait = Mathf.Clamp(secondsToWait, 0, 1);
+            //if unity editor, cap to 50ms since thats what it should be in desktop
+            #if UNITY_EDITOR
+            secondsToWait = 0.05f;
+            #endif
             if (VFX && !boolState)
             {
-                //trigger burst particles
-                LandingParticles.Emit(50);
+                SendCustomEventDelayedSeconds(nameof(DelayedLandingParticlesTrigger), secondsToWait);
             }
 
-            SetParticleSystemEmission(LeftWingTrail, VFX && boolState);
-            SetParticleSystemEmission(RightWingTrail, VFX && boolState);
+            if (VFX && boolState)
+            {
+                //start the particles. This ensures the synched objects are in the right place
+                SendCustomEventDelayedSeconds(nameof(DelayedParticlesStart), secondsToWait);
+            }
+            else
+            {
+                //stop the particles
+                SetParticleSystemEmission(LeftWingTrail, false);
+                SetParticleSystemEmission(RightWingTrail, false);
+            }
+        }
+
+        public void DelayedLandingParticlesTrigger()
+        {
+            //move the landing particles to the player's feet
+            LandingParticles.transform.position = playerInfoStore.Owner.GetPosition();
+
+            //trigger burst particles
+            LandingParticles.Emit(50);
+        }
+
+        public void DelayedParticlesStart()
+        {
+            //start the particles
+            SetParticleSystemEmission(LeftWingTrail, true);
+            SetParticleSystemEmission(RightWingTrail, true);
         }
 
         /// <summary>
@@ -166,30 +213,34 @@ namespace OpenFlightVRC.Effects
             }
         }
 
+        private bool sleeping = false;
         void Update()
         {
             //if we dont have a player then return
             if (playerInfoStore.Owner == null)
                 return;
 
-            //continually move ourselves to the player's chest
-            transform.position = playerInfoStore.Owner.GetBonePosition(HumanBodyBones.Chest);
-            //place the landing particles at the player's feet
-            LandingParticles.transform.position = playerInfoStore.Owner.GetPosition();
+            //if both are off, return to save on network traffic and performance
+            if (!SFX && !VFX)
+                return;
+
+            //if we are sleeping, return
+            if (sleeping)
+                return;
 
             //Audio Changing
             if (SFX)
             {
+                //continually move the audio to the player's chest
+                SoundObject.transform.position = playerInfoStore.Owner.GetBonePosition(HumanBodyBones.Chest);
                 float playerVelocity = playerInfoStore.Owner.GetVelocity().magnitude;
                 if (playerInfoStore.IsFlying)
                 {
                     //set the pitch of the glide sound based on the player's velocity
-                    //float pitch = Mathf.Lerp(minGlidePitch, maxGlidePitch, Mathf.InverseLerp(minGlideVelocity, maxGlideVelocity, playerVelocity));
                     float pitch = glidePitchCurve.Evaluate(playerVelocity);
                     GlideSound.pitch = pitch;
 
                     //set the volume of the glide sound based on the player's velocity
-                    //float volume = Mathf.Lerp(minGlideVolume, maxGlideVolume, Mathf.InverseLerp(minGlideVelocity, maxGlideVelocity, playerVelocity));
                     float volume = glideVolumeCurve.Evaluate(playerVelocity);
                     GlideSound.volume = volume;
                 }
@@ -213,28 +264,33 @@ namespace OpenFlightVRC.Effects
                     psmain.startSize = size;
                     psmain.startSpeed = startSpeed;
 
-                    //local player only. We use VRC Object syncs on the trails
-                    //This is stupidly needed because we cant get the tracking data of remote players, it just returns the bone data instead
-                    if (playerInfoStore.Owner.isLocal)
-                    {
-                        //set the rotation store objects to the player's hand rotation
-                        LeftHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
-                        RightHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
-                    }
-
-                    //copy the rotational information from the rotation store objects to the trail objects
-                    //instead of copying the position, we use the bone data so the position is always accurate
-                    //this implementation DOES mean the rotation will still lag ahead/behind the player, but it should be less noticeable than the position
-                    LeftWingTrail.transform.position = playerInfoStore.Owner.GetBonePosition(HumanBodyBones.LeftHand);
-                    LeftWingTrail.transform.rotation = LeftHandRotation.transform.rotation;
-                    RightWingTrail.transform.position = playerInfoStore.Owner.GetBonePosition(HumanBodyBones.RightHand);
-                    RightWingTrail.transform.rotation = RightHandRotation.transform.rotation;
-
-                    //set the wingtip transforms
-                    SetWingtipTransform(LeftWingTrail.gameObject, playerInfoStore.WorldWingtipOffset);
-                    SetWingtipTransform(RightWingTrail.gameObject, playerInfoStore.WorldWingtipOffset);
+                    HandleWingtips();
                 }
             }
+        }
+
+        private void HandleWingtips()
+        {
+            //local player only. We use VRC Object syncs on the trails
+            //This is stupidly needed because we cant get the tracking data of remote players, it just returns the bone data instead
+            if (playerInfoStore.Owner.isLocal)
+            {
+                //set the rotation store objects to the player's hand rotation
+                LeftHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
+                RightHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
+            }
+
+            //copy the rotational information from the rotation store objects to the trail objects
+            //instead of copying the position, we use the bone data so the position is always accurate
+            //this implementation DOES mean the rotation will still lag ahead/behind the player, but it should be less noticeable than the position
+            LeftWingTrail.transform.position = playerInfoStore.Owner.GetBonePosition(HumanBodyBones.LeftHand);
+            LeftWingTrail.transform.rotation = LeftHandRotation.transform.rotation;
+            RightWingTrail.transform.position = playerInfoStore.Owner.GetBonePosition(HumanBodyBones.RightHand);
+            RightWingTrail.transform.rotation = RightHandRotation.transform.rotation;
+
+            //set the wingtip transforms
+            SetWingtipTransform(LeftWingTrail.gameObject, playerInfoStore.WorldWingtipOffset);
+            SetWingtipTransform(RightWingTrail.gameObject, playerInfoStore.WorldWingtipOffset);
         }
     }
 }
