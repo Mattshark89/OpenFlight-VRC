@@ -224,13 +224,16 @@ namespace OpenFlightVRC.Effects
             if (sleeping)
                 return;
         
-            //local player only. We use VRC Object syncs on the trails
-            //This is stupidly needed because we cant get the tracking data of remote players, it just returns the bone data instead
-            if (playerInfoStore.Owner.isLocal)
+            if (playerInfoStore.IsFlying)
             {
-                //set the rotation store objects to the player's hand rotation
-                LeftHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
-                RightHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
+                //local player only. We use VRC Object syncs on the trails
+                //This is stupidly needed because we cant get the tracking data of remote players, it just returns the bone data instead
+                if (playerInfoStore.Owner.isLocal)
+                {
+                    //set the rotation store objects to the player's hand rotation
+                    LeftHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
+                    RightHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
+                }
             }
 
             //if both are off, return to save on network traffic and performance
