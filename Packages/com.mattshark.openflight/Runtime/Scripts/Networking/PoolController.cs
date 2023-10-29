@@ -26,6 +26,7 @@ namespace OpenFlightVRC.Net
 
         void Update()
         {
+            //TODO: make this not run every frame, and instead do it on property change
             //set the variables of each effect handler
             foreach (EffectsHandler handler in EffectHandlers)
             {
