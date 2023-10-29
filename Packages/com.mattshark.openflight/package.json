@@ -1,7 +1,7 @@
 {
   "name": "com.mattshark.openflight",
   "displayName": "OpenFlight",
-  "version": "1.6.0-beta.3",
+  "version": "1.6.0-beta.4",
   "description": "A VRChat flight system that allow all kinds of avatars to fly. https://github.com/Mattshark89/OpenFlight-VRC",
   "bugs" : {
     "url" : "https://github.com/Mattshark89/OpenFlight-VRC/issues"
@@ -16,8 +16,7 @@
   },
   "gitDependencies": {},
   "vpmDependencies": {
-    "com.vrchat.worlds" : "^3.3.0",
-    "com.vrchat.udonsharp" : "^1.1.9",
+    "com.vrchat.worlds" : "~3.4.1",
     "com.cyan.playerobjectpool" : "^1.1.2"
   },
   "legacyFolders": {
