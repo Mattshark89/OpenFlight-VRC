@@ -220,12 +220,21 @@ namespace OpenFlightVRC.Effects
             if (playerInfoStore.Owner == null)
                 return;
 
-            //if both are off, return to save on network traffic and performance
-            if (!SFX && !VFX)
-                return;
-
             //if we are sleeping, return
             if (sleeping)
+                return;
+        
+            //local player only. We use VRC Object syncs on the trails
+            //This is stupidly needed because we cant get the tracking data of remote players, it just returns the bone data instead
+            if (playerInfoStore.Owner.isLocal)
+            {
+                //set the rotation store objects to the player's hand rotation
+                LeftHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
+                RightHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
+            }
+
+            //if both are off, return to save on network traffic and performance
+            if (!SFX && !VFX)
                 return;
 
             //Audio Changing
@@ -271,15 +280,6 @@ namespace OpenFlightVRC.Effects
 
         private void HandleWingtips()
         {
-            //local player only. We use VRC Object syncs on the trails
-            //This is stupidly needed because we cant get the tracking data of remote players, it just returns the bone data instead
-            if (playerInfoStore.Owner.isLocal)
-            {
-                //set the rotation store objects to the player's hand rotation
-                LeftHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
-                RightHandRotation.transform.rotation = playerInfoStore.Owner.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
-            }
-
             //copy the rotational information from the rotation store objects to the trail objects
             //instead of copying the position, we use the bone data so the position is always accurate
             //this implementation DOES mean the rotation will still lag ahead/behind the player, but it should be less noticeable than the position
