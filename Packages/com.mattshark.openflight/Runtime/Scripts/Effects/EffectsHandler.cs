@@ -30,6 +30,9 @@ namespace OpenFlightVRC.Effects
                 //if rising edge, allow the particles to play
                 if (value)
                 {
+                    //make sure effects are near the hands before starting
+                    HandleWingtips();
+
                     //start the particles
                     LeftWingTrail.Play();
                     RightWingTrail.Play();
@@ -102,6 +105,19 @@ namespace OpenFlightVRC.Effects
 
             //initialize to asleep state
             sleeping = true;
+
+            //set our name to owned
+            LeftHandRotation.name = playerInfoStore.Owner.displayName + "'s LeftHandRotation";
+            RightHandRotation.name = playerInfoStore.Owner.displayName + "'s RightHandRotation";
+            LandingParticles.name = playerInfoStore.Owner.displayName + "'s LandingParticles";
+        }
+
+        internal void OnCleanup()
+        {
+            //set our name to unowned
+            LeftHandRotation.name = "LeftHandRotation (Unowned)";
+            RightHandRotation.name = "RightHandRotation (Unowned)";
+            LandingParticles.name = "LandingParticles (Unowned)";
         }
 
         /// <summary>
@@ -123,15 +139,7 @@ namespace OpenFlightVRC.Effects
             }
 
             ControlSound(GlideSound, SFX && boolState);
-
-            //if we exit flying, play the landing particles
-            float secondsToWait = Time.realtimeSinceStartup - Networking.SimulationTime(playerInfoStore.Owner);
-            //cap it at 3 seconds due to the editor being odd
-            secondsToWait = Mathf.Clamp(secondsToWait, 0, 1);
-            //if unity editor, cap to 50ms since thats what it should be in desktop
-            #if UNITY_EDITOR
-            secondsToWait = 0.05f;
-            #endif
+            float secondsToWait = CalculateNetworkLatencyDelay();
             if (VFX && !boolState)
             {
                 SendCustomEventDelayedSeconds(nameof(DelayedLandingParticlesTrigger), secondsToWait);
@@ -140,14 +148,26 @@ namespace OpenFlightVRC.Effects
             if (VFX && boolState)
             {
                 //start the particles. This ensures the synched objects are in the right place
-                SendCustomEventDelayedSeconds(nameof(DelayedParticlesStart), secondsToWait);
+                SendCustomEventDelayedSeconds(nameof(DelayedTrailParticlesStart), secondsToWait);
             }
             else
             {
                 //stop the particles
-                SetParticleSystemEmission(LeftWingTrail, false);
-                SetParticleSystemEmission(RightWingTrail, false);
+                SendCustomEventDelayedSeconds(nameof(DelayedTrailParticlesStop), secondsToWait);
             }
+        }
+
+        private float CalculateNetworkLatencyDelay()
+        {
+            //if we exit flying, play the landing particles
+            float secondsToWait = Time.realtimeSinceStartup - Networking.SimulationTime(playerInfoStore.Owner);
+            //cap it at 3 seconds due to the editor being odd
+            secondsToWait = Mathf.Clamp(secondsToWait, 0, 1);
+            //if unity editor, cap to 50ms since thats what it should be in desktop
+#if UNITY_EDITOR
+            secondsToWait = 0.05f;
+#endif
+            return secondsToWait;
         }
 
         public void DelayedLandingParticlesTrigger()
@@ -159,11 +179,18 @@ namespace OpenFlightVRC.Effects
             LandingParticles.Emit(50);
         }
 
-        public void DelayedParticlesStart()
+        public void DelayedTrailParticlesStart()
         {
             //start the particles
             SetParticleSystemEmission(LeftWingTrail, true);
             SetParticleSystemEmission(RightWingTrail, true);
+        }
+
+        public void DelayedTrailParticlesStop()
+        {
+            //stop the particles
+            SetParticleSystemEmission(LeftWingTrail, false);
+            SetParticleSystemEmission(RightWingTrail, false);
         }
 
         /// <summary>
@@ -286,6 +313,10 @@ namespace OpenFlightVRC.Effects
 
         private void HandleWingtips()
         {
+            //skip if player undefined
+            if (playerInfoStore.Owner == null)
+                return;
+
             //copy the rotational information from the rotation store objects to the trail objects
             //instead of copying the position, we use the bone data so the position is always accurate
             //this implementation DOES mean the rotation will still lag ahead/behind the player, but it should be less noticeable than the position

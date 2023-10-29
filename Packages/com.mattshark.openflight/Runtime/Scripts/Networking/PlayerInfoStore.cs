@@ -165,11 +165,16 @@ namespace OpenFlightVRC.Net
             Logger.Log("Owner set to " + Owner.displayName, this);
             effectsHandler.OwnerChanged();
             _isLocalPlayer = Networking.LocalPlayer == Owner;
+
+            //change the name of this object to the player's name
+            gameObject.name = Owner.displayName + "'s PlayerInfoStore";
         }
 
         public void _OnCleanup()
         {
-
+            //cleanup and set the name to not owned
+            gameObject.name = "PlayerInfoStore (Not Owned)";
+            effectsHandler.OnCleanup();
         }
     }
 }
