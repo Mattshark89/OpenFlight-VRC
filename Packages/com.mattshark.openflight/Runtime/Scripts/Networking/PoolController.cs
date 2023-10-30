@@ -11,7 +11,7 @@ using OpenFlightVRC.Effects;
 namespace OpenFlightVRC.Net
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class PoolController : UdonSharpBehaviour
+    public class PoolController : LoggableUdonSharpBehaviour
     {
         public CyanPlayerObjectAssigner Assigner;
         public AvatarDetection avatarDetection;

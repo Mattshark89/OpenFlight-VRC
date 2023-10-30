@@ -13,7 +13,7 @@ using static OpenFlightVRC.Util;
 namespace OpenFlightVRC
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class AvatarDetection : UdonSharpBehaviour
+    public class AvatarDetection : LoggableUdonSharpBehaviour
 	{
 		VRCPlayerApi localPlayer = null;
 		public string debugInfo = ""; //Contains all the debug info about avatar detection

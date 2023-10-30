@@ -8,7 +8,7 @@ using static OpenFlightVRC.Util;
 
 namespace OpenFlightVRC.Gizmos
 {
-    public class GizmoController : UdonSharpBehaviour
+    public class GizmoController : LoggableUdonSharpBehaviour
     {
         [Header("Script References")]
         public AvatarDetection avatarDetection;

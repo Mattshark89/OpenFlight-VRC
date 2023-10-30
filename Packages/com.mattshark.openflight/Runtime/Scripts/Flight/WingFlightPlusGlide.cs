@@ -35,7 +35,7 @@ public class WingFlightPlusGlideEditor : Editor
 #endif
 
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class WingFlightPlusGlide : UdonSharpBehaviour
+    public class WingFlightPlusGlide : LoggableUdonSharpBehaviour
 	{
 		[Header("Basic Settings")]
 		// Both of these "base" values are by default affected by the avatar's armspan. See sizeCurve.

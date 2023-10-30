@@ -11,7 +11,7 @@ using static OpenFlightVRC.Util;
 namespace OpenFlightVRC.Effects
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class EffectsHandler : UdonSharpBehaviour
+    public class EffectsHandler : LoggableUdonSharpBehaviour
     {
         public PlayerInfoStore playerInfoStore;
 
@@ -118,6 +118,15 @@ namespace OpenFlightVRC.Effects
             LeftHandRotation.name = "LeftHandRotation (Unowned)";
             RightHandRotation.name = "RightHandRotation (Unowned)";
             LandingParticles.name = "LandingParticles (Unowned)";
+
+            //stop the particles
+            LeftWingTrail.Stop();
+            RightWingTrail.Stop();
+            LandingParticles.Stop();
+
+            //stop the sounds
+            FlapSound.Stop();
+            GlideSound.Stop();
         }
 
         /// <summary>

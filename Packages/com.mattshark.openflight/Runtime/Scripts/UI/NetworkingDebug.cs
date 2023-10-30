@@ -11,7 +11,7 @@ using System;
 namespace OpenFlightVRC.UI
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class NetworkingDebug : UdonSharpBehaviour
+    public class NetworkingDebug : LoggableUdonSharpBehaviour
     {
         private CyanPlayerObjectAssigner Assigner;
         public UdonBehaviour assignerProxy;

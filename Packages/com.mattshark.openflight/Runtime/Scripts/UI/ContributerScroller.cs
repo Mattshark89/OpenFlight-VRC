@@ -9,7 +9,7 @@ using VRC.Udon;
 namespace OpenFlightVRC.UI
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class ContributerScroller : UdonSharpBehaviour
+    public class ContributerScroller : LoggableUdonSharpBehaviour
     {
         public GameObject T1;
         public GameObject ScrollRect;

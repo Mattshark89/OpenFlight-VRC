@@ -10,7 +10,7 @@ using VRC.Udon;
 namespace OpenFlightVRC.Net
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-    public class PlayerInfoStore : UdonSharpBehaviour
+    public class PlayerInfoStore : LoggableUdonSharpBehaviour
     {
         /// <summary> Current player on this object, null if none </summary>
         public VRCPlayerApi Owner;

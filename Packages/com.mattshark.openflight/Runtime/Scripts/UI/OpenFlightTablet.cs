@@ -9,7 +9,7 @@ using static OpenFlightVRC.Util;
 namespace OpenFlightVRC.UI
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class OpenFlightTablet : UdonSharpBehaviour
+    public class OpenFlightTablet : LoggableUdonSharpBehaviour
 	{
         VRCPlayerApi localPlayer = null;
 		public int fadeDistance = 10;

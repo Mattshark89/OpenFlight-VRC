@@ -8,7 +8,7 @@ using VRC.Udon;
 namespace OpenFlightVRC.UI
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class ContributerDetection : UdonSharpBehaviour
+    public class ContributerDetection : LoggableUdonSharpBehaviour
     {
         public AvatarListLoader AvatarListLoader;
         public bool contributerInWorld = false;

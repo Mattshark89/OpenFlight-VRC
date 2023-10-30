@@ -10,7 +10,7 @@ using VRC.SDK3.Data;
 namespace OpenFlightVRC
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class GithubReleaseInterpreter : UdonSharpBehaviour
+    public class GithubReleaseInterpreter : LoggableUdonSharpBehaviour
     {
         private VRCUrl URL = new VRCUrl("https://api.github.com/repos/Mattshark89/OpenFlight-VRC/releases?per_page=20");
         private DataDictionary[] releases;

@@ -8,7 +8,7 @@ using TMPro;
 namespace OpenFlightVRC.UI
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class DynamicInputField : UdonSharpBehaviour
+    public class DynamicInputField : LoggableUdonSharpBehaviour
 	{
 		public UdonBehaviour target;
 		public int decimalPlaces = 2;
