@@ -46,11 +46,11 @@ namespace OpenFlightVRC.Gizmos
             wingtipLine.SetPositions(new Vector3[] { Networking.LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position, wingtipGizmo.transform.position });
 
             #region Bone Debug Info
-            NeckDistanceText.text = FormatDistances(new float[] { avatarDetection.hashV1Distances[0], avatarDetection.hashV2Distances[0] });
-            ChestDistanceText.text = FormatDistances(new float[] { avatarDetection.hashV1Distances[1], avatarDetection.hashV2Distances[1] });
-            LeftShoulderDistanceText.text = FormatDistances(new float[] { avatarDetection.hashV1Distances[2], avatarDetection.hashV2Distances[2] });
-            LeftElbowDistanceText.text = FormatDistances(new float[] { avatarDetection.hashV1Distances[3], avatarDetection.hashV2Distances[3] });
-            LeftWristDistanceText.text = FormatDistances(new float[] { avatarDetection.hashV1Distances[4], avatarDetection.hashV2Distances[4] });
+            NeckDistanceText.text = avatarDetection.hashDistances[0].ToString();
+            ChestDistanceText.text = avatarDetection.hashDistances[1].ToString();
+            LeftShoulderDistanceText.text = avatarDetection.hashDistances[2].ToString();
+            LeftElbowDistanceText.text = avatarDetection.hashDistances[3].ToString();
+            LeftWristDistanceText.text = avatarDetection.hashDistances[4].ToString();
             #endregion
 
             //Wing direction gizmo
@@ -70,16 +70,6 @@ namespace OpenFlightVRC.Gizmos
             //arrow.transform.localScale = new Vector3(velocity.magnitude, velocity.magnitude, velocity.magnitude);
             arrow.transform.localScale = new Vector3(1, 1, velocity.magnitude);
             arrow.GetComponentInChildren<MeshRenderer>().material.color = color;
-        }
-
-        private string FormatDistances(float[] distances)
-        {
-            string output = "";
-            for (int i = 0; i < distances.Length; i++)
-            {
-                output += "v" + (i + 1) + ": " + distances[i].ToString() + "\n";
-            }
-            return output;
         }
     }
 }

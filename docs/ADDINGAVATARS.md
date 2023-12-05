@@ -15,12 +15,10 @@ To begin, its recommended to collect all of the information you will need to add
 
 <!-- div:left-panel -->
 - Hash
-  - This is the hash of the avatar. You can find this by going to a world with the tablet system installed, navigating to the debug tab and copying down the hash listed. If the world has a OpenFlight version newer than 1.2.0, there will be 2 hashes listed. The mandatory hash you *must* include is the hash with `v2` on the end. Including the `v1` hash is optional, but recommended. If the world has a OpenFlight version older than 1.2.0, there will only be 1 hash listed, in which case it is recommended to use a different world to get the `v2` hash.
+  - This is the hash of the avatar. You can find this by going to a world with the tablet system installed, navigating to the debug tab and copying down the hash listed. If the world has a OpenFlight version older than 1.6.0, there will be 2 hashes listed. The mandatory hash you *must* include is the hash with `v2` on the end. The `v1` hash is deprecated and should not be submitted.
 
 <!-- div:right-panel -->
 <br>
-
-!> `v1` hashes only remain for backwards compatibility with older versions of OpenFlight, and will be removed in future versions due to floating-point precision issues.
 
 <!-- div:left-panel -->
 - WingTipOffset
@@ -64,7 +62,7 @@ Some of the information you collected now needs to be formatted into JSON. Copy 
     "Name": "Kitavali",
     "Creator": "Rai Kitamatsu",
     "Introducer": "Happyrobot33",
-    "Hash": ["2135658862", "234133961v2"],
+    "Hash": ["234133961v2"],
     "Weight": 1,
     "WingtipOffset": 6.6
   }
@@ -76,30 +74,30 @@ Some of the information you collected now needs to be formatted into JSON. Copy 
 ### Advanced Formatting
 In some cases, an avatar base may have different versions as the creator has updated it. If you are either adding a new version of an existing avatar base, or adding a new avatar base that has multiple versions, there is a specific format to follow. Here is an example of what a properly formatted JSON entry for an avatar base with multiple versions should look like:
 ```json
-"Flutevali": {
-  "1.1": {
-    "Name": "Flutevali v1.1",
-    "Creator": "FluteBirdie",
-    "Introducer": "Heather May",
-    "Hash": ["2146477889", "826883716v2"],
-    "Weight": 1,
-    "WingtipOffset": 3.71
-  },
-  "2 Alpha": {
-    "Name": "Flutevali v2 Alpha",
-    "Creator": "FluteBirdie",
+"Reverse Avali": {
+  "Original": {
+    "Name": "Reverse Avali",
+    "Creator": "VictonRoy",
     "Introducer": "Happyrobot33",
-    "Hash": ["2103730750"],
+    "Hash": ["-1678847866v2"],
     "Weight": 1,
-    "WingtipOffset": 7.16
+    "WingtipOffset": 1.3
   },
-  "2 Beta": {
-    "Name": "Flutevali v2 Beta",
-    "Creator": "FluteBirdie",
+  "Modified": {
+    "Name": "Reverse Avali",
+    "Creator": "VictonRoy / farfelu",
     "Introducer": "Heather May",
-    "Hash": ["-1268029923", "-303321714v2"],
+    "Hash": ["-1731617419v2"],
     "Weight": 1,
-    "WingtipOffset": 7.16
+    "WingtipOffset": 2.28
+  },
+  "Webserfer Alteration": {
+    "Name": "Reverse Avali",
+    "Creator": "VictonRoy / Webserfer",
+    "Introducer": "Webserfer",
+    "Hash": ["-597043440v2"],
+    "Weight": 1,
+    "WingtipOffset": 4.5
   }
 }
 ```
