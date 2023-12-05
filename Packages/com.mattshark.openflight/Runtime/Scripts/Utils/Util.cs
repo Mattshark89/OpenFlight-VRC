@@ -9,8 +9,48 @@ namespace OpenFlightVRC
     /// <summary>
     /// A collection of useful functions that I cant find a better place for
     /// </summary>
-    public class Util : UdonSharpBehaviour
+    public class Util : LoggableUdonSharpBehaviour
     {
+        /// <summary>
+        /// Returns a a byte that is made up of the bools in the array
+        /// </summary>
+        /// <param name="bools">The bools to pack into a byte</param>
+        /// <returns>A byte made up of the bools in the array</returns>
+        public static byte BitPackBool(params bool[] bools)
+        {
+            if (bools.Length > 8)
+            {
+                Logger.LogError("Too many bools to pack into a byte!", null);
+                return 0;
+            }
+
+            byte result = 0;
+            int length = bools.Length;
+            for (int i = 0; i < length; i++)
+            {
+                if (bools[i])
+                {
+                    result |= (byte)(1 << i);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Returns an array of bools that are made up of the bits in the byte
+        /// </summary>
+        /// <param name="b">The byte to unpack</param>
+        /// <returns>An array of bools made up of the bits in the byte</returns>
+        public static bool[] BitUnpackBool(byte b)
+        {
+            bool[] result = new bool[8];
+            for (int i = 0; i < 8; i++)
+            {
+                result[i] = (b & (1 << i)) != 0;
+            }
+            return result;
+        }
+
         /// <summary>
         /// Returns the distance between two bones, modified by the scaling factor and spine
         /// </summary>
@@ -38,13 +78,31 @@ namespace OpenFlightVRC
             Quaternion rotation = bone.rotation;
 
             Vector3 WingTipPosition = position + (rotation * Vector3.forward * new Vector3(0, 0, WingtipOffset * (float)d_spinetochest).z);
+            FinalizeWingtipPosition(objectToMove, position, rotation, WingTipPosition);
+        }
 
+        private static void FinalizeWingtipPosition(GameObject objectToMove, Vector3 position, Quaternion rotation, Vector3 WingTipPosition)
+        {
             objectToMove.transform.position = WingTipPosition;
 
             //rotate so it goes in the correct direction
             objectToMove.transform.RotateAround(position, rotation * Vector3.up, 70);
         }
 
+        /// <summary>
+        /// Moves a gameobject to a wingtip position, but based on the object to moves current rotation and position
+        /// </summary>
+        /// <param name="objectToMove">The wingtip gameobject</param>
+        /// <param name="WorldWingtipOffset">The offset of the wingtip, in world space</param>
+        public static void SetWingtipTransform(GameObject objectToMove, float WorldWingtipOffset)
+        {
+            Vector3 position = objectToMove.transform.position;
+            Quaternion rotation = objectToMove.transform.rotation;
+
+            Vector3 WingTipPosition = position + (rotation * Vector3.forward * new Vector3(0, 0, WorldWingtipOffset).z);
+
+            FinalizeWingtipPosition(objectToMove, position, rotation, WingTipPosition);
+        }
 
         /// <summary>
         /// Helper function to get the total distance of a vector array.
@@ -52,7 +110,7 @@ namespace OpenFlightVRC
         /// </summary>
         /// <param name="vectors">The vector array to get the total distance of</param>
         /// <returns>The total distance of the vector array</returns>
-        public static float TotalVectorDistance(Vector3[] vectors)
+        public static float TotalVectorDistance(params Vector3[] vectors)
         {
             float totalDistance = 0;
             for (int i = 0; i < vectors.Length; i++)
@@ -86,7 +144,7 @@ namespace OpenFlightVRC
             Vector3 chest = localPlayer.GetBonePosition(HumanBodyBones.Chest);
             Vector3 Neck = localPlayer.GetBonePosition(HumanBodyBones.Neck);
             Vector3 Head = localPlayer.GetBonePosition(HumanBodyBones.Head);
-            float PlayerScale = TotalVectorDistance(new Vector3[] { footR, LowerLegR, UpperLegR, Hips, spine, chest, Neck, Head });
+            float PlayerScale = TotalVectorDistance(footR, LowerLegR, UpperLegR, Hips, spine, chest, Neck, Head);
 
             //if the player is too small, set the scale to 0.1
             PlayerScale = Mathf.Max(PlayerScale, 0.1f);

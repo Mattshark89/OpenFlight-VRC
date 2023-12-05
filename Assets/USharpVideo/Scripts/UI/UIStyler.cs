@@ -1,4 +1,5 @@
 ﻿
+using TMPro;
 using UnityEngine;
 using System.Reflection;
 using System.IO;
@@ -10,6 +11,8 @@ using VRC.SDK3.Components;
 using UnityEditor;
 using UdonSharpEditor;
 #endif
+
+#pragma warning disable CS0612 // Type or member is obsolete
 
 namespace UdonSharp.Video.UI
 {
@@ -25,7 +28,7 @@ namespace UdonSharp.Video.UI
             hideFlags = HideFlags.DontSaveInBuild;
         }
 
-        static Dictionary<UIStyleMarkup.StyleClass, FieldInfo> GetStyleFieldMap()
+        private static Dictionary<UIStyleMarkup.StyleClass, FieldInfo> GetStyleFieldMap()
         {
             Dictionary<UIStyleMarkup.StyleClass, FieldInfo> fieldLookup = new Dictionary<UIStyleMarkup.StyleClass, FieldInfo>();
 
@@ -33,7 +36,7 @@ namespace UdonSharp.Video.UI
             {
                 if (field.FieldType == typeof(Color))
                 {
-                    var markupAttr = field.GetCustomAttribute<StyleMarkupLinkAttribute>();
+                    StyleMarkupLinkAttribute markupAttr = field.GetCustomAttribute<StyleMarkupLinkAttribute>();
 
                     if (markupAttr != null)
                     {
@@ -46,7 +49,7 @@ namespace UdonSharp.Video.UI
         }
 
 #if UNITY_EDITOR
-        Color GetColor(FieldInfo field)
+    private Color GetColor(FieldInfo field)
         {
             return (Color)field.GetValue(uiStyle);
         }
@@ -67,6 +70,8 @@ namespace UdonSharp.Video.UI
                 if (markup.styleClass == UIStyleMarkup.StyleClass.TextHighlight)
                 {
                     InputField input = markup.GetComponent<InputField>();
+                    TMP_InputField inputTmp = markup.GetComponent<TMP_InputField>();
+                    VRCUrlInputField vrcInput = markup.GetComponent<VRCUrlInputField>();
 
                     if (input != null)
                     {
@@ -74,18 +79,24 @@ namespace UdonSharp.Video.UI
                         input.selectionColor = graphicColor;
                         RecordObject(input);
                     }
-                    else
+                    else if (inputTmp != null)
                     {
-                        var vrcInput = markup.GetComponent<VRCUrlInputField>();
+                        Undo.RecordObject(inputTmp, "Apply UI Style");
+                        inputTmp.selectionColor = graphicColor;
+                        RecordObject(inputTmp);
+                    }
+                    else if (vrcInput != null)
+                    {
                         Undo.RecordObject(vrcInput, "Apply UI Style");
                         vrcInput.selectionColor = graphicColor;
                         RecordObject(vrcInput);
                     }
-
                 }
                 else if (markup.styleClass == UIStyleMarkup.StyleClass.TextCaret)
                 {
                     InputField input = markup.GetComponent<InputField>();
+                    TMP_InputField inputTmp = markup.GetComponent<TMP_InputField>();
+                    VRCUrlInputField vrcInput = markup.GetComponent<VRCUrlInputField>();
 
                     if (input != null)
                     {
@@ -93,9 +104,14 @@ namespace UdonSharp.Video.UI
                         input.caretColor = graphicColor;
                         RecordObject(input);
                     }
-                    else
+                    else if (inputTmp != null)
                     {
-                        var vrcInput = markup.GetComponent<VRCUrlInputField>();
+                        Undo.RecordObject(inputTmp, "Apply UI Style");
+                        inputTmp.caretColor = graphicColor;
+                        RecordObject(inputTmp);
+                    }
+                    else if (vrcInput != null)
+                    {
                         Undo.RecordObject(vrcInput, "Apply UI Style");
                         vrcInput.caretColor = graphicColor;
                         RecordObject(vrcInput);
@@ -126,7 +142,7 @@ namespace UdonSharp.Video.UI
             }
         }
 
-        void RecordObject(Component comp)
+        private static void RecordObject(Object comp)
         {
             if (PrefabUtility.IsPartOfPrefabInstance(comp))
                 PrefabUtility.RecordPrefabInstancePropertyModifications(comp);
@@ -138,7 +154,7 @@ namespace UdonSharp.Video.UI
     [CustomEditor(typeof(UIStyler))]
     internal class UIStylerEditor : Editor
     {
-        SerializedProperty colorStyleProperty;
+        private SerializedProperty colorStyleProperty;
 
         private void OnEnable()
         {

@@ -18,13 +18,8 @@ namespace OpenFlightVRC
     /// </summary>
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class Logger : UdonSharpBehaviour
-	{
-        const string log = "OpenFlightLogObject";
+    {
         const int maxLogLength = 50;
-		void Start()
-		{
-            Log("Logging started", this);
-		}
 
         const string packageColor = "orange";
 
@@ -33,19 +28,30 @@ namespace OpenFlightVRC
             return "[" + ColorText("OpenFlight", packageColor) + "]";
         }
 
-        private static void WriteToUILog(string text, LogType LT)
+        private static void WriteToUILog(string text, LogType LT, LoggableUdonSharpBehaviour self)
         {
-            GameObject logObject = GameObject.Find(log);
+            //GameObject logObject = GameObject.Find(log);
 
-            //get udonbehaviour
-            UdonBehaviour logUdon = logObject.GetComponent<UdonBehaviour>();
+            GameObject logObject = self._logObject;
 
             if (logObject == null)
             {
-                //Commented out as it will cause issues with non-tablet setups
-                //Debug.LogWarning("Could not find log object!");
-                return;
+                const string log = "OpenFlightLogObject";
+
+                //try to find the log object
+                logObject = GameObject.Find(log);
+
+                if (logObject == null)
+                {
+                    return;
+                }
+
+                //set it back to the log object
+                self._logObject = logObject;
             }
+
+            //get udonbehaviour
+            UdonBehaviour logUdon = logObject.GetComponent<UdonBehaviour>();
 
             switch (LT)
             {
@@ -81,10 +87,10 @@ namespace OpenFlightVRC
         /// </summary>
         /// <param name="text">The text to print to the console</param>
         /// <param name="self">The UdonSharpBehaviour that is logging the text</param>
-		internal static void Log(string text, UdonSharpBehaviour self)
+		internal static void Log(string text, LoggableUdonSharpBehaviour self)
 		{
             Debug.Log(Format(text, self));
-            WriteToUILog(Format(text, self, false), LogType.Log);
+            WriteToUILog(Format(text, self, false), LogType.Log, self);
 		}
 
         /// <summary>
@@ -92,10 +98,10 @@ namespace OpenFlightVRC
         /// </summary>
         /// <param name="text">The text to print to the console</param>
         /// <param name="self">The UdonSharpBehaviour that is logging the text</param>
-        internal static void LogWarning(string text, UdonSharpBehaviour self)
+        internal static void LogWarning(string text, LoggableUdonSharpBehaviour self)
         {
             Debug.LogWarning(Format(text, self));
-            WriteToUILog(Format(text, self, false), LogType.Warning);
+            WriteToUILog(Format(text, self, false), LogType.Warning, self);
         }
 
         /// <summary>
@@ -103,10 +109,10 @@ namespace OpenFlightVRC
         /// </summary>
         /// <param name="text">The text to print to the console</param>
         /// <param name="self">The UdonSharpBehaviour that is logging the text</param>
-        internal static void LogError(string text, UdonSharpBehaviour self)
+        internal static void LogError(string text, LoggableUdonSharpBehaviour self)
         {
             Debug.LogError(Format(text, self));
-            WriteToUILog(Format(text, self, false), LogType.Error);
+            WriteToUILog(Format(text, self, false), LogType.Error, self);
         }
 
         /// <summary>
@@ -165,8 +171,16 @@ namespace OpenFlightVRC
         /// <returns>The color to use</returns>
         private static string ChooseColor(UdonSharpBehaviour self)
         {
-            //set random seed to hash of name
-            Random.InitState(self.name.GetHashCode());
+            //if the script is null, init to a constant
+            if (self == null)
+            {
+                Random.InitState(0);
+            }
+            else
+            {
+                //set random seed to hash of name
+                Random.InitState(self.name.GetHashCode());
+            }
 
             float Saturation = 1f;
             float Brightness = 1f;

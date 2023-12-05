@@ -13,7 +13,7 @@ using static OpenFlightVRC.Util;
 namespace OpenFlightVRC
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class AvatarDetection : UdonSharpBehaviour
+    public class AvatarDetection : LoggableUdonSharpBehaviour
 	{
 		VRCPlayerApi localPlayer = null;
 		public string debugInfo = ""; //Contains all the debug info about avatar detection
@@ -83,6 +83,18 @@ namespace OpenFlightVRC
                 Logger.Log("Avatar Changed, reevaluating flight...", this);
 				RunDetection();
 			}
+		}
+
+		//detect when the avatars player scale changes and re save the spine to chest distance
+		public override void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight)
+		{
+			Logger.Log("Avatar Scale Changed, reevaluating d_spinetochest...", this);
+			//get spine and hips first, as they are used to calculate the avatar scale
+			Vector3 spine = localPlayer.GetBonePosition(HumanBodyBones.Spine);
+			Vector3 chest = localPlayer.GetBonePosition(HumanBodyBones.Chest);
+
+			//calculate the avatar scale using the distance from hips to spine
+			d_spinetochest = Vector3.Distance(chest, spine);
 		}
 
 		void RunDetection()
@@ -185,7 +197,7 @@ namespace OpenFlightVRC
 				{
 					DataDictionary variant = avi_base[avi_base_keys[j]].DataDictionary;
 
-                    if (variant["Hash"].DataList.Contains(new DataToken(hashV1)) || variant["Hash"].DataList.Contains(new DataToken(hashV2)))
+                    if (variant["Hash"].DataList.Contains(hashV1) || variant["Hash"].DataList.Contains(hashV2))
                     {
                         name = variant["Name"].String;
                         creator = variant["Creator"].String;

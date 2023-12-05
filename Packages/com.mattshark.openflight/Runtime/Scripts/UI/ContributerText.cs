@@ -8,7 +8,7 @@ using VRC.Udon;
 namespace OpenFlightVRC.UI
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class ContributerText : UdonSharpBehaviour
+    public class ContributerText : LoggableUdonSharpBehaviour
     {
         public UdonBehaviour ContributerDetection;
         private TextMeshProUGUI text;

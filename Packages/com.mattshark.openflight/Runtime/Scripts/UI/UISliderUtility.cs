@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace OpenFlightVRC.UI
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class UISliderUtility : UdonSharpBehaviour
+    public class UISliderUtility : LoggableUdonSharpBehaviour
 	{
 		public UdonBehaviour target;
 		public string targetVariable;

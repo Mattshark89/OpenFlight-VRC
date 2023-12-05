@@ -35,7 +35,7 @@ public class WingFlightPlusGlideEditor : Editor
 #endif
 
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class WingFlightPlusGlide : UdonSharpBehaviour
+    public class WingFlightPlusGlide : LoggableUdonSharpBehaviour
 	{
 		[Header("Basic Settings")]
 		// Both of these "base" values are by default affected by the avatar's armspan. See sizeCurve.
@@ -73,6 +73,9 @@ public class WingFlightPlusGlideEditor : Editor
 		bool fallToGlide_DEFAULT = false;
 
 		[Header("Advanced Settings (Only for specialized use!)")]
+        [Tooltip("Angle to offset the gliding direction by from your hands. (Default: 0)")]
+        public float glideAngleOffset = 0f;
+        float glideAngleOffset_DEFAULT = 0f;
 		[Tooltip(
 			"How much Flap Strength and Flight Gravity are affected by an avatar's armspan. Default values will make smaller avis feel lighter and larger avis heavier."
 		)]
@@ -149,8 +152,8 @@ public class WingFlightPlusGlideEditor : Editor
 		private float downThrust = 0f;
 		private float flapAirFriction = 0.04f; // Prevents the gain of infinite speed while flapping. Set to 0 to remove this feature. THIS IS NOT A MAX SPEED
 
-		// Variables related to gliding
-		private Vector3 wingDirection;
+        // Variables related to gliding
+        internal Vector3 wingDirection;
 		private float steering;
 		private bool spinningRightRound = false; // Can't get that Protogen animation out of my head
 		private float rotSpeed = 0;
@@ -427,8 +430,11 @@ public class WingFlightPlusGlideEditor : Editor
 
 						if (glideDelay <= 1)
 						{
-							wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * Vector3.forward, LHRot * Vector3.forward, 0.5f)); // The direction the player should go based on how they've angled their wings
-						}
+                            //rotate Vector3.forward by the gliding angle offset
+                            Vector3 newForwardRight = Quaternion.Euler(glideAngleOffset, 0, 0) * Vector3.forward;
+                            Vector3 newForwardLeft = Quaternion.Euler(-glideAngleOffset, 0, 0) * Vector3.forward;
+                            wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * newForwardRight, LHRot * newForwardLeft, 0.5f)); // The direction the player should go based on how they've angled their wings
+                        }
 						else
 						{
 							wingDirection = newVelocity.normalized;
@@ -734,6 +740,7 @@ public class WingFlightPlusGlideEditor : Editor
 			airFriction_DEFAULT = airFriction;
 			useGravityCurve_DEFAULT = useGravityCurve;
 			bankingTurns_DEFAULT = bankingTurns;
+            glideAngleOffset_DEFAULT = glideAngleOffset;
             Logger.Log("Defaults initialized.", this);
 		}
 
@@ -755,6 +762,7 @@ public class WingFlightPlusGlideEditor : Editor
 			airFriction = airFriction_DEFAULT;
 			useGravityCurve = useGravityCurve_DEFAULT;
 			bankingTurns = bankingTurns_DEFAULT;
+            glideAngleOffset = glideAngleOffset_DEFAULT;
             Logger.Log("Defaults restored.", this);
 		}
 	}

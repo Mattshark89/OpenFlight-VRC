@@ -360,7 +360,7 @@ GameObject:
   - component: {fileID: 1431598095191993723}
   - component: {fileID: 1431598095191993722}
   - component: {fileID: 1431598095191993717}
-  - component: {fileID: 4931180511428145971}
+  - component: {fileID: 5054918439934577041}
   - component: {fileID: 1431598095191993727}
   m_Layer: 0
   m_Name: ReloadButton
@@ -474,7 +474,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 10, z: 0}
---- !u!114 &4931180511428145971
+--- !u!114 &5054918439934577041
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
