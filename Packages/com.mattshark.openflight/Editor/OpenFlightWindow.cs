@@ -44,6 +44,9 @@ namespace OpenFlightVRC.Editor
 				return;
 			}
 			GameObject instance = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+
+			//place the prefab in the center of the scene camera
+			instance.transform.position = SceneView.lastActiveSceneView.camera.transform.position + SceneView.lastActiveSceneView.camera.transform.forward * 2;
 		}
 	}
 }
