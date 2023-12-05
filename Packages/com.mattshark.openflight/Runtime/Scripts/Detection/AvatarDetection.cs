@@ -50,10 +50,8 @@ namespace OpenFlightVRC
 		public bool skipLoadingAvatar = true; //this is used to skip the loading avatar, as it is not a real avatar
 
 		//information about the avatar that has been detected
-		public string hashV1 = "0";
-        internal float[] hashV1Distances = new float[5];
-		public string hashV2 = "0";
-        internal float[] hashV2Distances = new float[5];
+		public string hash = "0";
+		internal float[] hashDistances = new float[5];
 		public float weight = 1;
 		public float WingtipOffset = 0;
 		public string name = ""; //this is the name of the avatar base
@@ -126,14 +124,12 @@ namespace OpenFlightVRC
 			Vector3 LeftHand = localPlayer.GetBonePosition(HumanBodyBones.LeftHand);
 
 			Vector3[] boneVectors = { chest, head, neck, leftShoulder, LeftUpperArm, LeftLowerArm, LeftHand };
-			hashV1 = GetHash(boneVectors, 1);
-			hashV2 = GetHash(boneVectors, 2);
+			hash = GetHash(boneVectors, 2);
 
-            Logger.Log("HashV1: " + hashV1, this);
-            Logger.Log("HashV2: " + hashV2, this);
+			Logger.Log("Avatar Hash: " + hash, this);
 
 			//check if the hash is the loading avatar, and if it is then dont check if the avatar is allowed to fly
-			if (hashV2 == "1439458325v2" && skipLoadingAvatar)
+			if (hash == "1439458325v2" && skipLoadingAvatar)
 			{
 				debugInfo = "Loading Avatar Detected, ignoring...";
 				name = "Loading Avatar";
@@ -146,7 +142,7 @@ namespace OpenFlightVRC
 			}
 
 			//check if the avatar is allowed to fly
-			allowedToFly = IsAvatarAllowedToFly(hashV1, hashV2);
+			allowedToFly = IsAvatarAllowedToFly(hash);
 
 			//tell openflight if the avatar is allowed to fly
 			if (allowedToFly)
@@ -164,10 +160,8 @@ namespace OpenFlightVRC
 
 			//print all the info to the text
 			debugInfo =
-				"HashV1 (Do not submit): "
-				+ hashV1
-				+ "\nHashV2: "
-				+ hashV2
+				"HashV2: "
+				+ hash
 				+ "\nAllowed to Fly: "
 				+ allowedToFly
 				+ "\n\nDetected Avatar Info: "
@@ -183,12 +177,11 @@ namespace OpenFlightVRC
 				+ WingtipOffset;
 		}
 
-		bool IsAvatarAllowedToFly(string in_hashV1, string in_hashV2)
+		bool IsAvatarAllowedToFly(string in_hash)
 		{
 			DataDictionary bases = json["Bases"].DataDictionary;
 			DataToken[] baseKeys = bases.GetKeys().ToArray();
-            DataToken hashV1 = new DataToken(in_hashV1);
-            DataToken hashV2 = new DataToken(in_hashV2);
+			DataToken hash_token = new DataToken(in_hash);
 			for (int i = 0; i < bases.Count; i++)
 			{
 				DataDictionary avi_base = bases[baseKeys[i]].DataDictionary;
@@ -197,9 +190,9 @@ namespace OpenFlightVRC
 				{
 					DataDictionary variant = avi_base[avi_base_keys[j]].DataDictionary;
 
-                    if (variant["Hash"].DataList.Contains(hashV1) || variant["Hash"].DataList.Contains(hashV2))
-                    {
-                        name = variant["Name"].String;
+					if (variant["Hash"].DataList.Contains(hash_token))
+					{
+						name = variant["Name"].String;
                         creator = variant["Creator"].String;
                         introducer = variant["Introducer"].String;
                         weight = (float)variant["Weight"].Number;
@@ -258,24 +251,10 @@ namespace OpenFlightVRC
 			int d_leftupperarmtoleftlowerarm;
 			int d_leftlowertolefthand;
 			string boneInfo;
+
+			//if you are wondering why this switch case is here, it is to support future versions of hashing, and was previously here to support v1 hashes. its left here so the implementation is already in place
 			switch (version)
 			{
-				case 1:
-					scalingFactor = 1000;
-                    d_necktohead = GetBoneDistance(bonePositions[2], bonePositions[1], scalingFactor, (float)d_spinetochest);
-                    d_chesttoneck = GetBoneDistance(bonePositions[0], bonePositions[2], scalingFactor, (float)d_spinetochest);
-                    d_leftshouldertoleftupperarm = GetBoneDistance(bonePositions[3], bonePositions[4], scalingFactor, (float)d_spinetochest);
-                    d_leftupperarmtoleftlowerarm = GetBoneDistance(bonePositions[4], bonePositions[5], scalingFactor, (float)d_spinetochest);
-                    d_leftlowertolefthand = GetBoneDistance(bonePositions[5], bonePositions[6], scalingFactor, (float)d_spinetochest);
-
-                    hashV1Distances[0] = d_necktohead;
-                    hashV1Distances[1] = d_chesttoneck;
-                    hashV1Distances[2] = d_leftshouldertoleftupperarm;
-                    hashV1Distances[3] = d_leftupperarmtoleftlowerarm;
-                    hashV1Distances[4] = d_leftlowertolefthand;
-
-                    boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
-					return boneInfo.GetHashCode().ToString();
 				case 2:
 					scalingFactor = 100;
                     d_necktohead = GetBoneDistance(bonePositions[2], bonePositions[1], scalingFactor, (float)d_spinetochest);
@@ -284,13 +263,13 @@ namespace OpenFlightVRC
                     d_leftupperarmtoleftlowerarm = GetBoneDistance(bonePositions[4], bonePositions[5], scalingFactor, (float)d_spinetochest);
                     d_leftlowertolefthand = GetBoneDistance(bonePositions[5], bonePositions[6], scalingFactor, (float)d_spinetochest);
 
-                    hashV2Distances[0] = d_necktohead;
-                    hashV2Distances[1] = d_chesttoneck;
-                    hashV2Distances[2] = d_leftshouldertoleftupperarm;
-                    hashV2Distances[3] = d_leftupperarmtoleftlowerarm;
-                    hashV2Distances[4] = d_leftlowertolefthand;
+					hashDistances[0] = d_necktohead;
+					hashDistances[1] = d_chesttoneck;
+					hashDistances[2] = d_leftshouldertoleftupperarm;
+					hashDistances[3] = d_leftupperarmtoleftlowerarm;
+					hashDistances[4] = d_leftlowertolefthand;
 
-                    boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
+					boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
 					return boneInfo.GetHashCode().ToString() + "v2";
 				default:
                     Logger.LogError("Invalid Hash Version Sent", this);

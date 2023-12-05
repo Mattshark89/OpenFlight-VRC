@@ -158,6 +158,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1062979055743477549}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   decimalPlaces: 2
   targetVariable: glideControl
@@ -570,6 +571,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 8920556472320288180}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177475442822}
   targetGameObject: {fileID: 0}
 --- !u!114 &8920556472320288180
@@ -901,6 +903,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1735992874404903752}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   targetVariable: useAvatarModifiers
   invert: 0
@@ -1389,6 +1392,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 4013692061680308111}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   targetVariable: fallToGlide
   invert: 0
@@ -2234,6 +2238,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 3217663461640142437}
+  _logObject: {fileID: 0}
   target: {fileID: 8054854718509797021}
   targetVariable: SFX
   invert: 0
@@ -2538,6 +2543,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 8011701950327751587}
+  _logObject: {fileID: 0}
   target: {fileID: 1124972295156573745}
   targetVariable: useOfflineJSON
   invert: 0
@@ -3077,6 +3083,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 4356436881126994583}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   targetVariable: flapStrengthBase
 --- !u!114 &4356436881126994583
@@ -3159,6 +3166,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 4806429423784995101}
+  _logObject: {fileID: 0}
   target: {fileID: 0}
   targetGameObject: {fileID: 0}
 --- !u!114 &4806429423784995101
@@ -4146,6 +4154,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 4598422286817120621}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177475442822}
   targetGameObject: {fileID: 0}
 --- !u!114 &4598422286817120621
@@ -4717,6 +4726,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6845549348533468736}
+  _logObject: {fileID: 0}
   target: {fileID: 211231958146027050}
   decimalPlaces: 2
   targetVariable: latestReleaseVersion
@@ -5142,6 +5152,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 4968743878581357041}
+  _logObject: {fileID: 0}
   assignerProxy: {fileID: 4806429423784995101}
 --- !u!114 &4968743878581357041
 MonoBehaviour:
@@ -6575,6 +6586,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 3093765107613182187}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   targetVariable: bankingTurns
   invert: 0
@@ -6960,6 +6972,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2049535500769255370}
+  _logObject: {fileID: 0}
   target: {fileID: 4598422286817120621}
   decimalPlaces: 2
   targetVariable: contributersString
@@ -7732,6 +7745,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2186655274563289651}
+  _logObject: {fileID: 0}
   target: {fileID: 211231958146027050}
   decimalPlaces: 2
   targetVariable: outputText
@@ -8013,6 +8027,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 378736009356696691}
+  _logObject: {fileID: 0}
   log: 
   text: {fileID: 7694682880398591870}
 --- !u!114 &378736009356696691
@@ -8199,6 +8214,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 8296429058116480603}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   decimalPlaces: 2
   targetVariable: glideAngleOffset
@@ -8300,6 +8316,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 211231958146027050}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177475442822}
   targetGameObject: {fileID: 0}
 --- !u!114 &211231958146027050
@@ -8815,6 +8832,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 8054854718509797021}
+  _logObject: {fileID: 0}
   target: {fileID: 0}
   targetGameObject: {fileID: 0}
 --- !u!114 &8054854718509797021
@@ -9541,6 +9559,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 7208189647518073207}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   targetVariable: airFriction
 --- !u!114 &7208189647518073207
@@ -10207,6 +10226,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1357687653739717276}
+  _logObject: {fileID: 0}
   target: {fileID: 8920556472320288180}
   decimalPlaces: 2
   targetVariable: fadeDistance
@@ -10374,6 +10394,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 163090257562137832}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   targetVariable: canGlide
   invert: 0
@@ -10620,6 +10641,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2130592238938436907}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   targetVariable: glideControl
 --- !u!114 &2130592238938436907
@@ -11192,6 +11214,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 808173220368794861}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323176094828665}
   targetVariable: ignoreVRCheck
   invert: 1
@@ -11521,6 +11544,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 774636205996086750}
+  _logObject: {fileID: 0}
   target: {fileID: 0}
   targetGameObject: {fileID: 0}
 --- !u!114 &774636205996086750
@@ -11715,9 +11739,10 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 8405683872318876875}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323176627279620}
   decimalPlaces: 2
-  targetVariable: hashV2
+  targetVariable: hash
   prefix: 
   suffix: 
 --- !u!114 &8405683872318876875
@@ -12338,6 +12363,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323176094828665}
+  _logObject: {fileID: 0}
   target: {fileID: 0}
   targetGameObject: {fileID: 0}
 --- !u!114 &6124323176094828665
@@ -12916,6 +12942,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323176298134151}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323176094828665}
   decimalPlaces: 2
   targetVariable: flightMode
@@ -14089,6 +14116,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323176601369146}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323176627279620}
   decimalPlaces: 2
   targetVariable: debugInfo
@@ -14204,6 +14232,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323176627279620}
+  _logObject: {fileID: 0}
   target: {fileID: 0}
   targetGameObject: {fileID: 0}
 --- !u!114 &6124323176627279620
@@ -14634,6 +14663,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323176737751583}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323176627279620}
   targetVariable: weight
 --- !u!114 &6124323176737751583
@@ -14763,6 +14793,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323176776535766}
+  _logObject: {fileID: 0}
   evalPointTransform: {fileID: 6124323176852550516}
   target: {fileID: 6124323177588583349}
   targetVariableCurve: gravityCurve
@@ -15058,6 +15089,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323176889078358}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323176094828665}
   decimalPlaces: 2
   targetVariable: flightAllowed
@@ -15873,6 +15905,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177233457237}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323176627279620}
   decimalPlaces: 2
   targetVariable: name
@@ -16466,6 +16499,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177475442822}
+  _logObject: {fileID: 0}
   fadeDistance: 10
   allowFade: 1
   objectsToHideOnFade:
@@ -16908,6 +16942,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177588583349}
+  _logObject: {fileID: 0}
   target: {fileID: 0}
   targetGameObject: {fileID: 0}
 --- !u!114 &6124323177588583349
@@ -17094,6 +17129,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177628877283}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323176627279620}
   decimalPlaces: 2
   targetVariable: introducer
@@ -17672,6 +17708,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177777727613}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323176627279620}
   decimalPlaces: 2
   targetVariable: WingtipOffset
@@ -17877,6 +17914,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177789251388}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323176627279620}
   decimalPlaces: 2
   targetVariable: weight
@@ -18352,6 +18390,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177903759352}
+  _logObject: {fileID: 0}
   evalPointTransform: {fileID: 6124323176394278841}
   target: {fileID: 6124323177588583349}
   targetVariableCurve: sizeCurve
@@ -18673,6 +18712,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177965004999}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323176627279620}
   targetVariable: WingtipOffset
 --- !u!114 &6124323177965004999
@@ -19009,6 +19049,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6124323178015860758}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323176627279620}
   decimalPlaces: 2
   targetVariable: creator
@@ -19549,6 +19590,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 7283307279162744276}
+  _logObject: {fileID: 0}
   target: {fileID: 8054854718509797021}
   targetVariable: VFX
   invert: 0
@@ -20295,6 +20337,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 8942712429970851963}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   decimalPlaces: 2
   targetVariable: flapStrengthBase
@@ -20500,6 +20543,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 3300831564966021061}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   decimalPlaces: 2
   targetVariable: flightGravityBase
@@ -20877,6 +20921,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6196912771390024924}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   targetVariable: flightGravityBase
 --- !u!114 &6196912771390024924
@@ -21319,6 +21364,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 8893690652887948767}
+  _logObject: {fileID: 0}
   T1: {fileID: 8370752998196073826}
   ScrollRect: {fileID: 7164854717655017053}
   speed: 2
@@ -21813,6 +21859,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 162943215918685203}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   targetVariable: requireJump
   invert: 0
@@ -22208,6 +22255,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6388080327894332988}
+  _logObject: {fileID: 0}
   target: {fileID: 8920556472320288180}
   targetVariable: fadeDistance
 --- !u!114 &6388080327894332988
@@ -23125,6 +23173,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 7348244918383567008}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   decimalPlaces: 3
   targetVariable: airFriction
@@ -23406,6 +23455,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 7315311179732668246}
+  _logObject: {fileID: 0}
   ContributerDetection: {fileID: 4598422286817120621}
 --- !u!114 &7315311179732668246
 MonoBehaviour:
@@ -23487,6 +23537,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1124972295156573745}
+  _logObject: {fileID: 0}
   target: {fileID: 0}
   targetGameObject: {fileID: 0}
 --- !u!114 &1124972295156573745
@@ -24220,6 +24271,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6185221123171015398}
+  _logObject: {fileID: 0}
   target: {fileID: 4598422286817120621}
   decimalPlaces: 2
   targetVariable: contributersString
@@ -24371,6 +24423,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 8520931124433069698}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   targetVariable: allowLoco
   invert: 0
@@ -24921,6 +24974,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 4474462134763606299}
+  _logObject: {fileID: 0}
   target: {fileID: 4598422286817120621}
   targetVariable: hideLocalPlayerContributerStatus
   invert: 0
@@ -25674,6 +25728,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 5085913572679631550}
+  _logObject: {fileID: 0}
   target: {fileID: 6124323177588583349}
   targetVariable: glideAngleOffset
 --- !u!114 &5085913572679631550
@@ -26307,6 +26362,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1181129156048963873}
+  _logObject: {fileID: 0}
   target: {fileID: 8920556472320288180}
   targetVariable: allowFade
   invert: 0
