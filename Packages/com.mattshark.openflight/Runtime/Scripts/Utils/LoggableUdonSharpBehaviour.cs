@@ -15,6 +15,6 @@ namespace OpenFlightVRC
         /// The object to log to. This essentially acts as a static variable in disguise since U# does not support static variables
         /// </summary>
         [HideInInspector]
-        public GameObject _logObject;
+        public UI.LoggerProxy _logProxy;
     }
 }

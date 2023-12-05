@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UdonSharp;
 using VRC.Udon;
+using OpenFlightVRC.UI;
 
 namespace OpenFlightVRC
 {
@@ -30,28 +31,27 @@ namespace OpenFlightVRC
 
         private static void WriteToUILog(string text, LogType LT, LoggableUdonSharpBehaviour self)
         {
-            //GameObject logObject = GameObject.Find(log);
+            LoggerProxy logProxy = self._logProxy;
 
-            GameObject logObject = self._logObject;
-
-            if (logObject == null)
+            if (logProxy == null)
             {
                 const string log = "OpenFlightLogObject";
 
                 //try to find the log object
-                logObject = GameObject.Find(log);
+                GameObject logObject = GameObject.Find(log);
 
                 if (logObject == null)
                 {
                     return;
                 }
 
-                //set it back to the log object
-                self._logObject = logObject;
-            }
+                //get udonbehaviour
+                LoggerProxy logUdon = logObject.GetComponent<LoggerProxy>();
 
-            //get udonbehaviour
-            UdonBehaviour logUdon = logObject.GetComponent<UdonBehaviour>();
+                //set it back to the log object
+                self._logProxy = logUdon;
+                logProxy = logUdon;
+            }
 
             switch (LT)
             {
@@ -67,7 +67,7 @@ namespace OpenFlightVRC
             }
 
             //get text
-            string logString = (string)logUdon.GetProgramVariable("log");
+            string logString = logProxy.log;
 
             //add text
             logString += text + "\n";
@@ -79,7 +79,7 @@ namespace OpenFlightVRC
             }
 
             //set text back
-            logUdon.SetProgramVariable("log", logString);
+            logProxy.log = logString;
         }
 
         /// <summary>
