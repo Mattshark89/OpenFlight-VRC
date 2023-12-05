@@ -6,7 +6,7 @@ using VRC.Udon;
 namespace OpenFlightVRC
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class ToggleWingedFlight : UdonSharpBehaviour
+    public class ToggleWingedFlight : LoggableUdonSharpBehaviour
 	{
 		// Settings:
 		// 0- Flight Disabled

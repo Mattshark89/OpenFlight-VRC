@@ -11,7 +11,7 @@ using OpenFlightVRC.Effects;
 namespace OpenFlightVRC.Net
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class PoolController : UdonSharpBehaviour
+    public class PoolController : LoggableUdonSharpBehaviour
     {
         public CyanPlayerObjectAssigner Assigner;
         public AvatarDetection avatarDetection;
@@ -19,19 +19,29 @@ namespace OpenFlightVRC.Net
         public OpenFlight openFlight;
         public ContributerDetection contributerDetection;
 
+        private bool _SFX_OLD = true;
         public bool SFX = true;
+        private bool _VFX_OLD = true;
         public bool VFX = true;
 
         private EffectsHandler[] EffectHandlers = new EffectsHandler[0];
 
         void Update()
         {
+            //TODO: make this not run every frame, and instead do it on property change
+            //gotta figure out why GetProgramVariable doesnt like propertys
+            if (_SFX_OLD == SFX && _VFX_OLD == VFX)
+                return;
+
             //set the variables of each effect handler
             foreach (EffectsHandler handler in EffectHandlers)
             {
                 handler.SFX = SFX;
                 handler.VFX = VFX;
             }
+
+            _SFX_OLD = SFX;
+            _VFX_OLD = VFX;
         }
 
         public void _OnLocalPlayerAssigned()

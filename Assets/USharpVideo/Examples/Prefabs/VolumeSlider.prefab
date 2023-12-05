@@ -1081,7 +1081,7 @@ GameObject:
   - component: {fileID: 3023202587643884173}
   - component: {fileID: 3023202587643884210}
   - component: {fileID: 3023202587643884211}
-  - component: {fileID: 3674009584588152603}
+  - component: {fileID: 734465534721621125}
   - component: {fileID: 3023202587643884215}
   - component: {fileID: 3023202587643884208}
   - component: {fileID: 3023202587643884209}
@@ -1170,7 +1170,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!114 &3674009584588152603
+--- !u!114 &734465534721621125
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1212,7 +1212,7 @@ MonoBehaviour:
   loopButtonBackground: {fileID: 0}
   loopButtonIcon: {fileID: 0}
   syncController: {fileID: 0}
-  volumeController: {fileID: 3287477666049291586}
+  volumeController: {fileID: 3100584755108811319}
   redGraphicColor: {r: 0.6320754, g: 0.19677822, b: 0.19677822, a: 1}
   whiteGraphicColor: {r: 0.9433962, g: 0.9433962, b: 0.9433962, a: 1}
   buttonBackgroundColor: {r: 0.21318094, g: 0.18627624, b: 0.21698111, a: 1}
@@ -1334,7 +1334,7 @@ GameObject:
   - component: {fileID: 3023202587792530261}
   - component: {fileID: 3023202587792530257}
   - component: {fileID: 3023202587792530262}
-  - component: {fileID: 3287477666049291586}
+  - component: {fileID: 3100584755108811319}
   - component: {fileID: 3023202587792530260}
   - component: {fileID: 3023202587792530263}
   m_Layer: 0
@@ -1402,7 +1402,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3287477666049291586
+--- !u!114 &3100584755108811319
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

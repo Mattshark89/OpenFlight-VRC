@@ -8,7 +8,7 @@ using VRC.Udon;
 namespace OpenFlightVRC.UI
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class ContributerDetection : UdonSharpBehaviour
+    public class ContributerDetection : LoggableUdonSharpBehaviour
     {
         public AvatarListLoader AvatarListLoader;
         public bool contributerInWorld = false;
@@ -39,48 +39,74 @@ namespace OpenFlightVRC.UI
         /// A formatted list of all the openflight contributers
         /// </summary>
         public string contributersString = "";
+
+        private DataList contributers = new DataList();
+        private DataList contributersInWorld = new DataList();
         void Start()
         {
             //subscribe to the avatar list loader callback
-            AvatarListLoader.AddCallback(this, "CheckForContributers");
+            AvatarListLoader.AddCallback(this, "GetContributersList");
+        }
+
+        public void GetContributersList()
+        {
+            //deserialize
+            bool success = VRCJson.TryDeserializeFromJson(AvatarListLoader.Output, out DataToken json);
+
+            //grab the Contributers array
+            contributers = json.DataDictionary["Contributers"].DataList;
+
+            //quickly check if the local player is a contributer
+            if (contributers.Contains(Networking.LocalPlayer.displayName))
+            {
+                localPlayerIsContributer = true;
+                Logger.Log("Local player is a contributer!", this);
+                contributerInWorld = true;
+                contributersInWorld.Add(Networking.LocalPlayer.displayName);
+            }
+
+            //check all players for contributer status
+            CheckForContributers();
         }
 
         public override void OnPlayerJoined(VRCPlayerApi player)
         {
-            CheckForContributers();
+            //check if the player is a contributer
+            if (contributers.Contains(player.displayName))
+            {
+                Logger.Log(player.displayName + " is a contributer!", this);
+                contributerInWorld = true;
+                contributersInWorld.Add(player.displayName);
+            }
         }
 
         public override void OnPlayerLeft(VRCPlayerApi player)
         {
-            CheckForContributers(player);
-        }
+            //check if the user that left was a contributer
+            if (contributers.Contains(player.displayName) && contributerInWorld)
+            {
+                Logger.Log("Player that left was a contributer! Checking for remaining contributers...", this);
+                contributersInWorld.Remove(player.displayName);
 
-        //for whatever dumb reason this is needed since the callback doesnt work if it has a optional parameter??????
-        public void CheckForContributers()
-        {
-            CheckForContributers(null);
+                //check if there are any contributers left
+                if (contributersInWorld.Count == 0)
+                {
+                    Logger.Log("No contributers left!", this);
+                    contributerInWorld = false;
+                }
+                else
+                {
+                    Logger.Log("Contributers left: " + contributersInWorld.Count, this);
+                }
+            }
         }
 
         /// <summary>
         /// Checks if there are any contributers in the instance
         /// </summary>
-        /// <param name="leavingPlayer">The player that is leaving the instance. If this is not null, the player will be ignored when checking for contributers. This is needed for to prevent timing issues</param>
-        public void CheckForContributers(VRCPlayerApi leavingPlayer = null)
+        public void CheckForContributers()
         {
             Logger.Log("Checking for contributers...", this);
-
-            //check to make sure the output isnt empty
-            if (AvatarListLoader.Output == "")
-            {
-                Logger.LogWarning("Data is empty!", this);
-                return;
-            }
-
-            //deserialize
-            bool success = VRCJson.TryDeserializeFromJson(AvatarListLoader.Output, out DataToken json);
-
-            //grab the Contributers array
-            DataList contributers = json.DataDictionary["Contributers"].DataList;
 
             //format them into a string
             contributersString = "";
@@ -93,15 +119,6 @@ namespace OpenFlightVRC.UI
             VRCPlayerApi[] players = new VRCPlayerApi[VRCPlayerApi.GetPlayerCount()];
             VRCPlayerApi.GetPlayers(players);
 
-            //Quickly check if the local player is a contributer
-            if (contributers.Contains(Networking.LocalPlayer.displayName))
-            {
-                localPlayerIsContributer = true;
-                Logger.Log("Local player is a contributer!", this);
-                contributerInWorld = true;
-                return;
-            }
-
             //loop through each user in the instance and check if they are a contributer
             foreach (VRCPlayerApi player in players)
             {
@@ -111,24 +128,20 @@ namespace OpenFlightVRC.UI
                     continue;
                 }
 
-                //check to make sure they arent a leaving player
-                if (leavingPlayer != null && player.playerId == leavingPlayer.playerId)
-                {
-                    continue;
-                }
-
                 //check if the player is a contributer
                 if (contributers.Contains(player.displayName))
                 {
                     Logger.Log(player.displayName + " is a contributer!", this);
                     contributerInWorld = true;
-                    return;
+                    contributersInWorld.Add(player.displayName);
                 }
             }
 
-            //if we get here, no contributers were found
-            contributerInWorld = false;
-            Logger.Log("No contributers found!", this);
+            //check if there are any contributers in the instance
+            if (!contributerInWorld)
+            {
+                Logger.Log("No contributers in the instance!", this);
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ using TMPro;
 namespace OpenFlightVRC.UI
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class VariableLabel : UdonSharpBehaviour
+    public class VariableLabel : LoggableUdonSharpBehaviour
 	{
 		public UdonBehaviour target;
 		public int decimalPlaces = 2;

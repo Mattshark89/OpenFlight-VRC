@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace OpenFlightVRC.UI
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class UIToggle : UdonSharpBehaviour
+    public class UIToggle : LoggableUdonSharpBehaviour
 	{
 		Toggle toggle; // The toggle component
 		public UdonBehaviour target; // The target UdonBehaviour

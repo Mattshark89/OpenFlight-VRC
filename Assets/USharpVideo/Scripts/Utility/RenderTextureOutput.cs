@@ -10,6 +10,8 @@ using UnityEditor;
 using UdonSharpEditor;
 #endif
 
+#pragma warning disable CS0612 // Type or member is obsolete
+
 namespace UdonSharp.Video
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
@@ -18,13 +20,13 @@ namespace UdonSharp.Video
     {
 #pragma warning disable CS0649
         [SerializeField]
-        USharpVideoPlayer sourceVideoPlayer;
-        VideoPlayerManager videoPlayerManager;
+        private USharpVideoPlayer sourceVideoPlayer;
+        private VideoPlayerManager videoPlayerManager;
 #pragma warning restore CS0649
 
         public CustomRenderTexture outputTexture;
 
-        Material outputMat;
+        private Material outputMat;
 
         private void Start()
         {
@@ -32,13 +34,13 @@ namespace UdonSharp.Video
             videoPlayerManager = sourceVideoPlayer.GetComponentInChildren<VideoPlayerManager>(true);
         }
 
-        Texture lastTex;
+        private Texture lastTex;
 
         private void LateUpdate()
         {
             Texture videoPlayerTex = videoPlayerManager.GetVideoTexture();
 
-            if (lastTex != videoPlayerManager)
+            if (lastTex != videoPlayerTex)
             {
                 outputMat.SetTexture("_SourceTexture", videoPlayerTex);
                 outputMat.SetInt("_IsAVPro", System.Convert.ToInt32(sourceVideoPlayer.IsUsingAVProPlayer()));
@@ -56,7 +58,7 @@ namespace UdonSharp.Video
         {
             public RenderTextureOutput targetOutput;
 
-            Vector2Int resolution = new Vector2Int(1920, 1080);
+            private Vector2Int resolution = new Vector2Int(1920, 1080);
 
             private void OnGUI()
             {
@@ -81,6 +83,7 @@ namespace UdonSharp.Video
                 newCRT.initializationMode = CustomRenderTextureUpdateMode.OnLoad;
                 newCRT.initializationColor = Color.black;
                 newCRT.initializationSource = CustomRenderTextureInitializationSource.TextureAndColor;
+                newCRT.depth = 0;
 
                 newCRT.updateMode = CustomRenderTextureUpdateMode.Realtime;
 
@@ -102,8 +105,8 @@ namespace UdonSharp.Video
             }
         }
 
-        SerializedProperty sourceVideoPlayerProperty;
-        SerializedProperty outputTextureProperty;
+        private SerializedProperty sourceVideoPlayerProperty;
+        private SerializedProperty outputTextureProperty;
 
         private void OnEnable()
         {

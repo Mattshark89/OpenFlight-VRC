@@ -1,8 +1,11 @@
-﻿ Shader "Colorize"
+﻿ Shader "OpenFlight/Colorize"
  {
      Properties
      {
-         _MainTex("_MainTex", 2D) = "white" {}      // Note _MainTex is a special name: This can also be accessed from C# via mainTexture property. 
+         _MainTex("Texture", 2D) = "white" {}      // Note _MainTex is a special name: This can also be accessed from C# via mainTexture property. 
+         _Color("Color", Color) = (1,1,1,1)
+         //cull selector
+        [Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull", Float) = 2
      }
          SubShader
          {
@@ -20,6 +23,7 @@
              Blend SrcAlpha OneMinusSrcAlpha
              //AlphaToMask On
              ZWrite On
+             Cull [_Cull]
              // ---
  
              CGPROGRAM
@@ -29,7 +33,9 @@
              #include "UnityCG.cginc"
  
              sampler2D _MainTex;
+                float4 _Color;
  
+
              //fixed4 _Color0;
  
              // http://wiki.unity3d.com/index.php/Shader_Code : 
@@ -64,6 +70,7 @@
              float4 MyFragmentShaderFunction(my_v2f  i) : COLOR
              {
                  half4 texcolor = tex2D(_MainTex, i.uv) * i.color; // texture's pixel color
+                    texcolor.rgb *= _Color.rgb; // tint color
                  return texcolor;
              }
  

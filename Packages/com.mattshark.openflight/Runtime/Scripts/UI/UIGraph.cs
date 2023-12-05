@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace OpenFlightVRC.UI
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class UIGraph : UdonSharpBehaviour
+    public class UIGraph : LoggableUdonSharpBehaviour
 	{
 		AnimationCurve curve; // The curve to graph
 		LineRenderer lineRenderer; // The line renderer component

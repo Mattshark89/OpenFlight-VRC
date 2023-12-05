@@ -8,10 +8,11 @@ using static OpenFlightVRC.Util;
 
 namespace OpenFlightVRC.Gizmos
 {
-    public class GizmoController : UdonSharpBehaviour
+    public class GizmoController : LoggableUdonSharpBehaviour
     {
         [Header("Script References")]
         public AvatarDetection avatarDetection;
+        public WingFlightPlusGlide wingFlightPlusGlide;
 
         [Header("Gizmo Objects")]
         public GameObject wingtipGizmo;
@@ -22,6 +23,9 @@ namespace OpenFlightVRC.Gizmos
         public TextMeshProUGUI LeftShoulderDistanceText;
         public TextMeshProUGUI LeftElbowDistanceText;
         public TextMeshProUGUI LeftWristDistanceText;
+        [Header("Velocity Arrows")]
+        public GameObject wingDirectionGizmo;
+        public GameObject playerVelocityGizmo;
         void Start()
         {
 
@@ -48,6 +52,24 @@ namespace OpenFlightVRC.Gizmos
             LeftElbowDistanceText.text = FormatDistances(new float[] { avatarDetection.hashV1Distances[3], avatarDetection.hashV2Distances[3] });
             LeftWristDistanceText.text = FormatDistances(new float[] { avatarDetection.hashV1Distances[4], avatarDetection.hashV2Distances[4] });
             #endregion
+
+            //Wing direction gizmo
+            ScaleArrow(wingDirectionGizmo, wingFlightPlusGlide.wingDirection, Color.red);
+            ScaleArrow(playerVelocityGizmo, Networking.LocalPlayer.GetVelocity(), Color.blue);
+        }
+
+        private void ScaleArrow(GameObject arrow, Vector3 velocity, Color color)
+        {
+            if (velocity.magnitude < 0.01f)
+            {
+                arrow.SetActive(false);
+                return;
+            }
+            arrow.SetActive(true);
+            arrow.transform.rotation = Quaternion.LookRotation(velocity);
+            //arrow.transform.localScale = new Vector3(velocity.magnitude, velocity.magnitude, velocity.magnitude);
+            arrow.transform.localScale = new Vector3(1, 1, velocity.magnitude);
+            arrow.GetComponentInChildren<MeshRenderer>().material.color = color;
         }
 
         private string FormatDistances(float[] distances)
