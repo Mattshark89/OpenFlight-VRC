@@ -1,0 +1,1 @@
+The point of this folder is to integrate dependencys when possible to prevent user friction and allow us to make our own modifications if necessary. These shouldnt be messed with at all unless absolutely necessary

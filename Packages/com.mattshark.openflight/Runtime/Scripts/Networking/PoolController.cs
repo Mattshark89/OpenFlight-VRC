@@ -3,7 +3,7 @@ using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
-using Cyan.PlayerObjectPool;
+using OpenFlightVRC.Integrations.Cyan.PlayerObjectPool;
 using OpenFlightVRC.UI;
 using OpenFlightVRC.Effects;
 
