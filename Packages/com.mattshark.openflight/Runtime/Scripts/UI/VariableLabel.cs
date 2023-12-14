@@ -27,15 +27,8 @@ namespace OpenFlightVRC.UI
 			text = GetComponent<TextMeshProUGUI>();
 			//determine if the target variable is a string
 			var targetType = target.GetProgramVariableType(targetVariable);
-			if (targetType == typeof(string))
-			{
-				isStringType = true;
-			}
-			//determine if the target variable is a bool
-			if (targetType == typeof(bool))
-			{
-				isBoolType = true;
-			}
+			isStringType = targetType == typeof(string);
+			isBoolType = targetType == typeof(bool);
 		}
 
 		void Update()
