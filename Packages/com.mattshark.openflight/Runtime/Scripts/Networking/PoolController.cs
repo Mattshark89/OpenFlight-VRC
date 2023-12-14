@@ -24,13 +24,17 @@ namespace OpenFlightVRC.Net
         private bool _VFX_OLD = true;
         public bool VFX = true;
 
+        private float _volume_OLD = 1f;
+        [Range(0f, 1f)]
+        public float volume = 1f;
+
         private EffectsHandler[] EffectHandlers = new EffectsHandler[0];
 
         void Update()
         {
             //TODO: make this not run every frame, and instead do it on property change
             //gotta figure out why GetProgramVariable doesnt like propertys
-            if (_SFX_OLD == SFX && _VFX_OLD == VFX)
+            if (_SFX_OLD == SFX && _VFX_OLD == VFX && _volume_OLD == volume)
                 return;
 
             //set the variables of each effect handler
@@ -38,10 +42,12 @@ namespace OpenFlightVRC.Net
             {
                 handler.SFX = SFX;
                 handler.VFX = VFX;
+                handler.volume = volume;
             }
 
             _SFX_OLD = SFX;
             _VFX_OLD = VFX;
+            _volume_OLD = volume;
         }
 
         public void _OnLocalPlayerAssigned()

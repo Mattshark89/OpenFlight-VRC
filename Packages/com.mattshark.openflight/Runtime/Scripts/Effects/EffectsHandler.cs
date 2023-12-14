@@ -76,6 +76,29 @@ namespace OpenFlightVRC.Effects
         public GameObject SoundObject;
         public AudioSource FlapSound;
 
+        [FieldChangeCallback(nameof(volume))]
+        private float _volume;
+        public float volume
+        {
+            get { return _volume; }
+            set
+            {
+                if (value == _volume)
+                {
+                    return;
+                }
+
+                //set the volume of the flap sound
+                FlapSound.volume = value;
+
+                //disabled as the glide sound is already dynamically controlled by the player's velocity, so we do the math there
+                //set the volume of the glide sound
+                //GlideSound.volume = value;
+
+                _volume = value;
+            }
+        }
+
         public AudioSource GlideSound;
         [Tooltip("Controls the pitch of the glide sound based on the player's velocity. Horizontal axis is velocity, vertical axis is pitch")]
         public AnimationCurve glidePitchCurve;
@@ -95,6 +118,7 @@ namespace OpenFlightVRC.Effects
 
             SFX = true;
             VFX = true;
+            volume = 1f;
         }
 
         internal void OwnerChanged()
@@ -291,9 +315,9 @@ namespace OpenFlightVRC.Effects
                     float pitch = glidePitchCurve.Evaluate(playerVelocity);
                     GlideSound.pitch = pitch;
 
-                    //set the volume of the glide sound based on the player's velocity
+                    //set the volume of the glide sound based on the player's velocity, scaled by the volume variable
                     float volume = glideVolumeCurve.Evaluate(playerVelocity);
-                    GlideSound.volume = volume;
+                    GlideSound.volume = volume * this.volume;
                 }
             }
 
