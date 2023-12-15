@@ -25,9 +25,9 @@ namespace OpenFlightVRC.UI
             hideFlags = HideFlags.DontSaveInBuild;
         }
 
-        public static Dictionary<UIStyleMarkup.StyleClass, FieldInfo> GetStyleFieldMap()
+        public static Dictionary<StyleClass, FieldInfo> GetStyleFieldMap()
         {
-            Dictionary<UIStyleMarkup.StyleClass, FieldInfo> fieldLookup = new Dictionary<UIStyleMarkup.StyleClass, FieldInfo>();
+            Dictionary<StyleClass, FieldInfo> fieldLookup = new Dictionary<StyleClass, FieldInfo>();
 
             foreach (FieldInfo field in typeof(UIStyle).GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
@@ -70,7 +70,7 @@ namespace OpenFlightVRC.UI
                     graphicColor.a = 1;
                 }
 
-                if (markup.styleClass == UIStyleMarkup.StyleClass.TextHighlight)
+                if (markup.styleClass == StyleClass.TextHighlight)
                 {
                     InputField input = markup.GetComponent<InputField>();
 
@@ -89,7 +89,7 @@ namespace OpenFlightVRC.UI
                     }
 
                 }
-                else if (markup.styleClass == UIStyleMarkup.StyleClass.TextCaret)
+                else if (markup.styleClass == StyleClass.TextCaret)
                 {
                     InputField input = markup.GetComponent<InputField>();
 
@@ -107,7 +107,7 @@ namespace OpenFlightVRC.UI
                         RecordObject(vrcInput);
                     }
                 }
-                else if (markup.styleClass == UIStyleMarkup.StyleClass.ActiveTab)
+                else if (markup.styleClass == StyleClass.ActiveTab)
                 {
                     Button button = markup.GetComponent<Button>();
 
@@ -136,7 +136,7 @@ namespace OpenFlightVRC.UI
                         }
                     }
                 }
-                else if (markup.styleClass == UIStyleMarkup.StyleClass.InActiveTab)
+                else if (markup.styleClass == StyleClass.InActiveTab)
                 {
                     Button button = markup.GetComponent<Button>();
 
@@ -165,7 +165,7 @@ namespace OpenFlightVRC.UI
                         }
                     }
                 }
-                else if (markup.styleClass == UIStyleMarkup.StyleClass.HighlightedButton)
+                else if (markup.styleClass == StyleClass.HighlightedButton)
                 {
                     Button button = markup.GetComponent<Button>();
 
