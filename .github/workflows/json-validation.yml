@@ -36,7 +36,7 @@ jobs:
           printf -v date '%(%Y-%m-%d)T\n' -1
           if [ $date != ${{ steps.json_date.outputs.value }} ]; then
             echo value=false >> $GITHUB_OUTPUT
-            echo "::error file=$DATA_JSON_PATH, line=3::Date not set to the latest date"
+            echo "::error file=$DATA_JSON_PATH, line=3::Date not set to the latest date. Please update the date to $date"
             exit 1
           fi
           echo value=true >> $GITHUB_OUTPUT
