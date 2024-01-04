@@ -1,8 +1,8 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.3.0",
-  "JSON Date": "2024-01-03",
-  "Contributers": ["Happyrobot33", "Mattshark89", "DatGek", "Heather May", "mackandelius", "Morghus", "Krazen", "fundale", "Literally Marty", "Roimu", "Daernaro", "IlChiporiAlbino", "Darizard", "-Jinxy-"],
+  "JSON Version": "2.4.0",
+  "JSON Date": "2024-01-04",
+  "Contributers": ["Happyrobot33", "Mattshark89", "DatGek", "Heather May", "mackandelius", "Morghus", "Krazen", "fundale", "Literally Marty", "Roimu", "Daernaro", "IlChiporiAlbino", "Darizard", "-Jinxy-", "OrcaToaster"],
   "Bases": {
     "Kitavali": {
       "Original": {
@@ -978,6 +978,16 @@
         "Hash": ["-216750810v2"],
         "Weight": 1,
         "WingtipOffset": 1.65
+      }
+    },
+    "Aviosaur": {
+      "Original": {
+        "Name": "Aviosaur",
+        "Creator": "Furality / Sylva",
+        "Introducer": "OrcaToaster",
+        "Hash": ["-489620916v2"],
+        "Weight": 1,
+        "WingtipOffset": 4.67
       }
     }
   }
