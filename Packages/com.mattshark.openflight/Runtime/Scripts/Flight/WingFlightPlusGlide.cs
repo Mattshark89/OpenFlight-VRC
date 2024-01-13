@@ -40,13 +40,13 @@ public class WingFlightPlusGlideEditor : Editor
 		[Header("Basic Settings")]
 		// Both of these "base" values are by default affected by the avatar's armspan. See sizeCurve.
 		[Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 285)")]
-		[Range(100, 800)]
+		[Range(100, 500)]
 		public int flapStrengthBase = 285;
 		int flapStrengthBase_DEFAULT = 285;
 
-		[Tooltip("Base gravity while flying (Default: 0.5)")]
-		public float flightGravityBase = 0.5f;
-		float flightGravityBase_DEFAULT = 0.5f;
+		[Tooltip("Base gravity while flying (Default: 0.4)")]
+		public float flightGravityBase = 0.4f;
+		float flightGravityBase_DEFAULT = 0.4f;
 
 		[Tooltip("Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident. (Default: true) CURRENTLY HAS NO EFFECT.")]
 		public bool requireJump = true;
@@ -69,8 +69,8 @@ public class WingFlightPlusGlideEditor : Editor
 		[Tooltip(
 			"Avatars can glide directly from a fall without having to flap first. This behavior is more intuitive for gliding off cliffs, but may cause players to trigger gliding on accident more often when they just want to fall. (Default: false)"
 		)]
-		public bool fallToGlide = false;
-		bool fallToGlide_DEFAULT = false;
+		public bool fallToGlide = true;
+		bool fallToGlide_DEFAULT = true;
 
 		[Header("Advanced Settings (Only for specialized use!)")]
         [Tooltip("Angle to offset the gliding direction by from your hands. (Default: 0)")]
@@ -85,10 +85,10 @@ public class WingFlightPlusGlideEditor : Editor
 		public float horizontalStrengthMod = 1.5f;
 		float horizontalStrengthMod_DEFAULT = 1.5f;
 
-		[Tooltip("How tight you want your turns while gliding. May be dynamically decreased by Avatar Modifier: weight. (Default: 1.5)")]
+		[Tooltip("How tight you want your turns while gliding. May be dynamically decreased by Avatar Modifier: weight. (Default: 2.5)")]
 		[Range(1f, 5f)]
-		public float glideControl = 2.3f; // Do not reduce this below 1; it will break under some weight values if you do
-		float glideControl_DEFAULT = 2.3f;
+		public float glideControl = 2.5f; // Do not reduce this below 1; it will break under some weight values if you do
+		float glideControl_DEFAULT = 2.5f;
 
 		[Tooltip("Slows gliding down over time. (Default: 0.02)")]
 		[Range(0f, 0.2f)]
@@ -117,6 +117,7 @@ public class WingFlightPlusGlideEditor : Editor
 		// Essential Variables
 		private VRCPlayerApi LocalPlayer;
 		private double debugTemp;
+		private float tps_dt = 0.05f; // The ticks per second in deltatime form. IE 0.02f would be 50 ticks per second, or 1/50
 		private int timeTick = -1; // -1 until the player is valid, then this value cycles from 0-99 at 50 ticks per second
 		private Vector3 RHPos;
 		private Vector3 LHPos;
@@ -242,23 +243,30 @@ public class WingFlightPlusGlideEditor : Editor
 			if ((LocalPlayer != null) && LocalPlayer.IsValid())
 			{
 				dtFake = dtFake + Time.deltaTime;
-				if (dtFake >= 0.011f)
+				if (dtFake >= tps_dt)
 				{
-					dtFake = dtFake - 0.011f;
-					FlightTick(0.011f);
+					dtFake = dtFake - tps_dt;
+					FlightTick(tps_dt);
 				}
 			}
 			if (spinningRightRound)
 			{
-				// Rotate the player (only if the Banking Turns beta setting is enabled)
-				if (useAvatarModifiers)
-				{
+				if (useAvatarModifiers) {
 					rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * Time.deltaTime * 6 * (1 - (weight - 1)));
-				}
-				else
-				{
+				} else {
+
 					rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * Time.deltaTime * 6);
 				}
+				// Rotate the player (only if the Banking Turns beta setting is enabled)
+				// if (useAvatarModifiers)
+				// {
+				// 	rotSpeed = rotSpeed + (rotSpeedGoal * Time.deltaTime * 0.05f);
+				// }
+				// else
+				// {
+				// 	rotSpeed = rotSpeed + (rotSpeedGoal * Time.deltaTime * 0.05f);
+				// }
+				// if (Mathf.Abs(rotSpeed) <= rotSpeedGoal) {rotSpeed = ;}
 
 				//Playspace origin and actual player position seems to work as parent and child objects,
 				//therefore the conclusion is that we must make the playspace origin orbit the player.
@@ -285,7 +293,7 @@ public class WingFlightPlusGlideEditor : Editor
 
 		private void FlightTick(float dt)
 		{
-			// Variable `dt` is Delta Time
+			// Variable `dt` is Fixed Delta Time
 			if (timeTick < 0)
 			{
 				// This block only runs once shortly after joining the world
@@ -354,7 +362,7 @@ public class WingFlightPlusGlideEditor : Editor
 					&& (!LocalPlayer.IsPlayerGrounded())
 					&& RHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(rightUpperArmBone).y
 					&& LHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(leftUpperArmBone).y
-					&& downThrust > 0.0002
+					&& downThrust > 0.002f
 				)
 				{
 					isFlapping = true;
@@ -369,7 +377,7 @@ public class WingFlightPlusGlideEditor : Editor
 				if (downThrust > 0)
 				{
 					// Calculate force to apply based on the flap
-					newVelocity = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * dt * flapStrength();
+					newVelocity = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * 0.011f * flapStrength();
 					if (LocalPlayer.IsPlayerGrounded())
 					{
 						// Prevents skiing along the ground
@@ -386,12 +394,17 @@ public class WingFlightPlusGlideEditor : Editor
 					// Speed cap (check, then apply flapping air friction)
 					if (finalVelocity.magnitude > 0.02f * flapStrength())
 					{
-						finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength() * 0.01f));
+						finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * flapStrength() * 0.011f));
 					}
 					setFinalVelocity = true;
 				}
 				else
 				{
+					// hotfix: set velocity to zero if grounded. Prevents stations from storing your momentum.
+					if (LocalPlayer.IsPlayerGrounded()) {
+						finalVelocity = Vector3.zero;
+						setFinalVelocity = true;
+					}
 					isFlapping = false;
 				}
 			}
@@ -476,7 +489,7 @@ public class WingFlightPlusGlideEditor : Editor
 						finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, dt * tmpFloat);
 
 						// Apply Air Friction
-						finalVelocity = finalVelocity * (1 - (airFriction * dt));
+						finalVelocity = finalVelocity * (1 - (airFriction * 0.011f));
 						setFinalVelocity = true;
 					}
 					else
@@ -522,9 +535,8 @@ public class WingFlightPlusGlideEditor : Editor
 							+ string.Concat("\nDownThrust: ", downThrust.ToString())
 							+ string.Concat("\nCannotFly: ", (cannotFlyTick > 0).ToString())
 							+ string.Concat("\nGlideDelay: ", glideDelay.ToString())
-							+ string.Concat("\neulerR: ", RHRot.eulerAngles.normalized.ToString())
+							+ string.Concat("\ngrounded: ", LocalPlayer.IsPlayerGrounded())
 							+ string.Concat("\nmag: ", LocalPlayer.GetVelocity().y.ToString())
-							//+ string.Concat("\nLeAngle: ", Quaternion.Angle(mehl, mehr).ToString())
 							+ string.Concat(
 								"\nCanDoIt: ",
 								(
@@ -551,9 +563,9 @@ public class WingFlightPlusGlideEditor : Editor
 					oldRunSpeed = LocalPlayer.GetRunSpeed();
 					oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
 				}
-				LocalPlayer.SetWalkSpeed(0f);
-				LocalPlayer.SetRunSpeed(0f);
-				LocalPlayer.SetStrafeSpeed(0f);
+				LocalPlayer.SetWalkSpeed(0.001f);
+				LocalPlayer.SetRunSpeed(0.001f);
+				LocalPlayer.SetStrafeSpeed(0.001f);
 			}
 			else
 			{

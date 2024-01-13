@@ -54,6 +54,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 5186127143155085286}
+  _logProxy: {fileID: 0}
   URL:
     url: https://mattshark89.github.io/OpenFlight-VRC/data.json
   OfflineJSON: {fileID: 4900000, guid: 9d86ef9407111214f816a786e6c90ad6, type: 3}
@@ -248,13 +249,15 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 4658167408585168752}
+  _logProxy: {fileID: 0}
   flapStrengthBase: 285
-  flightGravityBase: 0.5
+  flightGravityBase: 0.4
   requireJump: 1
   allowLoco: 0
   useAvatarModifiers: 1
   canGlide: 1
-  fallToGlide: 0
+  fallToGlide: 1
+  glideAngleOffset: 0
   sizeCurve:
     serializedVersion: 2
     m_Curve:
@@ -289,7 +292,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   horizontalStrengthMod: 1.5
-  glideControl: 2.3
+  glideControl: 2.5
   airFriction: 0.02
   useGravityCurve: 0
   gravityCurve:
@@ -327,6 +330,10 @@ MonoBehaviour:
     m_RotationOrder: 4
   debugOutput: {fileID: 0}
   bankingTurns: 1
+  dynamicPlayerPhysics: 0
+  isFlapping: 0
+  isFlying: 0
+  isGliding: 0
   armspan: 1
   wingtipOffset: 0
   weight: 1
@@ -462,6 +469,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 3876308527713053219}
+  _logProxy: {fileID: 0}
   setting: 2
   openFlight: {fileID: 3071123698582917635}
   wingedFlight: {fileID: 4253091968978786445}
@@ -578,16 +586,15 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2615372455177812041}
+  _logProxy: {fileID: 0}
   debugInfo: 
+  d_spinetochest: 0
   JSONLoader: {fileID: 3572098166805370559}
   OpenFlight: {fileID: 3071123698582917635}
   WingFlightPlusGlide: {fileID: 8589234957122968840}
   allowedToFly: 0
   skipLoadingAvatar: 1
-  showWingTipGizmo: 0
-  wingtipGizmo: {fileID: 2873313012049401434}
-  hashV1: 0
-  hashV2: 0
+  hash: 0
   weight: 0
   WingtipOffset: 0
   name: 
@@ -681,10 +688,12 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1614601171981653897}
+  _logProxy: {fileID: 0}
   wingedFlight: {fileID: 4253091968978786445}
   avatarDetection: {fileID: 2688283379173445320}
   flightMode: Auto
   flightAllowed: 0
+  ignoreVRCheck: 0
 --- !u!114 &1614601171981653897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -733,6 +742,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6403997113705946078}
+  _logProxy: {fileID: 0}
 --- !u!114 &6403997113705946078
 MonoBehaviour:
   m_ObjectHideFlags: 0
