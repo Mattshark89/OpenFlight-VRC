@@ -7,13 +7,12 @@ using UnityEngine.UI;
 namespace OpenFlightVRC.UI
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class UIGraph : LoggableUdonSharpBehaviour
+    public class UIGraph : UIBase
 	{
 		AnimationCurve curve; // The curve to graph
 		LineRenderer lineRenderer; // The line renderer component
 		RectTransform lineRendererRectTransform; // The transform of the line renderer
 		public RectTransform evalPointTransform; // The transform of the evaluation point graphic
-		public UdonBehaviour target; // The target UdonBehaviour
 		public string targetVariableCurve; // The target variable for the curve
 		public string targetVariableEval; // The target variable for the evaluation point
 		int resolution = 20; // The number of points to graph
@@ -23,10 +22,7 @@ namespace OpenFlightVRC.UI
 
 		void Start()
 		{
-			//get the real target from the proxy, if it exists
-			if (target.GetProgramVariable("target") != null)
-				target = (UdonBehaviour)target.GetProgramVariable("target");
-
+			InitializeTargetInfo();
 			//the line renderer is a child of the UI object
 			lineRenderer = GetComponentInChildren<LineRenderer>();
 

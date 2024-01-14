@@ -157,12 +157,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 1062979055743477549}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
-  decimalPlaces: 2
   targetVariable: glideControl
+  decimalPlaces: 2
   prefix: Glide Control {
   suffix: '}'
 --- !u!114 &1062979055743477549
@@ -1085,7 +1088,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 1735992874404903752}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
@@ -1648,7 +1654,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 4013692061680308111}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
@@ -2619,12 +2628,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 2921373574658501580}
   _logProxy: {fileID: 0}
   target: {fileID: 8054854718509797021}
-  decimalPlaces: 2
   targetVariable: volume
+  decimalPlaces: 2
   prefix: SFX Volume % {
   suffix: '}'
 --- !u!114 &2921373574658501580
@@ -3087,7 +3099,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 3217663461640142437}
   _logProxy: {fileID: 0}
   target: {fileID: 8054854718509797021}
@@ -3398,7 +3413,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 4413236113358062103}
   _logProxy: {fileID: 0}
   target: {fileID: 8054854718509797021}
@@ -3547,7 +3565,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 8011701950327751587}
   _logProxy: {fileID: 0}
   target: {fileID: 1124972295156573745}
@@ -4124,7 +4145,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 7949288453786413761}
   m_Direction: 0
   m_MinValue: 100
-  m_MaxValue: 800
+  m_MaxValue: 500
   m_WholeNumbers: 1
   m_Value: 100
   m_OnValueChanged:
@@ -4161,7 +4182,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 4356436881126994583}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
@@ -6100,12 +6124,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6845549348533468736}
   _logProxy: {fileID: 0}
   target: {fileID: 211231958146027050}
-  decimalPlaces: 2
   targetVariable: latestReleaseVersion
+  decimalPlaces: 2
   prefix: 'Latest Release: '
   suffix: 
 --- !u!114 &6845549348533468736
@@ -8660,7 +8687,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 3093765107613182187}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
@@ -9120,12 +9150,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 2049535500769255370}
   _logProxy: {fileID: 0}
   target: {fileID: 4598422286817120621}
-  decimalPlaces: 2
   targetVariable: contributersString
+  decimalPlaces: 2
   prefix: 
   suffix: 
 --- !u!114 &2049535500769255370
@@ -10115,12 +10148,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 2186655274563289651}
   _logProxy: {fileID: 0}
   target: {fileID: 211231958146027050}
-  decimalPlaces: 2
   targetVariable: outputText
+  decimalPlaces: 2
   prefix: 
   suffix: 
 --- !u!114 &2186655274563289651
@@ -10659,12 +10695,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 8296429058116480603}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
-  decimalPlaces: 2
   targetVariable: glideAngleOffset
+  decimalPlaces: 2
   prefix: Angle Offset {
   suffix: '}'
 --- !u!114 &8296429058116480603
@@ -12336,7 +12375,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 7208189647518073207}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
@@ -13115,12 +13157,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 1357687653739717276}
   _logProxy: {fileID: 0}
   target: {fileID: 8920556472320288180}
-  decimalPlaces: 2
   targetVariable: fadeDistance
+  decimalPlaces: 2
   prefix: Tablet Fade Dist {
   suffix: '}'
 --- !u!114 &1357687653739717276
@@ -13319,7 +13364,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 163090257562137832}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
@@ -13603,7 +13651,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 2130592238938436907}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
@@ -14287,7 +14338,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 808173220368794861}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323176094828665}
@@ -16385,12 +16439,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6124323176298134151}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323176094828665}
-  decimalPlaces: 2
   targetVariable: flightMode
+  decimalPlaces: 2
   prefix: 'Current Mode: '
   suffix: 
 --- !u!114 &6124323176298134151
@@ -17892,12 +17949,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6124323176601369146}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323176627279620}
-  decimalPlaces: 2
   targetVariable: debugInfo
+  decimalPlaces: 2
   prefix: 
   suffix: 
 --- !u!114 &6124323176601369146
@@ -18549,7 +18609,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6124323176737751583}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323176627279620}
@@ -18680,11 +18743,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6124323176776535766}
   _logProxy: {fileID: 0}
-  evalPointTransform: {fileID: 6124323176852550516}
   target: {fileID: 6124323177588583349}
+  targetVariable: 
+  evalPointTransform: {fileID: 6124323176852550516}
   targetVariableCurve: gravityCurve
   targetVariableEval: armspan
 --- !u!114 &6124323176776535766
@@ -19050,12 +19117,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6124323176889078358}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323176094828665}
-  decimalPlaces: 2
   targetVariable: flightAllowed
+  decimalPlaces: 2
   prefix: 'Flight: '
   suffix: 
 --- !u!114 &6124323176889078358
@@ -20088,12 +20158,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177233457237}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323176627279620}
-  decimalPlaces: 2
   targetVariable: name
+  decimalPlaces: 2
   prefix: 'Avatar: '
   suffix: 
 --- !u!114 &6124323177233457237
@@ -21571,12 +21644,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177628877283}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323176627279620}
-  decimalPlaces: 2
   targetVariable: introducer
+  decimalPlaces: 2
   prefix: 'Contributer: '
   suffix: 
 --- !u!114 &6124323177628877283
@@ -22261,12 +22337,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177777727613}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323176627279620}
-  decimalPlaces: 2
   targetVariable: WingtipOffset
+  decimalPlaces: 2
   prefix: Wing-Tip Offset {
   suffix: '}'
 --- !u!114 &6124323177777727613
@@ -22504,12 +22583,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177789251388}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323176627279620}
-  decimalPlaces: 2
   targetVariable: weight
+  decimalPlaces: 2
   prefix: Weight {
   suffix: '}'
 --- !u!114 &6124323177789251388
@@ -23165,11 +23247,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177903759352}
   _logProxy: {fileID: 0}
-  evalPointTransform: {fileID: 6124323176394278841}
   target: {fileID: 6124323177588583349}
+  targetVariable: 
+  evalPointTransform: {fileID: 6124323176394278841}
   targetVariableCurve: sizeCurve
   targetVariableEval: armspan
 --- !u!114 &6124323177903759352
@@ -23560,7 +23646,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6124323177965004999}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323176627279620}
@@ -23935,12 +24024,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6124323178015860758}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323176627279620}
-  decimalPlaces: 2
   targetVariable: creator
+  decimalPlaces: 2
   prefix: 'Creator: '
   suffix: 
 --- !u!114 &6124323178015860758
@@ -24623,7 +24715,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 7283307279162744276}
   _logProxy: {fileID: 0}
   target: {fileID: 8054854718509797021}
@@ -25482,12 +25577,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 8942712429970851963}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
-  decimalPlaces: 2
   targetVariable: flapStrengthBase
+  decimalPlaces: 2
   prefix: Flap Strength {
   suffix: '}'
 --- !u!114 &8942712429970851963
@@ -25725,12 +25823,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 3300831564966021061}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
-  decimalPlaces: 2
   targetVariable: flightGravityBase
+  decimalPlaces: 2
   prefix: Flight Gravity {
   suffix: '}'
 --- !u!114 &3300831564966021061
@@ -26176,7 +26277,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6196912771390024924}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
@@ -27336,7 +27440,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 162943215918685203}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
@@ -27806,7 +27913,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6388080327894332988}
   _logProxy: {fileID: 0}
   target: {fileID: 8920556472320288180}
@@ -28873,12 +28983,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 7348244918383567008}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
-  decimalPlaces: 3
   targetVariable: airFriction
+  decimalPlaces: 3
   prefix: Air Friction {
   suffix: '}'
 --- !u!114 &7348244918383567008
@@ -30155,12 +30268,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 6185221123171015398}
   _logProxy: {fileID: 0}
   target: {fileID: 4598422286817120621}
-  decimalPlaces: 2
   targetVariable: contributersString
+  decimalPlaces: 2
   prefix: ' '
   suffix: 
 --- !u!114 &6185221123171015398
@@ -30307,7 +30423,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 8520931124433069698}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
@@ -31006,7 +31125,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 4474462134763606299}
   _logProxy: {fileID: 0}
   target: {fileID: 4598422286817120621}
@@ -31908,7 +32030,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 5085913572679631550}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
@@ -32653,7 +32778,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: targetType
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 1181129156048963873}
   _logProxy: {fileID: 0}
   target: {fileID: 8920556472320288180}

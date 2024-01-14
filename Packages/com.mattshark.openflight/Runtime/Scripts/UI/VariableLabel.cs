@@ -7,11 +7,9 @@ using TMPro;
 namespace OpenFlightVRC.UI
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class VariableLabel : LoggableUdonSharpBehaviour
+    public class VariableLabel : UIBase
 	{
-		public UdonBehaviour target;
 		public int decimalPlaces = 2;
-		public string targetVariable;
 		public string prefix = "";
 		public string suffix = "";
 		TextMeshProUGUI text;
@@ -20,13 +18,8 @@ namespace OpenFlightVRC.UI
 
 		void Start()
 		{
-			//get the real target from the proxy, if it exists
-			if (target.GetProgramVariable("target") != null)
-				target = (UdonBehaviour)target.GetProgramVariable("target");
-
+			InitializeTargetInfo();
 			text = GetComponent<TextMeshProUGUI>();
-			//determine if the target variable is a string
-			var targetType = target.GetProgramVariableType(targetVariable);
 			isStringType = targetType == typeof(string);
 			isBoolType = targetType == typeof(bool);
 		}

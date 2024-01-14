@@ -7,20 +7,15 @@ using UnityEngine.UI;
 namespace OpenFlightVRC.UI
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class UIToggle : LoggableUdonSharpBehaviour
+    public class UIToggle : UIBase
 	{
 		Toggle toggle; // The toggle component
-		public UdonBehaviour target; // The target UdonBehaviour
-		public string targetVariable; // The target variable
         public bool invert = false; // If true, the toggle will be inverted
         bool value; // The value of variable
 
 		void Start()
 		{
-			//get the real target from the proxy, if it exists
-			if (target.GetProgramVariable("target") != null)
-				target = (UdonBehaviour)target.GetProgramVariable("target");
-
+			InitializeTargetInfo();
 			toggle = GetComponent<Toggle>();
             value = (bool)target.GetProgramVariable(targetVariable) ^ invert;
 			toggle.isOn = value;
