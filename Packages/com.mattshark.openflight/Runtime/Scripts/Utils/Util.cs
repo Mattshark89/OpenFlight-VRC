@@ -197,21 +197,15 @@ namespace OpenFlightVRC
         /// <returns>If the audio source was changed</returns>
         public static bool ControlSound(AudioSource source, bool enabled)
         {
-            if (enabled)
+            if (enabled && !source.isPlaying)
             {
-                if (!source.isPlaying)
-                {
-                    source.Play();
-                    return true;
-                }
+                source.Play();
+                return true;
             }
-            else
+            else if (source.isPlaying)
             {
-                if (source.isPlaying)
-                {
-                    source.Stop();
-                    return true;
-                }
+                source.Stop();
+                return true;
             }
             return false;
         }

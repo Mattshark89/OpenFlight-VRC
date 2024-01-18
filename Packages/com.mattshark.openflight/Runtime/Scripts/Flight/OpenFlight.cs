@@ -97,7 +97,6 @@ public class OpenFlightScenePostProcessor {
 				FlightOff();
 			}
 
-            //log openflight version
             Logger.Log("OpenFlight version " + OpenFlightVersion, this);
 		}
 

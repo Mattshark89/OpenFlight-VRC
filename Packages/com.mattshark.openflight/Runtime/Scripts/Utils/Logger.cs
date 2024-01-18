@@ -37,7 +37,6 @@ namespace OpenFlightVRC
             {
                 const string log = "OpenFlightLogObject";
 
-                //try to find the log object
                 GameObject logObject = GameObject.Find(log);
 
                 if (logObject == null)
@@ -45,10 +44,8 @@ namespace OpenFlightVRC
                     return;
                 }
 
-                //get udonbehaviour
                 LoggerProxy logUdon = logObject.GetComponent<LoggerProxy>();
 
-                //set it back to the log object
                 self._logProxy = logUdon;
                 logProxy = logUdon;
             }
@@ -66,10 +63,8 @@ namespace OpenFlightVRC
                     break;
             }
 
-            //get text
             string logString = logProxy.log;
 
-            //add text
             logString += text + "\n";
 
             //trim text if too many lines
@@ -78,7 +73,6 @@ namespace OpenFlightVRC
                 logString = logString.Substring(logString.IndexOf('\n') + 1);
             }
 
-            //set text back
             logProxy.log = logString;
         }
 

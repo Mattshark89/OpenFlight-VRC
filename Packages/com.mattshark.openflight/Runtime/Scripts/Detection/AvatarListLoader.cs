@@ -31,7 +31,6 @@ namespace OpenFlightVRC
 		/// </summary>
 		public void LoadURL()
 		{
-			//reset the output
 			Output = "";
 
 			if (useOfflineJSON)
@@ -41,22 +40,31 @@ namespace OpenFlightVRC
                 RunCallbacks();
 				return;
 			}
-			//load the URL
-			VRCStringDownloader.LoadUrl(URL, (VRC.Udon.Common.Interfaces.IUdonEventReceiver)this);
             Logger.Log("Loading Avatar List URL...", this);
+			VRCStringDownloader.LoadUrl(URL, (VRC.Udon.Common.Interfaces.IUdonEventReceiver)this);
 		}
 
+        /// <summary>
+        /// An array of behaviours to call back to when the URL is loaded
+        /// </summary>
         UdonSharpBehaviour[] callbackBehaviours = new UdonSharpBehaviour[0];
+        /// <summary>
+        /// An array of function names to call back to when the URL is loaded
+        /// </summary>
         string[] callbackFuncNames = new string[0];
 
+        //TODO: Convert this to a datadictonary instead of two synchronized arrays
+        /// <summary>
+        /// Adds a callback to the list of callbacks to run when the URL is loaded
+        /// </summary>
+        /// <param name="behaviour">The behaviour to call back to</param>
+        /// <param name="callback">The function name to call back to</param>
         internal void AddCallback(UdonSharpBehaviour behaviour, string callback)
         {
-            //add the callback to the array
             callbackBehaviours = callbackBehaviours.Append(behaviour);
             callbackFuncNames = callbackFuncNames.Append(callback);
         }
 
-		//if the URL successfully loads
 		public override void OnStringLoadSuccess(IVRCStringDownload data)
         {
             string result = data.Result;

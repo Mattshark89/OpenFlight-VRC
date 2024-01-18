@@ -13,6 +13,9 @@ namespace OpenFlightVRC
 		// 1- Flight Enabled
 		// 2- Flight Automatic
 		public int setting = 2;
+		const float OFFTEXTUREOFFSET = 0f;
+		const float AUTOTEXTUREOFFSET = 0.5f;
+		const float ONTEXTUREOFFSET = 0.75f;
 		public OpenFlight openFlight;
 		public GameObject wingedFlight;
 
@@ -28,23 +31,27 @@ namespace OpenFlightVRC
 			{
 				setting = 0;
 			}
-			// Yes I can combine these. No I will not. Readability my dudes
-			if (setting == 0)
+
+			switch (setting)
 			{
-				// Attempt to disable flight
-				openFlight.FlightOff();
-				this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0, 0f));
-			}
-			else if (setting == 1)
-			{
-				// Attempt to enable winged flight
-				openFlight.FlightOn();
-				this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0, 0.5f));
-			}
-			else if (setting == 2)
-			{
-				openFlight.FlightAuto();
-				this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0, 0.75f));
+				case 0:
+					openFlight.FlightOff();
+					this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, OFFTEXTUREOFFSET));
+					break;
+				case 1:
+					openFlight.FlightOn();
+					this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, AUTOTEXTUREOFFSET));
+					break;
+				case 2:
+					openFlight.FlightAuto();
+					this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, ONTEXTUREOFFSET));
+					break;
+				default:
+					//default to auto if something has gone wrong here, but this should never happen
+					openFlight.FlightAuto();
+					this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, AUTOTEXTUREOFFSET));
+					Debug.LogError("Invalid flight setting: " + setting);
+					break;
 			}
 		}
 	}

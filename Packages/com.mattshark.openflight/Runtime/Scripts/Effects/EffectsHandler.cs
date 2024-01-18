@@ -27,13 +27,12 @@ namespace OpenFlightVRC.Effects
                     return;
                 }
 
-                //if rising edge, allow the particles to play
+                //if rising edge
                 if (value)
                 {
                     //make sure effects are near the hands before starting
                     HandleWingtips();
 
-                    //start the particles
                     LeftWingTrail.Play();
                     RightWingTrail.Play();
                 }
@@ -41,10 +40,8 @@ namespace OpenFlightVRC.Effects
                 //if falling edge
                 if (!value)
                 {
-                    //stop the particles
                     LeftWingTrail.Stop();
                     RightWingTrail.Stop();
-                    //remove all particles
                     LeftWingTrail.Clear();
                     RightWingTrail.Clear();
                 }
