@@ -358,10 +358,10 @@ public class WingFlightPlusGlideEditor : Editor
 		{
 			if ((LocalPlayer != null) && LocalPlayer.IsValid())
 			{
-				dtFake = dtFake + Time.deltaTime;
+				dtFake += Time.deltaTime;
 				if (dtFake >= tps_dt)
 				{
-					dtFake = dtFake - tps_dt;
+					dtFake -= tps_dt;
 					FlightTick(tps_dt);
 				}
 			}
@@ -369,11 +369,11 @@ public class WingFlightPlusGlideEditor : Editor
 			{
 				if (useAvatarModifiers)
 				{
-					rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * Time.deltaTime * 6 * (1 - (weight - 1)));
+					rotSpeed += (rotSpeedGoal - rotSpeed) * Time.deltaTime * 6 * (1 - (weight - 1));
 				}
 				else
 				{
-					rotSpeed = rotSpeed + ((rotSpeedGoal - rotSpeed) * Time.deltaTime * 6);
+					rotSpeed += (rotSpeedGoal - rotSpeed) * Time.deltaTime * 6;
 				}
 
 				//Playspace origin and actual player position seems to work as parent and child objects,
