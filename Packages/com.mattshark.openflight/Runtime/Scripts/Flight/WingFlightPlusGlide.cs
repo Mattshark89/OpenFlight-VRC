@@ -233,9 +233,9 @@ public class WingFlightPlusGlideEditor : Editor
 				// Bug check: if avatar has been swapped, sometimes the player will be launched straight up
 				cannotFlyTick = 20;
 				setFinalVelocity = false;
-			}
 
-			CalculateStats();
+				CalculateStats();
+			}
 		}
 
 		public void Update()
