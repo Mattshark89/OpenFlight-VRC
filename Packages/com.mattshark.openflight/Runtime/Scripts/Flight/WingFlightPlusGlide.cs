@@ -346,7 +346,8 @@ public class WingFlightPlusGlideEditor : Editor
 		{
 			if (player == LocalPlayer)
 			{
-				// Bug check: if avatar has been swapped, sometimes the player will be launched straight up
+				// Bug: if avatar has been swapped, sometimes the player will be launched straight up.
+				// Fix: while cannotFlyTick > 0, do not allow flying. Decreases by one each tick.    
 				cannotFlyTick = 20;
 				setFinalVelocity = false;
 			}
@@ -356,6 +357,9 @@ public class WingFlightPlusGlideEditor : Editor
 
 		public void Update()
 		{
+  			// FixedUpdate()'s tick rate varies per VR headset.
+     			// Therefore, I am using Update() to create my own fake homebrew FixedUpdate()
+			// It is called MainFlightTick()
 			if ((LocalPlayer != null) && LocalPlayer.IsValid())
 			{
 				dtFake += Time.deltaTime;
@@ -365,8 +369,10 @@ public class WingFlightPlusGlideEditor : Editor
 					MainFlightTick(tps_dt);
 				}
 			}
+   			// Banking turns should feel smooth since it's heavy on visuals. So this block exists in Update() instead of MainFlightTick()
 			if (spinningRightRound)
 			{
+   				// Avatar modifiers affect spin speed
 				if (useAvatarModifiers)
 				{
 					rotSpeed += (rotSpeedGoal - rotSpeed) * Time.deltaTime * 6 * (1 - (weight - 1));
@@ -376,6 +382,7 @@ public class WingFlightPlusGlideEditor : Editor
 					rotSpeed += (rotSpeedGoal - rotSpeed) * Time.deltaTime * 6;
 				}
 
+				// --- BEGIN MACKANDELIUS NO-JITTER BANKING TURNS FIX ---
 				//Playspace origin and actual player position seems to work as parent and child objects,
 				//therefore the conclusion is that we must make the playspace origin orbit the player.
 				//
@@ -396,6 +403,7 @@ public class WingFlightPlusGlideEditor : Editor
 					VRC_SceneDescriptor.SpawnOrientation.AlignRoomWithSpawnPoint,
 					true
 				);
+    				// --- END FIX ---
 			}
 		}
 
@@ -413,7 +421,7 @@ public class WingFlightPlusGlideEditor : Editor
 				rightHandBone = HumanBodyBones.RightHand;
 				CalculateStats();
 			}
-
+			// Only affect velocity this tick if setFinalVelocity == true by the end
 			setFinalVelocity = false;
 			// Check if hands are being moved downward while above a certain Y threshold
 			// We're using LocalPlayer.GetPosition() to turn these global coordinates into local ones
@@ -438,7 +446,7 @@ public class WingFlightPlusGlideEditor : Editor
 				fallingTick = 0;
 			}
 
-			// Check if hands are held out (ie are a certain distance from the central body)
+			// Hands are out if they are a certain distance from the torso
 			handsOut = (
 				Vector2.Distance(
 					new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z),
@@ -470,12 +478,11 @@ public class WingFlightPlusGlideEditor : Editor
 				)
 				{
 					isFlapping = true;
-					// TakeOff() will only take effect if !isFlying
+					// TakeOff() will check !isFlying
 					TakeOff();
 				}
 			}
 
-			// -- STATE: Flapping
 			if (isFlapping)
 			{
 				FlapTick();
@@ -487,12 +494,12 @@ public class WingFlightPlusGlideEditor : Editor
 				TakeOff();
 			}
 
-			// -- STATE: Flying
-			// (Flying starts when a player first flaps and ends when they become grounded)
+			// Flying starts when a player first flaps and ends when they become grounded
 			if (isFlying)
 			{
 				FlyTick(fixedDeltaTime);
 			}
+
 			RHPosLast = RHPos;
 			LHPosLast = LHPos;
 
@@ -514,21 +521,24 @@ public class WingFlightPlusGlideEditor : Editor
 		/// <param name="dt"></param>
 		private void FlyTick(float dt)
 		{
+  			// Check if FlyTick should be skipped this tick
 			if (IsMainMenuOpen() || ((!isFlapping) && LocalPlayer.IsPlayerGrounded()))
 			{
 				Land();
 			}
 			else
 			{
-				// ---=== Run every frame while the player is "flying" ===---
+   				// Ensure Gravity is correct
 				if (LocalPlayer.GetGravityStrength() != GetFlightGravity() && LocalPlayer.GetVelocity().y < 0)
 				{
 					LocalPlayer.SetGravityStrength(GetFlightGravity());
 				}
 
+				// Check for a gliding pose
+    				// Verbose explanation: (Ensure you're not flapping) && (check for handsOut frame one, ignore handsOut afterwards) && Self Explanatory && Ditto
 				if ((!isFlapping) && (isGliding || handsOut) && handsOpposite && canGlide)
 				{
-					// Gliding, banking, and steering logic
+					// Forgot what this bugfixed
 					if (LocalPlayer.GetVelocity().y > -1f && (!isGliding))
 					{
 						glideDelay = 3;
@@ -539,10 +549,10 @@ public class WingFlightPlusGlideEditor : Editor
 
 					if (glideDelay <= 1)
 					{
-						//rotate Vector3.forward by the gliding angle offset
 						Vector3 newForwardRight = Quaternion.Euler(glideAngleOffset, 0, 0) * Vector3.forward;
 						Vector3 newForwardLeft = Quaternion.Euler(-glideAngleOffset, 0, 0) * Vector3.forward;
-						wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * newForwardRight, LHRot * newForwardLeft, 0.5f)); // The direction the player should go based on how they've angled their wings
+      						// wingDirection is a normal vector pointing towards the forward direction, based on arm/wing angle
+						wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * newForwardRight, LHRot * newForwardLeft, 0.5f));
 					}
 					else
 					{
@@ -550,7 +560,8 @@ public class WingFlightPlusGlideEditor : Editor
 						glideDelay -= 5 * dt;
 					}
 
-					// Hotfix: Always have some form of horizontal velocity while falling. In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
+					// Bug: In rare cases (more common with extremely small avatars) a player's velocity is perfectly straight up/down, which breaks gliding
+					// Fix: Always have some form of horizontal velocity while falling.
 					if (newVelocity.y < 0.3f && newVelocity.x == 0 && newVelocity.z == 0)
 					{
 						Vector2 tmpV2 = new Vector2(wingDirection.x, wingDirection.z).normalized * 0.145f;
@@ -563,33 +574,34 @@ public class WingFlightPlusGlideEditor : Editor
 
 					if (bankingTurns)
 					{
+     						// "Where's the logic for banking turns?" See Update()
 						spinningRightRound = true;
 						rotSpeedGoal = steering;
 					}
 					else
 					{
-						// Default "banking" which is just midair strafing
+						// Fallback "banking" which is just midair strafing. Nobody likes how this feels, should depreciate it
 						wingDirection = Quaternion.Euler(0, steering, 0) * wingDirection;
 					}
 
-					// X and Z are purely based on which way the wings are pointed ("forward") for ease of VR control
+					// Favoring Fun over Realism
+					// Verbose: X and Z are purely based on which way the wings are pointed ("forward") instead of calculating how the wind would hit each wing, for ease of VR control
 					targetVelocity = Vector3.ClampMagnitude(newVelocity + (Vector3.Normalize(wingDirection) * newVelocity.magnitude), newVelocity.magnitude);
 
-					// tmpFloat == glideControl (Except if weight > 1, glideControl temporarily decreases)
-					float tmpfloat = (useAvatarModifiers && weight > 1) ? glideControl - ((weight - 1) * 0.6f) : glideControl;
+					float newGlideControl = (useAvatarModifiers && weight > 1) ? glideControl - ((weight - 1) * 0.6f) : glideControl;
 					if (glideDelay > 0)
 					{
 						glideDelay -= 5 * dt;
 					}
-					tmpfloat *= (1 - glideDelay) / 1;
+					newGlideControl *= (1 - glideDelay) / 1;
 
-					finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, dt * tmpfloat);
+					finalVelocity = Vector3.Slerp(newVelocity, targetVelocity, dt * newGlideControl);
 
 					// Apply Air Friction
 					finalVelocity *= 1 - (airFriction * 0.011f);
 					setFinalVelocity = true;
 				}
-				else
+				else  // Not in a gliding pose?
 				{
 					isGliding = false;
 					rotSpeedGoal = 0;
@@ -599,7 +611,7 @@ public class WingFlightPlusGlideEditor : Editor
 		}
 
 		/// <summary>
-		/// Flapping starts when a player first flaps and ends when they stop flapping
+		/// Flapping starts when a player first flaps and ends when they stop flapping. FlapTick will run every tick.
 		/// </summary>
 		private void FlapTick()
 		{
@@ -614,7 +626,6 @@ public class WingFlightPlusGlideEditor : Editor
 				}
 				else
 				{
-					// apply horizontalStrengthMod, keeping the y component the same
 					newVelocity.Scale(new Vector3(horizontalStrengthMod, 1, horizontalStrengthMod));
 				}
 				finalVelocity = LocalPlayer.GetVelocity() + newVelocity;
@@ -627,7 +638,8 @@ public class WingFlightPlusGlideEditor : Editor
 			}
 			else
 			{
-				// hotfix: set velocity to zero if grounded. Prevents stations from storing your momentum.
+   				// Bug: Stations store your velocity, releasing it all at once when you hop off. Meaning you can flap while seated to infinitely build velocity.
+				// Fix: set velocity to zero if grounded. Unfortunately breaks the RequireJump() setting, which will be refactored in the future.
 				if (LocalPlayer.IsPlayerGrounded())
 				{
 					finalVelocity = Vector3.zero;
@@ -648,11 +660,6 @@ public class WingFlightPlusGlideEditor : Editor
 					timeTick = 0;
 					if (debugOutput != null)
 					{
-						//TODO: WTF does this variable mean?
-						bool canDoIt = (
-							Vector3.Distance(LocalPlayer.GetBonePosition(leftHandBone), LocalPlayer.GetBonePosition(rightHandBone))
-							> (armspan / 3.3 * 2) + Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone), LocalPlayer.GetBonePosition(rightUpperArmBone))
-						);
 						debugOutput.text =
 							string.Concat("\nIsFlying: ", isFlying.ToString())
 							+ string.Concat("\nIsFlapping: ", isFlapping.ToString())
@@ -662,8 +669,7 @@ public class WingFlightPlusGlideEditor : Editor
 							+ string.Concat("\nCannotFly: ", (cannotFlyTick > 0).ToString())
 							+ string.Concat("\nGlideDelay: ", glideDelay.ToString())
 							+ string.Concat("\ngrounded: ", LocalPlayer.IsPlayerGrounded())
-							+ string.Concat("\nmag: ", LocalPlayer.GetVelocity().y.ToString())
-							+ string.Concat("\nCanDoIt: ", canDoIt.ToString());
+							+ string.Concat("\nYmagnitude: ", LocalPlayer.GetVelocity().y.ToString());
 					}
 				}
 			}
@@ -694,11 +700,12 @@ public class WingFlightPlusGlideEditor : Editor
 			LocalPlayer.SetStrafeSpeed(oldStrafeSpeed);
 		}
 
-		// Flight Strength, etc. are based on armspan and whatnot.
-		// This function can be re-run to recalculate these values at any time (upon switching avatars for example)
+		/// <summary>
+		/// Running this function will recalculate important variables needed for Flap Strength.
+		/// </summary>
 		private void CalculateStats()
 		{
-			// `armspan` does not include the distance between shoulders
+			// `armspan` does not include the distance between shoulders. shoulderDistance stores this value by itself.
 			armspan =
 				Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone), LocalPlayer.GetBonePosition(leftLowerArmBone))
 				+ Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone), LocalPlayer.GetBonePosition(leftHandBone))
@@ -708,7 +715,9 @@ public class WingFlightPlusGlideEditor : Editor
 			Logger.Log("Armspan: " + armspan.ToString() + " Shoulder Distance: " + shoulderDistance.ToString(), this);
 		}
 
-		// Set necessary values for beginning flight
+		/// <summary>
+		/// Set necessary values for beginning flight. Automatically ensures it only runs on the first tick of flight.
+		/// </summary>
 		public void TakeOff()
 		{
 			if (!isFlying)
@@ -736,7 +745,7 @@ public class WingFlightPlusGlideEditor : Editor
 		/// </summary>
 		private void CheckPhysicsUnChanged()
 		{
-			//if the world gravity is different than what we have saved, throw a warning
+			// Log a warning if gravity values differ from what we have saved
 			if (LocalPlayer.GetGravityStrength() != oldGravityStrength)
 			{
 				Logger.LogWarning(
@@ -746,7 +755,7 @@ public class WingFlightPlusGlideEditor : Editor
 				Logger.LogWarning("Saved Gravity: " + oldGravityStrength.ToString(), this);
 			}
 
-			//if the player movement is different than what we have saved, throw a warning
+			// Log a warning if movement values differ from what we have saved
 			if (LocalPlayer.GetWalkSpeed() != oldWalkSpeed || LocalPlayer.GetRunSpeed() != oldRunSpeed || LocalPlayer.GetStrafeSpeed() != oldStrafeSpeed)
 			{
 				Logger.LogWarning(
@@ -771,7 +780,7 @@ public class WingFlightPlusGlideEditor : Editor
 		}
 
 		/// <summary>
-		/// Effectually disables all flight-related variables
+		/// Effectually disables all flight-related variables and functions. This does not permanently disable flight (the player can just flap again); disable the GameObject instead.
 		/// </summary>
 		public void Land()
 		{
