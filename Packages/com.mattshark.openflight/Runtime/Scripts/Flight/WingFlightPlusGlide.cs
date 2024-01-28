@@ -350,9 +350,9 @@ public class WingFlightPlusGlideEditor : Editor
 				// Fix: while cannotFlyTick > 0, do not allow flying. Decreases by one each tick.    
 				cannotFlyTick = 20;
 				setFinalVelocity = false;
-			}
 
-			CalculateStats();
+				CalculateStats();
+			}
 		}
 
 		public void Update()
