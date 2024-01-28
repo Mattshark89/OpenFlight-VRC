@@ -201,7 +201,7 @@ public class WingFlightPlusGlideEditor : Editor
 		public bool dynamicPlayerPhysics = false;
 
 		/// <summary>
-		/// Helper property. Do not touch, unless empty, then set to empty game object.
+		/// Helper property. Do not remove the GameObject. If it somehow got unset, then set it to an empty game object (A Load Bearing Transform object should exist in the prefab for this purpose).
 		/// </summary>
 		[Header("Helper property (Do not touch, unless empty, then set to empty game object)")]
 		[Tooltip("Do not remove, if empty add the 'Load Bearing' game object, script will fail at runtime without this setup.")]
@@ -362,7 +362,7 @@ public class WingFlightPlusGlideEditor : Editor
 				if (dtFake >= tps_dt)
 				{
 					dtFake -= tps_dt;
-					FlightTick(tps_dt);
+					MainFlightTick(tps_dt);
 				}
 			}
 			if (spinningRightRound)
@@ -399,7 +399,7 @@ public class WingFlightPlusGlideEditor : Editor
 			}
 		}
 
-		private void FlightTick(float fixedDeltaTime)
+		private void MainFlightTick(float fixedDeltaTime)
 		{
 			if (timeTick < 0)
 			{
@@ -521,9 +521,9 @@ public class WingFlightPlusGlideEditor : Editor
 			else
 			{
 				// ---=== Run every frame while the player is "flying" ===---
-				if (LocalPlayer.GetGravityStrength() != FlightGravity() && LocalPlayer.GetVelocity().y < 0)
+				if (LocalPlayer.GetGravityStrength() != GetFlightGravity() && LocalPlayer.GetVelocity().y < 0)
 				{
-					LocalPlayer.SetGravityStrength(FlightGravity());
+					LocalPlayer.SetGravityStrength(GetFlightGravity());
 				}
 
 				if ((!isFlapping) && (isGliding || handsOut) && handsOpposite && canGlide)
@@ -606,7 +606,7 @@ public class WingFlightPlusGlideEditor : Editor
 			if (downThrust > 0)
 			{
 				// Calculate force to apply based on the flap
-				newVelocity = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * 0.011f * FlapStrength();
+				newVelocity = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * 0.011f * GetFlapStrength();
 				if (LocalPlayer.IsPlayerGrounded())
 				{
 					// Prevents skiing along the ground
@@ -619,9 +619,9 @@ public class WingFlightPlusGlideEditor : Editor
 				}
 				finalVelocity = LocalPlayer.GetVelocity() + newVelocity;
 				// Speed cap (check, then apply flapping air friction)
-				if (finalVelocity.magnitude > 0.02f * FlapStrength())
+				if (finalVelocity.magnitude > 0.02f * GetFlapStrength())
 				{
-					finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * FlapStrength() * 0.011f));
+					finalVelocity = finalVelocity.normalized * (finalVelocity.magnitude - (flapAirFriction * GetFlapStrength() * 0.011f));
 				}
 				setFinalVelocity = true;
 			}
@@ -642,7 +642,7 @@ public class WingFlightPlusGlideEditor : Editor
 			if (timeTick >= 0)
 			{
 				timeTick++;
-				// Automatically update the debug output every 0.2 seconds (assuming VRChat uses the Unity default of 50 ticks per second)
+				// Automatically update the debug output every 0.2 seconds (sorta, since certain VR headsets affect FixedUpdate())
 				if (timeTick > 9)
 				{
 					timeTick = 0;
@@ -670,7 +670,7 @@ public class WingFlightPlusGlideEditor : Editor
 		}
 
 		/// <summary>
-		/// Immobilizes the player's locomotion. This is useful for preventing the player from moving while flying. Still allows the player to rotate.
+		/// Immobilizes the player's locomotion. This is useful for preventing the player from moving while flying. Still allows the player to rotate, unlike VRC's method of immobilization.
 		/// </summary>
 		/// <param name="immobilize"></param>
 		private void ImmobilizePart(bool immobilize)
@@ -722,7 +722,7 @@ public class WingFlightPlusGlideEditor : Editor
 				{
 					CheckPhysicsUnChanged();
 				}
-				LocalPlayer.SetGravityStrength(FlightGravity());
+				LocalPlayer.SetGravityStrength(GetFlightGravity());
 				if (!allowLoco)
 				{
 					ImmobilizePart(true);
@@ -793,7 +793,7 @@ public class WingFlightPlusGlideEditor : Editor
 			Logger.Log("Landed.", this);
 		}
 
-		private float FlapStrength()
+		private float GetFlapStrength()
 		{
 			if (useAvatarModifiers)
 			{
@@ -804,7 +804,7 @@ public class WingFlightPlusGlideEditor : Editor
 			return sizeCurve.Evaluate(armspan) * flapStrengthBase + 10;
 		}
 
-		private float FlightGravity()
+		private float GetFlightGravity()
 		{
 			float gravity = 0;
 			if (useGravityCurve)
@@ -823,20 +823,6 @@ public class WingFlightPlusGlideEditor : Editor
 				return gravity * weight;
 			}
 			return gravity;
-		}
-
-		// --- Helper Functions ---
-
-		public void EnableBetaFeatures()
-		{
-			bankingTurns = true;
-			Logger.Log("Beta Features enabled.", this);
-		}
-
-		public void DisableBetaFeatures()
-		{
-			bankingTurns = false;
-			Logger.Log("Beta Features disabled.", this);
 		}
 
 		/// <summary>
