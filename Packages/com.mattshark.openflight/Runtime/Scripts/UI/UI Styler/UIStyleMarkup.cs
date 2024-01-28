@@ -1,20 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using VRC.Udon;
 using UdonSharp;
 
 #if UNITY_EDITOR
 using UnityEditor;
 using UdonSharpEditor;
 using UnityEditor.Callbacks;
-using UdonSharpEditor;
 #endif
 
 namespace OpenFlightVRC.UI
 {
-	public enum StyleClass
+    public enum StyleClass
 	{
 		Background,
 		FieldBackground,

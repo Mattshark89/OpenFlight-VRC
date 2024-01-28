@@ -259,6 +259,7 @@ public class WingFlightPlusGlideEditor : Editor
 		/// If >0, disables flight then decreases itself by one
 		/// </summary>
 		private int cannotFlyTick = 0;
+
 		/// <summary>
 		/// Increased by one every tick one's y velocity < 0
 		/// </summary>
@@ -347,7 +348,7 @@ public class WingFlightPlusGlideEditor : Editor
 			if (player == LocalPlayer)
 			{
 				// Bug: if avatar has been swapped, sometimes the player will be launched straight up.
-				// Fix: while cannotFlyTick > 0, do not allow flying. Decreases by one each tick.    
+				// Fix: while cannotFlyTick > 0, do not allow flying. Decreases by one each tick.
 				cannotFlyTick = 20;
 				setFinalVelocity = false;
 
@@ -357,8 +358,8 @@ public class WingFlightPlusGlideEditor : Editor
 
 		public void Update()
 		{
-  			// FixedUpdate()'s tick rate varies per VR headset.
-     			// Therefore, I am using Update() to create my own fake homebrew FixedUpdate()
+			// FixedUpdate()'s tick rate varies per VR headset.
+			// Therefore, I am using Update() to create my own fake homebrew FixedUpdate()
 			// It is called MainFlightTick()
 			if ((LocalPlayer != null) && LocalPlayer.IsValid())
 			{
@@ -369,10 +370,10 @@ public class WingFlightPlusGlideEditor : Editor
 					MainFlightTick(tps_dt);
 				}
 			}
-   			// Banking turns should feel smooth since it's heavy on visuals. So this block exists in Update() instead of MainFlightTick()
+			// Banking turns should feel smooth since it's heavy on visuals. So this block exists in Update() instead of MainFlightTick()
 			if (spinningRightRound)
 			{
-   				// Avatar modifiers affect spin speed
+				// Avatar modifiers affect spin speed
 				if (useAvatarModifiers)
 				{
 					rotSpeed += (rotSpeedGoal - rotSpeed) * Time.deltaTime * 6 * (1 - (weight - 1));
@@ -403,7 +404,7 @@ public class WingFlightPlusGlideEditor : Editor
 					VRC_SceneDescriptor.SpawnOrientation.AlignRoomWithSpawnPoint,
 					true
 				);
-    				// --- END FIX ---
+				// --- END FIX ---
 			}
 		}
 
@@ -521,21 +522,21 @@ public class WingFlightPlusGlideEditor : Editor
 		/// <param name="dt"></param>
 		private void FlyTick(float dt)
 		{
-  			// Check if FlyTick should be skipped this tick
+			// Check if FlyTick should be skipped this tick
 			if (IsMainMenuOpen() || ((!isFlapping) && LocalPlayer.IsPlayerGrounded()))
 			{
 				Land();
 			}
 			else
 			{
-   				// Ensure Gravity is correct
+				// Ensure Gravity is correct
 				if (LocalPlayer.GetGravityStrength() != GetFlightGravity() && LocalPlayer.GetVelocity().y < 0)
 				{
 					LocalPlayer.SetGravityStrength(GetFlightGravity());
 				}
 
 				// Check for a gliding pose
-    				// Verbose explanation: (Ensure you're not flapping) && (check for handsOut frame one, ignore handsOut afterwards) && Self Explanatory && Ditto
+				// Verbose explanation: (Ensure you're not flapping) && (check for handsOut frame one, ignore handsOut afterwards) && Self Explanatory && Ditto
 				if ((!isFlapping) && (isGliding || handsOut) && handsOpposite && canGlide)
 				{
 					// Forgot what this bugfixed
@@ -551,7 +552,7 @@ public class WingFlightPlusGlideEditor : Editor
 					{
 						Vector3 newForwardRight = Quaternion.Euler(glideAngleOffset, 0, 0) * Vector3.forward;
 						Vector3 newForwardLeft = Quaternion.Euler(-glideAngleOffset, 0, 0) * Vector3.forward;
-      						// wingDirection is a normal vector pointing towards the forward direction, based on arm/wing angle
+						// wingDirection is a normal vector pointing towards the forward direction, based on arm/wing angle
 						wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * newForwardRight, LHRot * newForwardLeft, 0.5f));
 					}
 					else
@@ -574,7 +575,7 @@ public class WingFlightPlusGlideEditor : Editor
 
 					if (bankingTurns)
 					{
-     						// "Where's the logic for banking turns?" See Update()
+						// "Where's the logic for banking turns?" See Update()
 						spinningRightRound = true;
 						rotSpeedGoal = steering;
 					}
@@ -601,7 +602,7 @@ public class WingFlightPlusGlideEditor : Editor
 					finalVelocity *= 1 - (airFriction * 0.011f);
 					setFinalVelocity = true;
 				}
-				else  // Not in a gliding pose?
+				else // Not in a gliding pose?
 				{
 					isGliding = false;
 					rotSpeedGoal = 0;
@@ -618,7 +619,7 @@ public class WingFlightPlusGlideEditor : Editor
 			if (downThrust > 0)
 			{
 				// Calculate force to apply based on the flap
-				newVelocity = ((RHPos - RHPosLast) + (LHPos - LHPosLast)) * 0.011f * GetFlapStrength();
+				newVelocity = 0.011f * GetFlapStrength() * ((RHPos - RHPosLast) + (LHPos - LHPosLast));
 				if (LocalPlayer.IsPlayerGrounded())
 				{
 					// Prevents skiing along the ground
@@ -638,7 +639,7 @@ public class WingFlightPlusGlideEditor : Editor
 			}
 			else
 			{
-   				// Bug: Stations store your velocity, releasing it all at once when you hop off. Meaning you can flap while seated to infinitely build velocity.
+				// Bug: Stations store your velocity, releasing it all at once when you hop off. Meaning you can flap while seated to infinitely build velocity.
 				// Fix: set velocity to zero if grounded. Unfortunately breaks the RequireJump() setting, which will be refactored in the future.
 				if (LocalPlayer.IsPlayerGrounded())
 				{
@@ -769,13 +770,18 @@ public class WingFlightPlusGlideEditor : Editor
 			}
 		}
 
+#pragma warning disable IDE0044 // Add readonly modifier. We want functions to be able to modify this
+		private Collider[] _colliders = new Collider[0];
+#pragma warning restore IDE0044 // Add readonly modifier
 		/// <summary>
 		/// Utility method to detect main menu status. Technique pulled from <see href="https://github.com/Superbstingray/UdonPlayerPlatformHook">UdonPlayerPlatformHook</see>
 		/// </summary>
 		/// <returns>True if the main menu is open, false otherwise</returns>
 		private bool IsMainMenuOpen()
 		{
-			int uiColliderCount = Physics.OverlapSphere(LocalPlayer.GetPosition(), 10f, 524288).Length;
+			//swapped from OverlapSphere to OverlapSphereNonAlloc, as it does not allocate memory each time it is called,
+			//saving on garbage collection. Also doesnt require a .Length check, as it returns the number of colliders it found inherently.
+			int uiColliderCount = Physics.OverlapSphereNonAlloc(LocalPlayer.GetPosition(), 10f, _colliders, 524288);
 			return uiColliderCount == 8 || uiColliderCount == 9 || uiColliderCount == 10;
 		}
 

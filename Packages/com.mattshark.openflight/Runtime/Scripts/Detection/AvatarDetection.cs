@@ -62,8 +62,10 @@ namespace OpenFlightVRC
 		internal float[] hashDistances = new float[5];
 		public float weight = 1;
 		public float WingtipOffset = 0;
-		public string name = ""; //this is the name of the avatar base
-		public string creator = ""; //this is the person who created the avatar base
+#pragma warning disable CS0108 // Member hides inherited member; missing new keyword
+        public string name = ""; //this is the name of the avatar base
+#pragma warning restore CS0108 // Member hides inherited member; missing new keyword
+        public string creator = ""; //this is the person who created the avatar base
 		public string introducer = ""; //this is the person who introduced the avatar to the JSON list itself
 		const string LOADINGAVATARHASH = "1439458325v2";
 		#endregion
