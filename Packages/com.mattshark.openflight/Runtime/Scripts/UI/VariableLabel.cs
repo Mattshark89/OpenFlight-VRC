@@ -1,34 +1,32 @@
 ﻿using UdonSharp;
 using UnityEngine;
-using VRC.SDKBase;
-using VRC.Udon;
 using TMPro;
 
 namespace OpenFlightVRC.UI
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class VariableLabel : UIBase
+	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+	public class VariableLabel : UIBase
 	{
 		public int decimalPlaces = 2;
 		public string prefix = "";
 		public string suffix = "";
 		TextMeshProUGUI text;
-		bool isStringType = false;
-		bool isBoolType = false;
+		private bool _isStringType = false;
+		private bool _isBoolType = false;
 
 		void Start()
 		{
 			InitializeTargetInfo();
 			text = GetComponent<TextMeshProUGUI>();
-			isStringType = targetType == typeof(string);
-			isBoolType = targetType == typeof(bool);
+			_isStringType = targetType == typeof(string);
+			_isBoolType = targetType == typeof(bool);
 		}
 
 		void Update()
 		{
 			var targetValue = target.GetProgramVariable(targetVariable);
 			//determine if it is a bool
-			if (isBoolType)
+			if (_isBoolType)
 			{
 				if ((bool)targetValue)
 				{
@@ -39,7 +37,7 @@ namespace OpenFlightVRC.UI
 					text.text = prefix + "False" + suffix;
 				}
 			}
-			else if (!isStringType)
+			else if (!_isStringType)
 			{
 				float roundingModifier = Mathf.Pow(10, decimalPlaces);
 				float rounded = Mathf.Round((float)targetValue * roundingModifier) / roundingModifier;

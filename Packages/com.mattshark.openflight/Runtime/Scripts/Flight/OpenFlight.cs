@@ -1,20 +1,17 @@
 ﻿using UdonSharp;
 using UnityEngine;
-using UnityEngine.UI;
 using Unity.Collections;
 using VRC.SDKBase;
-using VRC.Udon;
 
 namespace OpenFlightVRC
 {
 	//This chunk of code allows the OpenFlight version number to be set automatically from the package.json file
 	//its done using this method for dumb unity reasons but it works so whatever
 #if !COMPILER_UDONSHARP && UNITY_EDITOR
-using UnityEditor;
-using UnityEditor.Callbacks;
+    using UnityEditor.Callbacks;
 
-public class OpenFlightScenePostProcessor {
-	[PostProcessSceneAttribute]
+    public class OpenFlightScenePostProcessor {
+	[PostProcessScene]
 	public static void OnPostProcessScene() {
 		//get the openflight version from the package.json file
 		string packageJson = System.IO.File.ReadAllText("Packages/com.mattshark.openflight/package.json");
@@ -30,8 +27,8 @@ public class OpenFlightScenePostProcessor {
 }
 #endif
 
-    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class OpenFlight : LoggableUdonSharpBehaviour
+	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+	public class OpenFlight : LoggableUdonSharpBehaviour
 	{
 		//this removes any override that the editor might have set through the inspector ([HideInInspector] does NOT do that)
 		/// <summary>
@@ -55,7 +52,7 @@ public class OpenFlightScenePostProcessor {
 		/// </summary>
 		public string flightMode = "Auto";
 
-		private VRCPlayerApi LocalPlayer;
+		private VRCPlayerApi _localPlayer;
 
 		/// <summary>
 		/// If true, the player is allowed to fly
@@ -63,41 +60,45 @@ public class OpenFlightScenePostProcessor {
 		[ReadOnly]
 		public bool flightAllowed = false;
 
-        /// <summary>
-        /// If true, the system will ignore the VR check and allow flight even if the player is not in VR
-        /// </summary>
-        /// <remarks>
-        /// You REALLY should not turn this on. This is purely for testing purposes
-        /// </remarks>
-        public bool ignoreVRCheck = false;
+		/// <summary>
+		/// If true, the system will ignore the VR check and allow flight even if the player is not in VR
+		/// </summary>
+		/// <remarks>
+		/// You REALLY should not turn this on. This is purely for testing purposes
+		/// </remarks>
+		public bool ignoreVRCheck = false;
 
-        /// <summary>
-        /// Turns flight off
-        /// </summary>
-        void SwitchFlight()
+		/// <summary>
+		/// Turns flight off
+		/// </summary>
+		void SwitchFlight()
 		{
 			wingedFlight.SetActive(false);
 			flightAllowed = false;
 		}
 
-        private bool inVR()
-        {
-            if (ignoreVRCheck)
-            {
-                Logger.LogWarning("VR check is being ignored! This should not be enabled in a production build!", this);
-            }
-            return LocalPlayer.IsUserInVR() || ignoreVRCheck;
-        }
-
-        public void Start()
+		/// <summary>
+		/// Checks if the player is in VR
+		/// </summary>
+		/// <returns></returns>
+		private bool InVR()
 		{
-			LocalPlayer = Networking.LocalPlayer;
-            if (!inVR())
+			if (ignoreVRCheck)
+			{
+				Logger.LogWarning("VR check is being ignored! This should not be enabled in a production build!", this);
+			}
+			return _localPlayer.IsUserInVR() || ignoreVRCheck;
+		}
+
+		public void Start()
+		{
+			_localPlayer = Networking.LocalPlayer;
+			if (!InVR())
 			{
 				FlightOff();
 			}
 
-            Logger.Log("OpenFlight version " + OpenFlightVersion, this);
+			Logger.Log("OpenFlight version " + OpenFlightVersion, this);
 		}
 
 		/// <summary>
@@ -105,17 +106,17 @@ public class OpenFlightScenePostProcessor {
 		/// </summary>
 		public void FlightOn()
 		{
-            if (inVR())
+			if (InVR())
 			{
 				SwitchFlight();
 				wingedFlight.SetActive(true);
 				flightMode = "On";
 				flightAllowed = true;
-                Logger.Log("Flight turned on", this);
+				Logger.Log("Flight turned on", this);
 			}
 			else
 			{
-                Logger.Log("Flight cannot be turned on because the player is not in VR", this);
+				Logger.Log("Flight cannot be turned on because the player is not in VR", this);
 			}
 		}
 
@@ -128,7 +129,7 @@ public class OpenFlightScenePostProcessor {
 			wingedFlight.SetActive(false);
 			flightMode = "Off";
 			flightAllowed = false;
-            Logger.Log("Flight turned off", this);
+			Logger.Log("Flight turned off", this);
 		}
 
 		/// <summary>
@@ -136,7 +137,7 @@ public class OpenFlightScenePostProcessor {
 		/// </summary>
 		public void FlightAuto()
 		{
-            if (inVR())
+			if (InVR())
 			{
 				flightMode = "Auto";
 				flightAllowed = false;
@@ -146,11 +147,11 @@ public class OpenFlightScenePostProcessor {
 				{
 					avatarDetection.ReevaluateFlight();
 				}
-                Logger.Log("Flight set to auto", this);
+				Logger.Log("Flight set to auto", this);
 			}
 			else
 			{
-                Logger.Log("Flight cannot be set to auto because the player is not in VR", this);
+				Logger.Log("Flight cannot be set to auto because the player is not in VR", this);
 			}
 		}
 

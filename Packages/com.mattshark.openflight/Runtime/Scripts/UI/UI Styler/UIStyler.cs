@@ -8,42 +8,41 @@ using VRC.SDK3.Components;
 #if UNITY_EDITOR
 using UnityEditor.Callbacks;
 using UnityEditor;
-using UdonSharpEditor;
 #endif
 
 namespace OpenFlightVRC.UI
 {
-    [AddComponentMenu("OpenFlight/UI/Styler")]
-    internal class UIStyler : MonoBehaviour, VRC.SDKBase.IEditorOnly
-    {
+	[AddComponentMenu("OpenFlight/UI/Styler")]
+	internal class UIStyler : MonoBehaviour, VRC.SDKBase.IEditorOnly
+	{
 #pragma warning disable CS0649
-        public UIStyle uiStyle;
+		public UIStyle uiStyle;
 #pragma warning restore CS0649
 
-        private void Reset()
-        {
-            hideFlags = HideFlags.DontSaveInBuild;
-        }
+		private void Reset()
+		{
+			hideFlags = HideFlags.DontSaveInBuild;
+		}
 
-        public static Dictionary<StyleClass, FieldInfo> GetStyleFieldMap()
-        {
-            Dictionary<StyleClass, FieldInfo> fieldLookup = new Dictionary<StyleClass, FieldInfo>();
+		public static Dictionary<StyleClass, FieldInfo> GetStyleFieldMap()
+		{
+			Dictionary<StyleClass, FieldInfo> fieldLookup = new Dictionary<StyleClass, FieldInfo>();
 
-            foreach (FieldInfo field in typeof(UIStyle).GetFields(BindingFlags.Public | BindingFlags.Instance))
-            {
-                if (field.FieldType == typeof(Color))
-                {
-                    StyleMarkupLinkAttribute markupAttr = field.GetCustomAttribute<StyleMarkupLinkAttribute>();
+			foreach (FieldInfo field in typeof(UIStyle).GetFields(BindingFlags.Public | BindingFlags.Instance))
+			{
+				if (field.FieldType == typeof(Color))
+				{
+					StyleMarkupLinkAttribute markupAttr = field.GetCustomAttribute<StyleMarkupLinkAttribute>();
 
-                    if (markupAttr != null)
-                    {
-                        fieldLookup.Add(markupAttr.Class, field);
-                    }
-                }
-            }
+					if (markupAttr != null)
+					{
+						fieldLookup.Add(markupAttr.Class, field);
+					}
+				}
+			}
 
-            return fieldLookup;
-        }
+			return fieldLookup;
+		}
 
 #if UNITY_EDITOR
         private Color GetColor(FieldInfo field)
@@ -234,7 +233,7 @@ namespace OpenFlightVRC.UI
             Object.DestroyImmediate(GameObject.FindObjectOfType<UIStyler>());
         }
 #endif
-    }
+	}
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(UIStyler))]
@@ -257,7 +256,7 @@ namespace OpenFlightVRC.UI
         {
             colorStyleProperty = serializedObject.FindProperty(nameof(UIStyler.uiStyle));
 
-            #region Style Dropdown Initialization
+	#region Style Dropdown Initialization
             //attempt to find all styles relating to the package that this script is in
             styles = new List<UIStyle>();
             string[] guids = AssetDatabase.FindAssets("t:UIStyle");
@@ -306,7 +305,7 @@ namespace OpenFlightVRC.UI
                     break;
                 }
             }
-            #endregion
+	#endregion
         }
 
         public override void OnInspectorGUI()
@@ -437,7 +436,7 @@ namespace OpenFlightVRC.UI
 
                 styleObj.ApplyModifiedProperties();
 
-                #region Unused Properties Foldout
+	#region Unused Properties Foldout
                 //display unused properties in a foldout
                 if (unusedProperties.Length > 0)
                 {
@@ -456,7 +455,7 @@ namespace OpenFlightVRC.UI
                         EditorGUI.indentLevel--;
                     }
                 }
-                #endregion
+	#endregion
 
                 if (EditorGUI.EndChangeCheck())
                     (target as UIStyler).ApplyStyle();

@@ -10,7 +10,7 @@ using UnityEditor.Callbacks;
 
 namespace OpenFlightVRC.UI
 {
-    public enum StyleClass
+	public enum StyleClass
 	{
 		Background,
 		FieldBackground,
@@ -54,7 +54,6 @@ public class UIStyleMarkupScenePostProcessor {
 	[AddComponentMenu("Udon Sharp/Video/UI/Style Markup")]
 	internal class UIStyleMarkup : UdonSharpBehaviour
 	{
-
 #pragma warning disable CS0649
 		public StyleClass styleClass;
 		public Graphic targetGraphic;

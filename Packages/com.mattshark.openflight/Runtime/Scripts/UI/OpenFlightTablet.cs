@@ -1,43 +1,43 @@
 ﻿using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
-using VRC.Udon;
 using UnityEngine.UI;
 using TMPro;
 using static OpenFlightVRC.Util;
 
 namespace OpenFlightVRC.UI
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class OpenFlightTablet : LoggableUdonSharpBehaviour
+	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+	public class OpenFlightTablet : LoggableUdonSharpBehaviour
 	{
-        VRCPlayerApi localPlayer = null;
+		private VRCPlayerApi _localPlayer = null;
 		public int fadeDistance = 10;
 		public bool allowFade = true;
 		public GameObject[] objectsToHideOnFade;
-        public GameObject[] objectsToShowOnFade;
+		public GameObject[] objectsToShowOnFade;
 		public OpenFlight OpenFlight;
 		public AvatarDetection AvatarDetection;
 
 		public TextMeshProUGUI VersionInfo;
 
 		public Button[] tabs;
-		private int activeTab = 0;
+		private int _activeTab = 0;
 
 		//Overwritten at start
-		private Color tabBaseColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
-		private Color tabActiveColor = new Color(0.5f, 0.5f, 0.5f, 1f);
+		private Color _tabBaseColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+		private Color _tabActiveColor = new Color(0.5f, 0.5f, 0.5f, 1f);
 
 		//the reason this is needed is stupid, but essentially if there isnt a delay between start going into update, the tablet will immediately hide itself breaking all the children UI scripts
-		private int fadeTimeout = 2;
+		private int _fadeTimeout = 2;
+
 		void Start()
 		{
 			//get the local player
-			localPlayer = Networking.LocalPlayer;
+			_localPlayer = Networking.LocalPlayer;
 
 			//save the tab colors into this script
-			tabBaseColor = tabs[0].colors.normalColor;
-			tabActiveColor = tabs[0].colors.selectedColor;
+			_tabBaseColor = tabs[0].colors.normalColor;
+			_tabActiveColor = tabs[0].colors.selectedColor;
 
 			//initialize the tabs
 			SetActiveTabMain();
@@ -46,21 +46,21 @@ namespace OpenFlightVRC.UI
 		void Update()
 		{
 			//continually highlight the active tab
-			SetActiveTab(activeTab);
+			SetActiveTab(_activeTab);
 
 			//wait for udon to startup
-			if (fadeTimeout <= 0)
+			if (_fadeTimeout <= 0)
 			{
 				//check if the player is within the fade distance
-				if (Vector3.Distance(localPlayer.GetPosition(), transform.position) > fadeDistance && allowFade)
-                {
-                    //disable all the objects that should be hidden
-                    SetFadeState(false);
-                }
-                else
+				if (Vector3.Distance(_localPlayer.GetPosition(), transform.position) > fadeDistance && allowFade)
 				{
-                    //enable all the objects that should be hidden
-                    SetFadeState(true);
+					//disable all the objects that should be hidden
+					SetFadeState(false);
+				}
+				else
+				{
+					//enable all the objects that should be hidden
+					SetFadeState(true);
 
 					//set the version info text
 					VersionInfo.text =
@@ -69,35 +69,35 @@ namespace OpenFlightVRC.UI
 			}
 
 			//decrement the fade timeout
-			if (fadeTimeout > 0)
+			if (_fadeTimeout > 0)
 			{
-				fadeTimeout--;
+				_fadeTimeout--;
 			}
 		}
 
-        /// <summary>
-        /// Controls the fade state of the tablet
-        /// </summary>
-        /// <param name="state">The state to set the tablet to</param>
-        private void SetFadeState(bool state)
-        {
-            foreach (GameObject obj in objectsToHideOnFade)
-            {
-                obj.SetActive(state);
-            }
-            foreach (GameObject obj in objectsToShowOnFade)
-            {
-                obj.SetActive(!state);
-            }
-        }
+		/// <summary>
+		/// Controls the fade state of the tablet
+		/// </summary>
+		/// <param name="state">The state to set the tablet to</param>
+		private void SetFadeState(bool state)
+		{
+			foreach (GameObject obj in objectsToHideOnFade)
+			{
+				obj.SetActive(state);
+			}
+			foreach (GameObject obj in objectsToShowOnFade)
+			{
+				obj.SetActive(!state);
+			}
+		}
 
-        public override void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight)
+		public override void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight)
 		{
 			if (player.isLocal)
 			{
-                Logger.Log("Player eye height changed, updating tablet scale", this);
-                transform.localScale = new Vector3(ScaleModifier(), ScaleModifier(), ScaleModifier());
-            }
+				Logger.Log("Player eye height changed, updating tablet scale", this);
+				transform.localScale = new Vector3(ScaleModifier(), ScaleModifier(), ScaleModifier());
+			}
 		}
 
 		/// <summary>
@@ -111,14 +111,14 @@ namespace OpenFlightVRC.UI
 				if (i == tab)
 				{
 					ColorBlock colors = tabs[i].colors;
-					colors.normalColor = tabActiveColor;
+					colors.normalColor = _tabActiveColor;
 					tabs[i].colors = colors;
-					activeTab = i;
+					_activeTab = i;
 				}
 				else
 				{
 					ColorBlock colors = tabs[i].colors;
-					colors.normalColor = tabBaseColor;
+					colors.normalColor = _tabBaseColor;
 					tabs[i].colors = colors;
 				}
 			}
@@ -140,14 +140,14 @@ namespace OpenFlightVRC.UI
 			SetActiveTab(2);
 		}
 
-        public void SetActiveTabChangeLog()
-        {
-            SetActiveTab(3);
-        }
+		public void SetActiveTabChangeLog()
+		{
+			SetActiveTab(3);
+		}
 
-        public void SetActiveTabNetworking()
-        {
-            SetActiveTab(4);
-        }
+		public void SetActiveTabNetworking()
+		{
+			SetActiveTab(4);
+		}
 	}
 }

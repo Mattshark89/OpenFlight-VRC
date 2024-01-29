@@ -12,9 +12,9 @@ namespace OpenFlightVRC.UI
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class NetworkingDebug : LoggableUdonSharpBehaviour
 	{
-		private CyanPlayerObjectAssigner Assigner;
+		private CyanPlayerObjectAssigner _assigner;
 		public UdonBehaviour assignerProxy;
-		private TextMeshProUGUI Text;
+		private TextMeshProUGUI _TMP;
 
 		void Start()
 		{
@@ -23,10 +23,10 @@ namespace OpenFlightVRC.UI
 			{
 				//get the assigner as a component first
 				UdonBehaviour assignerBehaviour = (UdonBehaviour)assignerProxy.GetProgramVariable("target");
-				Assigner = (CyanPlayerObjectAssigner)assignerBehaviour.GetComponent(typeof(UdonBehaviour));
+				_assigner = (CyanPlayerObjectAssigner)assignerBehaviour.GetComponent(typeof(UdonBehaviour));
 			}
 
-			Text = GetComponent<TextMeshProUGUI>();
+			_TMP = GetComponent<TextMeshProUGUI>();
 		}
 
 		private string _text = "";
@@ -44,7 +44,7 @@ namespace OpenFlightVRC.UI
 			if (_currentPlayerBeingUpdated == 0)
 			{
 				//push the text from the last frame to the UI
-				Text.text = _text;
+				_TMP.text = _text;
 
 				//reset the text
 				_text = "";
@@ -77,7 +77,7 @@ namespace OpenFlightVRC.UI
 
 		private string QueryForPlayer(VRCPlayerApi player)
 		{
-			Component behaviour = Assigner._GetPlayerPooledUdon(player);
+			Component behaviour = _assigner._GetPlayerPooledUdon(player);
 
 			//if null, player is not in the pool yet
 			if (behaviour == null)

@@ -1,14 +1,12 @@
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
-using VRC.SDKBase;
 using VRC.Udon;
-using TMPro;
 
 namespace OpenFlightVRC.UI
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class DynamicInputField : LoggableUdonSharpBehaviour
+	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+	public class DynamicInputField : LoggableUdonSharpBehaviour
 	{
 		public UdonBehaviour target;
 		public int decimalPlaces = 2;
@@ -16,8 +14,8 @@ namespace OpenFlightVRC.UI
 		public string prefix = "";
 		public string suffix = "";
 		InputField field;
-		bool isStringType = false;
-		bool isBoolType = false;
+		private bool _isStringType = false;
+		private bool _isBoolType = false;
 
 		void Start()
 		{
@@ -31,12 +29,12 @@ namespace OpenFlightVRC.UI
 			var targetType = target.GetProgramVariableType(targetVariable);
 			if (targetType == typeof(string))
 			{
-				isStringType = true;
+				_isStringType = true;
 			}
 			//determine if the target variable is a bool
 			if (targetType == typeof(bool))
 			{
-				isBoolType = true;
+				_isBoolType = true;
 			}
 		}
 
@@ -44,7 +42,7 @@ namespace OpenFlightVRC.UI
 		{
 			var targetValue = target.GetProgramVariable(targetVariable);
 			//determine if it is a bool
-			if (isBoolType)
+			if (_isBoolType)
 			{
 				if ((bool)targetValue)
 				{
@@ -55,7 +53,7 @@ namespace OpenFlightVRC.UI
 					field.text = prefix + "False" + suffix;
 				}
 			}
-			else if (!isStringType)
+			else if (!_isStringType)
 			{
 				float roundingModifier = Mathf.Pow(10, decimalPlaces);
 				float rounded = Mathf.Round((float)targetValue * roundingModifier) / roundingModifier;

@@ -3,8 +3,6 @@ using TMPro;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
-using VRC.Udon;
-using VRC.SDK3;
 using VRC.SDK3.Data;
 using static OpenFlightVRC.Util;
 
@@ -13,7 +11,7 @@ namespace OpenFlightVRC
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class AvatarDetection : LoggableUdonSharpBehaviour
 	{
-		VRCPlayerApi localPlayer = null;
+		private VRCPlayerApi _localPlayer = null;
 
 		/// <summary>
 		/// Contains all the debug info about avatar detection
@@ -49,7 +47,7 @@ namespace OpenFlightVRC
 		#endregion
 		#region JSON Info
 		[System.NonSerialized]
-		string jsonString = "";
+		private string _jsonString = "";
 		DataDictionary json;
 		public string jsonVersion = "";
 		public string jsonDate = "";
@@ -59,20 +57,20 @@ namespace OpenFlightVRC
 
 		#region Avatar Information
 		public string hash = "0";
-		internal float[] hashDistances = new float[5];
+		internal float[] HashDistances = new float[5];
 		public float weight = 1;
 		public float WingtipOffset = 0;
 #pragma warning disable CS0108 // Member hides inherited member; missing new keyword
-        public string name = ""; //this is the name of the avatar base
+		public string name = ""; //this is the name of the avatar base
 #pragma warning restore CS0108 // Member hides inherited member; missing new keyword
-        public string creator = ""; //this is the person who created the avatar base
+		public string creator = ""; //this is the person who created the avatar base
 		public string introducer = ""; //this is the person who introduced the avatar to the JSON list itself
 		const string LOADINGAVATARHASH = "1439458325v2";
 		#endregion
 
 		void Start()
 		{
-			localPlayer = Networking.LocalPlayer;
+			_localPlayer = Networking.LocalPlayer;
 
 			debugInfo = "Loading JSON list...";
 			JSONLoader.AddCallback(this, nameof(LoadJSON));
@@ -109,10 +107,11 @@ namespace OpenFlightVRC
 		/// <returns>The avatar scale</returns>
 		private double CalculateAvatarScale(out Vector3 spine, out Vector3 chest)
 		{
-			spine = localPlayer.GetBonePosition(HumanBodyBones.Spine);
-			chest = localPlayer.GetBonePosition(HumanBodyBones.Chest);
+			spine = _localPlayer.GetBonePosition(HumanBodyBones.Spine);
+			chest = _localPlayer.GetBonePosition(HumanBodyBones.Chest);
 			return Vector3.Distance(chest, spine);
 		}
+
 		private double CalculateAvatarScale()
 		{
 			return CalculateAvatarScale(out Vector3 spine, out Vector3 chest);
@@ -120,7 +119,7 @@ namespace OpenFlightVRC
 
 		private void RunDetection()
 		{
-			if (string.IsNullOrEmpty(jsonString))
+			if (string.IsNullOrEmpty(_jsonString))
 			{
 				Logger.Log("JSON list is empty, returning...", this);
 				return;
@@ -134,14 +133,14 @@ namespace OpenFlightVRC
 			WingFlightPlusGlide.weight = weight;
 
 			//get all the bones
-			Vector3 head = localPlayer.GetBonePosition(HumanBodyBones.Head);
-			Vector3 neck = localPlayer.GetBonePosition(HumanBodyBones.Neck);
-			Vector3 leftShoulder = localPlayer.GetBonePosition(HumanBodyBones.LeftShoulder);
-			Vector3 LeftUpperArm = localPlayer.GetBonePosition(HumanBodyBones.LeftUpperArm);
-			Vector3 LeftLowerArm = localPlayer.GetBonePosition(HumanBodyBones.LeftLowerArm);
-			Vector3 LeftHand = localPlayer.GetBonePosition(HumanBodyBones.LeftHand);
+			Vector3 head = _localPlayer.GetBonePosition(HumanBodyBones.Head);
+			Vector3 neck = _localPlayer.GetBonePosition(HumanBodyBones.Neck);
+			Vector3 leftShoulder = _localPlayer.GetBonePosition(HumanBodyBones.LeftShoulder);
+			Vector3 leftUpperArm = _localPlayer.GetBonePosition(HumanBodyBones.LeftUpperArm);
+			Vector3 leftLowerArm = _localPlayer.GetBonePosition(HumanBodyBones.LeftLowerArm);
+			Vector3 leftHand = _localPlayer.GetBonePosition(HumanBodyBones.LeftHand);
 
-			Vector3[] boneVectors = { chest, head, neck, leftShoulder, LeftUpperArm, LeftLowerArm, LeftHand };
+			Vector3[] boneVectors = { chest, head, neck, leftShoulder, leftUpperArm, leftLowerArm, leftHand };
 			hash = GenerateHash(boneVectors, 2);
 
 			Logger.Log("Avatar Hash: " + hash, this);
@@ -236,10 +235,10 @@ namespace OpenFlightVRC
 		public void LoadJSON()
 		{
 			Logger.Log("Deserializing JSON list...", this);
-			jsonString = JSONLoader.Output;
+			_jsonString = JSONLoader.Output;
 
 			//Return type is if the deserialization was successful or not
-			if (!VRCJson.TryDeserializeFromJson(jsonString, out DataToken jsonDataToken))
+			if (!VRCJson.TryDeserializeFromJson(_jsonString, out DataToken jsonDataToken))
 			{
 				debugInfo = "Failed to load JSON list!";
 				Logger.LogError("Failed to load JSON list! This shouldnt occur unless we messed up the JSON, or VRChat broke something!", this);
@@ -259,7 +258,7 @@ namespace OpenFlightVRC
 			debugInfo = "Loading JSON list...";
 			JSONLoader.LoadURL();
 
-			jsonString = "";
+			_jsonString = "";
 			d_spinetochest = 0;
 		}
 
@@ -290,11 +289,11 @@ namespace OpenFlightVRC
 					d_leftupperarmtoleftlowerarm = GetBoneDistance(bonePositions[4], bonePositions[5], scalingFactor, (float)d_spinetochest);
 					d_leftlowertolefthand = GetBoneDistance(bonePositions[5], bonePositions[6], scalingFactor, (float)d_spinetochest);
 
-					hashDistances[0] = d_necktohead;
-					hashDistances[1] = d_chesttoneck;
-					hashDistances[2] = d_leftshouldertoleftupperarm;
-					hashDistances[3] = d_leftupperarmtoleftlowerarm;
-					hashDistances[4] = d_leftlowertolefthand;
+					HashDistances[0] = d_necktohead;
+					HashDistances[1] = d_chesttoneck;
+					HashDistances[2] = d_leftshouldertoleftupperarm;
+					HashDistances[3] = d_leftupperarmtoleftlowerarm;
+					HashDistances[4] = d_leftlowertolefthand;
 
 					boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
 					return boneInfo.GetHashCode().ToString() + "v2";

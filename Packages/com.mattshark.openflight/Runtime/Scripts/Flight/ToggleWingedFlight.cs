@@ -1,12 +1,10 @@
 ﻿using UdonSharp;
 using UnityEngine;
-using VRC.SDKBase;
-using VRC.Udon;
 
 namespace OpenFlightVRC
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class ToggleWingedFlight : LoggableUdonSharpBehaviour
+	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+	public class ToggleWingedFlight : LoggableUdonSharpBehaviour
 	{
 		// Settings:
 		// 0- Flight Disabled
@@ -21,10 +19,10 @@ namespace OpenFlightVRC
 
 		void Start()
 		{
-			this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0, 0.75f));
+			GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0, 0.75f));
 		}
 
-        public override void Interact()
+		public override void Interact()
 		{
 			setting++;
 			if (setting > 2)
@@ -36,20 +34,20 @@ namespace OpenFlightVRC
 			{
 				case 0:
 					openFlight.FlightOff();
-					this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, OFFTEXTUREOFFSET));
+					GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, OFFTEXTUREOFFSET));
 					break;
 				case 1:
 					openFlight.FlightOn();
-					this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, AUTOTEXTUREOFFSET));
+					GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, AUTOTEXTUREOFFSET));
 					break;
 				case 2:
 					openFlight.FlightAuto();
-					this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, ONTEXTUREOFFSET));
+					GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, ONTEXTUREOFFSET));
 					break;
 				default:
 					//default to auto if something has gone wrong here, but this should never happen
 					openFlight.FlightAuto();
-					this.GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, AUTOTEXTUREOFFSET));
+					GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, AUTOTEXTUREOFFSET));
 					Debug.LogError("Invalid flight setting: " + setting);
 					break;
 			}

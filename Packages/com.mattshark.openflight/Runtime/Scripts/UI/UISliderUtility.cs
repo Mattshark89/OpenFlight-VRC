@@ -1,7 +1,4 @@
 ﻿using UdonSharp;
-using UnityEngine;
-using VRC.SDKBase;
-using VRC.Udon;
 using UnityEngine.UI;
 
 namespace OpenFlightVRC.UI
@@ -9,42 +6,42 @@ namespace OpenFlightVRC.UI
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class UISliderUtility : UIBase
 	{
-		Slider slider;
+		private Slider _slider;
 
 		void Start()
 		{
-            InitializeTargetInfo();
-			slider = GetComponent<Slider>();
+			InitializeTargetInfo();
+			_slider = GetComponent<Slider>();
 		}
 
 		void Update()
 		{
-			var value = slider.value;
+			var value = _slider.value;
 
 			switch (targetType)
 			{
 				case System.Type floatType when floatType == typeof(float):
 					if ((float)target.GetProgramVariable(targetVariable) != value)
 					{
-						slider.value = (float)target.GetProgramVariable(targetVariable);
+						_slider.value = (float)target.GetProgramVariable(targetVariable);
 					}
 					break;
 				case System.Type intType when intType == typeof(int):
 					if ((int)target.GetProgramVariable(targetVariable) != value)
 					{
-						slider.value = (int)target.GetProgramVariable(targetVariable);
+						_slider.value = (int)target.GetProgramVariable(targetVariable);
 					}
 					break;
 				case System.Type doubleType when doubleType == typeof(double):
 					if ((double)target.GetProgramVariable(targetVariable) != value)
 					{
-						slider.value = (float)(double)target.GetProgramVariable(targetVariable);
+						_slider.value = (float)(double)target.GetProgramVariable(targetVariable);
 					}
 					break;
 				default:
 					if ((int)target.GetProgramVariable(targetVariable) != value)
 					{
-						slider.value = (int)target.GetProgramVariable(targetVariable);
+						_slider.value = (int)target.GetProgramVariable(targetVariable);
 					}
 					break;
 			}
@@ -52,7 +49,7 @@ namespace OpenFlightVRC.UI
 
 		public void Changed()
 		{
-			var value = slider.value;
+			var value = _slider.value;
 			switch (targetType.ToString())
 			{
 				case "System.Single":
