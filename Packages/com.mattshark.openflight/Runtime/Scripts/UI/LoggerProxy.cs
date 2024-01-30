@@ -1,4 +1,8 @@
-﻿using TMPro;
+﻿/**
+ * @ Maintainer: Happyrobot33
+ */
+
+using TMPro;
 using UdonSharp;
 
 namespace OpenFlightVRC.UI

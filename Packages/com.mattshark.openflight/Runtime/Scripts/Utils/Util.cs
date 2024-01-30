@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/**
+ * @ Maintainer: Happyrobot33
+ */
+
+using UnityEngine;
 using VRC.SDKBase;
 
 namespace OpenFlightVRC

@@ -1,4 +1,8 @@
-﻿using UdonSharp;
+﻿/**
+ * @ Maintainer: Happyrobot33
+ */
+
+using UdonSharp;
 using UnityEngine;
 
 namespace OpenFlightVRC.UI

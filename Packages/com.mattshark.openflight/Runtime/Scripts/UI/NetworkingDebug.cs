@@ -1,4 +1,8 @@
-﻿using UdonSharp;
+﻿/**
+ * @ Maintainer: Happyrobot33
+ */
+
+using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;

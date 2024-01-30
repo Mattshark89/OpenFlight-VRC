@@ -1,4 +1,8 @@
-﻿using UdonSharp;
+﻿/**
+ * @ Maintainer: Mattshark89
+ */
+
+using UdonSharp;
 using UnityEngine;
 using Unity.Collections;
 using VRC.SDKBase;

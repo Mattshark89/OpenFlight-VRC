@@ -1,5 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/**
+ * @ Maintainer: Happyrobot33
+ */
+
 using UnityEditor;
 using UnityEngine;
 

@@ -1,4 +1,8 @@
-﻿using System;
+﻿/**
+ * @ Maintainer: Happyrobot33
+ */
+
+using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEditor;

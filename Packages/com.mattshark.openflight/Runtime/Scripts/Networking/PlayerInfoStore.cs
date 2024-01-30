@@ -1,4 +1,8 @@
-﻿using OpenFlightVRC.Effects;
+﻿/**
+ * @ Maintainer: Happyrobot33
+ */
+
+using OpenFlightVRC.Effects;
 using OpenFlightVRC.UI;
 using UdonSharp;
 using VRC.SDKBase;

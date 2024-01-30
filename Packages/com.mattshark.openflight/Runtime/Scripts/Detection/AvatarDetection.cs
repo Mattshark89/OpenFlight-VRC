@@ -1,5 +1,7 @@
-﻿using System.Collections;
-using TMPro;
+﻿/**
+ * @ Maintainer: Happyrobot33
+ */
+
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;

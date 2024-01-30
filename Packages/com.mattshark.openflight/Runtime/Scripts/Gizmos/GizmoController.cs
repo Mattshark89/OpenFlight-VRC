@@ -1,4 +1,8 @@
-﻿using TMPro;
+﻿/**
+ * @ Maintainer: Happyrobot33
+ */
+
+using TMPro;
 using UnityEngine;
 using VRC.SDKBase;
 using static OpenFlightVRC.Util;
