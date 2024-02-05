@@ -3,15 +3,15 @@ name: Update Website
 env:
   listPublishDirectory: Website
   pathToCi: ci
-  
-on: 
+
+on:
   workflow_dispatch:
   workflow_run:
     workflows: [Build Release]
     types:
       - completed
   release:
-     types: [published, edited, created, unpublished, deleted, released]
+    types: [published, edited, created, unpublished, deleted, released]
   push:
     branches: ["main"]
 
@@ -20,7 +20,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  
+
 # Allow one concurrent deployment
 concurrency:
   group: "pages"
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3 # check out this repo
-        with: 
+        with:
           fetch-depth: 0 # fetch all history
 
       - uses: actions/checkout@v3 # check out automation repo
@@ -45,7 +45,7 @@ jobs:
           repository: Happyrobot33/package-list-action #TODO: Change this to the main repo once it's merged
           path: ${{env.pathToCi}}
           clean: false # otherwise the local repo will no longer be checked out
-          
+
       - name: Restore Timestamps
         uses: chetan/git-restore-mtime-action@v1
 
@@ -56,25 +56,30 @@ jobs:
             ${{env.pathToCi}}/.nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
-          
+
       - name: Build Package Version Listing
         run: ${{env.pathToCi}}/build.cmd BuildMultiPackageListing --root ${{env.pathToCi}} --list-publish-directory $GITHUB_WORKSPACE/${{env.listPublishDirectory}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
- 
+
       #This ensures that the scripts can always refer to the top level copy, allowing us to move it around in the project without issue
       - name: Copy Data
         uses: canastro/copy-action@0.0.2
         with:
           source: "./Packages/com.mattshark.openflight/Runtime/data.json"
           target: "./${{env.listPublishDirectory}}/data.json"
-      
+
+      #make a folder for the doxygen docs
+      - name: Make Docs Folder
+        run: mkdir -p ${{env.listPublishDirectory}}/docs/Doxygen
+
+      #Generate the doxygen documentation
       - name: Generate C# Documentation
         uses: mattnotmitt/doxygen-action@v1.9.5
         with:
-            working-directory: './${{env.listPublishDirectory}}/docs/Doxygen/'
-            doxyfile-path: 'docs/DoxygenConfig'
-            enable-latex: true
+          working-directory: "./${{env.listPublishDirectory}}/docs/Doxygen/"
+          doxyfile-path: "docs/DoxygenConfig"
+          enable-latex: true
 
       #Copy docs into the website
       - name: Copy Docs
@@ -82,17 +87,17 @@ jobs:
         with:
           source: "./docs/."
           target: "./${{env.listPublishDirectory}}/docs/"
-          flags: '-rp' #recursive and preserve timestamps
+          flags: "-rp" #recursive and preserve timestamps
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
-        
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
           path: ${{env.listPublishDirectory}}
           #path: '.'
-          
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
