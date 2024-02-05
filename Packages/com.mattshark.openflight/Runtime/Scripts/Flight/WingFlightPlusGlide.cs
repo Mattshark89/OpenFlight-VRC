@@ -786,7 +786,11 @@ public class WingFlightPlusGlideEditor : Editor
 			//swapped from OverlapSphere to OverlapSphereNonAlloc, as it does not allocate memory each time it is called,
 			//saving on garbage collection. Also doesnt require a .Length check, as it returns the number of colliders it found inherently.
 			int uiColliderCount = Physics.OverlapSphereNonAlloc(LocalPlayer.GetPosition(), 10f, _colliders, 524288);
-			return uiColliderCount == 8 || uiColliderCount == 9 || uiColliderCount == 10;
+			//commented out due to extern count, this uses 3
+			//return uiColliderCount == 8 || uiColliderCount == 9 || uiColliderCount == 10;
+
+			//this uses 2 externs
+			return 8 <= uiColliderCount && uiColliderCount <= 10;
 		}
 
 		/// <summary>
