@@ -56,7 +56,7 @@ namespace OpenFlightVRC.UI
 				_players = new VRCPlayerApi[_playerCount];
 				VRCPlayerApi.GetPlayers(_players);
 				_text += string.Format(
-					"Network CLogged: {0}\nNetwork Settled: {1}\nPlayer Count: {2}\n",
+					"Network Clogged: {0}\nNetwork Settled: {1}\nPlayer Count: {2}\n",
 					Networking.IsClogged,
 					Networking.IsNetworkSettled,
 					_playerCount
