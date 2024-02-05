@@ -72,7 +72,7 @@ jobs:
       - name: Generate C# Documentation
         uses: mattnotmitt/doxygen-action@v1.9.5
         with:
-            working-directory: 'docs/Doxygen/'
+            working-directory: './${{env.listPublishDirectory}}/docs/Doxygen/'
             doxyfile-path: 'docs/DoxygenConfig'
             enable-latex: true
 
