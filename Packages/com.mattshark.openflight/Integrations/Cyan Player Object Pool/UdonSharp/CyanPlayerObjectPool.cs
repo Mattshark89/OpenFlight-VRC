@@ -72,7 +72,7 @@ namespace OpenFlightVRC.Integrations.Cyan.PlayerObjectPool
         /// If true, the pool will automatically increase the pool size to match the world player cap.
         /// </summary>
         [Tooltip("If true, the pool will automatically increase the pool size to match the world player cap.")]
-        public bool autoPoolSize = true;
+        public bool autoPoolSize = false;
 
         /// <summary>
         /// How large is the object pool? This number should be equal to (world player cap * 2 + 2). All object 

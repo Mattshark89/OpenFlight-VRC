@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7650233290849937204}
   - component: {fileID: 1792036535177792823}
   m_Layer: 0
-  m_Name: PlayerObjectPool
+  m_Name: OpenFlightPlayerObjectPool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,7 +54,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1792036535177792823}
-  autoPoolSize: 1
+  autoPoolSize: 0
   poolSize: 82
   printDebugLogs: 0
 --- !u!114 &1792036535177792823

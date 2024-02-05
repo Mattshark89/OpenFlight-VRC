@@ -116,13 +116,13 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: localPlayer
+      Data: _localPlayer
     - Name: $v
       Entry: 7
       Data: 7|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: localPlayer
+      Data: _localPlayer
     - Name: <UserType>k__BackingField
       Entry: 7
       Data: 8|System.RuntimeType, mscorlib
@@ -596,13 +596,13 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: activeTab
+      Data: _activeTab
     - Name: $v
       Entry: 7
       Data: 33|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: activeTab
+      Data: _activeTab
     - Name: <UserType>k__BackingField
       Entry: 9
       Data: 11
@@ -644,13 +644,13 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: tabBaseColor
+      Data: _tabBaseColor
     - Name: $v
       Entry: 7
       Data: 35|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: tabBaseColor
+      Data: _tabBaseColor
     - Name: <UserType>k__BackingField
       Entry: 7
       Data: 36|System.RuntimeType, mscorlib
@@ -698,13 +698,13 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: tabActiveColor
+      Data: _tabActiveColor
     - Name: $v
       Entry: 7
       Data: 38|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: tabActiveColor
+      Data: _tabActiveColor
     - Name: <UserType>k__BackingField
       Entry: 9
       Data: 36
@@ -746,13 +746,13 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: fadeTimeout
+      Data: _fadeTimeout
     - Name: $v
       Entry: 7
       Data: 40|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: fadeTimeout
+      Data: _fadeTimeout
     - Name: <UserType>k__BackingField
       Entry: 9
       Data: 11
