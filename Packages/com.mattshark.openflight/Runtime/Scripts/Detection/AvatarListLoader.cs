@@ -9,6 +9,9 @@ using VRC.SDK3.StringLoading;
 
 namespace OpenFlightVRC
 {
+	/// <summary>
+	/// This is used to query the Github data.json file for the list of avatars. It supports falling back to the in-world list if the Github list fails to load.
+	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class AvatarListLoader : LoggableUdonSharpBehaviour
 	{
@@ -19,6 +22,9 @@ namespace OpenFlightVRC
 		/// </summary>
 		[System.NonSerialized]
 		public string Output = "";
+		/// <summary>
+		/// The in-world json file. This is used if the URL fails to load
+		/// </summary>
 		public TextAsset OfflineJSON;
 
 		/// <summary>
@@ -27,7 +33,7 @@ namespace OpenFlightVRC
 		public bool useOfflineJSON = false;
 
 		/// <summary>
-		/// Initiate a asynchronous URL load
+		/// 	Loads the URL and sets the Output property. This is done asynchronously, so make sure your script waits for output to be set. See VRCStringDownloader for more information
 		/// </summary>
 		public void LoadURL()
 		{

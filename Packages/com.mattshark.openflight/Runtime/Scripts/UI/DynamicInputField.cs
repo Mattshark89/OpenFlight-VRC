@@ -12,12 +12,27 @@ namespace OpenFlightVRC.UI
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class DynamicInputField : LoggableUdonSharpBehaviour
 	{
+		/// <summary>
+		/// The target UdonBehaviour to get the variable from
+		/// </summary>
 		public UdonBehaviour target;
+		/// <summary>
+		/// The ammount of decimal places to round the number to
+		/// </summary>
 		public int decimalPlaces = 2;
+		/// <summary>
+		/// The name of the variable to get from the target
+		/// </summary>
 		public string targetVariable;
+		/// <summary>
+		/// The prefix to add to the variable
+		/// </summary>
 		public string prefix = "";
+		/// <summary>
+		/// The suffix to add to the variable
+		/// </summary>
 		public string suffix = "";
-		InputField field;
+		private InputField field;
 		private bool _isStringType = false;
 		private bool _isBoolType = false;
 

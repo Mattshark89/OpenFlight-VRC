@@ -43,29 +43,68 @@ namespace OpenFlightVRC
 
 		//external JSON list stuff
 		#region Script References
+		/// <summary>
+		/// The AvatarListLoader script that is used to load the avatar list
+		/// </summary>
 		public AvatarListLoader JSONLoader;
+		/// <summary>
+		/// The OpenFlight script, used to enable/disable flight
+		/// </summary>
 		public OpenFlight OpenFlight;
+		/// <summary>
+		/// The WingFlightPlusGlide script, needed to set the flight properties
+		/// </summary>
 		public WingFlightPlusGlide WingFlightPlusGlide;
 		#endregion
 		#region JSON Info
 		[System.NonSerialized]
 		private string _jsonString = "";
-		DataDictionary json;
+		private DataDictionary json;
+		/// <summary>
+		/// The version of the JSON file that was loaded
+		/// </summary>
 		public string jsonVersion = "";
+		/// <summary>
+		/// The date of the JSON file that was loaded
+		/// </summary>
 		public string jsonDate = "";
 		#endregion
+		/// <summary>
+		/// Whether or not the user is allowed to fly
+		/// </summary>
 		public bool allowedToFly = false;
+		/// <summary>
+		/// Whether or not to skip loading the avatar entirely
+		/// </summary>
 		public bool skipLoadingAvatar = true;
 
 		#region Avatar Information
+		/// <summary>
+		/// The current hash of the avatar worn
+		/// </summary>
 		public string hash = "0";
 		internal float[] HashDistances = new float[5];
+		/// <summary>
+		/// The weight of the currently worn avatar
+		/// </summary>
 		public float weight = 1;
+		/// <summary>
+		/// The offset of the wing tip for the current avatar
+		/// </summary>
 		public float WingtipOffset = 0;
 #pragma warning disable CS0108 // Member hides inherited member; missing new keyword
+		/// <summary>
+		/// 	The name of the currently worn avatar. Defaults to `Unknown` if not in the list, or `Loading Avatar` if you are in the loading avatar / mecanim default rig
+		/// </summary>
 		public string name = ""; //this is the name of the avatar base
 #pragma warning restore CS0108 // Member hides inherited member; missing new keyword
+		/// <summary>
+		/// 	The creator of the currently worn avatar. Defaults to `Unknown` if not in the list, or `Loading Avatar` if you are in the loading avatar / mecanim default rig
+		/// </summary>
 		public string creator = ""; //this is the person who created the avatar base
+		/// <summary>
+		/// 	The introducer of the currently worn avatar. Defaults to `Unknown` if not in the list, or `Loading Avatar` if you are in the loading avatar / mecanim default rig
+		/// </summary>
 		public string introducer = ""; //this is the person who introduced the avatar to the JSON list itself
 		const string LOADINGAVATARHASH = "1439458325v2";
 		#endregion
