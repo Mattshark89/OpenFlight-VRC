@@ -69,15 +69,11 @@ jobs:
           source: "./Packages/com.mattshark.openflight/Runtime/data.json"
           target: "./${{env.listPublishDirectory}}/data.json"
 
-      #make a folder for the doxygen docs
-      - name: Make Docs Folder
-        run: mkdir -p ${{env.listPublishDirectory}}/docs/Doxygen
-
       #Generate the doxygen documentation
       - name: Generate C# Documentation
         uses: mattnotmitt/doxygen-action@v1.9.5
         with:
-          working-directory: "./${{env.listPublishDirectory}}/docs/Doxygen/"
+          working-directory: "./docs/Doxygen/"
           doxyfile-path: "./DoxygenConfig"
           enable-latex: true
 
