@@ -18751,7 +18751,7 @@ MonoBehaviour:
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
   targetVariable: 
-  evalPointTransform: {fileID: 6124323176852550516}
+  EvalPointTransform: {fileID: 6124323176852550516}
   targetVariableCurve: gravityCurve
   targetVariableEval: armspan
 --- !u!114 &6124323176776535766
@@ -18825,7 +18825,7 @@ MonoBehaviour:
   SynchronizePosition: 0
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
-  _syncMethod: 0
+  _syncMethod: 2
   serializedProgramAsset: {fileID: 11400000, guid: fb9021e0da8cc2b42ac0391c3161ad91,
     type: 2}
   programSource: {fileID: 11400000, guid: 42701fe13384449479df80c6bb57e970, type: 2}
@@ -23255,7 +23255,7 @@ MonoBehaviour:
   _logProxy: {fileID: 0}
   target: {fileID: 6124323177588583349}
   targetVariable: 
-  evalPointTransform: {fileID: 6124323176394278841}
+  EvalPointTransform: {fileID: 6124323176394278841}
   targetVariableCurve: sizeCurve
   targetVariableEval: armspan
 --- !u!114 &6124323177903759352
@@ -23329,7 +23329,7 @@ MonoBehaviour:
   SynchronizePosition: 0
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
-  _syncMethod: 0
+  _syncMethod: 2
   serializedProgramAsset: {fileID: 11400000, guid: fb9021e0da8cc2b42ac0391c3161ad91,
     type: 2}
   programSource: {fileID: 11400000, guid: 42701fe13384449479df80c6bb57e970, type: 2}
