@@ -130,6 +130,13 @@ You will also need to make sure you increment the version number at the top of t
 
 ?> Our date format is `YYYY-MM-DD`, based on UTC Time, so make sure you follow that format, and not your local timezone. The date for right now is <utcdate></utcdate>
 
+Lastly, at the top of the JSON, there is a list of VRChat usernames for contributers. In newer versions, this will be scrolling on the tablet and will also give you special effects in worlds.
+```json
+{
+  "Contributers": ["Happyrobot33", "Mattshark89", "DatGek", "Heather May", "mackandelius", "Morghus", "Krazen", "fundale", "Literally Marty", "Roimu", "Daernaro", "IlChiporiAlbino", "Darizard", "-Jinxy-", "OrcaToaster"],
+}
+```
+
 After doing this, save the file using `Ctrl+S`, and then use the key combination `Ctrl+Shift+G` to access source control. Once there, fill in the message field with `[Avatar Addition] Avatar Name`, replacing `Avatar Name` with the name(s) of the avatar(s) you are adding.
 
 !> If you are adding multiple avatars, make sure you list all of their names in the message.
