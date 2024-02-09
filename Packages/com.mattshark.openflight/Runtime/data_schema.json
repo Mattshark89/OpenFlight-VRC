@@ -3,67 +3,108 @@
   "type": "object",
   "properties": {
     "JSON Version": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "description": "The version of the current JSON. The minor version should be incremented when a new avatar is added"
     },
     "JSON Date": {
       "type": "string",
-      "format": "date"
+      "format": "date",
+      "pattern": "^(\\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
+      "description": "The date of the current JSON. The date should be updated when this file is changed at all"
     },
     "Contributers": {
       "type": "array",
       "items": {
-        "type": "string"
-      }
+        "type": "string",
+        "description": "A VRChat username"
+      },
+      "description": "A list of all the people who have contributed to this JSON file. The strings listed are all VRChat usernames"
     },
     "Bases": {
       "type": "object",
       "additionalProperties": {
         "type": "object",
+        "title": "Avatar Base",
+        "description": "An avatar base that is eligible for auto detection",
         "additionalProperties": {
           "type": "object",
+          "title": "Avatar Base Variant",
+          "description": "A variant of an avatar base that is eligible for auto detection. This allows grouping multiple avatar revisions into a single base.",
           "properties": {
             "Name": {
-              "type": "string"
+              "type": "string",
+              "description": "The name of the avatar base variant"
             },
             "Creator": {
-              "type": "string"
+              "type": "string",
+              "description": "The creator of the avatar base variant"
             },
             "Introducer": {
-              "type": "string"
+              "type": "string",
+              "description": "The VRChat username of the person who introduced the avatar base variant to the JSON file. This is used to track who added what to the JSON file."
             },
             "Hash": {
               "type": "array",
+              "description": "The hash of the avatar base variant. This is used to identify the avatar base variant in game",
               "items": {
                 "type": "string",
+                "pattern": "^-?[0-9]{1,}v2",
                 "not": {
+                  "$comment": "This is cursed, but its the only way to comment what each hash goes with each avatar thats excluded",
                   "enum": [
+                    "Wickerbeast",
                     "782623496v2",
+                    "Nardoragon",
                     "341832v2",
+                    "Tigerbee",
                     "-657973745v2",
+                    "Rexioum",
                     "10151625v2",
+                    "Fennix",
                     "608546079v2",
+                    "Hobkin",
                     "776808177v2",
+                    "Aqualux",
                     "-268831991v2",
+                    "Awtter",
                     "482781345v2",
+                    "Dergadol",
                     "-1320032328v2",
+                    "Kibby",
                     "-1658919646v2",
+                    "Mantled Beast",
                     "-2138640187v2",
+                    "Protodal",
                     "998558977v2",
+                    "Protoroo",
                     "-180659171v2",
+                    "Rikorchi",
                     "943490728v2",
+                    "Silvalux",
                     "463788516v2",
+                    "Taidum",
                     "328210781v2",
-                    "-1254610910v2"
+                    "Zurg",
+                    "-1254610910v2",
+                    "Maelstrorca",
+                    "253114771v2",
+                    "Freakhound",
+                    "-2048057485v2",
+                    "Novabeast",
+                    "216280090v2"
                   ]
                 }
               },
               "minItems": 1
             },
             "Weight": {
-              "type": "number"
+              "type": "number",
+              "description": "The weight the avatar should have in game. This is currently unused."
             },
             "WingtipOffset": {
-              "type": "number"
+              "type": "number",
+              "description": "The wingtip offset of the avatar."
             }
           },
           "required": [
@@ -78,7 +119,8 @@
         },
         "minProperties": 1
       },
-      "minProperties": 1
+      "minProperties": 1,
+      "description": "All of the Unique avatar bases that are eligible for auto detection"
     }
   },
   "required": [
