@@ -1,8 +1,8 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.4.0",
-  "JSON Date": "2024-01-04",
-  "Contributers": ["Happyrobot33", "Mattshark89", "DatGek", "Heather May", "mackandelius", "Morghus", "Krazen", "fundale", "Literally Marty", "Roimu", "Daernaro", "IlChiporiAlbino", "Darizard", "-Jinxy-", "OrcaToaster"],
+  "JSON Version": "2.5.0",
+  "JSON Date": "2024-02-10",
+  "Contributers": ["Happyrobot33", "Mattshark89", "DatGek", "Heather May", "mackandelius", "Morghus", "Krazen", "fundale", "Literally Marty", "Roimu", "Daernaro", "IlChiporiAlbino", "Darizard", "-Jinxy-", "OrcaToaster", "Slash0x"],
   "Bases": {
     "Kitavali": {
       "Original": {
@@ -823,7 +823,7 @@
     "Scaled Wyvern": {
       "Original": {
         "Name": "Scaled Wyvern",
-        "Creator": "slash0x",
+        "Creator": "Slash0x",
         "Introducer": "Happyrobot33",
         "Hash": ["-571998177v2", "-2138666214v2"],
         "Weight": 1,
@@ -988,6 +988,16 @@
         "Hash": ["-489620916v2"],
         "Weight": 1,
         "WingtipOffset": 4.67
+      }
+    },
+    "ScarletWindsurferWyvern": {
+      "Original": {
+        "Name": "Scarlet Windsurfer Wyvern",
+        "Creator": "Slash0x",
+        "Introducer": "Happyrobot33",
+        "Hash": ["-1817490604v2"],
+        "Weight": 1,
+        "WingtipOffset": 13.7
       }
     }
   }
