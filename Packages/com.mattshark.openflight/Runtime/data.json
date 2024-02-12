@@ -1,8 +1,8 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.5.3",
-  "JSON Date": "2024-02-10",
-  "Contributers": ["Happyrobot33", "Mattshark89", "DatGek", "Heather May", "mackandelius", "Morghus", "Krazen", "fundale", "Literally Marty", "Roimu", "Daernaro", "IlChiporiAlbino", "Darizard", "-Jinxy-", "OrcaToaster", "Slash0x"],
+  "JSON Version": "2.6.0",
+  "JSON Date": "2024-02-12",
+  "Contributers": ["Happyrobot33", "Mattshark89", "DatGek", "Heather May", "mackandelius", "Morghus", "Krazen", "fundale", "Literally Marty", "Roimu", "Daernaro", "IlChiporiAlbino", "Darizard", "-Jinxy-", "OrcaToaster", "Slash0x","Igneoun"],
   "Bases": {
     "Kitavali": {
       "Original": {
@@ -998,6 +998,16 @@
         "Hash": ["-1817490604v2", "202486027v2", "-1359631808v2"],
         "Weight": 1,
         "WingtipOffset": 13.7
+      }
+    },
+    "QC Avali": {
+      "Original": {
+      "Name": "QC Avali",
+      "Creator": "QuestingCrusader/CL3NR",
+      "Introducer": "Igneoun",
+      "Hash": ["44657003v2"],
+      "Weight": 1,
+      "WingtipOffset": 0
       }
     }
   }
