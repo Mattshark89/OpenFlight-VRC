@@ -242,6 +242,7 @@ namespace OpenFlightVRC
 			DataDictionary bases = json["Bases"].DataDictionary;
 			DataToken[] baseKeys = bases.GetKeys().ToArray();
 			DataToken hash_token = new DataToken(in_hash);
+			//TODO: Change this to a precomputed hash map lookup. Wouldnt affect performance that much as this is already surprisingly fast but still
 			for (int i = 0; i < bases.Count; i++)
 			{
 				DataDictionary avi_base = bases[baseKeys[i]].DataDictionary;
