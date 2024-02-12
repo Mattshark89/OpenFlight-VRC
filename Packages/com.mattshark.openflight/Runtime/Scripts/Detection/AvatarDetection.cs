@@ -232,6 +232,65 @@ namespace OpenFlightVRC
 				+ WingtipOffset;
 		}
 
+		public void RunBenchmark()
+		{
+			const int iterations = 2048;
+			DataList missTimes = new DataList();
+			DataList hitTimes = new DataList();
+
+			//generate a array of known cache misses
+			string[] knownMisses = new string[iterations];
+			for (int i = 0; i < iterations; i++)
+			{
+				knownMisses[i] = Random.Range(-1000000000, 1000000000).ToString() + "v?";
+			}
+			System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+
+			//test a bunch of cache misses
+			for (int i = 0; i < iterations; i++)
+			{
+				//start timer
+				sw.Start();
+				IsAvatarAllowedToFly(knownMisses[i]);
+				sw.Stop();
+				missTimes.Add(new DataToken(sw.ElapsedMilliseconds));
+				sw.Reset();
+			}
+
+			string[] knownHits = new string[iterations];
+			int totalHashes = json["HashTable"].DataDictionary.Count;
+			for (int i = 0; i < iterations; i++)
+			{
+				knownHits[i] = json["HashTable"].DataDictionary.GetKeys()[Random.Range(0, totalHashes)].ToString();
+			}
+
+			//test a bunch of cache hits
+			for (int i = 0; i < iterations; i++)
+			{
+				//start timer
+				sw.Start();
+				IsAvatarAllowedToFly(knownHits[i]);
+				sw.Stop();
+				hitTimes.Add(new DataToken(sw.ElapsedMilliseconds));
+				sw.Reset();
+			}
+
+			//calculate the average time for each
+			double missAverage = 0;
+			double hitAverage = 0;
+			for (int i = 0; i < iterations; i++)
+			{
+				missAverage += missTimes[i].Number;
+				hitAverage += hitTimes[i].Number;
+			}
+			missAverage /= iterations;
+			hitAverage /= iterations;
+
+			//print the results
+			Logger.Log("Average Miss Time: " + missAverage + "ms", this);
+			Logger.Log("Average Hit Time: " + hitAverage + "ms", this);
+		}
+
 		/// <summary>
 		/// Checks the hash against the JSON list to see if the avatar is allowed to fly or not
 		/// </summary>
@@ -239,10 +298,31 @@ namespace OpenFlightVRC
 		/// <returns>Whether or not the avatar is allowed to fly</returns>
 		private bool IsAvatarAllowedToFly(string in_hash)
 		{
+			DataToken hash_token = new DataToken(in_hash);
+			//Attempt to use the hashtable method first, otherwise fall back to the old crawling method
+			if (json.ContainsKey("HashTable"))
+			{
+				//this means we have the fast lookup option available
+				DataDictionary HashTable = json["HashTable"].DataDictionary;
+				if (HashTable.TryGetValue(hash_token, out DataToken data))
+				{
+					DataDictionary variant = data.DataDictionary;
+					name = variant["Name"].String;
+					creator = variant["Creator"].String;
+					introducer = variant["Introducer"].String;
+					weight = (float)variant["Weight"].Number;
+					WingtipOffset = (float)variant["WingtipOffset"].Number;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			//Old crawling method
 			DataDictionary bases = json["Bases"].DataDictionary;
 			DataToken[] baseKeys = bases.GetKeys().ToArray();
-			DataToken hash_token = new DataToken(in_hash);
-			//TODO: Change this to a precomputed hash map lookup. Wouldnt affect performance that much as this is already surprisingly fast but still
 			for (int i = 0; i < bases.Count; i++)
 			{
 				DataDictionary avi_base = bases[baseKeys[i]].DataDictionary;
