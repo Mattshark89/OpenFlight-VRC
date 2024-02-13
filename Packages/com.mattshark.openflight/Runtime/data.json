@@ -1,8 +1,26 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.6.0",
-  "JSON Date": "2024-02-12",
-  "Contributers": ["Happyrobot33", "Mattshark89", "DatGek", "Heather May", "mackandelius", "Morghus", "Krazen", "fundale", "Literally Marty", "Roimu", "Daernaro", "IlChiporiAlbino", "Darizard", "-Jinxy-", "OrcaToaster", "Slash0x","Igneoun"],
+  "JSON Version": "2.7.0",
+  "JSON Date": "2024-02-13",
+  "Contributers": [
+    "-Jinxy-",
+    "Daernaro",
+    "Darizard",
+    "DatGek",
+    "Happyrobot33",
+    "Heather May",
+    "Igneoun",
+    "IlChiporiAlbino",
+    "Krazen",
+    "Literally Marty",
+    "Mattshark89",
+    "Morghus",
+    "OrcaToaster",
+    "Roimu",
+    "Slash0x",
+    "fundale",
+    "mackandelius"
+  ],
   "Bases": {
     "Kitavali": {
       "Original": {
@@ -1002,12 +1020,22 @@
     },
     "QC Avali": {
       "Original": {
-      "Name": "QC Avali",
-      "Creator": "QuestingCrusader/CL3NR",
-      "Introducer": "Igneoun",
-      "Hash": ["44657003v2"],
-      "Weight": 1,
-      "WingtipOffset": 0
+        "Name": "QC Avali",
+        "Creator": "QuestingCrusader/CL3NR",
+        "Introducer": "Igneoun",
+        "Hash": ["44657003v2"],
+        "Weight": 1,
+        "WingtipOffset": 0
+      }
+    },
+    "Paw'vali": {
+      "Original": {
+        "Name": "Paw'vali",
+        "Creator": "TheRPGslayer",
+        "Introducer": "Heather May",
+        "Hash": ["-574142661v2"],
+        "Weight": 1,
+        "WingtipOffset": 5.5
       }
     }
   }
