@@ -235,60 +235,121 @@ namespace OpenFlightVRC
 		public void RunBenchmark()
 		{
 			const int iterations = 2048;
-			DataList missTimes = new DataList();
-			DataList hitTimes = new DataList();
-
-			//generate a array of known cache misses
-			string[] knownMisses = new string[iterations];
-			for (int i = 0; i < iterations; i++)
-			{
-				knownMisses[i] = Random.Range(-1000000000, 1000000000).ToString() + "v?";
-			}
+			const int generationIterations = 1024;
 			System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
-			//test a bunch of cache misses
-			for (int i = 0; i < iterations; i++)
+			DataList generationTimes = new DataList();
+
+			DataDictionary hashTable = new DataDictionary();
+			//generate the hash table 2048 times
+			for (int i = 0; i < generationIterations; i++)
 			{
-				//start timer
+				//clear the hash table
+				hashTable.Clear();
+
+				//start the timer
 				sw.Start();
-				IsAvatarAllowedToFly(knownMisses[i]);
+				DataDictionary bases = json["Bases"].DataDictionary;
+				DataToken[] baseKeys = bases.GetKeys().ToArray();
+				for (int j = 0; j < bases.Count; j++)
+				{
+					DataDictionary avi_base = bases[baseKeys[j]].DataDictionary;
+					DataToken[] avi_base_keys = avi_base.GetKeys().ToArray();
+					for (int k = 0; k < avi_base.Count; k++)
+					{
+						DataDictionary variant = avi_base[avi_base_keys[k]].DataDictionary.DeepClone();
+						DataToken[] hashes = variant["Hash"].DataList.ToArray();
+						//remove hashes from the variant
+						variant.Remove("Hash");
+						for (int l = 0; l < hashes.Length; l++)
+						{
+							hashTable.Add(hashes[l], variant);
+						}
+					}
+				}
+
+				//stop the timer
 				sw.Stop();
-				missTimes.Add(new DataToken(sw.ElapsedMilliseconds));
+				generationTimes.Add(new DataToken(sw.ElapsedMilliseconds));
 				sw.Reset();
 			}
-
-			string[] knownHits = new string[iterations];
-			int totalHashes = json["HashTable"].DataDictionary.Count;
-			for (int i = 0; i < iterations; i++)
-			{
-				knownHits[i] = json["HashTable"].DataDictionary.GetKeys()[Random.Range(0, totalHashes)].ToString();
-			}
-
-			//test a bunch of cache hits
-			for (int i = 0; i < iterations; i++)
-			{
-				//start timer
-				sw.Start();
-				IsAvatarAllowedToFly(knownHits[i]);
-				sw.Stop();
-				hitTimes.Add(new DataToken(sw.ElapsedMilliseconds));
-				sw.Reset();
-			}
+			//the last time the loop runs, hashtable is filled, so we can use it for the next test
+			json.Add("HashTable", hashTable);
 
 			//calculate the average time for each
-			double missAverage = 0;
-			double hitAverage = 0;
-			for (int i = 0; i < iterations; i++)
+			double generationAverage = 0;
+			for (int i = 0; i < generationIterations; i++)
 			{
-				missAverage += missTimes[i].Number;
-				hitAverage += hitTimes[i].Number;
+				generationAverage += generationTimes[i].Number;
 			}
-			missAverage /= iterations;
-			hitAverage /= iterations;
+			generationAverage /= generationIterations;
 
 			//print the results
-			Logger.Log("Average Miss Time: " + missAverage + "ms", this);
-			Logger.Log("Average Hit Time: " + hitAverage + "ms", this);
+			Logger.Log("Average Hash Table Generation Time: " + generationAverage + "ms;" + " Time Per Hash: " + generationAverage / json["HashTable"].DataDictionary.Count + "ms", this);
+
+			string[] methodNames = { "HashTable", "Crawl" };
+			foreach (string methodName in methodNames)
+			{
+				DataList missTimes = new DataList();
+				DataList hitTimes = new DataList();
+
+				bool useHashTable = methodName == "HashTable";
+
+				//generate a array of known cache misses
+				string[] knownMisses = new string[iterations];
+				for (int i = 0; i < iterations; i++)
+				{
+					knownMisses[i] = Random.Range(-1000000000, 1000000000).ToString() + "v?";
+				}
+
+				//test a bunch of cache misses
+				for (int i = 0; i < iterations; i++)
+				{
+					//start timer
+					sw.Start();
+					IsAvatarAllowedToFly(knownMisses[i], !useHashTable);
+					sw.Stop();
+					missTimes.Add(new DataToken(sw.ElapsedMilliseconds));
+					sw.Reset();
+				}
+
+				string[] knownHits = new string[iterations];
+				int totalHashes = json["HashTable"].DataDictionary.Count;
+				for (int i = 0; i < iterations; i++)
+				{
+					knownHits[i] = json["HashTable"].DataDictionary.GetKeys()[Random.Range(0, totalHashes)].ToString();
+				}
+
+				//test a bunch of cache hits
+				for (int i = 0; i < iterations; i++)
+				{
+					//start timer
+					sw.Start();
+					IsAvatarAllowedToFly(knownHits[i], !useHashTable);
+					sw.Stop();
+					hitTimes.Add(new DataToken(sw.ElapsedMilliseconds));
+					sw.Reset();
+				}
+
+				//calculate the average time for each
+				double missAverage = 0;
+				double hitAverage = 0;
+				for (int i = 0; i < iterations; i++)
+				{
+					missAverage += missTimes[i].Number;
+					hitAverage += hitTimes[i].Number;
+				}
+				missAverage /= iterations;
+				hitAverage /= iterations;
+
+				//calculate the ammount of time it roughly takes for a single hash to be checked
+				double timePerHash = missAverage / totalHashes;
+
+				//print the results
+				//Logger.Log("Average Miss Time: " + missAverage + "ms", this);
+				//Logger.Log("Average Hit Time: " + hitAverage + "ms", this);
+				Logger.Log("Average " + methodName + " Miss Time: " + missAverage + "ms;" + " Hit Time: " + hitAverage + "ms;" + " Time Per Hash: " + timePerHash + "ms", this);
+			}
 		}
 
 		/// <summary>
@@ -296,27 +357,38 @@ namespace OpenFlightVRC
 		/// </summary>
 		/// <param name="in_hash">The hash of the avatar</param>
 		/// <returns>Whether or not the avatar is allowed to fly</returns>
-		private bool IsAvatarAllowedToFly(string in_hash)
+		private bool IsAvatarAllowedToFly(string in_hash, bool forceCrawl = false)
 		{
 			DataToken hash_token = new DataToken(in_hash);
-			//Attempt to use the hashtable method first, otherwise fall back to the old crawling method
-			if (json.ContainsKey("HashTable"))
+
+			//if error token, return false and log error
+			if (hash_token.Error != DataError.None)
 			{
-				//this means we have the fast lookup option available
-				DataDictionary HashTable = json["HashTable"].DataDictionary;
-				if (HashTable.TryGetValue(hash_token, out DataToken data))
+				Logger.LogError("Invalid Hash Sent, received error: " + hash_token.Error + " with hash: " + in_hash, this);
+				return false;
+			}
+
+			if (!forceCrawl)
+			{
+				//Attempt to use the hashtable method first, otherwise fall back to the old crawling method
+				if (json.ContainsKey("HashTable"))
 				{
-					DataDictionary variant = data.DataDictionary;
-					name = variant["Name"].String;
-					creator = variant["Creator"].String;
-					introducer = variant["Introducer"].String;
-					weight = (float)variant["Weight"].Number;
-					WingtipOffset = (float)variant["WingtipOffset"].Number;
-					return true;
-				}
-				else
-				{
-					return false;
+					//this means we have the fast lookup option available
+					DataDictionary HashTable = json["HashTable"].DataDictionary;
+					if (HashTable.TryGetValue(hash_token, out DataToken data))
+					{
+						DataDictionary variant = data.DataDictionary;
+						name = variant["Name"].String;
+						creator = variant["Creator"].String;
+						introducer = variant["Introducer"].String;
+						weight = (float)variant["Weight"].Number;
+						WingtipOffset = (float)variant["WingtipOffset"].Number;
+						return true;
+					}
+					else
+					{
+						return false;
+					}
 				}
 			}
 
