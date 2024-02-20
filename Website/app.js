@@ -2,9 +2,9 @@ import { baseLayerLuminance, StandardLuminance } from 'https://unpkg.com/@fluent
 
 const LISTING_URL = "{{ listingInfo.Url }}";
 
-const PACKAGES = {
+const PACKAGES = `{
 {{~ for package in packages ~}}
-  "{{ package.Name }}": {
+  "{{ package.Name }}" {
     name: "{{ package.Name }}",
     displayName: "{{ if package.DisplayName; package.DisplayName; end; }}",
     description: "{{ if package.Description; package.Description; end; }}",
@@ -27,7 +27,7 @@ const PACKAGES = {
     licensesUrl: "{{ package.LicensesUrl }}",
   },
 {{~ end ~}}
-};
+}`;
 
 const setTheme = () => {
   const isDarkTheme = () => window.matchMedia("(prefers-color-scheme: dark)").matches;
