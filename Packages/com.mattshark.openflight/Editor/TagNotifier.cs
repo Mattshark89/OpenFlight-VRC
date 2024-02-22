@@ -3,21 +3,21 @@
  */
 
 using System;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEditor;
 using VRC.SDK3.Editor;
 using VRC.SDKBase.Editor.Elements;
 using System.Reflection;
-using UnityEditor.UIElements;
 using VRC.SDKBase.Editor.Api;
 using VRC.Core;
 using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
 
 //this script literally is just here to notify the world creator at upload that we recommend adding the openflight tag to the world
 namespace OpenFlightVRC.Editor
 {
+    /// <summary>
+    /// A simple script to notify the user to add the OpenFlight tag to their world if it is not already there and there is space
+    /// </summary>
     public class TagNotifier : EditorWindow
     {
         public const string ADD_TAG_DECISION_KEY = "OpenFlight_AddTagDecision";

@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace OpenFlightVRC.Editor
 {
+    /// <summary>
+    /// A simple script to modify client sim at runtime for in-editor flight testing
+    /// </summary>
     public class ClientSimTestSetup : EditorWindow
     {
         [MenuItem("VRC Packages/OpenFlight/Editor/Modify Client Sim Objects")]

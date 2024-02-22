@@ -10,6 +10,9 @@ using static OpenFlightVRC.Util;
 
 namespace OpenFlightVRC
 {
+	/// <summary>
+	/// A script to detect the avatar worn and check if it is allowed to fly
+	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class AvatarDetection : LoggableUdonSharpBehaviour
 	{

@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace OpenFlightVRC.Editor
 {
+	/// <summary>
+	/// A simple editor window that takes a screenshot of the scene view
+	/// </summary>
 	public class CameraScreenshot : EditorWindow
 	{
 		[MenuItem("VRC Packages/OpenFlight/Editor/Camera Screenshot")]

@@ -4,23 +4,11 @@
 
 using UnityEditor;
 using UnityEngine;
-
-/*
-The point of this script is to create a dropdown menu in the Unity Editor top bar
-
-The top bar entry is Packages, which inside of that dropdown it contains a entry for each package
-(Future goal, package creators would need to add their package to the dropdown menu. Hopefully this can get standardized in the future)
-
-an example of the dropdown structure
-VRC Packages
-    OpenFlight
-        Prefabs
-            Lite
-            Full
-    AnotherPackagename
-*/
 namespace OpenFlightVRC.Editor
 {
+	/// <summary>
+	/// The point of this script is to create a dropdown menu in the Unity Editor top bar for adding in the OpenFlight prefabs
+	/// </summary>
 	public class OpenFlightWindow : EditorWindow
 	{
 		[MenuItem("VRC Packages/OpenFlight/Prefabs/Lite")]
