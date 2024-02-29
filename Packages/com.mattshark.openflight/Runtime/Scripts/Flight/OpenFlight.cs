@@ -54,6 +54,7 @@ namespace OpenFlightVRC
 		/// <summary>
 		/// The current flight mode
 		/// </summary>
+		[ReadOnlyInspector]
 		public string flightMode = "Auto";
 
 		private VRCPlayerApi _localPlayer;
@@ -61,7 +62,7 @@ namespace OpenFlightVRC
 		/// <summary>
 		/// If true, the player is allowed to fly
 		/// </summary>
-		[ReadOnly]
+		[ReadOnly, ReadOnlyInspector]
 		public bool flightAllowed = false;
 
 		/// <summary>
@@ -70,6 +71,7 @@ namespace OpenFlightVRC
 		/// <remarks>
 		/// You REALLY should not turn this on. This is purely for testing purposes
 		/// </remarks>
+		[ReadOnlyInspector]
 		public bool ignoreVRCheck = false;
 
 		/// <summary>
