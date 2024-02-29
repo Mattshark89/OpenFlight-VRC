@@ -12,23 +12,49 @@ namespace OpenFlightVRC
 	//This chunk of code allows the OpenFlight version number to be set automatically from the package.json file
 	//its done using this method for dumb unity reasons but it works so whatever
 #if !COMPILER_UDONSHARP && UNITY_EDITOR
-    using UnityEditor.Callbacks;
+	using UnityEditor.Callbacks;
 
-    public class OpenFlightScenePostProcessor {
-	[PostProcessScene]
-	public static void OnPostProcessScene() {
-		//get the openflight version from the package.json file
-		string packageJson = System.IO.File.ReadAllText("Packages/com.mattshark.openflight/package.json");
-		string version = packageJson.Split(new string[] { "\"version\": \"" }, System.StringSplitOptions.None)[1].Split('"')[0];
-		//find all the OpenFlight scripts in the scene
-		OpenFlight[] openFlightScripts = Object.FindObjectsOfType<OpenFlight>();
-		foreach (OpenFlight openFlightScript in openFlightScripts)
+    using VRC.SDKBase.Editor.BuildPipeline;
+
+    public class OpenFlightScenePostProcessor
+	{
+		[PostProcessScene]
+		public static void OnPostProcessScene()
 		{
-			//set their version number
-			openFlightScript.OpenFlightVersion = version;
+			//get the openflight version from the package.json file
+			string packageJson = System.IO.File.ReadAllText("Packages/com.mattshark.openflight/package.json");
+			string version = packageJson.Split(new string[] { "\"version\": \"" }, System.StringSplitOptions.None)[1].Split('"')[0];
+			//find all the OpenFlight scripts in the scene
+			OpenFlight[] openFlightScripts = Object.FindObjectsOfType<OpenFlight>();
+			foreach (OpenFlight openFlightScript in openFlightScripts)
+			{
+				//set their version number
+				openFlightScript.OpenFlightVersion = version;
+			}
 		}
 	}
-}
+
+	public class OpenFlightChecker : VRC.SDKBase.Editor.BuildPipeline.IVRCSDKBuildRequestedCallback
+	{
+        public int callbackOrder => 0;
+
+        public bool OnBuildRequested(VRCSDKRequestedBuildType requestedBuildType)
+        {
+            //check to make sure the world scale of openflight is 1
+			OpenFlight[] openFlightScripts = Object.FindObjectsOfType<OpenFlight>();
+
+			foreach (OpenFlight openFlightScript in openFlightScripts)
+			{
+				if (openFlightScript.transform.lossyScale != Vector3.one)
+				{
+					Debug.LogError("OpenFlight: The world scale of the OpenFlight object must be 1.0. Please reset the scale of the OpenFlight object to 1.0.", openFlightScript);
+					return false;
+				}
+			}
+
+			return true;
+        }
+	}
 #endif
 
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
@@ -54,7 +80,7 @@ namespace OpenFlightVRC
 		/// <summary>
 		/// The current flight mode
 		/// </summary>
-		[ReadOnlyInspector]
+		[ReadOnly]
 		public string flightMode = "Auto";
 
 		private VRCPlayerApi _localPlayer;
@@ -102,6 +128,23 @@ namespace OpenFlightVRC
 			if (!InVR())
 			{
 				FlightOff();
+			}
+
+			//apply flight mode
+			switch (flightMode)
+			{
+				case "On":
+					FlightOn();
+					break;
+				case "Off":
+					FlightOff();
+					break;
+				case "Auto":
+					FlightAuto();
+					break;
+				default:
+					Logger.LogWarning("Invalid flight mode: " + flightMode, this);
+					break;
 			}
 
 			Logger.Log("OpenFlight version " + OpenFlightVersion, this);
