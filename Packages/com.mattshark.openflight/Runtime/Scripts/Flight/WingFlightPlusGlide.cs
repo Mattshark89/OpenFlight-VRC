@@ -38,6 +38,9 @@ public class WingFlightPlusGlideEditor : Editor
 }
 #endif
 
+	/// <summary>
+	/// This is the main script that controls all of the physics for the flight system.
+	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class WingFlightPlusGlide : LoggableUdonSharpBehaviour
 	{

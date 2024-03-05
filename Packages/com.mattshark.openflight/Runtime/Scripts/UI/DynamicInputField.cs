@@ -9,6 +9,9 @@ using VRC.Udon;
 
 namespace OpenFlightVRC.UI
 {
+	/// <summary>
+	/// A dynamic input field that gets its value from a UdonBehaviour variable, or a proxy
+	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class DynamicInputField : LoggableUdonSharpBehaviour
 	{

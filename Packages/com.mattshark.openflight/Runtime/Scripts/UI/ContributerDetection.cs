@@ -10,12 +10,21 @@ using VRC.Udon;
 
 namespace OpenFlightVRC.UI
 {
+	/// <summary>
+	/// Handles detecting if players are contributers or not
+	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class ContributerDetection : LoggableUdonSharpBehaviour
 	{
 		public AvatarListLoader AvatarListLoader;
+		/// <summary>
+		/// Will be true if there is at least one contributer in the instance
+		/// </summary>
 		public bool contributerInWorld = false;
 		private bool _localPlayerIsContributer = false;
+		/// <summary>
+		/// If the local player is a contributer
+		/// </summary>
 		public bool localPlayerIsContributer
 		{
 			get

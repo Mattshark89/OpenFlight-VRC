@@ -8,6 +8,9 @@ using TMPro;
 
 namespace OpenFlightVRC.UI
 {
+	/// <summary>
+	/// A utility for a dynamic label to get and values from a UdonBehaviour variable
+	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class VariableLabel : UIBase
 	{

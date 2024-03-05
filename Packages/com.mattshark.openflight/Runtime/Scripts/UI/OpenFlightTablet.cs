@@ -11,11 +11,22 @@ using static OpenFlightVRC.Util;
 
 namespace OpenFlightVRC.UI
 {
+	/// <summary>
+	/// The main script for the OpenFlight tablet itself, managing tabs and LOD fading
+	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class OpenFlightTablet : LoggableUdonSharpBehaviour
 	{
 		private VRCPlayerApi _localPlayer = null;
+		/// <summary>
+		/// The distance from the tablet the player has to be for it to fade out
+		/// </summary>
+		[Tooltip("The distance from the tablet the player has to be for it to fade out")]
 		public int fadeDistance = 10;
+		/// <summary>
+		/// If the tablet is allowed to fade out when the player is far away
+		/// </summary>
+		[Tooltip("If the tablet is allowed to fade out when the player is far away")]
 		public bool allowFade = true;
 		public GameObject[] objectsToHideOnFade;
 		public GameObject[] objectsToShowOnFade;

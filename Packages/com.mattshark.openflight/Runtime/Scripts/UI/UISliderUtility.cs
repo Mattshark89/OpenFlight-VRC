@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 namespace OpenFlightVRC.UI
 {
+	/// <summary>
+	/// A utility for the slider to get and set values from a UdonBehaviour variable
+	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class UISliderUtility : UIBase
 	{

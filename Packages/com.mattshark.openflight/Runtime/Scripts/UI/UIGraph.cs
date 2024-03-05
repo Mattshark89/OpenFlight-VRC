@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace OpenFlightVRC.UI
 {
+	/// <summary>
+	/// A graph that graphs an animation curve
+	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class UIGraph : UIBase
 	{

@@ -9,6 +9,9 @@ using VRC.SDKBase;
 
 namespace OpenFlightVRC.Net
 {
+	/// <summary>
+	/// This class is used to store player information, such as if they are flying, flapping, or a contributer.
+	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 	public class PlayerInfoStore : LoggableUdonSharpBehaviour
 	{
@@ -17,6 +20,9 @@ namespace OpenFlightVRC.Net
 
 		[FieldChangeCallback(nameof(IsFlying))]
 		private bool _isFlying;
+		/// <summary>
+		/// If the player is flying or not. When set, it will forward the event to the effects handler
+		/// </summary>
 		public bool IsFlying
 		{
 			get { return _isFlying; }
@@ -35,6 +41,9 @@ namespace OpenFlightVRC.Net
 
 		[FieldChangeCallback(nameof(IsFlapping))]
 		private bool _isFlapping;
+		/// <summary>
+		/// If the player is flapping or not. When set, it will forward the event to the effects handler
+		/// </summary>
 		public bool IsFlapping
 		{
 			get { return _isFlapping; }
@@ -54,6 +63,13 @@ namespace OpenFlightVRC.Net
 
 		[FieldChangeCallback(nameof(IsContributer))]
 		private bool _isContributer;
+		/// <summary>
+		/// If the player is a contributer or not. When set, it will forward the event to the effects handler
+		/// </summary>
+		/// <remarks>
+		/// This isnt straightforward due to some sphagetti code when I first implemented the contributers feature.
+		/// Needs to be refactored to be more straightforward, as this is just really used as a flag to allow users to hide themselves as a contributer, instead of being the main source of truth on if someone is a contributer
+		/// </remarks>
 		public bool IsContributer
 		{
 			get { return _isContributer; }
@@ -72,6 +88,9 @@ namespace OpenFlightVRC.Net
 
 		[UdonSynced, FieldChangeCallback(nameof(WorldWingtipOffset))]
 		private float _WorldWingtipOffset;
+		/// <summary>
+		/// The world wingtip offset for this player. This is WORLD RELATIVE, NOT player size relative.
+		/// </summary>
 		public float WorldWingtipOffset
 		{
 			get { return _WorldWingtipOffset; }

@@ -8,6 +8,9 @@ using VRC.SDKBase;
 
 namespace OpenFlightVRC
 {
+	/// <summary>
+	/// A safer respawn that resets the players velocity on respawn to avoid flinging them around if they were flying
+	/// </summary>
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class SaferRespawn : LoggableUdonSharpBehaviour
 	{

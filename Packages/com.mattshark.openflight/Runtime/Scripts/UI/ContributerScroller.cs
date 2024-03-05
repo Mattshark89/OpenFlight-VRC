@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace OpenFlightVRC.UI
 {
+	/// <summary>
+	/// Scrolls the contributer text on the tablet. Implemented in U# for various TMPro limitation reasons
+	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class ContributerScroller : LoggableUdonSharpBehaviour
 	{

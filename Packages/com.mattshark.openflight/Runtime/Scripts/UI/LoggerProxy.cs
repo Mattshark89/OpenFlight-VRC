@@ -7,6 +7,9 @@ using UdonSharp;
 
 namespace OpenFlightVRC.UI
 {
+	/// <summary>
+	/// A endpoint for the loggable udon behaviour to send logs to. see <see cref="LoggableUdonSharpBehaviour"/>
+	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class LoggerProxy : LoggableUdonSharpBehaviour
 	{

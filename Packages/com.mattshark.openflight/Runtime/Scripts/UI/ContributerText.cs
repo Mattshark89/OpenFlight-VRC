@@ -8,6 +8,9 @@ using VRC.Udon;
 
 namespace OpenFlightVRC.UI
 {
+	/// <summary>
+	/// Handles the contributer in world text on the tablet
+	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class ContributerText : LoggableUdonSharpBehaviour
 	{

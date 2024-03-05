@@ -6,14 +6,16 @@ using UdonSharp;
 using UnityEngine;
 using VRC.Udon;
 
-/*
-This entire script is a mess, but this is basically here so all of the scripts that are on the tablet can refer to this instead of the actual scripts.
-this allows the tablet to be placed without also needing to place the standaolne script together.
-feel free to add events here if you need to call them from the tablet.
-*/
-
 namespace OpenFlightVRC.UI
 {
+	/// <summary>
+	/// This entire script is a mess, but this is basically here so all of the scripts that are on the tablet can refer to this instead of the actual scripts.
+	/// this allows the tablet to be placed without also needing to place the standalone script together.
+	/// feel free to add events here if you need to call them from the tablet.
+	/// </summary>
+	/// <remarks>
+	/// We HIGHLY recommend you do not use these methods as a API for your own scripts. This is NOT garunteed to be stable
+	/// </remarks>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class ProxyUdonScript : LoggableUdonSharpBehaviour
 	{
@@ -32,33 +34,35 @@ namespace OpenFlightVRC.UI
 		public void FlightOn()
 		{
 			if (target != null)
-				target.SendCustomEvent("FlightOn");
+				target.SendCustomEvent(nameof(OpenFlightVRC.OpenFlight.FlightOn));
 		}
 
 		public void FlightOff()
 		{
 			if (target != null)
-				target.SendCustomEvent("FlightOff");
+				target.SendCustomEvent(nameof(OpenFlightVRC.OpenFlight.FlightOff));
 		}
 
 		public void FlightAuto()
 		{
 			if (target != null)
-				target.SendCustomEvent("FlightAuto");
+				target.SendCustomEvent(nameof(OpenFlightVRC.OpenFlight.FlightAuto));
 		}
 
 		public void reloadJSON()
 		{
 			if (target != null)
-				target.SendCustomEvent("reloadJSON");
+				target.SendCustomEvent(nameof(OpenFlightVRC.AvatarDetection.reloadJSON));
 		}
 
+		// TODO: I dont think this is required anymore?
 		public void showGizmo()
 		{
 			if (target != null)
 				target.SendCustomEvent("showGizmo");
 		}
 
+		// TODO: I dont think this is required anymore?
 		public void hideGizmo()
 		{
 			if (target != null)
@@ -80,13 +84,13 @@ namespace OpenFlightVRC.UI
 		public void RestoreDefaults()
 		{
 			if (target != null)
-				target.SendCustomEvent("RestoreDefaults");
+				target.SendCustomEvent(nameof(OpenFlightVRC.WingFlightPlusGlide.RestoreDefaults));
 		}
 
 		public void InitializeDefaults()
 		{
 			if (target != null)
-				target.SendCustomEvent("InitializeDefaults");
+				target.SendCustomEvent(nameof(OpenFlightVRC.WingFlightPlusGlide.InitializeDefaults));
 		}
 	}
 }

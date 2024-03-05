@@ -13,6 +13,9 @@ using System;
 
 namespace OpenFlightVRC.UI
 {
+	/// <summary>
+	/// Controls the text information on the networking tab of the tablet
+	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class NetworkingDebug : LoggableUdonSharpBehaviour
 	{

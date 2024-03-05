@@ -9,6 +9,9 @@ using VRC.SDK3.Data;
 
 namespace OpenFlightVRC
 {
+	/// <summary>
+	/// Interprets the Github release json from the OpenFlight-VRC repository
+	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class GithubReleaseInterpreter : LoggableUdonSharpBehaviour
 	{

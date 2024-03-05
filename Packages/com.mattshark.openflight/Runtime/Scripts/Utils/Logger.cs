@@ -8,6 +8,9 @@ using OpenFlightVRC.UI;
 
 namespace OpenFlightVRC
 {
+	/// <summary>
+	/// The type of log to write
+	/// </summary>
 	enum LogType
 	{
 		Log,
