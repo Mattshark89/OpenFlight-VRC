@@ -16,14 +16,18 @@ namespace OpenFlightVRC
 	public class GithubReleaseInterpreter : LoggableUdonSharpBehaviour
 	{
 		private VRCUrl URL = new VRCUrl("https://api.github.com/repos/Mattshark89/OpenFlight-VRC/releases?per_page=20");
-		private DataDictionary[] _releases;
-
-		public string outputText = "";
-		public bool onLatestRelease = false;
-		public string releasesBehind = "0";
-		public string latestReleaseVersion = "?.?.?";
 		public OpenFlight OF;
 		public AvatarListLoader AvatarListLoader;
+		private DataDictionary[] _releases;
+
+		[ReadOnlyInspector]
+		public string outputText = "";
+		[ReadOnlyInspector]
+		public bool onLatestRelease = false;
+		[ReadOnlyInspector]
+		public string releasesBehind = "0";
+		[ReadOnlyInspector]
+		public string latestReleaseVersion = "?.?.?";
 
 		void Start()
 		{

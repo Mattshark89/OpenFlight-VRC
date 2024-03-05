@@ -20,6 +20,7 @@ namespace OpenFlightVRC.UI
 		/// <summary>
 		/// Will be true if there is at least one contributer in the instance
 		/// </summary>
+		[ReadOnlyInspector]
 		public bool contributerInWorld = false;
 		private bool _localPlayerIsContributer = false;
 		/// <summary>
@@ -42,6 +43,7 @@ namespace OpenFlightVRC.UI
 		/// <summary>
 		/// A formatted list of all the openflight contributers
 		/// </summary>
+		[ReadOnlyInspector]
 		public string contributersString = "";
 
 		private DataList _contributers = new DataList();

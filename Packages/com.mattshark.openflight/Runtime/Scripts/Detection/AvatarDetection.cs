@@ -19,6 +19,11 @@ namespace OpenFlightVRC
 		private VRCPlayerApi _localPlayer = null;
 
 		/// <summary>
+		/// Whether or not to skip loading the avatar entirely
+		/// </summary>
+		public bool skipLoadingAvatar = true;
+
+		/// <summary>
 		/// Contains all the debug info about avatar detection
 		/// </summary>
 		/// <remarks>
@@ -37,11 +42,13 @@ namespace OpenFlightVRC
 		/// Introducer: XXX
 		/// Weight: XXX
 		/// Wingtip Offset: XXX </remarks>
+		[ReadOnlyInspector]
 		public string debugInfo = "";
 
 		/// <summary>
 		/// The distance from the spine to the chest, used to calculate the avatar scale
 		/// </summary>
+		[ReadOnlyInspector]
 		public double d_spinetochest = 0;
 
 		//external JSON list stuff
@@ -50,6 +57,7 @@ namespace OpenFlightVRC
 		/// The AvatarListLoader script that is used to load the avatar list
 		/// </summary>
 		public AvatarListLoader JSONLoader;
+
 		/// <summary>
 		/// The OpenFlight script, used to enable/disable flight
 		/// </summary>
@@ -66,48 +74,53 @@ namespace OpenFlightVRC
 		/// <summary>
 		/// The version of the JSON file that was loaded
 		/// </summary>
+		[ReadOnlyInspector]
 		public string jsonVersion = "";
 		/// <summary>
 		/// The date of the JSON file that was loaded
 		/// </summary>
+		[ReadOnlyInspector]
 		public string jsonDate = "";
 		#endregion
 		/// <summary>
 		/// Whether or not the user is allowed to fly
 		/// </summary>
+		[ReadOnlyInspector]
 		public bool allowedToFly = false;
-		/// <summary>
-		/// Whether or not to skip loading the avatar entirely
-		/// </summary>
-		public bool skipLoadingAvatar = true;
 
 		#region Avatar Information
 		/// <summary>
 		/// The current hash of the avatar worn
 		/// </summary>
+		[ReadOnlyInspector]
 		public string hash = "0";
 		internal float[] HashDistances = new float[5];
 		/// <summary>
 		/// The weight of the currently worn avatar
 		/// </summary>
+		[ReadOnlyInspector]
 		public float weight = 1;
 		/// <summary>
 		/// The offset of the wing tip for the current avatar
 		/// </summary>
+		[ReadOnlyInspector]
 		public float WingtipOffset = 0;
 #pragma warning disable CS0108 // Member hides inherited member; missing new keyword
 		/// <summary>
 		/// 	The name of the currently worn avatar. Defaults to `Unknown` if not in the list, or `Loading Avatar` if you are in the loading avatar / mecanim default rig
 		/// </summary>
+		[ReadOnlyInspector]
 		public string name = ""; //this is the name of the avatar base
 #pragma warning restore CS0108 // Member hides inherited member; missing new keyword
 		/// <summary>
 		/// 	The creator of the currently worn avatar. Defaults to `Unknown` if not in the list, or `Loading Avatar` if you are in the loading avatar / mecanim default rig
 		/// </summary>
+		[ReadOnlyInspector]
 		public string creator = ""; //this is the person who created the avatar base
 		/// <summary>
 		/// 	The introducer of the currently worn avatar. Defaults to `Unknown` if not in the list, or `Loading Avatar` if you are in the loading avatar / mecanim default rig
 		/// </summary>
+		[ReadOnlyInspector]
 		public string introducer = ""; //this is the person who introduced the avatar to the JSON list itself
 		const string LOADINGAVATARHASH = "1439458325v2";
 		#endregion
