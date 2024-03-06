@@ -13,6 +13,7 @@ namespace OpenFlightVRC
 	public enum AvatarDetectionCallback
 	{
 		RunDetection,
+		LoadJSON
 	}
 
 	/// <summary>
@@ -261,7 +262,7 @@ namespace OpenFlightVRC
 			stopwatch.Stop();
 			Logger.Log("Hash Lookup Time: " + stopwatch.ElapsedMilliseconds + "ms for hash: " + hash, this);
 		}
-		
+
 		/// <summary>
 		/// Checks the hash against the JSON list to see if the avatar is allowed to fly or not
 		/// </summary>
@@ -395,6 +396,7 @@ namespace OpenFlightVRC
 			double averageTime = (double)ms / (double)hashCount;
 			Logger.Log("Hash Lookup Table Generated! Took: " + ms + "ms, Average Time Per Hash: " + averageTime + "ms", this);
 
+			RunCallback(AvatarDetectionCallback.LoadJSON);
 			RunDetection();
 		}
 

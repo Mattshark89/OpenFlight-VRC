@@ -67,7 +67,7 @@ namespace OpenFlightVRC.UI
 			UpdateVersionInfo();
 
 			//subscribe to the json list load event
-			AvatarDetection.AddCallback(AvatarDetectionCallback.RunDetection, this, nameof(UpdateVersionInfo));
+			AvatarDetection.AddCallback(AvatarDetectionCallback.LoadJSON, this, nameof(UpdateVersionInfo));
 		}
 
 		void Update()
