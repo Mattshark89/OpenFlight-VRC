@@ -79,7 +79,7 @@ namespace OpenFlightVRC.UI
 			if (_fadeTimeout <= 0)
 			{
 				//check if the player is within the fade distance
-				if (Vector3.Distance(_localPlayer.GetPosition(), transform.position) > fadeDistance && allowFade)
+				if (_localPlayer.IsValid() && Vector3.Distance(_localPlayer.GetPosition(), transform.position) > fadeDistance && allowFade)
 				{
 					//disable all the objects that should be hidden
 					SetFadeState(false);
