@@ -75,7 +75,7 @@ namespace OpenFlightVRC
 		#region JSON Info
 		[System.NonSerialized]
 		private string _jsonString = "";
-		private DataDictionary json;
+		private DataDictionary _json;
 		/// <summary>
 		/// The version of the JSON file that was loaded
 		/// </summary>
@@ -256,6 +256,7 @@ namespace OpenFlightVRC
 			RunCallback(AvatarDetectionCallback.RunDetection);
 		}
 
+
 		/// <summary>
 		/// Checks the hash against the JSON list to see if the avatar is allowed to fly or not
 		/// </summary>
@@ -263,10 +264,41 @@ namespace OpenFlightVRC
 		/// <returns>Whether or not the avatar is allowed to fly</returns>
 		private bool IsAvatarAllowedToFly(string in_hash)
 		{
-			DataDictionary bases = json["Bases"].DataDictionary;
-			DataToken[] baseKeys = bases.GetKeys().ToArray();
 			DataToken hash_token = new DataToken(in_hash);
-			//TODO: Change this to a precomputed hash map lookup. Wouldnt affect performance that much as this is already surprisingly fast but still
+
+			//if error token, return false and log error
+			if (hash_token.Error != DataError.None)
+			{
+				Logger.LogError("Invalid Hash Sent, received error: " + hash_token.Error + " with hash: " + in_hash, this);
+				return false;
+			}
+
+			//Attempt to use the hashtable method first, otherwise fall back to the old crawling method
+			if (_json.ContainsKey("HashTable"))
+			{
+				//this means we have the fast lookup option available
+				DataDictionary hashTable = _json["HashTable"].DataDictionary;
+				if (hashTable.TryGetValue(hash_token, out DataToken data))
+				{
+					DataDictionary variant = data.DataDictionary;
+					name = variant["Name"].String;
+					creator = variant["Creator"].String;
+					introducer = variant["Introducer"].String;
+					weight = (float)variant["Weight"].Number;
+					WingtipOffset = (float)variant["WingtipOffset"].Number;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			Logger.LogWarning("HashTable not found, falling back to old crawling method", this);
+
+			//Old crawling method
+			DataDictionary bases = _json["Bases"].DataDictionary;
+			DataToken[] baseKeys = bases.GetKeys().ToArray();
 			for (int i = 0; i < bases.Count; i++)
 			{
 				DataDictionary avi_base = bases[baseKeys[i]].DataDictionary;
@@ -310,9 +342,46 @@ namespace OpenFlightVRC
 				Logger.LogError("Failed to load JSON list! This shouldnt occur unless we messed up the JSON, or VRChat broke something!", this);
 				return;
 			}
-			json = jsonDataToken.DataDictionary;
-			jsonVersion = json["JSON Version"].String;
-			jsonDate = json["JSON Date"].String;
+			_json = jsonDataToken.DataDictionary;
+			jsonVersion = _json["JSON Version"].String;
+			jsonDate = _json["JSON Date"].String;
+
+			//generate the hashtable
+			Logger.Log("Generating Hash Lookup Table...", this);
+			//setup and start stopwatch
+			System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+			sw.Start();
+			DataDictionary hashTable = new DataDictionary();
+
+			DataDictionary bases = _json["Bases"].DataDictionary;
+			DataToken[] baseKeys = bases.GetKeys().ToArray();
+			for (int j = 0; j < bases.Count; j++)
+			{
+				DataDictionary avi_base = bases[baseKeys[j]].DataDictionary;
+				DataToken[] avi_base_keys = avi_base.GetKeys().ToArray();
+				for (int k = 0; k < avi_base.Count; k++)
+				{
+					DataDictionary variant = avi_base[avi_base_keys[k]].DataDictionary.DeepClone();
+					DataToken[] hashes = variant["Hash"].DataList.ToArray();
+					//remove hashes from the variant
+					variant.Remove("Hash");
+					for (int l = 0; l < hashes.Length; l++)
+					{
+						hashTable.Add(hashes[l], variant);
+					}
+				}
+			}
+
+			//TECHNICALLY we should be checking if the key already exists,
+			//but we are assuming the JSON is fresh since we just reloaded it from a new string
+			_json.Add("HashTable", hashTable);
+			sw.Stop();
+			int ms = sw.Elapsed.Milliseconds;
+			//calculate the time it took to generate each individual hash
+			int hashCount = hashTable.Count;
+			double averageTime = (double)ms / (double)hashCount;
+			Logger.Log("Hash Lookup Table Generated! Took: " + ms + "ms, Average Time Per Hash: " + averageTime + "ms", this);
+
 			RunDetection();
 		}
 

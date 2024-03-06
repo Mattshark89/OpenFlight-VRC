@@ -6,6 +6,7 @@ using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.SDK3.StringLoading;
+using VRC.SDK3.Data;
 
 namespace OpenFlightVRC
 {
