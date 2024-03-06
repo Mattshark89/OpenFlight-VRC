@@ -120,7 +120,7 @@ namespace OpenFlightVRC
 
                         //run the method
                         behaviour.SendCustomEvent(methodName);
-                        Logger.Log(String.Format("Running callback [{0}] for [{1}]", Logger.ColorizeFunction(behaviour, methodName), Logger.ColorizeFunction(behaviour, methodName)), this);
+                        Logger.Log(String.Format("Running callback [{0}] for [{1}]", Logger.ColorizeFunction(behaviour, methodName), Logger.ColorizeScript(behaviour)), this);
                     }
                 }
             }

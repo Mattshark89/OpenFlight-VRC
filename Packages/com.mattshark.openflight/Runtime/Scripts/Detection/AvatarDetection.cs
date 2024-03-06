@@ -256,7 +256,12 @@ namespace OpenFlightVRC
 			RunCallback(AvatarDetectionCallback.RunDetection);
 		}
 
-
+		private void ProcessTimer(System.Diagnostics.Stopwatch stopwatch, string hash)
+		{
+			stopwatch.Stop();
+			Logger.Log("Hash Lookup Time: " + stopwatch.ElapsedMilliseconds + "ms for hash: " + hash, this);
+		}
+		
 		/// <summary>
 		/// Checks the hash against the JSON list to see if the avatar is allowed to fly or not
 		/// </summary>
@@ -264,6 +269,10 @@ namespace OpenFlightVRC
 		/// <returns>Whether or not the avatar is allowed to fly</returns>
 		private bool IsAvatarAllowedToFly(string in_hash)
 		{
+			//start a timer
+			System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+			sw.Start();
+
 			DataToken hash_token = new DataToken(in_hash);
 
 			//if error token, return false and log error
@@ -286,10 +295,12 @@ namespace OpenFlightVRC
 					introducer = variant["Introducer"].String;
 					weight = (float)variant["Weight"].Number;
 					WingtipOffset = (float)variant["WingtipOffset"].Number;
+					ProcessTimer(sw, in_hash);
 					return true;
 				}
 				else
 				{
+					ProcessTimer(sw, in_hash);
 					return false;
 				}
 			}
@@ -314,6 +325,7 @@ namespace OpenFlightVRC
 						introducer = variant["Introducer"].String;
 						weight = (float)variant["Weight"].Number;
 						WingtipOffset = (float)variant["WingtipOffset"].Number;
+						ProcessTimer(sw, in_hash);
 						return true;
 					}
 				}
@@ -324,6 +336,7 @@ namespace OpenFlightVRC
 			introducer = "Unknown";
 			weight = 1;
 			WingtipOffset = 0;
+			ProcessTimer(sw, in_hash);
 			return false;
 		}
 
