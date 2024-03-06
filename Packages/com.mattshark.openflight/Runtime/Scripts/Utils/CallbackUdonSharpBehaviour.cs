@@ -29,9 +29,9 @@ namespace OpenFlightVRC
         /// <summary>
         /// Adds a callback based on the callback ID
         /// </summary>
-        /// <param name="callbackID"></param>
-        /// <param name="behaviour"></param>
-        /// <param name="methodName"></param>
+        /// <param name="callbackID">The ID of the callback to add. This should be an enum</param>
+        /// <param name="behaviour">The behaviour to run the callback on. Use <see cref="this"/> to run the callback on the behaviour this script is attached to</param>
+        /// <param name="methodName">The name of the method to run when this callback is triggered. Recommended to use <see cref="nameof"/> to get the method name</param>
         /// <returns>Returns a true if the callback was added successfully, and false if the callback already exists</returns>
         public bool AddCallback(Enum callbackID, UdonSharpBehaviour behaviour, string methodName)
         {
@@ -62,9 +62,7 @@ namespace OpenFlightVRC
         /// <summary>
         /// Removes a callback based on the callback ID
         /// </summary>
-        /// <param name="callbackID"></param>
-        /// <param name="behaviour"></param>
-        /// <param name="methodName"></param>
+        /// <inheritdoc cref="AddCallback(Enum, UdonSharpBehaviour, string)"/>
         /// <returns>Returns a true if the callback was removed successfully, and false if the callback does not exist</returns>
         public bool RemoveCallback(Enum callbackID, UdonSharpBehaviour behaviour, string methodName)
         {
@@ -94,7 +92,7 @@ namespace OpenFlightVRC
         /// <summary>
         /// Runs all the callbacks for the given callback ID
         /// </summary>
-        /// <param name="callbackID"></param>
+        /// <param name="callbackID"><inheritdoc cref="AddCallback(Enum, UdonSharpBehaviour, string)" path="/param[@name='callbackID']"/></param>
         internal void RunCallback(Enum callbackID)
         {
             int id = Convert.ToInt32(callbackID);
