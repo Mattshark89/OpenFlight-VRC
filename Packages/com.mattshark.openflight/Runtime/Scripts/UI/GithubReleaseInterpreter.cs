@@ -32,7 +32,7 @@ namespace OpenFlightVRC
 		void Start()
 		{
 			//subscribe to the avatar list loader callback
-			AvatarListLoader.AddCallback(this, "LoadURL");
+			AvatarListLoader.AddCallback(AvatarListLoaderCallback.AvatarListLoaded, this, nameof(LoadURL));
 		}
 
 		public void LoadURL()

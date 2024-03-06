@@ -10,11 +10,16 @@ using static OpenFlightVRC.Util;
 
 namespace OpenFlightVRC
 {
+	public enum AvatarDetectionCallback
+	{
+		RunDetection,
+	}
+
 	/// <summary>
 	/// A script to detect the avatar worn and check if it is allowed to fly
 	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class AvatarDetection : LoggableUdonSharpBehaviour
+	public class AvatarDetection : CallbackUdonSharpBehaviour
 	{
 		private VRCPlayerApi _localPlayer = null;
 
@@ -130,7 +135,7 @@ namespace OpenFlightVRC
 			_localPlayer = Networking.LocalPlayer;
 
 			debugInfo = "Loading JSON list...";
-			JSONLoader.AddCallback(this, nameof(LoadJSON));
+			JSONLoader.AddCallback(AvatarListLoaderCallback.AvatarListLoaded, this, nameof(LoadJSON));
 
 			JSONLoader.LoadURL();
 		}
@@ -211,22 +216,23 @@ namespace OpenFlightVRC
 				weight = 1;
 				WingtipOffset = 0;
 				Logger.Log("Loading Avatar Detected, ignoring...", this);
-				return;
-			}
-
-			allowedToFly = IsAvatarAllowedToFly(hash);
-
-			if (allowedToFly)
-			{
-				OpenFlight.CanFly();
-				Logger.Log("Avatar is allowed to fly!", this);
 			}
 			else
 			{
-				OpenFlight.CannotFly();
-				WingFlightPlusGlide.wingtipOffset = 0;
-				WingFlightPlusGlide.weight = 1;
-				Logger.Log("Avatar is not allowed to fly!", this);
+				allowedToFly = IsAvatarAllowedToFly(hash);
+
+				if (allowedToFly)
+				{
+					OpenFlight.CanFly();
+					Logger.Log("Avatar is allowed to fly!", this);
+				}
+				else
+				{
+					OpenFlight.CannotFly();
+					WingFlightPlusGlide.wingtipOffset = 0;
+					WingFlightPlusGlide.weight = 1;
+					Logger.Log("Avatar is not allowed to fly!", this);
+				}
 			}
 
 			//print all the info to the text
@@ -246,6 +252,8 @@ namespace OpenFlightVRC
 				+ weight
 				+ "\nWingtip Offset: "
 				+ WingtipOffset;
+
+			RunCallback(AvatarDetectionCallback.RunDetection);
 		}
 
 		/// <summary>
