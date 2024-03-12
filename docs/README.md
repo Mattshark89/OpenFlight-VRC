@@ -51,7 +51,6 @@ The detection is handled by a few scripts. [AvatarDetection.cs](/ScriptReference
 - `Mattshark89`: Flight/Gliding physics engine, repository manager
 - `Happyrobot33`: Avatar detection system, settings tablet, VCC package manager shenanigans, and many other small tasks
 - `MerlinVR`: UI Styler system source code
-- `Reimajo`: Inspiration for the project via their Avali Flight System (check them out here! https://reimajo.booth.pm/)
 - Github contributors: <br>
 <a href="https://github.com/Mattshark89/OpenFlight-VRC/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Mattshark89/OpenFlight-VRC" />
