@@ -96,8 +96,6 @@ In no particular order:
 
 - Github contributors: https://github.com/Mattshark89/OpenFlight-VRC/graphs/contributors
 
-- `Reimajo`: Inspiration for the project via their Avali Flight System (check out their shop here! <a href="https://reimajo.booth.pm/">https://reimajo.booth.pm/</a>)
-
 ...and several others for giving suggestions and helping fix critical bugs. You all are great!
 
 <a href="https://github.com/Mattshark89/OpenFlight-VRC/graphs/contributors">
