@@ -12,30 +12,30 @@ using TMPro;
 namespace OpenFlightVRC
 {
 #if !COMPILER_UDONSHARP && UNITY_EDITOR // These using statements must be wrapped in this check to prevent issues on builds
-using UnityEditor;
-using UdonSharpEditor;
+	using UnityEditor;
+	using UdonSharpEditor;
 #endif
 
 	// This is a custom inspector for the WingFlightPlusGlide script. It currently just adds a reset to defaults button
 #if !COMPILER_UDONSHARP && UNITY_EDITOR
-[CustomEditor(typeof(WingFlightPlusGlide))]
-public class WingFlightPlusGlideEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        WingFlightPlusGlide script = (WingFlightPlusGlide)target;
+	[CustomEditor(typeof(WingFlightPlusGlide))]
+	public class WingFlightPlusGlideEditor : Editor
+	{
+		public override void OnInspectorGUI()
+		{
+			WingFlightPlusGlide script = (WingFlightPlusGlide)target;
 
-        if (UdonSharpGUI.DrawDefaultUdonSharpBehaviourHeader(target)) return;
+			if (UdonSharpGUI.DrawDefaultUdonSharpBehaviourHeader(target)) return;
 
-        if (GUILayout.Button("Reset to Prefab Defaults"))
-        {
-            // Reset all values to the default in the prefab
-            PrefabUtility.RevertObjectOverride(script, InteractionMode.AutomatedAction);
-        }
+			if (GUILayout.Button("Reset to Prefab Defaults"))
+			{
+				// Reset all values to the default in the prefab
+				PrefabUtility.RevertObjectOverride(script, InteractionMode.AutomatedAction);
+			}
 
-        DrawDefaultInspector();
-    }
-}
+			DrawDefaultInspector();
+		}
+	}
 #endif
 
 	/// <summary>
@@ -70,7 +70,7 @@ public class WingFlightPlusGlideEditor : Editor
 		/// <summary>
 		/// Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident.
 		/// </summary>
-		[Tooltip("Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident. (Default: true) CURRENTLY HAS NO EFFECT.")]
+		[Tooltip("Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident. (Default: true)")]
 		public bool requireJump = true;
 
 		/// <inheritdoc cref="requireJump"/>
@@ -478,8 +478,8 @@ public class WingFlightPlusGlideEditor : Editor
 				// Check for the beginning of a flap
 				if (
 					(isFlying || handsOut)
-					// && (requireJump ? !LocalPlayer.IsPlayerGrounded() : true)
-					&& (!LocalPlayer.IsPlayerGrounded())
+					&& (requireJump ? !LocalPlayer.IsPlayerGrounded() : true)
+					&& !IsPlayerInStation()
 					&& RHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(rightUpperArmBone).y
 					&& LHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(leftUpperArmBone).y
 					&& downThrust > 0.002f
@@ -646,9 +646,7 @@ public class WingFlightPlusGlideEditor : Editor
 			}
 			else
 			{
-				// Bug: Stations store your velocity, releasing it all at once when you hop off. Meaning you can flap while seated to infinitely build velocity.
-				// Fix: set velocity to zero if grounded. Unfortunately breaks the RequireJump() setting, which will be refactored in the future.
-				if (LocalPlayer.IsPlayerGrounded())
+				if (IsPlayerInStation())
 				{
 					finalVelocity = Vector3.zero;
 					setFinalVelocity = true;
@@ -777,23 +775,50 @@ public class WingFlightPlusGlideEditor : Editor
 			}
 		}
 
-#pragma warning disable IDE0044 // Add readonly modifier. We want functions to be able to modify this
-		private Collider[] _colliders = new Collider[0];
-#pragma warning restore IDE0044 // Add readonly modifier
+		private readonly Collider[] _colliders = new Collider[50];
 		/// <summary>
 		/// Utility method to detect main menu status. Technique pulled from <see href="https://github.com/Superbstingray/UdonPlayerPlatformHook">UdonPlayerPlatformHook</see>
 		/// </summary>
 		/// <returns>True if the main menu is open, false otherwise</returns>
 		private bool IsMainMenuOpen()
 		{
+			const int layer = 2 << 18;
 			//swapped from OverlapSphere to OverlapSphereNonAlloc, as it does not allocate memory each time it is called,
 			//saving on garbage collection. Also doesnt require a .Length check, as it returns the number of colliders it found inherently.
-			int uiColliderCount = Physics.OverlapSphereNonAlloc(LocalPlayer.GetPosition(), 10f, _colliders, 524288);
+			int uiColliderCount = Physics.OverlapSphereNonAlloc(LocalPlayer.GetPosition(), 10f, _colliders, layer);
 			//commented out due to extern count, this uses 3
 			//return uiColliderCount == 8 || uiColliderCount == 9 || uiColliderCount == 10;
 
 			//this uses 2 externs
 			return 8 <= uiColliderCount && uiColliderCount <= 10;
+		}
+
+		/// <summary>
+		/// Utility method to detect if the player is in a station.
+		/// </summary>
+		/// <returns>True if the player is in a station, false otherwise</returns>
+		private bool IsPlayerInStation()
+		{
+			//player local layer, which is layer 9
+			const int layer = 2 << 9;
+			int colliderCount = Physics.OverlapSphereNonAlloc(LocalPlayer.GetPosition(), 50f, _colliders, layer);
+
+			//if the count is 0, then we can garuntee the player is in a station
+			if (colliderCount == 0)
+			{
+				return true;
+			}
+
+			//loop over the colliders and if there is colliders that are null, then the player is not in a station
+			for (int i = 0; i < colliderCount; i++)
+			{
+				if (_colliders[i] == null)
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		/// <summary>
