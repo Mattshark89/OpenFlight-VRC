@@ -98,9 +98,10 @@ namespace OpenFlightVRC.UI
 
 			//estimate ping based on time since startup and simulation time
 			//in MS
-			float latency = (Time.realtimeSinceStartup - Networking.SimulationTime(player)) * 1000;
-			//round it
-			latency = Mathf.Round(latency);
+			float IKLatency = (Time.realtimeSinceStartup - Networking.SimulationTime(player)) * 1000;
+			IKLatency = Mathf.Round(IKLatency);
+			float PlayerStorelatency = (Time.realtimeSinceStartup - Networking.SimulationTime(store.gameObject)) * 1000;
+			PlayerStorelatency = Mathf.Round(PlayerStorelatency);
 
 			//get the packed data in a bit string
 			string packedData = Convert.ToString(store.PackedData, 2).PadLeft(8, '0');
@@ -110,8 +111,12 @@ namespace OpenFlightVRC.UI
 			return playerHeader
 				+ "\n"
 				+ tab
-				+ "latency (ms): "
-				+ latency
+				+ "IK Latency (ms): "
+				+ IKLatency
+				+ "\n"
+				+ tab
+				+ "Player Store Latency (ms): "
+				+ PlayerStorelatency
 				+ "\n"
 				+ tab
 				+ "Extracted Data:\n"
