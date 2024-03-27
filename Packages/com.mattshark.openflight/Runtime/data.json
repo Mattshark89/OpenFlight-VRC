@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.8.0",
-  "JSON Date": "2024-03-13",
+  "JSON Version": "2.9.0",
+  "JSON Date": "2024-03-27",
   "Contributers": [
     "-Jinxy-",
     "Daernaro",
@@ -20,7 +20,8 @@
     "Roimu",
     "Slash0x",
     "fundale",
-    "mackandelius"
+    "mackandelius",
+    "Eglantine"
   ],
   "Bases": {
     "Kitavali": {
@@ -1047,6 +1048,16 @@
         "Hash": ["2119855112v2"],
         "Weight": 1,
         "WingtipOffset": 5
+      }
+    },
+    "Forge Raptor": {
+      "Original": {
+        "Name": "Forge Raptor",
+        "Creator": "Eglantine/Drakious",
+        "Introducer": "Eglantine",
+        "Hash": ["238494729v2"],
+        "Weight": 1,
+        "WingtipOffset": 2
       }
     }
   }
