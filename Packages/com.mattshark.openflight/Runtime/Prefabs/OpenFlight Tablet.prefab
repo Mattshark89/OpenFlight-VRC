@@ -6877,7 +6877,7 @@ GameObject:
   - component: {fileID: 1747352802645973078}
   - component: {fileID: 5818044771357647667}
   m_Layer: 0
-  m_Name: Manual Scale Toggle
+  m_Name: Lock Scale Toggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7398,7 +7398,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Manual Scale
+  m_text: Lock Scale
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cf5cc7e34709fe84cb807ce63ba7dd1c, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: cf5cc7e34709fe84cb807ce63ba7dd1c, type: 2}
@@ -21549,7 +21549,6 @@ MonoBehaviour:
   - {fileID: 1994533359978441240}
   OpenFlight: {fileID: 0}
   AvatarDetection: {fileID: 0}
-  AvatarListLoader: {fileID: 0}
   VersionInfo: {fileID: 6124323176387380655}
   tabs:
   - {fileID: 6124323177215462759}

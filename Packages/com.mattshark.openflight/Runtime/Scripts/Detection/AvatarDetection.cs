@@ -257,6 +257,11 @@ namespace OpenFlightVRC
 			RunCallback(AvatarDetectionCallback.RunDetection);
 		}
 
+		/// <summary>
+		/// Processes the timer and logs the time it took to lookup the hash
+		/// </summary>
+		/// <param name="stopwatch"></param>
+		/// <param name="hash"></param>
 		private void ProcessTimer(System.Diagnostics.Stopwatch stopwatch, string hash)
 		{
 			stopwatch.Stop();
@@ -269,82 +274,97 @@ namespace OpenFlightVRC
 		/// <param name="in_hash">The hash of the avatar</param>
 		/// <returns>Whether or not the avatar is allowed to fly</returns>
 		private bool IsAvatarAllowedToFly(string in_hash)
-		{
-			//start a timer
-			System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-			sw.Start();
+        {
+            //start a timer
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
 
-			DataToken hash_token = new DataToken(in_hash);
+            DataToken hash_token = new DataToken(in_hash);
 
-			//if error token, return false and log error
-			if (hash_token.Error != DataError.None)
-			{
-				Logger.LogError("Invalid Hash Sent, received error: " + hash_token.Error + " with hash: " + in_hash, this);
-				return false;
-			}
+            //if error token, return false and log error
+            if (hash_token.Error != DataError.None)
+            {
+                Logger.LogError("Invalid Hash Sent, received error: " + hash_token.Error + " with hash: " + in_hash, this);
+                return false;
+            }
 
-			//Attempt to use the hashtable method first, otherwise fall back to the old crawling method
-			if (_json.ContainsKey("HashTable"))
-			{
-				//this means we have the fast lookup option available
-				DataDictionary hashTable = _json["HashTable"].DataDictionary;
-				if (hashTable.TryGetValue(hash_token, out DataToken data))
-				{
-					DataDictionary variant = data.DataDictionary;
-					name = variant["Name"].String;
-					creator = variant["Creator"].String;
-					introducer = variant["Introducer"].String;
-					weight = (float)variant["Weight"].Number;
-					WingtipOffset = (float)variant["WingtipOffset"].Number;
-					ProcessTimer(sw, in_hash);
-					return true;
-				}
-				else
-				{
-					ProcessTimer(sw, in_hash);
-					return false;
-				}
-			}
+            //Attempt to use the hashtable method first, otherwise fall back to the old crawling method
+            if (_json.ContainsKey("HashTable"))
+            {
+                //this means we have the fast lookup option available
+                DataDictionary hashTable = _json["HashTable"].DataDictionary;
+                if (hashTable.TryGetValue(hash_token, out DataToken data))
+                {
+                    DataDictionary variant = data.DataDictionary;
+					SetInfo(variant["Name"].String, variant["Creator"].String, variant["Introducer"].String, (float)variant["Weight"].Number, (float)variant["WingtipOffset"].Number);
+                    ProcessTimer(sw, in_hash);
+                    return true;
+                }
+                else
+                {
+					SetInfoDefault();
+                    ProcessTimer(sw, in_hash);
+                    return false;
+                }
+            }
 
-			Logger.LogWarning("HashTable not found, falling back to old crawling method", this);
+            Logger.LogWarning("HashTable not found, falling back to old crawling method", this);
 
-			//Old crawling method
-			DataDictionary bases = _json["Bases"].DataDictionary;
-			DataToken[] baseKeys = bases.GetKeys().ToArray();
-			for (int i = 0; i < bases.Count; i++)
-			{
-				DataDictionary avi_base = bases[baseKeys[i]].DataDictionary;
-				DataToken[] avi_base_keys = avi_base.GetKeys().ToArray();
-				for (int j = 0; j < avi_base.Count; j++)
-				{
-					DataDictionary variant = avi_base[avi_base_keys[j]].DataDictionary;
+            //Old crawling method
+            DataDictionary bases = _json["Bases"].DataDictionary;
+            DataToken[] baseKeys = bases.GetKeys().ToArray();
+            for (int i = 0; i < bases.Count; i++)
+            {
+                DataDictionary avi_base = bases[baseKeys[i]].DataDictionary;
+                DataToken[] avi_base_keys = avi_base.GetKeys().ToArray();
+                for (int j = 0; j < avi_base.Count; j++)
+                {
+                    DataDictionary variant = avi_base[avi_base_keys[j]].DataDictionary;
 
-					if (variant["Hash"].DataList.Contains(hash_token))
-					{
-						name = variant["Name"].String;
-						creator = variant["Creator"].String;
-						introducer = variant["Introducer"].String;
-						weight = (float)variant["Weight"].Number;
-						WingtipOffset = (float)variant["WingtipOffset"].Number;
-						ProcessTimer(sw, in_hash);
-						return true;
-					}
-				}
-			}
+                    if (variant["Hash"].DataList.Contains(hash_token))
+                    {
+						SetInfo(variant["Name"].String, variant["Creator"].String, variant["Introducer"].String, (float)variant["Weight"].Number, (float)variant["WingtipOffset"].Number);
+                        ProcessTimer(sw, in_hash);
+                        return true;
+                    }
+                }
+            }
 
-			name = "Unknown";
-			creator = "Unknown";
-			introducer = "Unknown";
-			weight = 1;
-			WingtipOffset = 0;
-			ProcessTimer(sw, in_hash);
-			return false;
-		}
+            SetInfoDefault();
+            ProcessTimer(sw, in_hash);
+            return false;
+        }
 
 		/// <summary>
-		/// Deserializes the JSON list after being told its available
+		/// Sets the info of the avatar to the given values
 		/// </summary>
-		public void LoadJSON()
+		/// <param name="name"></param>
+		/// <param name="creator"></param>
+		/// <param name="introducer"></param>
+		/// <param name="weight"></param>
+		/// <param name="wingtipOffset"></param>
+        private void SetInfo(string name, string creator, string introducer, float weight, float wingtipOffset)
+		{
+			this.name = name;
+			this.creator = creator;
+			this.introducer = introducer;
+			this.weight = weight;
+			WingtipOffset = wingtipOffset;
+		}
+        
+		/// <summary>
+		/// Sets the info of the avatar to the default values
+		/// </summary>
+		private void SetInfoDefault()
+		{
+			const string DEFAULT = "N/A";
+			SetInfo(DEFAULT, DEFAULT, DEFAULT, 1, 0);
+		}
+
+        /// <summary>
+        /// Deserializes the JSON list after being told its available
+        /// </summary>
+        public void LoadJSON()
 		{
 			Logger.Log("Deserializing JSON list...", this);
 			_jsonString = JSONLoader.Output;
