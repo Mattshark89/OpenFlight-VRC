@@ -634,6 +634,16 @@ namespace OpenFlightVRC
 			{
 				// Calculate force to apply based on the flap
 				newVelocity = 0.011f * GetFlapStrength() * ((RHPos - RHPosLast) + (LHPos - LHPosLast));
+
+				if(!useAvatarScale)
+				{
+					//scale up the flap strength by the avatar's size inversely
+					// 1 / 0.1 = 10 Smaller than normal Avatar
+					// 1 / 1 = 1 Normal
+					// 1 / 10 = 0.1 Larger than normal Avatar
+					newVelocity = newVelocity / armspan;
+				}
+
 				if (LocalPlayer.IsPlayerGrounded())
 				{
 					// Prevents skiing along the ground
