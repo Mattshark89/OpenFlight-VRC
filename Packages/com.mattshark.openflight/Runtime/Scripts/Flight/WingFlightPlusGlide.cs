@@ -864,39 +864,39 @@ namespace OpenFlightVRC
 				modifier = flapStrengthBase + 10;
 			}
 
-			float armspanResult = 0;
+			float armspanChoice = 0;
 			if (useAvatarScale)
 			{
-				armspanResult = armspan;
+				armspanChoice = armspan;
 			}
 			else
 			{
-				armspanResult = 1;
+				armspanChoice = 1.0f;
 			}
 
-			return sizeCurve.Evaluate(armspanResult) * modifier;
+			return sizeCurve.Evaluate(armspanChoice) * modifier;
 		}
 
 		private float GetFlightGravity()
 		{
-			float armspanResult = 0;
+			float armspanChoice = 0;
 			if (useAvatarScale)
 			{
-				armspanResult = armspan;
+				armspanChoice = armspan;
 			}
 			else
 			{
-				armspanResult = 1;
+				armspanChoice = 1.0f;
 			}
 
 			float gravity = 0;
 			if (useGravityCurve)
 			{
-				gravity = gravityCurve.Evaluate(armspanResult) * armspanResult;
+				gravity = gravityCurve.Evaluate(armspanChoice) * armspanChoice;
 			}
 			else
 			{
-				gravity = sizeCurve.Evaluate(armspanResult) * flightGravityBase * armspanResult;
+				gravity = sizeCurve.Evaluate(armspanChoice) * flightGravityBase * armspanChoice;
 			}
 
 			if (useAvatarModifiers)
