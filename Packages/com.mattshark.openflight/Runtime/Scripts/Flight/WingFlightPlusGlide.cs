@@ -52,7 +52,7 @@ namespace OpenFlightVRC
 		[Header("Basic Settings")]
 		// Both of these "base" values are by default affected by the avatar's armspan. See sizeCurve.
 		[Tooltip("Want flaps to be stronger or weaker? Change this value first. (Default: 285)")]
-		[Range(100, 500)]
+		[Range(100, 800)]
 		public int flapStrengthBase = 285;
 
 		/// <inheritdoc cref="flapStrengthBase"/>
@@ -86,7 +86,7 @@ namespace OpenFlightVRC
 		bool allowLoco_DEFAULT = false;
 
 		/// <summary>
-		/// Avatars using the avatar detection system may have wingtip, weight, etc. modifiers intended to personalize how they feel in the air. Set this value to true to use these modifiers or false if you want them disregarded for consistency. (Note: avatar size detection is not an Avatar Modifier; size-related calculations will always apply even if this setting is set to false.)
+		/// Avatars using the avatar detection system may have wingtip, weight, etc. modifiers intended to personalize how they feel in the air. Set this value to true to use these modifiers or false if you want them disregarded for consistency. (Note: avatar size detection is not an Avatar Modifier; size-related calculations will always apply even if this setting is set to false. see <see cref="useAvatarScale"/>)
 		/// </summary>
 		[Tooltip(
 			"Avatars using the avatar detection system may have wingtip, weight, etc. modifiers intended to personalize how they feel in the air. Set this value to true to use these modifiers or false if you want them disregarded for consistency. (Note: avatar size detection is not an Avatar Modifier; size-related calculations will always apply even if this setting is set to false.) (Default: true)"
@@ -95,6 +95,13 @@ namespace OpenFlightVRC
 
 		/// <inheritdoc cref="useAvatarModifiers"/>
 		bool useAvatarModifiers_DEFAULT = true;
+
+		/// <summary>
+		/// Use the avatar's scale to affect the physics of flight. This is useful for making smaller avatars feel lighter and larger avatars feel heavier.
+		/// </summary>
+		[Tooltip("Use the avatar's scale to affect the physics of flight. This is useful for making smaller avatars feel lighter and larger avatars feel heavier. (Default: true)")]
+		public bool useAvatarScale = true;
+		bool useAvatarScale_DEFAULT = true;
 
 		/// <summary>
 		/// Allow gliding?
@@ -846,26 +853,55 @@ namespace OpenFlightVRC
 
 		private float GetFlapStrength()
 		{
+			float modifier = 0;
 			if (useAvatarModifiers)
 			{
 				// default settings
-				return sizeCurve.Evaluate(armspan) * (flapStrengthBase + (wingtipOffset * 8));
+				modifier = (flapStrengthBase + (wingtipOffset * 8));
+			}
+			else
+			{
+				modifier = flapStrengthBase + 10;
 			}
 
-			return sizeCurve.Evaluate(armspan) * flapStrengthBase + 10;
+			float armspanResult = 0;
+			if (useAvatarScale)
+			{
+				armspanResult = armspan;
+			}
+			else
+			{
+				armspanResult = 1;
+			}
+
+			return sizeCurve.Evaluate(armspanResult) * modifier;
 		}
 
 		private float GetFlightGravity()
 		{
+			float armspanResult = 0;
+			if (useAvatarScale)
+			{
+				armspanResult = armspan;
+			}
+			else
+			{
+				armspanResult = 1;
+			}
+
 			float gravity = 0;
 			if (useGravityCurve)
 			{
-				gravity = gravityCurve.Evaluate(armspan) * armspan;
+				gravity = gravityCurve.Evaluate(armspanResult) * armspanResult;
+			}
+			else if (useAvatarScale)
+			{
+				gravity = flightGravityBase * armspanResult;
 			}
 			else
 			{
 				// default settings
-				gravity = sizeCurve.Evaluate(armspan) * flightGravityBase * armspan;
+				gravity = sizeCurve.Evaluate(armspanResult) * flightGravityBase * armspanResult;
 			}
 
 			if (useAvatarModifiers)
@@ -916,6 +952,7 @@ namespace OpenFlightVRC
 			useGravityCurve_DEFAULT = useGravityCurve;
 			bankingTurns_DEFAULT = bankingTurns;
 			glideAngleOffset_DEFAULT = glideAngleOffset;
+			useAvatarScale_DEFAULT = useAvatarScale;
 			Logger.Log("Defaults initialized.", this);
 		}
 
@@ -938,6 +975,7 @@ namespace OpenFlightVRC
 			useGravityCurve = useGravityCurve_DEFAULT;
 			bankingTurns = bankingTurns_DEFAULT;
 			glideAngleOffset = glideAngleOffset_DEFAULT;
+			useAvatarScale = useAvatarScale_DEFAULT;
 			Logger.Log("Defaults restored.", this);
 		}
 	}
