@@ -894,13 +894,8 @@ namespace OpenFlightVRC
 			{
 				gravity = gravityCurve.Evaluate(armspanResult) * armspanResult;
 			}
-			else if (useAvatarScale)
-			{
-				gravity = flightGravityBase * armspanResult;
-			}
 			else
 			{
-				// default settings
 				gravity = sizeCurve.Evaluate(armspanResult) * flightGravityBase * armspanResult;
 			}
 
