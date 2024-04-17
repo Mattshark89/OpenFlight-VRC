@@ -113,21 +113,24 @@ namespace OpenFlightVRC
 		public float WingtipOffset = 0;
 #pragma warning disable CS0108 // Member hides inherited member; missing new keyword
 		/// <summary>
-		/// 	The name of the currently worn avatar. Defaults to `Unknown` if not in the list, or `Loading Avatar` if you are in the loading avatar / mecanim default rig
+		/// 	The name of the currently worn avatar. Defaults to `N/A` if not in the list, or `Loading Avatar` if you are in the loading avatar / mecanim default rig
 		/// </summary>
 		[ReadOnlyInspector]
 		public string name = ""; //this is the name of the avatar base
 #pragma warning restore CS0108 // Member hides inherited member; missing new keyword
 		/// <summary>
-		/// 	The creator of the currently worn avatar. Defaults to `Unknown` if not in the list, or `Loading Avatar` if you are in the loading avatar / mecanim default rig
+		/// 	The creator of the currently worn avatar. Defaults to `N/A` if not in the list, or `Loading Avatar` if you are in the loading avatar / mecanim default rig
 		/// </summary>
 		[ReadOnlyInspector]
 		public string creator = ""; //this is the person who created the avatar base
 		/// <summary>
-		/// 	The introducer of the currently worn avatar. Defaults to `Unknown` if not in the list, or `Loading Avatar` if you are in the loading avatar / mecanim default rig
+		/// 	The introducer of the currently worn avatar. Defaults to `N/A` if not in the list, or `Loading Avatar` if you are in the loading avatar / mecanim default rig
 		/// </summary>
 		[ReadOnlyInspector]
 		public string introducer = ""; //this is the person who introduced the avatar to the JSON list itself
+		/// <summary>
+		/// The hash of the default mecanim humanoid rig, which is also what VRChat uses as the loading avatar
+		/// </summary>
 		const string LOADINGAVATARHASH = "1439458325v2";
 		#endregion
 
