@@ -33,7 +33,7 @@ jobs:
       - name: Check if Date is latest
         #if: steps.changed_files.outputs.any_changed == 'true'
         run: |
-          date +%Z >> $timezone
+          timezone=$(date +%Z)
           echo "Timezone for this runner is $timezone"
           printf -v date '%(%Y-%m-%d)T\n' -1
           if [ $date != ${{ steps.json_date.outputs.value }} ]; then
