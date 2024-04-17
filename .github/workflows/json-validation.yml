@@ -31,7 +31,7 @@ jobs:
           cmd: "jq '.[\"JSON Date\"]' $DATA_JSON_PATH"
 
       - name: Check if Date is latest
-        #if: steps.changed_files.outputs.any_changed == 'true'
+        if: steps.changed_files.outputs.any_changed == 'true'
         run: |
           timezone=$(date +%Z)
           echo "Timezone for this runner is $timezone"

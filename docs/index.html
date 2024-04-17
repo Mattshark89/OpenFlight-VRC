@@ -38,9 +38,9 @@
           methods: {
             formatDate() {
               date = new Date();
-              day = date.getDate();
-              month = date.getMonth() + 1;
-              year = date.getFullYear();
+              day = date.getUTCDate();
+              month = date.getUTCMonth() + 1;
+              year = date.getUTCFullYear();
 
               return `${year}-${month}-${day}`;
             }
