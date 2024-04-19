@@ -9,6 +9,8 @@ Note that this is a World/Udon project. This system cannot be installed to an av
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/todo_count)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/current_release_downloads)
 ![](https://byob.yarr.is/Mattshark89/OpenFlight-VRC/lifetime_release_downloads)
+<img src="https://img.shields.io/liberapay/receives/OpenFlight.svg?logo=liberapay">
+<img src="https://img.shields.io/liberapay/patrons/OpenFlight.svg?logo=liberapay">
 
 ### Docs Page
 Check here for the latest docs: https://mattshark89.github.io/OpenFlight-VRC/docs/#/
