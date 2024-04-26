@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.13.0",
-  "JSON Date": "2024-04-20",
+  "JSON Version": "2.14.0",
+  "JSON Date": "2024-04-26",
   "Contributers": [
     "-Jinxy-",
     "Daernaro",
@@ -23,7 +23,8 @@
     "mackandelius",
     "Eglantine",
     "~EmberVR~",
-    "Nanireid101"
+    "Nanireid101",
+    "Mіcca"
   ],
   "Bases": {
     "Kitavali": {
@@ -1118,6 +1119,34 @@
         "Hash": ["1497242661v2"],
         "Weight": 1,
         "WingtipOffset": 7.59
+      }
+    },
+    "Ashera Dragoncat": {
+      "1.18": {
+        "Name": "Ashera Dragoncat - Winged",
+        "Creator": "Micca / Takomalynx",
+        "Introducer": "Micca",
+        "Hash": ["-951652582v2"],
+        "Weight": 1,
+        "WingtipOffset": 9.35
+      },
+      "1.19": {
+        "Name": "Ashera Dragoncat - Winged",
+        "Creator": "Micca / Takomalynx",
+        "Introducer": "Micca",
+        "Hash": ["1057437118v2"],
+        "Weight": 1,
+        "WingtipOffset": 8.6
+      }
+    },
+    "Nox Wyvern": {
+      "Original": {
+        "Name": "Nox Wyvern",
+        "Creator": "Sierrlen / Fluff Rali",
+        "Introducer": "Micca",
+        "Hash": ["-1165575725v2"],
+        "Weight": 1,
+        "WingtipOffset": 7.99
       }
     }
   }
