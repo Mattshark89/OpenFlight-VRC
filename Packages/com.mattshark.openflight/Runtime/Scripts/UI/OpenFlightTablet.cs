@@ -42,6 +42,11 @@ namespace OpenFlightVRC.UI
 		public TextMeshProUGUI VersionInfo;
 
 		public Button[] tabs;
+		/// <summary>
+		/// The tabs that should be initialized on start. This ensures Start() is called on all the tabs
+		/// </summary>
+		[Tooltip("The tabs that should be initialized on start. This ensures Start() is called on all the tabs")]
+		public GameObject[] tabsToInitialize;
 		private int _activeTab = 0;
 
 		//Overwritten at start
@@ -49,7 +54,8 @@ namespace OpenFlightVRC.UI
 		private Color _tabActiveColor = new Color(0.5f, 0.5f, 0.5f, 1f);
 
 		//the reason this is needed is stupid, but essentially if there isnt a delay between start going into update, the tablet will immediately hide itself breaking all the children UI scripts
-		private int _fadeTimeout = 2;
+		private int _fadeTimeout = fadeTimeoutStart;
+		internal const int fadeTimeoutStart = 2;
 
 		void Start()
 		{
@@ -68,6 +74,14 @@ namespace OpenFlightVRC.UI
 
 			//subscribe to the json list load event
 			AvatarDetection.AddCallback(AvatarDetectionCallback.LoadJSON, this, nameof(UpdateVersionInfo));
+
+			//enable the tabs that need to be initialized
+			foreach (GameObject tab in tabsToInitialize)
+			{
+				tab.SetActive(true);
+			}
+
+			SendCustomEventDelayedFrames(nameof(FixInitialization), _fadeTimeout);
 		}
 
 		void Update()
@@ -95,6 +109,15 @@ namespace OpenFlightVRC.UI
 			if (_fadeTimeout > 0)
 			{
 				_fadeTimeout--;
+			}
+		}
+
+		public void FixInitialization()
+		{
+			//disable the tabs that were initialized
+			foreach (GameObject tab in tabsToInitialize)
+			{
+				tab.SetActive(false);
 			}
 		}
 
