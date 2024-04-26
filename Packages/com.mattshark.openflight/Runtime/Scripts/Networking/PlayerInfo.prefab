@@ -58,6 +58,7 @@ MonoBehaviour:
       Entry: 6
       Data: 
   _udonSharpBackingUdonBehaviour: {fileID: -8444781059147605421}
+  _logProxy: {fileID: 0}
   effectsHandler: {fileID: 1249273843356016464}
 --- !u!114 &-8444781059147605421
 MonoBehaviour:
@@ -712,6 +713,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1200833383092323075}
+  _logProxy: {fileID: 0}
   playerInfoStore: {fileID: 4548817697373630809}
   LeftWingTrail: {fileID: 4831116287091766749}
   RightWingTrail: {fileID: 108134917997573697}
@@ -11321,7 +11323,6 @@ GameObject:
   - component: {fileID: 3778612144701789631}
   - component: {fileID: 5022996504097398289}
   - component: {fileID: 2889740770237252602}
-  - component: {fileID: 7569406923157296603}
   m_Layer: 0
   m_Name: Landing Dust
   m_TagString: Untagged
@@ -16073,16 +16074,3 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!114 &7569406923157296603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8799867404487235071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1783056023, guid: 661092b4961be7145bfbe56e1e62337b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AllowCollisionOwnershipTransfer: 0
