@@ -137,6 +137,6 @@ Lastly, at the top of the JSON, there is a list of VRChat usernames for contribu
 }
 ```
 
-After doing this, save the file using `Ctrl+S`, and then use the key combination `Ctrl+Shift+G` to access source control. Once there, fill in the message field with `[Avatar Addition] Avatar Name`, replacing `Avatar Name` with the name(s) of the avatar(s) you are adding.
+After doing this, save the file using `Ctrl+S`, and then use the key combination `Ctrl+Shift+G` to access source control. Once there, fill in the message field with `[Avatar Addition] Avatar Name`, replacing `Avatar Name` with the name(s) of the avatar(s) you are adding. Once completed, select Commit & Push, and push as a fork repository.
 
 !> If you are adding multiple avatars, make sure you list all of their names in the message.
