@@ -498,6 +498,7 @@ namespace OpenFlightVRC
 				}
 			}
 
+            // This should not be an else. It can trigger the same tick as "if (!isFlapping)"
 			if (isFlapping)
 			{
 				FlapTick();
@@ -553,11 +554,10 @@ namespace OpenFlightVRC
 				// Verbose explanation: (Ensure you're not flapping) && (check for handsOut frame one, ignore handsOut afterwards) && Self Explanatory && Ditto
 				if ((!isFlapping) && (isGliding || handsOut) && handsOpposite && canGlide)
 				{
-					// Forgot what this bugfixed
-					if (LocalPlayer.GetVelocity().y > -1f && (!isGliding))
-					{
-						glideDelay = 3;
-					}
+					// Currently, glideDelay is being disabled to alleviate a VRChat issue where avatars may spazz out while moving at high velocities.
+                    // However, this may reintroduce an old bug so we're keeping this here.
+                    // If gliding is suddenly causing you to bank up and down rapidly, uncomment this:
+					// if (LocalPlayer.GetVelocity().y > -1f && (!isGliding)) {glideDelay = 3;}
 
 					isGliding = true;
 					newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
