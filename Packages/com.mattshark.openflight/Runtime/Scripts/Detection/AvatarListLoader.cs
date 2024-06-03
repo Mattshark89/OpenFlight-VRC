@@ -51,7 +51,12 @@ namespace OpenFlightVRC
 				RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
 				return;
 			}
-			Logger.Log("Loading Avatar List URL...", this);
+
+			//initially trigger with the in-world list
+			Output = OfflineJSON.text;
+			Logger.Log("Using in-world JSON list until remote is available....", this);
+			RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
+
 			VRCStringDownloader.LoadUrl(URL, (VRC.Udon.Common.Interfaces.IUdonEventReceiver)this);
 		}
 
