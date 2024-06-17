@@ -22,7 +22,6 @@ namespace OpenFlightVRC
 		[PostProcessScene]
 		public static void OnPostProcessScene()
 		{
-
 			//get the path of this script asset
 			string guid = AssetDatabase.FindAssets(string.Format("t:Script {0}", typeof(OpenFlight).Name))[0];
 			string path = AssetDatabase.GUIDToAssetPath(guid);
