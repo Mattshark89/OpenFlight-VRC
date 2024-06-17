@@ -409,15 +409,13 @@ namespace OpenFlightVRC
 				}
 			}
 
-			//TECHNICALLY we should be checking if the key already exists,
-			//but we are assuming the JSON is fresh since we just reloaded it from a new string
-			_json.Add("HashTable", hashTable);
+			_json.SetValue("HashTable", hashTable);
 			sw.Stop();
 			int ms = sw.Elapsed.Milliseconds;
 			//calculate the time it took to generate each individual hash
 			int hashCount = hashTable.Count;
 			double averageTime = (double)ms / (double)hashCount;
-			Logger.Log("Hash Lookup Table Generated! Took: " + ms + "ms, Average Time Per Hash: " + averageTime + "ms", this);
+			Logger.Log(string.Format("Hash Lookup Table Generated! Took: {0}ms, Average Time Per Hash: {1}ms", ms, averageTime), this);
 
 			RunCallback(AvatarDetectionCallback.LoadJSON);
 			RunDetection();

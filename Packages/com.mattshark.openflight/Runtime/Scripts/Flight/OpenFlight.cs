@@ -9,10 +9,11 @@ using VRC.SDKBase;
 
 namespace OpenFlightVRC
 {
-	//This chunk of code allows the OpenFlight version number to be set automatically from the package.json file
-	//its done using this method for dumb unity reasons but it works so whatever
+    using UnityEditor;
+    //This chunk of code allows the OpenFlight version number to be set automatically from the package.json file
+    //its done using this method for dumb unity reasons but it works so whatever
 #if !COMPILER_UDONSHARP && UNITY_EDITOR
-	using UnityEditor.Callbacks;
+    using UnityEditor.Callbacks;
 
     using VRC.SDKBase.Editor.BuildPipeline;
 
@@ -21,15 +22,20 @@ namespace OpenFlightVRC
 		[PostProcessScene]
 		public static void OnPostProcessScene()
 		{
-			//get the openflight version from the package.json file
-			string packageJson = System.IO.File.ReadAllText("Packages/com.mattshark.openflight/package.json");
-			string version = packageJson.Split(new string[] { "\"version\": \"" }, System.StringSplitOptions.None)[1].Split('"')[0];
+
+			//get the path of this script asset
+			string guid = AssetDatabase.FindAssets(string.Format("t:Script {0}", typeof(OpenFlight).Name))[0];
+			string path = AssetDatabase.GUIDToAssetPath(guid);
+
+			//get the openflight package info
+			UnityEditor.PackageManager.PackageInfo packageInfo = UnityEditor.PackageManager.PackageInfo.FindForAssetPath(path);
+
 			//find all the OpenFlight scripts in the scene
 			OpenFlight[] openFlightScripts = Object.FindObjectsOfType<OpenFlight>();
 			foreach (OpenFlight openFlightScript in openFlightScripts)
 			{
 				//set their version number
-				openFlightScript.OpenFlightVersion = version;
+				openFlightScript.OpenFlightVersion = packageInfo.version;
 			}
 		}
 	}
