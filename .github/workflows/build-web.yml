@@ -67,7 +67,12 @@ jobs:
         uses: canastro/copy-action@0.0.2
         with:
           source: "./Packages/com.mattshark.openflight/Runtime/data.json"
-          target: "./${{env.listPublishDirectory}}/data.json"
+          target: "./${{env.listPublishDirectory}}/data-original.json"
+
+      # Makes the file smaller for everyone to download
+      - name: Minify and copy data.json
+        run: jq -r tostring ./${{env.listPublishDirectory}}/data-original.json > ./${{env.listPublishDirectory}}/data.json
+
 
       #Generate the doxygen documentation
       - name: Generate C# Documentation
