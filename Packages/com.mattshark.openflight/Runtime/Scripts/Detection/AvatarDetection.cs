@@ -161,7 +161,7 @@ namespace OpenFlightVRC
 			{
 				return;
 			}
-			Logger.Log("Avatar Scale Changed, reevaluating d_spinetochest...", this);
+			Logger.Log(string.Format("Avatar Scale Changed, reevaluating {0}...", nameof(d_spinetochest)), this);
 			d_spinetochest = CalculateAvatarScale();
 		}
 
