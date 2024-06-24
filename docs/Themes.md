@@ -5,26 +5,26 @@ Using work derived from the [USharpVideo Project](https://github.com/MerlinVR/US
 <!-- tabs:start -->
 #### **Avali**
 This theme represents the original color scheme of the tablet, and is the default theme upon install.
-![Avali](Images/UI%20Styler/Demo/Avali.png)
+![Avali](Assets/UI%20Styler/Demo/Avali.png)
 #### **Dark**
 This theme is a general dark theme, with a transparent background.
-![Dark](Images/UI%20Styler/Demo/Dark.png)
+![Dark](Assets/UI%20Styler/Demo/Dark.png)
 #### **Midnight**
 This theme is a darker dark theme, with a non-transparent background.
-![Midnight](Images/UI%20Styler/Demo/Midnight.png)
+![Midnight](Assets/UI%20Styler/Demo/Midnight.png)
 #### **Light**
 This theme is a general light theme, if you like that sort of thing.
-![Light](Images/UI%20Styler/Demo/Light.png)
+![Light](Assets/UI%20Styler/Demo/Light.png)
 #### **Discord**
 This theme is based on the Discord desktop app, using color codes provided from [eggradients.com](https://www.eggradients.com/tool/discord-color-codes).
-![Discord](Images/UI%20Styler/Demo/Discord.png)
+![Discord](Assets/UI%20Styler/Demo/Discord.png)
 #### **VRC**
 This theme is based on the client sim tool for VRC.
-![VRC](Images/UI%20Styler/Demo/VRC.png)
+![VRC](Assets/UI%20Styler/Demo/VRC.png)
 <!-- tabs:end -->
 
 <!-- div:right-panel -->
-[Loop](Images/UI%20Styler/Demo/Loop.mp4 ':include :type=video width=100% height=auto autoplay muted loop controls')
+[Loop](Assets/UI%20Styler/Demo/Loop.mp4 ':include :type=video width=100% height=auto autoplay muted loop controls')
 
 <!-- panels:end -->
 
@@ -34,7 +34,7 @@ This theme is based on the client sim tool for VRC.
 Selecting a theme for the tablet is relatively simple. First, find the tablet root in the scene, labelled `OpenFlight Tablet` (You can find this under the `OpenFlight` prefab). In the inspector for this object, you will find the `Styler` component, with a dropdown to select a style from your project. Any custom styles you make will also be shown here.
 
 <!-- div:right-panel -->
-[Changing Styles](Images/UI%20Styler/Demo/ChangingStyles.mp4 ':include :type=video width=100% height=auto autoplay muted loop controls')
+[Changing Styles](Assets/UI%20Styler/Demo/ChangingStyles.mp4 ':include :type=video width=100% height=auto autoplay muted loop controls')
 <!-- panels:end -->
 
 ## Creating custom themes
@@ -44,5 +44,5 @@ Creating a custom theme is very straightforward aswell. We recommend opening the
 
 !> **Important Note** Make sure you create this asset in your assets folder! Anything made in the packages folder will be deleted upon updating the package!
 <!-- div:right-panel -->
-[New Styles](Images/UI%20Styler/Demo/NewStyle.mp4 ':include :type=video width=100% height=auto autoplay muted loop controls')
+[New Styles](Assets/UI%20Styler/Demo/NewStyle.mp4 ':include :type=video width=100% height=auto autoplay muted loop controls')
 <!-- panels:end -->
