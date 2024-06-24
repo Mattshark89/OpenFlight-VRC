@@ -20960,7 +20960,7 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 6124323176298134151}
   _logProxy: {fileID: 0}
   target: {fileID: 6124323176094828665}
-  targetVariable: flightMode
+  targetVariable: flightModeString
   decimalPlaces: 2
   prefix: 'Current Mode: '
   suffix: 
@@ -21035,7 +21035,7 @@ MonoBehaviour:
   SynchronizePosition: 0
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
-  _syncMethod: 0
+  _syncMethod: 2
   serializedProgramAsset: {fileID: 11400000, guid: fb9021e0da8cc2b42ac0391c3161ad91,
     type: 2}
   programSource: {fileID: 11400000, guid: 42701fe13384449479df80c6bb57e970, type: 2}
@@ -23264,7 +23264,7 @@ MonoBehaviour:
   SynchronizePosition: 0
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
-  _syncMethod: 0
+  _syncMethod: 2
   serializedProgramAsset: {fileID: 11400000, guid: fb9021e0da8cc2b42ac0391c3161ad91,
     type: 2}
   programSource: {fileID: 11400000, guid: 42701fe13384449479df80c6bb57e970, type: 2}

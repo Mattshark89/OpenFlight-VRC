@@ -9,15 +9,15 @@ using VRC.SDKBase;
 
 namespace OpenFlightVRC
 {
-    using UnityEditor;
-    //This chunk of code allows the OpenFlight version number to be set automatically from the package.json file
-    //its done using this method for dumb unity reasons but it works so whatever
+	using UnityEditor;
+	//This chunk of code allows the OpenFlight version number to be set automatically from the package.json file
+	//its done using this method for dumb unity reasons but it works so whatever
 #if !COMPILER_UDONSHARP && UNITY_EDITOR
-    using UnityEditor.Callbacks;
+	using UnityEditor.Callbacks;
 
-    using VRC.SDKBase.Editor.BuildPipeline;
+	using VRC.SDKBase.Editor.BuildPipeline;
 
-    public class OpenFlightScenePostProcessor
+	public class OpenFlightScenePostProcessor
 	{
 		[PostProcessScene]
 		public static void OnPostProcessScene()
@@ -41,26 +41,36 @@ namespace OpenFlightVRC
 
 	public class OpenFlightChecker : VRC.SDKBase.Editor.BuildPipeline.IVRCSDKBuildRequestedCallback
 	{
-        public int callbackOrder => 0;
+		public int callbackOrder => 0;
 
-        public bool OnBuildRequested(VRCSDKRequestedBuildType requestedBuildType)
-        {
-            //check to make sure the world scale of openflight is 1
+		public bool OnBuildRequested(VRCSDKRequestedBuildType requestedBuildType)
+		{
+			//check to make sure the world scale of openflight is 1
 			OpenFlight[] openFlightScripts = Object.FindObjectsOfType<OpenFlight>();
 
 			foreach (OpenFlight openFlightScript in openFlightScripts)
 			{
 				if (openFlightScript.transform.lossyScale != Vector3.one)
 				{
+					//show a popup
+					EditorUtility.DisplayDialog("OpenFlight World Scale Error", "The world scale of the OpenFlight object must be 1.0. Please reset the scale of the OpenFlight object to 1.0.", "OK");
+					
 					Debug.LogError("OpenFlight: The world scale of the OpenFlight object must be 1.0. Please reset the scale of the OpenFlight object to 1.0.", openFlightScript);
 					return false;
 				}
 			}
 
 			return true;
-        }
+		}
 	}
 #endif
+
+	public enum FlightMode
+	{
+		Off,
+		Auto,
+		On
+	}
 
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class OpenFlight : LoggableUdonSharpBehaviour
@@ -82,11 +92,41 @@ namespace OpenFlightVRC
 		/// </summary>
 		public AvatarDetection avatarDetection;
 
+		[FieldChangeCallback(nameof(flightMode)), SerializeField]
+		private FlightMode _flightMode = FlightMode.Auto;
 		/// <summary>
-		/// The current flight mode
+		/// The current flight mode.
 		/// </summary>
-		[ReadOnly]
-		public string flightMode = "Auto";
+		public FlightMode flightMode
+		{
+			get => _flightMode;
+			set
+			{
+				_flightMode = value;
+				//update the flight mode string
+				switch (value)
+				{
+					case FlightMode.Off:
+						flightModeString = "Off";
+						break;
+					case FlightMode.Auto:
+						flightModeString = "Auto";
+						break;
+					case FlightMode.On:
+						flightModeString = "On";
+						break;
+					default:
+						flightModeString = "Unknown";
+						break;
+				}
+			}
+		}
+
+		/// <summary>
+		/// The current flight mode as a string.
+		/// </summary>
+		[ReadOnlyInspector]
+		public string flightModeString = "";
 
 		private VRCPlayerApi _localPlayer;
 
@@ -129,6 +169,9 @@ namespace OpenFlightVRC
 
 		public void Start()
 		{
+			//update the flight mode string by setting the flight mode to itself to trigger the property setter
+			flightMode = _flightMode;
+
 			_localPlayer = Networking.LocalPlayer;
 			if (!InVR())
 			{
@@ -138,17 +181,17 @@ namespace OpenFlightVRC
 			//apply flight mode
 			switch (flightMode)
 			{
-				case "On":
+				case FlightMode.On:
 					FlightOn();
 					break;
-				case "Off":
+				case FlightMode.Off:
 					FlightOff();
 					break;
-				case "Auto":
+				case FlightMode.Auto:
 					FlightAuto();
 					break;
 				default:
-					Logger.LogWarning("Invalid flight mode: " + flightMode, this);
+					Logger.LogWarning("Invalid flight mode: " + flightModeString, this);
 					break;
 			}
 
@@ -164,7 +207,7 @@ namespace OpenFlightVRC
 			{
 				SwitchFlight();
 				wingedFlight.SetActive(true);
-				flightMode = "On";
+				flightMode = FlightMode.On;
 				flightAllowed = true;
 				Logger.Log("Flight turned on", this);
 			}
@@ -181,7 +224,7 @@ namespace OpenFlightVRC
 		{
 			SwitchFlight();
 			wingedFlight.SetActive(false);
-			flightMode = "Off";
+			flightMode = FlightMode.Off;
 			flightAllowed = false;
 			Logger.Log("Flight turned off", this);
 		}
@@ -193,7 +236,7 @@ namespace OpenFlightVRC
 		{
 			if (InVR())
 			{
-				flightMode = "Auto";
+				flightMode = FlightMode.Auto;
 				flightAllowed = false;
 
 				//tell the avatar detection script to check if the player can fly again
@@ -215,7 +258,7 @@ namespace OpenFlightVRC
 		/// <seealso cref="FlightAuto"/>
 		public void CanFly()
 		{
-			if (string.Equals(flightMode, "Auto"))
+			if (flightMode == FlightMode.Auto)
 			{
 				SwitchFlight();
 				wingedFlight.SetActive(true);
@@ -228,7 +271,7 @@ namespace OpenFlightVRC
 		/// </summary>
 		public void CannotFly()
 		{
-			if (string.Equals(flightMode, "Auto"))
+			if (flightMode == FlightMode.Auto)
 			{
 				SwitchFlight();
 				wingedFlight.SetActive(false);
