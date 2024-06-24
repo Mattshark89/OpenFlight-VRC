@@ -54,7 +54,7 @@ namespace OpenFlightVRC
 				{
 					//show a popup
 					EditorUtility.DisplayDialog("OpenFlight World Scale Error", "The world scale of the OpenFlight object must be 1.0. Please reset the scale of the OpenFlight object to 1.0.", "OK");
-					
+
 					Debug.LogError("OpenFlight: The world scale of the OpenFlight object must be 1.0. Please reset the scale of the OpenFlight object to 1.0.", openFlightScript);
 					return false;
 				}
@@ -92,6 +92,7 @@ namespace OpenFlightVRC
 		/// </summary>
 		public AvatarDetection avatarDetection;
 
+		/// <inheritdoc cref="flightMode"/>
 		[FieldChangeCallback(nameof(flightMode)), SerializeField]
 		private FlightMode _flightMode = FlightMode.Auto;
 		/// <summary>
@@ -130,11 +131,40 @@ namespace OpenFlightVRC
 
 		private VRCPlayerApi _localPlayer;
 
+		/// <inheritdoc cref="flightAllowed"/>
+		[ReadOnly, ReadOnlyInspector, FieldChangeCallback(nameof(flightAllowed))]
+		private bool _flightAllowed = false;
 		/// <summary>
 		/// If true, the player is allowed to fly
 		/// </summary>
-		[ReadOnly, ReadOnlyInspector]
-		public bool flightAllowed = false;
+		public bool flightAllowed
+		{
+			get => _flightAllowed;
+			set
+			{
+				_flightAllowed = value;
+
+				//update the flight allowed string
+				if (value)
+				{
+					flightAllowedString = "Active";
+				}
+				else
+				{
+					if (InVR())
+					{
+						flightAllowedString = "Inactive";
+					}
+					else
+					{
+						flightAllowedString = "Inactive (Not in VR)";
+					}
+				}
+			}
+		}
+
+		[ReadOnlyInspector]
+		public string flightAllowedString = "";
 
 		/// <summary>
 		/// If true, the system will ignore the VR check and allow flight even if the player is not in VR
@@ -164,6 +194,13 @@ namespace OpenFlightVRC
 			{
 				Logger.LogWarning("VR check is being ignored! This should not be enabled in a production build!", this);
 			}
+
+			//ensure the user is valid
+			if (_localPlayer == null)
+			{
+				_localPlayer = Networking.LocalPlayer;
+			}
+
 			return _localPlayer.IsUserInVR() || ignoreVRCheck;
 		}
 
@@ -171,6 +208,8 @@ namespace OpenFlightVRC
 		{
 			//update the flight mode string by setting the flight mode to itself to trigger the property setter
 			flightMode = _flightMode;
+			//update the flight allowed string aswell
+			flightAllowed = _flightAllowed;
 
 			_localPlayer = Networking.LocalPlayer;
 			if (!InVR())
