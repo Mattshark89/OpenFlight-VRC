@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using VRC.SDKBase;
 using VRC.Udon;
 using TMPro;
+using VRC.SDK3.Data;
 
 namespace OpenFlightVRC
 {
@@ -16,9 +17,9 @@ namespace OpenFlightVRC
 	using UdonSharpEditor;
 #endif
 
-	// This is a custom inspector for the WingFlightPlusGlide script. It currently just adds a reset to defaults button
+    // This is a custom inspector for the WingFlightPlusGlide script. It currently just adds a reset to defaults button
 #if !COMPILER_UDONSHARP && UNITY_EDITOR
-	[CustomEditor(typeof(WingFlightPlusGlide))]
+    [CustomEditor(typeof(WingFlightPlusGlide))]
 	public class WingFlightPlusGlideEditor : Editor
 	{
 		public override void OnInspectorGUI()
@@ -55,17 +56,11 @@ namespace OpenFlightVRC
 		[Range(100, 800)]
 		public int flapStrengthBase = 285;
 
-		/// <inheritdoc cref="flapStrengthBase"/>
-		int flapStrengthBase_DEFAULT = 285;
-
 		/// <summary>
 		/// Base gravity while flying.
 		/// </summary>
 		[Tooltip("Base gravity while flying (Default: 0.4)")]
 		public float flightGravityBase = 0.4f;
-
-		/// <inheritdoc cref="flightGravityBase"/>
-		float flightGravityBase_DEFAULT = 0.4f;
 
 		/// <summary>
 		/// Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident.
@@ -73,17 +68,11 @@ namespace OpenFlightVRC
 		[Tooltip("Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident. (Default: true)")]
 		public bool requireJump = true;
 
-		/// <inheritdoc cref="requireJump"/>
-		bool requireJump_DEFAULT = true;
-
 		/// <summary>
 		/// Allow locomotion (wasd/left joystick) while flying?
 		/// </summary>
 		[Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
 		public bool allowLoco = false;
-
-		/// <inheritdoc cref="allowLoco"/>
-		bool allowLoco_DEFAULT = false;
 
 		/// <summary>
 		/// Avatars using the avatar detection system may have wingtip, weight, etc. modifiers intended to personalize how they feel in the air. Set this value to true to use these modifiers or false if you want them disregarded for consistency. (Note: avatar size detection is not an Avatar Modifier; size-related calculations will always apply even if this setting is set to false. see <see cref="useAvatarScale"/>)
@@ -93,24 +82,17 @@ namespace OpenFlightVRC
 		)]
 		public bool useAvatarModifiers = true;
 
-		/// <inheritdoc cref="useAvatarModifiers"/>
-		bool useAvatarModifiers_DEFAULT = true;
-
 		/// <summary>
 		/// Use the avatar's scale to affect the physics of flight. This is useful for making smaller avatars feel lighter and larger avatars feel heavier.
 		/// </summary>
 		[Tooltip("Use the avatar's scale to affect the physics of flight. This is useful for making smaller avatars feel lighter and larger avatars feel heavier. (Default: true)")]
 		public bool useAvatarScale = true;
-		bool useAvatarScale_DEFAULT = true;
 
 		/// <summary>
 		/// Allow gliding?
 		/// </summary>
 		[Tooltip("Allow gliding. (Default: true)")]
 		public bool canGlide = true;
-
-		/// <inheritdoc cref="canGlide"/>
-		bool canGlide_DEFAULT = true;
 
 		/// <summary>
 		/// Avatars can glide directly from a fall without having to flap first. This behavior is more intuitive for gliding off cliffs, but may cause players to trigger gliding on accident more often when they just want to fall.
@@ -120,9 +102,6 @@ namespace OpenFlightVRC
 		)]
 		public bool fallToGlide = true;
 
-		/// <inheritdoc cref="fallToGlide"/>
-		bool fallToGlide_DEFAULT = true;
-
 		#region Advanced Settings
 		/// <summary>
 		/// Angle to offset the gliding direction by from your hands.
@@ -130,9 +109,6 @@ namespace OpenFlightVRC
 		[Header("Advanced Settings (Only for specialized use!)")]
 		[Tooltip("Angle to offset the gliding direction by from your hands. (Default: 0)")]
 		public float glideAngleOffset = 0f;
-
-		/// <inheritdoc cref="glideAngleOffset"/>
-		float glideAngleOffset_DEFAULT = 0f;
 
 		/// <summary>
 		/// How much Flap Strength and Flight Gravity are affected by an avatar's armspan. Default values will make smaller avis feel lighter and larger avis heavier.
@@ -148,9 +124,6 @@ namespace OpenFlightVRC
 		[Tooltip("Modifier for horizontal flap strength. Makes flapping forwards easier. (Default: 1.5)")]
 		public float horizontalStrengthMod = 1.5f;
 
-		/// <inheritdoc cref="horizontalStrengthMod"/>
-		float horizontalStrengthMod_DEFAULT = 1.5f;
-
 		/// <summary>
 		/// How tight you want your turns while gliding. May be dynamically decreased by Avatar Modifier: weight.
 		/// </summary>
@@ -161,9 +134,6 @@ namespace OpenFlightVRC
 		[Range(1f, 5f)]
 		public float glideControl = 2.5f; // Do not reduce this below 1; it will break under some weight values if you do
 
-		/// <inheritdoc cref="glideControl"/>
-		float glideControl_DEFAULT = 2.5f;
-
 		/// <summary>
 		/// Slows gliding down over time.
 		/// </summary>
@@ -171,17 +141,11 @@ namespace OpenFlightVRC
 		[Range(0f, 0.2f)]
 		public float airFriction = 0.02f;
 
-		/// <inheritdoc cref="airFriction"/>
-		float airFriction_DEFAULT = 0.02f;
-
 		/// <summary>
 		/// If enabled, flight gravity will use Gravity Curve's curve instead of Size Curve's curve multiplied by Flight Gravity Base.
 		/// </summary>
 		[Tooltip("If enabled, flight gravity will use Gravity Curve's curve instead of Size Curve's curve multiplied by Flight Gravity Base. (Default: false)")]
 		public bool useGravityCurve = false;
-
-		/// <inheritdoc cref="useGravityCurve"/>
-		bool useGravityCurve_DEFAULT = false;
 
 		/// <summary>
 		/// Similar to Size Curve, but instead of modifying Flap Strength, it only affects Gravity. This value is ignored (Size Curve will be used instead) unless Use Gravity Curve is enabled.
@@ -205,9 +169,6 @@ namespace OpenFlightVRC
 		/// </remarks>
 		[Tooltip("Banking to the left or right will force the player to rotate. (Default: true)")]
 		public bool bankingTurns = true;
-
-		/// <inheritdoc cref="bankingTurns"/>
-		bool bankingTurns_DEFAULT = true;
 
 		/// <summary>
 		/// If enabled, gravity and movement will be saved each time the user takes off, instead of just at the start of the world.
@@ -317,7 +278,6 @@ namespace OpenFlightVRC
 
 		[Tooltip("Default avatar wingtipOffset. (Default: 0)")]
 		public float wingtipOffset = 0;
-		float wingtipOffset_DEFAULT = 0;
 
 		[Tooltip("Default avatar weight. (Default: 1)")]
 		[Range(0f, 2f)]
@@ -927,26 +887,32 @@ Velocity: {8}",
 		}
 
 		/// <summary>
+		/// Stores the default values of all settings fields in the script.
+		/// </summary>
+		private DataDictionary defaultsStore;
+
+		/// <summary>
 		/// Initializes all default values. This should not be called by end users in most cases.
 		/// </summary>
 		public void InitializeDefaults()
 		{
-			flapStrengthBase_DEFAULT = flapStrengthBase;
-			flightGravityBase_DEFAULT = flightGravityBase;
-			requireJump_DEFAULT = requireJump;
-			allowLoco_DEFAULT = allowLoco;
-			useAvatarModifiers_DEFAULT = useAvatarModifiers;
-			wingtipOffset_DEFAULT = wingtipOffset;
-			canGlide_DEFAULT = canGlide;
-			fallToGlide_DEFAULT = fallToGlide;
-			horizontalStrengthMod_DEFAULT = horizontalStrengthMod;
-			glideControl_DEFAULT = glideControl;
-			airFriction_DEFAULT = airFriction;
-			useGravityCurve_DEFAULT = useGravityCurve;
-			bankingTurns_DEFAULT = bankingTurns;
-			glideAngleOffset_DEFAULT = glideAngleOffset;
-			useAvatarScale_DEFAULT = useAvatarScale;
-			Logger.Log("Defaults initialized.", this);
+			defaultsStore = new DataDictionary();
+			defaultsStore.SetValue((DataToken)nameof(flapStrengthBase), flapStrengthBase);
+			defaultsStore.SetValue((DataToken)nameof(flightGravityBase), flightGravityBase);
+			defaultsStore.SetValue((DataToken)nameof(requireJump), requireJump);
+			defaultsStore.SetValue((DataToken)nameof(allowLoco), allowLoco);
+			defaultsStore.SetValue((DataToken)nameof(useAvatarModifiers), useAvatarModifiers);
+			defaultsStore.SetValue((DataToken)nameof(wingtipOffset), wingtipOffset);
+			defaultsStore.SetValue((DataToken)nameof(canGlide), canGlide);
+			defaultsStore.SetValue((DataToken)nameof(fallToGlide), fallToGlide);
+			defaultsStore.SetValue((DataToken)nameof(horizontalStrengthMod), horizontalStrengthMod);
+			defaultsStore.SetValue((DataToken)nameof(glideControl), glideControl);
+			defaultsStore.SetValue((DataToken)nameof(airFriction), airFriction);
+			defaultsStore.SetValue((DataToken)nameof(useGravityCurve), useGravityCurve);
+			defaultsStore.SetValue((DataToken)nameof(bankingTurns), bankingTurns);
+			defaultsStore.SetValue((DataToken)nameof(glideAngleOffset), glideAngleOffset);
+			defaultsStore.SetValue((DataToken)nameof(useAvatarScale), useAvatarScale);
+			Logger.Log(string.Format("Defaults initialized ({0} values).", defaultsStore.Count), this);
 		}
 
 		/// <summary>
@@ -954,22 +920,40 @@ Velocity: {8}",
 		/// </summary>
 		public void RestoreDefaults()
 		{
-			flapStrengthBase = flapStrengthBase_DEFAULT;
-			flightGravityBase = flightGravityBase_DEFAULT;
-			requireJump = requireJump_DEFAULT;
-			allowLoco = allowLoco_DEFAULT;
-			useAvatarModifiers = useAvatarModifiers_DEFAULT;
-			wingtipOffset = wingtipOffset_DEFAULT;
-			canGlide = canGlide_DEFAULT;
-			fallToGlide = fallToGlide_DEFAULT;
-			horizontalStrengthMod = horizontalStrengthMod_DEFAULT;
-			glideControl = glideControl_DEFAULT;
-			airFriction = airFriction_DEFAULT;
-			useGravityCurve = useGravityCurve_DEFAULT;
-			bankingTurns = bankingTurns_DEFAULT;
-			glideAngleOffset = glideAngleOffset_DEFAULT;
-			useAvatarScale = useAvatarScale_DEFAULT;
-			Logger.Log("Defaults restored.", this);
+			flapStrengthBase = GetDefaultValue(nameof(flapStrengthBase)).Int;
+			flightGravityBase = GetDefaultValue(nameof(flightGravityBase)).Float;
+			requireJump = GetDefaultValue(nameof(requireJump)).Boolean;
+			allowLoco = GetDefaultValue(nameof(allowLoco)).Boolean;
+			useAvatarModifiers = GetDefaultValue(nameof(useAvatarModifiers)).Boolean;
+			wingtipOffset = GetDefaultValue(nameof(wingtipOffset)).Float;
+			canGlide = GetDefaultValue(nameof(canGlide)).Boolean;
+			fallToGlide = GetDefaultValue(nameof(fallToGlide)).Boolean;
+			horizontalStrengthMod = GetDefaultValue(nameof(horizontalStrengthMod)).Float;
+			glideControl = GetDefaultValue(nameof(glideControl)).Float;
+			airFriction = GetDefaultValue(nameof(airFriction)).Float;
+			useGravityCurve = GetDefaultValue(nameof(useGravityCurve)).Boolean;
+			bankingTurns = GetDefaultValue(nameof(bankingTurns)).Boolean;
+			glideAngleOffset = GetDefaultValue(nameof(glideAngleOffset)).Float;
+			useAvatarScale = GetDefaultValue(nameof(useAvatarScale)).Boolean;
+			Logger.Log(string.Format("Defaults restored ({0} values).", defaultsStore.Count), this);
+		}
+
+		/// <summary>
+		/// Gets the default value for a given key. If the key is not found, a warning is logged and a default value of 0 is returned.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		private DataToken GetDefaultValue(string key)
+		{
+			if(defaultsStore.TryGetValue(key, out DataToken value))
+			{
+				return value;
+			}
+			else
+			{
+				Logger.LogError("Key not found in defaults store: " + key, this);
+				return new DataToken(0);
+			}
 		}
 	}
 }
