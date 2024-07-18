@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.20.2",
-  "JSON Date": "2024-07-08",
+  "JSON Version": "2.20.3",
+  "JSON Date": "2024-07-18",
   "Contributers": [
     "-Jinxy-",
     "Daernaro",
@@ -28,7 +28,8 @@
     "FunnelVision",
     "PhoenixFallen",
     "-Dark-Spirit-",
-    "Mike Da Bird"
+    "Mike Da Bird",
+    "dasnull"
   ],
   "Bases": {
     "Kitavali": {
@@ -1456,6 +1457,18 @@
         ],
         "Weight": 1,
         "WingtipOffset": 1.34
+      }
+    },
+    "KAvali": {
+      "Original": {
+        "Name": "KAvali",
+        "Creator": "Questing Crusader",
+        "Introducer": "dasnull",
+        "Hash": [
+          "266521799v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 4.75
       }
     }
   }
