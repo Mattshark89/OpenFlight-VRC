@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.21.0",
-  "JSON Date": "2024-07-28",
+  "JSON Version": "2.21.1",
+  "JSON Date": "2024-07-29",
   "Contributers": [
     "-Jinxy-",
     "Daernaro",
@@ -1413,12 +1413,22 @@
       }
     },
     "Spiri'vali": {
-      "Original": {
-        "Name": "Spiri'vali",
+      "Beta": {
+        "Name": "Spiri'vali Beta",
         "Creator": "Hiyu",
         "Introducer": "FunnelVision",
         "Hash": [
           "136290747v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 3.81
+      },
+      "Original": {
+        "Name": "Spiri'vali",
+        "Creator": "Hiyu",
+        "Introducer": "Happyrobot33",
+        "Hash": [
+          "55850455v2"
         ],
         "Weight": 1,
         "WingtipOffset": 3.81
@@ -1466,7 +1476,8 @@
         "Creator": "Questing Crusader",
         "Introducer": "dasnull",
         "Hash": [
-          "266521799v2"
+          "266521799v2",
+          "927855988v2"
         ],
         "Weight": 1,
         "WingtipOffset": 4.75
