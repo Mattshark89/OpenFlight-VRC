@@ -73,6 +73,29 @@ jobs:
       - name: Minify and copy data.json
         run: jq -r tostring ./${{env.listPublishDirectory}}/data-original.json > ./${{env.listPublishDirectory}}/data.json
 
+      #Copy docs into the website
+      - name: Copy Docs
+        uses: canastro/copy-action@master
+        with:
+          source: "./docs/."
+          target: "./${{env.listPublishDirectory}}/docs/"
+          flags: "-rp" #recursive and preserve timestamps
+
+      #--C# DOCUMENTATION--
+      # Checkout latest release version instead of the latest commit
+      - name: get latest release with tag
+        id: latestrelease
+        run: |
+          echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/weide-zhou/ticket13/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+
+      - name: confirm release tag
+        run: |
+          echo ${{ steps.latestrelease.outputs.releasetag }}
+
+      - name: tagcheckout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.latestrelease.outputs.releasetag }}
 
       #Generate the doxygen documentation
       - name: Generate C# Documentation
@@ -81,14 +104,7 @@ jobs:
           working-directory: "./docs/Doxygen/"
           doxyfile-path: "./DoxygenConfig"
           enable-latex: true
-
-      #Copy docs into the website
-      - name: Copy Docs
-        uses: canastro/copy-action@master
-        with:
-          source: "./docs/."
-          target: "./${{env.listPublishDirectory}}/docs/"
-          flags: "-rp" #recursive and preserve timestamps
+      #--C# DOCUMENTATION--
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
