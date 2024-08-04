@@ -17,9 +17,9 @@ namespace OpenFlightVRC
 	using UdonSharpEditor;
 #endif
 
-    // This is a custom inspector for the WingFlightPlusGlide script. It currently just adds a reset to defaults button
+	// This is a custom inspector for the WingFlightPlusGlide script. It currently just adds a reset to defaults button
 #if !COMPILER_UDONSHARP && UNITY_EDITOR
-    [CustomEditor(typeof(WingFlightPlusGlide))]
+	[CustomEditor(typeof(WingFlightPlusGlide))]
 	public class WingFlightPlusGlideEditor : Editor
 	{
 		public override void OnInspectorGUI()
@@ -101,6 +101,12 @@ namespace OpenFlightVRC
 			"Avatars can glide directly from a fall without having to flap first. This behavior is more intuitive for gliding off cliffs, but may cause players to trigger gliding on accident more often when they just want to fall. (Default: false)"
 		)]
 		public bool fallToGlide = true;
+		/// <summary>
+		/// The number of ticks the player must be falling before automatically gliding. This is only used if <see cref="fallToGlide"/> is true.
+		/// </summary>
+		[Tooltip("The number of ticks the player must be falling before automatically gliding. This is only used if Fall to Glide is enabled. (Default: 20)")]
+		[Range(1, 100)]
+		public int fallToGlideActivationDelay = 20;
 
 		#region Advanced Settings
 		/// <summary>
@@ -458,7 +464,7 @@ namespace OpenFlightVRC
 			}
 
 			// See fallToGlide tooltip
-			if (fallToGlide && fallingTick >= 20 && handsOut && handsOpposite && canGlide)
+			if (fallToGlide && fallingTick >= fallToGlideActivationDelay && handsOut && handsOpposite && canGlide)
 			{
 				TakeOff();
 			}
@@ -682,9 +688,9 @@ Velocity: {8}",
 					oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
 				}
 
-                LocalPlayer.SetWalkSpeed(ImmobileSpeed);
-                LocalPlayer.SetRunSpeed(ImmobileSpeed);
-                LocalPlayer.SetStrafeSpeed(ImmobileSpeed);
+				LocalPlayer.SetWalkSpeed(ImmobileSpeed);
+				LocalPlayer.SetRunSpeed(ImmobileSpeed);
+				LocalPlayer.SetStrafeSpeed(ImmobileSpeed);
 			}
 			else
 			{
@@ -831,33 +837,33 @@ Velocity: {8}",
 			{
 				CheckPhysicsUnchanged();
 			}
-			
+
 			Logger.Log("Landed.", this);
 		}
 
 		private float GetFlapStrength()
-        {
-            float flapStrengthMod = useAvatarModifiers ? wingtipOffset * 8 : 10;
+		{
+			float flapStrengthMod = useAvatarModifiers ? wingtipOffset * 8 : 10;
 
-            return sizeCurve.Evaluate(GetArmspanValue()) * (flapStrengthBase + flapStrengthMod);
-        }
+			return sizeCurve.Evaluate(GetArmspanValue()) * (flapStrengthBase + flapStrengthMod);
+		}
 
 		/// <summary>
 		/// Returns the current armspan value, or a value of 1 if <see cref="useAvatarScale"/> is false.
 		/// </summary>
 		/// <returns></returns>
-        private float GetArmspanValue()
-        {
-            return useAvatarScale ? armspan : 1.0f;
-        }
-
-        private float GetFlightGravity()
+		private float GetArmspanValue()
 		{
-            float gravity = useGravityCurve
-                ? gravityCurve.Evaluate(GetArmspanValue()) * GetArmspanValue()
-                : sizeCurve.Evaluate(GetArmspanValue()) * flightGravityBase * GetArmspanValue();
+			return useAvatarScale ? armspan : 1.0f;
+		}
 
-            if (useAvatarModifiers)
+		private float GetFlightGravity()
+		{
+			float gravity = useGravityCurve
+				? gravityCurve.Evaluate(GetArmspanValue()) * GetArmspanValue()
+				: sizeCurve.Evaluate(GetArmspanValue()) * flightGravityBase * GetArmspanValue();
+
+			if (useAvatarModifiers)
 			{
 				// default settings
 				return gravity * weight;
@@ -912,6 +918,7 @@ Velocity: {8}",
 			defaultsStore.SetValue((DataToken)nameof(bankingTurns), bankingTurns);
 			defaultsStore.SetValue((DataToken)nameof(glideAngleOffset), glideAngleOffset);
 			defaultsStore.SetValue((DataToken)nameof(useAvatarScale), useAvatarScale);
+			defaultsStore.SetValue((DataToken)nameof(fallToGlideActivationDelay), weight);
 			Logger.Log(string.Format("Defaults initialized ({0} values).", defaultsStore.Count), this);
 		}
 
@@ -935,6 +942,7 @@ Velocity: {8}",
 			bankingTurns = GetDefaultValue(nameof(bankingTurns)).Boolean;
 			glideAngleOffset = GetDefaultValue(nameof(glideAngleOffset)).Float;
 			useAvatarScale = GetDefaultValue(nameof(useAvatarScale)).Boolean;
+			fallToGlideActivationDelay = GetDefaultValue(nameof(fallToGlideActivationDelay)).Int;
 			Logger.Log(string.Format("Defaults restored ({0} values).", defaultsStore.Count), this);
 		}
 
@@ -945,7 +953,7 @@ Velocity: {8}",
 		/// <returns></returns>
 		private DataToken GetDefaultValue(string key)
 		{
-			if(defaultsStore.TryGetValue(key, out DataToken value))
+			if (defaultsStore.TryGetValue(key, out DataToken value))
 			{
 				return value;
 			}
