@@ -86,7 +86,7 @@ jobs:
       - name: get latest release with tag
         id: latestrelease
         run: |
-          echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/weide-zhou/ticket13/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+          echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/Mattshark89/OpenFlight-VRC/releases/latest | jq '.tag_name' | sed 's/\"//g')"
 
       - name: confirm release tag
         run: |
