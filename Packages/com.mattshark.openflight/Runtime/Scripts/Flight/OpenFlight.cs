@@ -96,7 +96,7 @@ namespace OpenFlightVRC
 		[FieldChangeCallback(nameof(flightMode)), SerializeField]
 		private FlightMode _flightMode = FlightMode.Auto;
 		/// <summary>
-		/// The current flight mode.
+		/// The current flight mode. Will not allow flight if the player is not in VR. Can be bypassed with <see cref="ignoreVRCheck"/>, but doing so is not recommended.
 		/// </summary>
 		public FlightMode flightMode
 		{
@@ -104,6 +104,7 @@ namespace OpenFlightVRC
 			set
 			{
 				_flightMode = value;
+				const string FLIGHTCANTBESETTEMPLATE = "Flight cannot be set to {0} because the player is not in VR";
 				//update the flight mode string
 				switch (value)
 				{
@@ -127,7 +128,7 @@ namespace OpenFlightVRC
 						else
 						{
 							flightMode = FlightMode.Off;
-							Logger.Log("Flight cannot be set to auto because the player is not in VR", this);
+							Logger.Log(string.format(FLIGHTCANTBESETTEMPLATE, "Auto"), this);
 						}
 						break;
 					case FlightMode.On:
@@ -140,7 +141,7 @@ namespace OpenFlightVRC
 						else
 						{
 							flightMode = FlightMode.Off;
-							Logger.Log("Flight cannot be turned on because the player is not in VR", this);
+							Logger.Log(string.format(FLIGHTCANTBESETTEMPLATE, "On"), this);
 						}
 						break;
 					default:
