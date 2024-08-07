@@ -109,17 +109,39 @@ namespace OpenFlightVRC
 				{
 					case FlightMode.Off:
 						flightModeString = "Off";
+						SwitchFlight(false);
+						Logger.Log("Flight turned off", this);
 						break;
 					case FlightMode.Auto:
-						flightModeString = "Auto";
-						//tell the avatar detection script to check if the player can fly again
-						if (avatarDetection != null)
+						if (InVR())
 						{
-							avatarDetection.ReevaluateFlight();
+							flightModeString = "Auto";
+							SwitchFlight(false);
+							//tell the avatar detection script to check if the player can fly again
+							if (avatarDetection != null)
+							{
+								avatarDetection.ReevaluateFlight();
+							}
+							Logger.Log("Flight set to auto", this);
+						}
+						else
+						{
+							flightMode = FlightMode.Off;
+							Logger.Log("Flight cannot be set to auto because the player is not in VR", this);
 						}
 						break;
 					case FlightMode.On:
-						flightModeString = "On";
+						if (InVR())
+						{
+							flightModeString = "On";
+							SwitchFlight(true);
+							Logger.Log("Flight turned on", this);
+						}
+						else
+						{
+							flightMode = FlightMode.Off;
+							Logger.Log("Flight cannot be turned on because the player is not in VR", this);
+						}
 						break;
 					default:
 						flightModeString = "Unknown";
@@ -183,10 +205,11 @@ namespace OpenFlightVRC
 		/// <summary>
 		/// Turns flight off
 		/// </summary>
-		void SwitchFlight()
+		/// <param name="value">If true, flight will be turned off</param>
+		private void SwitchFlight(bool value)
 		{
-			wingedFlight.SetActive(false);
-			flightAllowed = false;
+			wingedFlight.SetActive(value);
+			flightAllowed = value;
 		}
 
 		/// <summary>
@@ -247,18 +270,7 @@ namespace OpenFlightVRC
 		/// </summary>
 		public void FlightOn()
 		{
-			if (InVR())
-			{
-				SwitchFlight();
-				wingedFlight.SetActive(true);
-				flightMode = FlightMode.On;
-				flightAllowed = true;
-				Logger.Log("Flight turned on", this);
-			}
-			else
-			{
-				Logger.Log("Flight cannot be turned on because the player is not in VR", this);
-			}
+			flightMode = FlightMode.On;
 		}
 
 		/// <summary>
@@ -266,11 +278,7 @@ namespace OpenFlightVRC
 		/// </summary>
 		public void FlightOff()
 		{
-			SwitchFlight();
-			wingedFlight.SetActive(false);
 			flightMode = FlightMode.Off;
-			flightAllowed = false;
-			Logger.Log("Flight turned off", this);
 		}
 
 		/// <summary>
@@ -278,16 +286,7 @@ namespace OpenFlightVRC
 		/// </summary>
 		public void FlightAuto()
 		{
-			if (InVR())
-			{
-				flightAllowed = false;
-				flightMode = FlightMode.Auto;
-				Logger.Log("Flight set to auto", this);
-			}
-			else
-			{
-				Logger.Log("Flight cannot be set to auto because the player is not in VR", this);
-			}
+			flightMode = FlightMode.Auto;
 		}
 
 		/// <summary>
@@ -298,9 +297,7 @@ namespace OpenFlightVRC
 		{
 			if (flightMode == FlightMode.Auto)
 			{
-				SwitchFlight();
-				wingedFlight.SetActive(true);
-				flightAllowed = true;
+				SwitchFlight(true);
 			}
 		}
 
@@ -311,9 +308,7 @@ namespace OpenFlightVRC
 		{
 			if (flightMode == FlightMode.Auto)
 			{
-				SwitchFlight();
-				wingedFlight.SetActive(false);
-				flightAllowed = false;
+				SwitchFlight(false);
 			}
 		}
 	}
