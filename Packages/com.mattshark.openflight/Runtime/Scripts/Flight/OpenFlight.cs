@@ -112,6 +112,11 @@ namespace OpenFlightVRC
 						break;
 					case FlightMode.Auto:
 						flightModeString = "Auto";
+						//tell the avatar detection script to check if the player can fly again
+						if (avatarDetection != null)
+						{
+							avatarDetection.ReevaluateFlight();
+						}
 						break;
 					case FlightMode.On:
 						flightModeString = "On";
@@ -275,14 +280,8 @@ namespace OpenFlightVRC
 		{
 			if (InVR())
 			{
-				flightMode = FlightMode.Auto;
 				flightAllowed = false;
-
-				//tell the avatar detection script to check if the player can fly again
-				if (avatarDetection != null)
-				{
-					avatarDetection.ReevaluateFlight();
-				}
+				flightMode = FlightMode.Auto;
 				Logger.Log("Flight set to auto", this);
 			}
 			else
