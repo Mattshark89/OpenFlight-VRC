@@ -128,7 +128,7 @@ namespace OpenFlightVRC
 						else
 						{
 							flightMode = FlightMode.Off;
-							Logger.Log(string.format(FLIGHTCANTBESETTEMPLATE, "Auto"), this);
+							Logger.Log(string.Format(FLIGHTCANTBESETTEMPLATE, "Auto"), this);
 						}
 						break;
 					case FlightMode.On:
@@ -141,7 +141,7 @@ namespace OpenFlightVRC
 						else
 						{
 							flightMode = FlightMode.Off;
-							Logger.Log(string.format(FLIGHTCANTBESETTEMPLATE, "On"), this);
+							Logger.Log(string.Format(FLIGHTCANTBESETTEMPLATE, "On"), this);
 						}
 						break;
 					default:
