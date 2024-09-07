@@ -38,11 +38,8 @@
           methods: {
             formatDate() {
               date = new Date();
-              day = date.getUTCDate();
-              month = date.getUTCMonth() + 1;
-              year = date.getUTCFullYear();
 
-              return `${year}-${month}-${day}`;
+              return date.toISOString().split('T')[0];
             }
           },
         }
