@@ -436,7 +436,7 @@ namespace OpenFlightVRC
 
 			//if (Vector3.Angle(LHRot * Vector3.right, RHRot * Vector3.right) > 90)
 			handsOpposite = (
-				Vector3.Distance(LocalPlayer.GetBonePosition(LeftHandBone), LocalPlayer.GetBonePosition(RightHandBone)) > (armspan / 3.3 * 2) + shoulderDistance
+				Vector3.Distance(LocalPlayer.GetBonePosition(LeftHandBone), LocalPlayer.GetBonePosition(RightHandBone)) > (armspan / 3.3f * 2) + shoulderDistance
 			);
 
 			if (!isFlapping)
@@ -918,7 +918,7 @@ Velocity: {8}",
 			defaultsStore.SetValue((DataToken)nameof(bankingTurns), bankingTurns);
 			defaultsStore.SetValue((DataToken)nameof(glideAngleOffset), glideAngleOffset);
 			defaultsStore.SetValue((DataToken)nameof(useAvatarScale), useAvatarScale);
-			defaultsStore.SetValue((DataToken)nameof(fallToGlideActivationDelay), weight);
+			defaultsStore.SetValue((DataToken)nameof(fallToGlideActivationDelay), fallToGlideActivationDelay);
 			Logger.Log(string.Format("Defaults initialized ({0} values).", defaultsStore.Count), this);
 		}
 
