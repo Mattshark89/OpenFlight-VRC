@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.24.0",
-  "JSON Date": "2024-09-07",
+  "JSON Version": "2.25.0",
+  "JSON Date": "2024-09-21",
   "Contributers": [
     "-Jinxy-",
     "Daernaro",
@@ -33,7 +33,8 @@
     "Polaris°",
     "Vexprimagen",
     "Purpzie",
-    "a distraction"
+    "a distraction",
+    "InvertedCrink"
   ],
   "Bases": {
     "Kitavali": {
@@ -1525,6 +1526,16 @@
         "Weight": 1,
         "WingtipOffset": 10.5
       }
-    }
+    },
+    "Mantled Vern": {
+    	"Original": {
+      	"Name": "Mantled Vern",
+     	 "Creator": "Nicoreda / InvertedCrink",
+      	"Introducer": "InvertedCrink",
+      	"Hash": ["-1808718474v2"],
+      	"Weight": 1,
+     	 "WingtipOffset": 6.731415
+  		}
+		}
   }
 }
