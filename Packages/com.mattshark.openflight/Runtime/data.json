@@ -1,6 +1,6 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.25.1",
+  "JSON Version": "2.26.0",
   "JSON Date": "2024-09-23",
   "Contributers": [
     "-Jinxy-",
@@ -1503,7 +1503,9 @@
         "Name": "AS.4VA-L1",
         "Creator": "Aeyon Systems",
         "Introducer": "Polaris°",
-        "Hash": ["-521218447v2"],
+        "Hash": [
+          "-521218447v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 3.5
       }
@@ -1513,7 +1515,9 @@
         "Name": "Pteryxis",
         "Creator": "rocrocot",
         "Introducer": "Vexprimagen",
-        "Hash": ["-868816976v2"],
+        "Hash": [
+          "-868816976v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 1.82
       }
@@ -1523,28 +1527,36 @@
         "Name": "Purpzbee",
         "Creator": "Tokyozilla / Purpzie",
         "Introducer": "Purpzie",
-        "Hash": ["-657967206v2"],
+        "Hash": [
+          "-657967206v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 10.5
       }
     },
     "Mantled Vern": {
-    	"Original": {
-      	"Name": "Mantled Vern",
-     	 "Creator": "Nicoreda / InvertedCrink",
-      	"Introducer": "InvertedCrink",
-      	"Hash": ["-1808718474v2"],
-      	"Weight": 1,
-     	 "WingtipOffset": 6.731415
-  		}
-		},
+      "Original": {
+        "Name": "Mantled Vern",
+        "Creator": "Nicoreda / InvertedCrink",
+        "Introducer": "InvertedCrink",
+        "Hash": [
+          "-1808718474v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 6.731415
+      }
+    },
     "Av-Eli": {
-    	"Original": {
-      	"Name": "Base Av-Eli",
-     	 "Creator": "IshgardWinter",
-      	"Introducer": "Angiethekirin",
-      	"Hash": ["-903359428v2"],
-      	"Weight": 1,
-     	 "WingtipOffset": 3.1
+      "Original": {
+        "Name": "Av-Eli",
+        "Creator": "IshgardWinter",
+        "Introducer": "Angiethekirin",
+        "Hash": [
+          "-903359428v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 3.1
+      }
+    }
   }
 }
