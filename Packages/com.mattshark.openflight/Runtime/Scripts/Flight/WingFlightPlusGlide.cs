@@ -779,7 +779,8 @@ Velocity: {8}",
 			const int layer = 2 << 18;
 			//swapped from OverlapSphere to OverlapSphereNonAlloc, as it does not allocate memory each time it is called,
 			//saving on garbage collection. Also doesnt require a .Length check, as it returns the number of colliders it found inherently.
-			int uiColliderCount = Physics.OverlapSphereNonAlloc(LocalPlayer.GetPosition(), 10f, _colliders, layer);
+			//Second note, instead of using localplayer position, we use the head position, as the player position can desync depending on Holoport and VRC changes.
+			int uiColliderCount = Physics.OverlapSphereNonAlloc(LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).position, 10f, _colliders, layer);
 			//commented out due to extern count, this uses 3
 			//return uiColliderCount == 8 || uiColliderCount == 9 || uiColliderCount == 10;
 
