@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.26.1",
-  "JSON Date": "2024-09-23",
+  "JSON Version": "2.26.2",
+  "JSON Date": "2024-09-26",
   "Contributers": [
     "-Jinxy-",
     "Daernaro",
@@ -35,7 +35,8 @@
     "Purpzie",
     "a distraction",
     "InvertedCrink",
-    "~Angiethekirin~"
+    "~Angiethekirin~",
+    "Kitsune KAZE"
   ],
   "Bases": {
     "Kitavali": {
@@ -60,6 +61,16 @@
         ],
         "Weight": 1,
         "WingtipOffset": 5.0
+      },
+      "V2": {
+        "Name": "Batdal",
+        "Creator": "Nicoreda",
+        "Introducer": "Kitsune KAZE",
+        "Hash": [
+          "676162765v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 4.8
       }
     },
     "Chimera Recon": {
@@ -1556,18 +1567,6 @@
         ],
         "Weight": 1,
         "WingtipOffset": 3.1
-      }
-    },
-    "Batdal": {
-      "Original": {
-        "Name": "Batdal",
-        "Creator": "Nicoreda",
-        "Introducer": "Kitsune KAZE",
-        "Hash": [
-          "676162765v2"
-        ],
-        "Weight": 1,
-        "WingtipOffset": 4.8
       }
     }
   }
