@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.26.2",
-  "JSON Date": "2024-09-26",
+  "JSON Version": "2.26.3",
+  "JSON Date": "2024-10-3",
   "Contributers": [
     "-Jinxy-",
     "Daernaro",
@@ -36,7 +36,8 @@
     "a distraction",
     "InvertedCrink",
     "~Angiethekirin~",
-    "Kitsune KAZE"
+    "Kitsune KAZE",
+    "Neszumi"
   ],
   "Bases": {
     "Kitavali": {
@@ -1567,6 +1568,18 @@
         ],
         "Weight": 1,
         "WingtipOffset": 3.1
+      }
+    },
+    "SAM (Sap Avali Model)": {
+      "Original": {
+        "Name": "SAM (Sap Avali Model)",
+        "Creator": "Sap",
+        "Introducer": "Neszumi",
+        "Hash": [
+          "415114641v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 7.0
       }
     }
   }
