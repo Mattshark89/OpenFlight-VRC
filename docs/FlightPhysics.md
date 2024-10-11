@@ -1,7 +1,7 @@
 # Flight Physics
 While the default flight physics should work for most worlds, some creators will want to adapt them to fit their world better; for instance, it may be more convenient to fly faster to travel through a particuarly large world. To experiment with these settings yourself, find the `WingedFlight` GameObject inside of your OpenFlight object to reveal its settings in your inspector:
 
-![WingedFlight](Images/Unity%20Interface/WingedFlightLocation.png)
+![WingedFlight](Assets/Unity%20Interface/WingedFlightLocation.png)
 
 To learn more about each setting, hover over each item within the inspector, or view the documentation [here.](ScriptReference/Flight/WingFlightPlusGlide.md)
 

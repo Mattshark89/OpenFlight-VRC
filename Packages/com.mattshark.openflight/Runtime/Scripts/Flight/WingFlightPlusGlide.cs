@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using VRC.SDKBase;
 using VRC.Udon;
 using TMPro;
+using VRC.SDK3.Data;
 
 namespace OpenFlightVRC
 {
@@ -71,17 +72,11 @@ namespace OpenFlightVRC
 		[Range(100, 800)]
 		public int flapStrengthBase = 285;
 
-		/// <inheritdoc cref="flapStrengthBase"/>
-		int flapStrengthBase_DEFAULT = 285;
-
 		/// <summary>
 		/// Base gravity while flying.
 		/// </summary>
 		[Tooltip("Base gravity while flying (Default: 0.4)")]
 		public float flightGravityBase = 0.4f;
-
-		/// <inheritdoc cref="flightGravityBase"/>
-		float flightGravityBase_DEFAULT = 0.4f;
 
 		/// <summary>
 		/// Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident.
@@ -89,17 +84,11 @@ namespace OpenFlightVRC
 		[Tooltip("Require the player to jump before flapping can occur? Makes it less likely to trigger a flap by accident. (Default: true)")]
 		public bool requireJump = true;
 
-		/// <inheritdoc cref="requireJump"/>
-		bool requireJump_DEFAULT = true;
-
 		/// <summary>
 		/// Allow locomotion (wasd/left joystick) while flying?
 		/// </summary>
 		[Tooltip("Allow locomotion (wasd/left joystick) while flying? (Default: false)")]
 		public bool allowLoco = false;
-
-		/// <inheritdoc cref="allowLoco"/>
-		bool allowLoco_DEFAULT = false;
 
 		/// <summary>
 		/// Avatars using the avatar detection system may have wingtip, weight, etc. modifiers intended to personalize how they feel in the air. Set this value to true to use these modifiers or false if you want them disregarded for consistency. (Note: avatar size detection is not an Avatar Modifier; size-related calculations will always apply even if this setting is set to false. see <see cref="useAvatarScale"/>)
@@ -109,24 +98,17 @@ namespace OpenFlightVRC
 		)]
 		public bool useAvatarModifiers = true;
 
-		/// <inheritdoc cref="useAvatarModifiers"/>
-		bool useAvatarModifiers_DEFAULT = true;
-
 		/// <summary>
 		/// Use the avatar's scale to affect the physics of flight. This is useful for making smaller avatars feel lighter and larger avatars feel heavier.
 		/// </summary>
 		[Tooltip("Use the avatar's scale to affect the physics of flight. This is useful for making smaller avatars feel lighter and larger avatars feel heavier. (Default: true)")]
 		public bool useAvatarScale = true;
-		bool useAvatarScale_DEFAULT = true;
 
 		/// <summary>
 		/// Allow gliding?
 		/// </summary>
 		[Tooltip("Allow gliding. (Default: true)")]
 		public bool canGlide = true;
-
-		/// <inheritdoc cref="canGlide"/>
-		bool canGlide_DEFAULT = true;
 
 		/// <summary>
 		/// Avatars can glide directly from a fall without having to flap first. This behavior is more intuitive for gliding off cliffs, but may cause players to trigger gliding on accident more often when they just want to fall.
@@ -135,9 +117,12 @@ namespace OpenFlightVRC
 			"Avatars can glide directly from a fall without having to flap first. This behavior is more intuitive for gliding off cliffs, but may cause players to trigger gliding on accident more often when they just want to fall. (Default: false)"
 		)]
 		public bool fallToGlide = true;
-
-		/// <inheritdoc cref="fallToGlide"/>
-		bool fallToGlide_DEFAULT = true;
+		/// <summary>
+		/// The number of ticks the player must be falling before automatically gliding. This is only used if <see cref="fallToGlide"/> is true.
+		/// </summary>
+		[Tooltip("The number of ticks the player must be falling before automatically gliding. This is only used if Fall to Glide is enabled. (Default: 20)")]
+		[Range(1, 100)]
+		public int fallToGlideActivationDelay = 20;
 
 		#region Advanced Settings
 		/// <summary>
@@ -146,9 +131,6 @@ namespace OpenFlightVRC
 		[Header("Advanced Settings (Only for specialized use!)")]
 		[Tooltip("Angle to offset the gliding direction by from your hands. (Default: 0)")]
 		public float glideAngleOffset = 0f;
-
-		/// <inheritdoc cref="glideAngleOffset"/>
-		float glideAngleOffset_DEFAULT = 0f;
 
 		/// <summary>
 		/// How much Flap Strength and Flight Gravity are affected by an avatar's armspan. Default values will make smaller avis feel lighter and larger avis heavier.
@@ -164,9 +146,6 @@ namespace OpenFlightVRC
 		[Tooltip("Modifier for horizontal flap strength. Makes flapping forwards easier. (Default: 1.5)")]
 		public float horizontalStrengthMod = 1.5f;
 
-		/// <inheritdoc cref="horizontalStrengthMod"/>
-		float horizontalStrengthMod_DEFAULT = 1.5f;
-
 		/// <summary>
 		/// How tight you want your turns while gliding. May be dynamically decreased by Avatar Modifier: weight.
 		/// </summary>
@@ -177,9 +156,6 @@ namespace OpenFlightVRC
 		[Range(1f, 5f)]
 		public float glideControl = 2.5f; // Do not reduce this below 1; it will break under some weight values if you do
 
-		/// <inheritdoc cref="glideControl"/>
-		float glideControl_DEFAULT = 2.5f;
-
 		/// <summary>
 		/// Slows gliding down over time.
 		/// </summary>
@@ -187,17 +163,11 @@ namespace OpenFlightVRC
 		[Range(0f, 0.2f)]
 		public float airFriction = 0.02f;
 
-		/// <inheritdoc cref="airFriction"/>
-		float airFriction_DEFAULT = 0.02f;
-
 		/// <summary>
 		/// If enabled, flight gravity will use Gravity Curve's curve instead of Size Curve's curve multiplied by Flight Gravity Base.
 		/// </summary>
 		[Tooltip("If enabled, flight gravity will use Gravity Curve's curve instead of Size Curve's curve multiplied by Flight Gravity Base. (Default: false)")]
 		public bool useGravityCurve = false;
-
-		/// <inheritdoc cref="useGravityCurve"/>
-		bool useGravityCurve_DEFAULT = false;
 
 		/// <summary>
 		/// Similar to Size Curve, but instead of modifying Flap Strength, it only affects Gravity. This value is ignored (Size Curve will be used instead) unless Use Gravity Curve is enabled.
@@ -218,11 +188,9 @@ namespace OpenFlightVRC
 		/// </summary>
 		/// <remarks>
 		/// Can possibly cause network lag, but in testing it doesnt seem to.
-		[Tooltip("Banking to the left or right will force the player to rotate. May cause network lag? (Default: true)")]
+		/// </remarks>
+		[Tooltip("Banking to the left or right will force the player to rotate. (Default: true)")]
 		public bool bankingTurns = true;
-
-		/// <inheritdoc cref="bankingTurns"/>
-		bool bankingTurns_DEFAULT = true;
 
 		/// <summary>
 		/// If enabled, gravity and movement will be saved each time the user takes off, instead of just at the start of the world.
@@ -249,7 +217,7 @@ namespace OpenFlightVRC
 		/// The ticks per second in deltatime form.
 		/// For example, a value of 0.02f would be 50 ticks per second, or 1/50.
 		/// </summary>
-		private float tps_dt = 0.05f; // The ticks per second in deltatime form. IE 0.02f would be 50 ticks per second, or 1/50
+		private const float DeltaTimeTicksPerSecond = 1f / 20f;
 
 		/// <summary>
 		/// The current time tick value.
@@ -291,7 +259,7 @@ namespace OpenFlightVRC
 		private int cannotFlyTick = 0;
 
 		/// <summary>
-		/// Increased by one every tick one's y velocity < 0
+		/// Increased by one every tick the local players y velocity is negative
 		/// </summary>
 		private int fallingTick = 0;
 		private float dtFake = 0;
@@ -319,12 +287,12 @@ namespace OpenFlightVRC
 		private float oldStrafeSpeed;
 
 		// Avatar-specific properties
-		private HumanBodyBones rightUpperArmBone; // Bones won't be given a value until LocalPlayer.IsValid()
-		private HumanBodyBones leftUpperArmBone;
-		private HumanBodyBones rightLowerArmBone;
-		private HumanBodyBones leftLowerArmBone;
-		private HumanBodyBones rightHandBone;
-		private HumanBodyBones leftHandBone;
+		private const HumanBodyBones RightUpperArmBone = HumanBodyBones.RightUpperArm;
+		private const HumanBodyBones LeftUpperArmBone = HumanBodyBones.LeftUpperArm;
+		private const HumanBodyBones RightLowerArmBone = HumanBodyBones.RightLowerArm;
+		private const HumanBodyBones LeftLowerArmBone = HumanBodyBones.LeftLowerArm;
+		private const HumanBodyBones RightHandBone = HumanBodyBones.RightHand;
+		private const HumanBodyBones LeftHandBone = HumanBodyBones.LeftHand;
 		private float shoulderDistance = 0; // Distance between the two shoulders
 
 		[HideInInspector]
@@ -336,9 +304,6 @@ namespace OpenFlightVRC
 		[Tooltip("Default avatar weight. (Default: 1)")]
 		[Range(0f, 2f)]
 		public float weight = 1.0f;
-
-		//Banking variables
-		private Vector3 playerHolder;
 
 		public void Start()
 		{
@@ -393,42 +358,37 @@ namespace OpenFlightVRC
 			if ((LocalPlayer != null) && LocalPlayer.IsValid())
 			{
 				dtFake += Time.deltaTime;
-				if (dtFake >= tps_dt)
+				if (dtFake >= DeltaTimeTicksPerSecond)
 				{
-					dtFake -= tps_dt;
-					MainFlightTick(tps_dt);
+					dtFake -= DeltaTimeTicksPerSecond;
+					MainFlightTick(DeltaTimeTicksPerSecond);
 				}
 			}
 			// Banking turns should feel smooth since it's heavy on visuals. So this block exists in Update() instead of MainFlightTick()
 			if (spinningRightRound)
 			{
 				// Avatar modifiers affect spin speed
-				if (useAvatarModifiers)
-				{
-					rotSpeed += (rotSpeedGoal - rotSpeed) * Time.deltaTime * 6 * (1 - (weight - 1));
-				}
-				else
-				{
-					rotSpeed += (rotSpeedGoal - rotSpeed) * Time.deltaTime * 6;
-				}
+				float weightMod = useAvatarModifiers ? (1 - (weight - 1)) : 1;
+				rotSpeed += (rotSpeedGoal - rotSpeed) * Time.deltaTime * 6 * weightMod;
 
 				// --- BEGIN MACKANDELIUS NO-JITTER BANKING TURNS FIX ---
 				//Playspace origin and actual player position seems to work as parent and child objects,
 				//therefore the conclusion is that we must make the playspace origin orbit the player.
 				//
 				//Caching positional data and modifying a virtual origin to be translated.
-				loadBearingTransform.position = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Origin).position;
-				loadBearingTransform.rotation = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Origin).rotation;
-				playerHolder = LocalPlayer.GetPosition();
+				VRCPlayerApi.TrackingData trackingData = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Origin);
+				loadBearingTransform.position = trackingData.position;
+				loadBearingTransform.rotation = trackingData.rotation;
+				Vector3 playerPos = LocalPlayer.GetPosition();
 
 				//This function is strange.
 				//I am in awe of the Unity engineers that had to fix the edge case of someone wanting to rotate the parent around a child.
 				//Sure is useful in this case though.
-				loadBearingTransform.RotateAround(playerHolder, Vector3.up, rotSpeed * Time.deltaTime);
+				loadBearingTransform.RotateAround(playerPos, Vector3.up, rotSpeed * Time.deltaTime);
 
 				//Teleport based on playspace position, with an offset to place the player at the teleport location instead of the playspace origin.
 				LocalPlayer.TeleportTo(
-					playerHolder + (loadBearingTransform.position - playerHolder),
+					playerPos + (loadBearingTransform.position - playerPos),
 					loadBearingTransform.rotation,
 					VRC_SceneDescriptor.SpawnOrientation.AlignRoomWithSpawnPoint,
 					true
@@ -443,22 +403,22 @@ namespace OpenFlightVRC
 			{
 				// This block only runs once shortly after joining the world
 				timeTick = 0;
-				leftLowerArmBone = HumanBodyBones.LeftLowerArm;
-				rightLowerArmBone = HumanBodyBones.RightLowerArm;
-				leftUpperArmBone = HumanBodyBones.LeftUpperArm;
-				rightUpperArmBone = HumanBodyBones.RightUpperArm;
-				leftHandBone = HumanBodyBones.LeftHand;
-				rightHandBone = HumanBodyBones.RightHand;
 				CalculateStats();
 			}
 			// Only affect velocity this tick if setFinalVelocity == true by the end
 			setFinalVelocity = false;
+
+			Vector3 playerPos = LocalPlayer.GetPosition();
+
 			// Check if hands are being moved downward while above a certain Y threshold
 			// We're using LocalPlayer.GetPosition() to turn these global coordinates into local ones
-			RHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;
-			LHPos = LocalPlayer.GetPosition() - LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).position;
-			LHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand).rotation;
-			RHRot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).rotation;
+			VRCPlayerApi.TrackingData leftHandData = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand);
+			RHPos = playerPos - leftHandData.position;
+			RHRot = leftHandData.rotation;
+
+			VRCPlayerApi.TrackingData rightHandData = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand);
+			LHPos = playerPos - rightHandData.position;
+			LHRot = rightHandData.rotation;
 
 			downThrust = 0;
 			if ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y) > 0)
@@ -479,20 +439,20 @@ namespace OpenFlightVRC
 			// Hands are out if they are a certain distance from the torso
 			handsOut = (
 				Vector2.Distance(
-					new Vector2(LocalPlayer.GetBonePosition(rightUpperArmBone).x, LocalPlayer.GetBonePosition(rightUpperArmBone).z),
-					new Vector2(LocalPlayer.GetBonePosition(rightHandBone).x, LocalPlayer.GetBonePosition(rightHandBone).z)
+					new Vector2(LocalPlayer.GetBonePosition(RightUpperArmBone).x, LocalPlayer.GetBonePosition(RightUpperArmBone).z),
+					new Vector2(LocalPlayer.GetBonePosition(RightHandBone).x, LocalPlayer.GetBonePosition(RightHandBone).z)
 				)
 					> armspan / 3.3f
 				&& Vector2.Distance(
-					new Vector2(LocalPlayer.GetBonePosition(leftUpperArmBone).x, LocalPlayer.GetBonePosition(leftUpperArmBone).z),
-					new Vector2(LocalPlayer.GetBonePosition(leftHandBone).x, LocalPlayer.GetBonePosition(leftHandBone).z)
+					new Vector2(LocalPlayer.GetBonePosition(LeftUpperArmBone).x, LocalPlayer.GetBonePosition(LeftUpperArmBone).z),
+					new Vector2(LocalPlayer.GetBonePosition(LeftHandBone).x, LocalPlayer.GetBonePosition(LeftHandBone).z)
 				)
 					> armspan / 3.3f
 			);
 
 			//if (Vector3.Angle(LHRot * Vector3.right, RHRot * Vector3.right) > 90)
 			handsOpposite = (
-				Vector3.Distance(LocalPlayer.GetBonePosition(leftHandBone), LocalPlayer.GetBonePosition(rightHandBone)) > (armspan / 3.3 * 2) + shoulderDistance
+				Vector3.Distance(LocalPlayer.GetBonePosition(LeftHandBone), LocalPlayer.GetBonePosition(RightHandBone)) > (armspan / 3.3f * 2) + shoulderDistance
 			);
 
 			if (!isFlapping)
@@ -502,8 +462,8 @@ namespace OpenFlightVRC
 					(isFlying || handsOut)
 					&& (requireJump ? !LocalPlayer.IsPlayerGrounded() : true)
 					&& !IsPlayerInStation()
-					&& RHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(rightUpperArmBone).y
-					&& LHPos.y < LocalPlayer.GetPosition().y - LocalPlayer.GetBonePosition(leftUpperArmBone).y
+					&& RHPos.y < playerPos.y - LocalPlayer.GetBonePosition(RightUpperArmBone).y
+					&& LHPos.y < playerPos.y - LocalPlayer.GetBonePosition(LeftUpperArmBone).y
 					&& downThrust > 0.002f
 				)
 				{
@@ -514,13 +474,14 @@ namespace OpenFlightVRC
 				}
 			}
 
+			// This should not be an else. It can trigger the same tick as "if (!isFlapping)"
 			if (isFlapping)
 			{
 				FlapTick();
 			}
 
 			// See fallToGlide tooltip
-			if (fallToGlide && fallingTick >= 20 && handsOut && handsOpposite && canGlide)
+			if (fallToGlide && fallingTick >= fallToGlideActivationDelay && handsOut && handsOpposite && canGlide)
 			{
 				TakeOff();
 			}
@@ -569,11 +530,10 @@ namespace OpenFlightVRC
 				// Verbose explanation: (Ensure you're not flapping) && (check for handsOut frame one, ignore handsOut afterwards) && Self Explanatory && Ditto
 				if ((!isFlapping) && (isGliding || handsOut) && handsOpposite && canGlide)
 				{
-					// Forgot what this bugfixed
-					if (LocalPlayer.GetVelocity().y > -1f && (!isGliding))
-					{
-						glideDelay = 3;
-					}
+					// Currently, glideDelay is being disabled to alleviate a VRChat issue where avatars may spazz out while moving at high velocities.
+					// However, this may reintroduce an old bug so we're keeping this here.
+					// If gliding is suddenly causing you to bank up and down rapidly, uncomment this:
+					// if (LocalPlayer.GetVelocity().y > -1f && (!isGliding)) {glideDelay = 3;}
 
 					isGliding = true;
 					newVelocity = setFinalVelocity ? finalVelocity : LocalPlayer.GetVelocity();
@@ -651,7 +611,7 @@ namespace OpenFlightVRC
 				// Calculate force to apply based on the flap
 				newVelocity = 0.011f * GetFlapStrength() * ((RHPos - RHPosLast) + (LHPos - LHPosLast));
 
-				if(!useAvatarScale)
+				if (!useAvatarScale)
 				{
 					//scale up the flap strength by the avatar's size inversely
 					// 1 / 0.1 = 10 Smaller than normal Avatar
@@ -699,16 +659,29 @@ namespace OpenFlightVRC
 					timeTick = 0;
 					if (debugOutput != null)
 					{
-						debugOutput.text =
-							string.Concat("\nIsFlying: ", isFlying.ToString())
-							+ string.Concat("\nIsFlapping: ", isFlapping.ToString())
-							+ string.Concat("\nIsGliding: ", isGliding.ToString())
-							+ string.Concat("\nHandsOut: ", handsOut.ToString())
-							+ string.Concat("\nDownThrust: ", downThrust.ToString())
-							+ string.Concat("\nCannotFly: ", (cannotFlyTick > 0).ToString())
-							+ string.Concat("\nGlideDelay: ", glideDelay.ToString())
-							+ string.Concat("\ngrounded: ", LocalPlayer.IsPlayerGrounded())
-							+ string.Concat("\nYmagnitude: ", LocalPlayer.GetVelocity().y.ToString());
+						//Don't add tabs back here, or else they will end up in the multiline string
+						debugOutput.text = string.Format(
+@"Is Player Flying: {0}
+Is Player Flapping: {1}
+Is Player Gliding: {2}
+--Internal Vars--
+Hands Out: {3}
+Downward Thrust: {4}
+Cannot Fly: {5}
+Glide Delay: {6}
+--Player Controller State--
+Grounded: {7}
+Velocity: {8}",
+							isFlying,
+							isFlapping,
+							isGliding,
+							handsOut,
+							downThrust,
+							cannotFlyTick > 0,
+							glideDelay,
+							LocalPlayer.IsPlayerGrounded(),
+							LocalPlayer.GetVelocity()
+						);
 					}
 				}
 			}
@@ -718,8 +691,11 @@ namespace OpenFlightVRC
 		/// Immobilizes the player's locomotion. This is useful for preventing the player from moving while flying. Still allows the player to rotate, unlike VRC's method of immobilization.
 		/// </summary>
 		/// <param name="immobilize"></param>
-		private void ImmobilizePart(bool immobilize)
+		private void ImmobilizePlayer(bool immobilize)
 		{
+			//This is non-zero as it allows the "forward" direction of a player to still update while flying, fixing some animation bugs.
+			const float ImmobileSpeed = 0.001f;
+
 			if (immobilize)
 			{
 				if (dynamicPlayerPhysics)
@@ -728,15 +704,17 @@ namespace OpenFlightVRC
 					oldRunSpeed = LocalPlayer.GetRunSpeed();
 					oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
 				}
-				LocalPlayer.SetWalkSpeed(0.001f);
-				LocalPlayer.SetRunSpeed(0.001f);
-				LocalPlayer.SetStrafeSpeed(0.001f);
-				return;
-			}
 
-			LocalPlayer.SetWalkSpeed(oldWalkSpeed);
-			LocalPlayer.SetRunSpeed(oldRunSpeed);
-			LocalPlayer.SetStrafeSpeed(oldStrafeSpeed);
+				LocalPlayer.SetWalkSpeed(ImmobileSpeed);
+				LocalPlayer.SetRunSpeed(ImmobileSpeed);
+				LocalPlayer.SetStrafeSpeed(ImmobileSpeed);
+			}
+			else
+			{
+				LocalPlayer.SetWalkSpeed(oldWalkSpeed);
+				LocalPlayer.SetRunSpeed(oldRunSpeed);
+				LocalPlayer.SetStrafeSpeed(oldStrafeSpeed);
+			}
 		}
 
 		/// <summary>
@@ -746,11 +724,11 @@ namespace OpenFlightVRC
 		{
 			// `armspan` does not include the distance between shoulders. shoulderDistance stores this value by itself.
 			armspan =
-				Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone), LocalPlayer.GetBonePosition(leftLowerArmBone))
-				+ Vector3.Distance(LocalPlayer.GetBonePosition(leftLowerArmBone), LocalPlayer.GetBonePosition(leftHandBone))
-				+ Vector3.Distance(LocalPlayer.GetBonePosition(rightUpperArmBone), LocalPlayer.GetBonePosition(rightLowerArmBone))
-				+ Vector3.Distance(LocalPlayer.GetBonePosition(rightLowerArmBone), LocalPlayer.GetBonePosition(rightHandBone));
-			shoulderDistance = Vector3.Distance(LocalPlayer.GetBonePosition(leftUpperArmBone), LocalPlayer.GetBonePosition(rightUpperArmBone));
+				Vector3.Distance(LocalPlayer.GetBonePosition(LeftUpperArmBone), LocalPlayer.GetBonePosition(LeftLowerArmBone))
+				+ Vector3.Distance(LocalPlayer.GetBonePosition(LeftLowerArmBone), LocalPlayer.GetBonePosition(LeftHandBone))
+				+ Vector3.Distance(LocalPlayer.GetBonePosition(RightUpperArmBone), LocalPlayer.GetBonePosition(RightLowerArmBone))
+				+ Vector3.Distance(LocalPlayer.GetBonePosition(RightLowerArmBone), LocalPlayer.GetBonePosition(RightHandBone));
+			shoulderDistance = Vector3.Distance(LocalPlayer.GetBonePosition(LeftUpperArmBone), LocalPlayer.GetBonePosition(RightUpperArmBone));
 			Logger.Log("Armspan: " + armspan.ToString() + " Shoulder Distance: " + shoulderDistance.ToString(), this);
 		}
 
@@ -769,12 +747,12 @@ namespace OpenFlightVRC
 				}
 				else
 				{
-					CheckPhysicsUnChanged();
+					CheckPhysicsUnchanged();
 				}
 				LocalPlayer.SetGravityStrength(GetFlightGravity());
 				if (!allowLoco)
 				{
-					ImmobilizePart(true);
+					ImmobilizePlayer(true);
 				}
 				Logger.Log("Took off.", this);
 			}
@@ -783,7 +761,7 @@ namespace OpenFlightVRC
 		/// <summary>
 		/// Checks if the world gravity or player movement has changed from the saved values and throws a warning if so.
 		/// </summary>
-		private void CheckPhysicsUnChanged()
+		private void CheckPhysicsUnchanged()
 		{
 			// Log a warning if gravity values differ from what we have saved
 			if (LocalPlayer.GetGravityStrength() != oldGravityStrength)
@@ -819,7 +797,8 @@ namespace OpenFlightVRC
 			const int layer = 2 << 18;
 			//swapped from OverlapSphere to OverlapSphereNonAlloc, as it does not allocate memory each time it is called,
 			//saving on garbage collection. Also doesnt require a .Length check, as it returns the number of colliders it found inherently.
-			int uiColliderCount = Physics.OverlapSphereNonAlloc(LocalPlayer.GetPosition(), 10f, _colliders, layer);
+			//Second note, instead of using localplayer position, we use the head position, as the player position can desync depending on Holoport and VRC changes.
+			int uiColliderCount = Physics.OverlapSphereNonAlloc(LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).position, 10f, _colliders, layer);
 			//commented out due to extern count, this uses 3
 			//return uiColliderCount == 8 || uiColliderCount == 9 || uiColliderCount == 10;
 
@@ -868,64 +847,41 @@ namespace OpenFlightVRC
 			rotSpeed = 0;
 			rotSpeedGoal = 0;
 			LocalPlayer.SetGravityStrength(oldGravityStrength);
+
 			if (!allowLoco)
 			{
-				ImmobilizePart(false);
+				ImmobilizePlayer(false);
 			}
+
 			if (!dynamicPlayerPhysics)
 			{
-				CheckPhysicsUnChanged();
+				CheckPhysicsUnchanged();
 			}
+
 			Logger.Log("Landed.", this);
 		}
 
 		private float GetFlapStrength()
 		{
-			float modifier = 0;
-			if (useAvatarModifiers)
-			{
-				// default settings
-				modifier = (flapStrengthBase + (wingtipOffset * 8));
-			}
-			else
-			{
-				modifier = flapStrengthBase + 10;
-			}
+			float flapStrengthMod = useAvatarModifiers ? wingtipOffset * 8 : 10;
 
-			float armspanChoice = 0;
-			if (useAvatarScale)
-			{
-				armspanChoice = armspan;
-			}
-			else
-			{
-				armspanChoice = 1.0f;
-			}
+			return sizeCurve.Evaluate(GetArmspanValue()) * (flapStrengthBase + flapStrengthMod);
+		}
 
-			return sizeCurve.Evaluate(armspanChoice) * modifier;
+		/// <summary>
+		/// Returns the current armspan value, or a value of 1 if <see cref="useAvatarScale"/> is false.
+		/// </summary>
+		/// <returns></returns>
+		private float GetArmspanValue()
+		{
+			return useAvatarScale ? armspan : 1.0f;
 		}
 
 		private float GetFlightGravity()
 		{
-			float armspanChoice = 0;
-			if (useAvatarScale)
-			{
-				armspanChoice = armspan;
-			}
-			else
-			{
-				armspanChoice = 1.0f;
-			}
-
-			float gravity = 0;
-			if (useGravityCurve)
-			{
-				gravity = gravityCurve.Evaluate(armspanChoice) * armspanChoice;
-			}
-			else
-			{
-				gravity = sizeCurve.Evaluate(armspanChoice) * flightGravityBase * armspanChoice;
-			}
+			float gravity = useGravityCurve
+				? gravityCurve.Evaluate(GetArmspanValue()) * GetArmspanValue()
+				: sizeCurve.Evaluate(GetArmspanValue()) * flightGravityBase * GetArmspanValue();
 
 			if (useAvatarModifiers)
 			{
@@ -957,25 +913,33 @@ namespace OpenFlightVRC
 		}
 
 		/// <summary>
+		/// Stores the default values of all settings fields in the script.
+		/// </summary>
+		private DataDictionary defaultsStore;
+
+		/// <summary>
 		/// Initializes all default values. This should not be called by end users in most cases.
 		/// </summary>
 		public void InitializeDefaults()
 		{
-			flapStrengthBase_DEFAULT = flapStrengthBase;
-			flightGravityBase_DEFAULT = flightGravityBase;
-			requireJump_DEFAULT = requireJump;
-			allowLoco_DEFAULT = allowLoco;
-			useAvatarModifiers_DEFAULT = useAvatarModifiers;
-			canGlide_DEFAULT = canGlide;
-			fallToGlide_DEFAULT = fallToGlide;
-			horizontalStrengthMod_DEFAULT = horizontalStrengthMod;
-			glideControl_DEFAULT = glideControl;
-			airFriction_DEFAULT = airFriction;
-			useGravityCurve_DEFAULT = useGravityCurve;
-			bankingTurns_DEFAULT = bankingTurns;
-			glideAngleOffset_DEFAULT = glideAngleOffset;
-			useAvatarScale_DEFAULT = useAvatarScale;
-			Logger.Log("Defaults initialized.", this);
+			defaultsStore = new DataDictionary();
+			defaultsStore.SetValue((DataToken)nameof(flapStrengthBase), flapStrengthBase);
+			defaultsStore.SetValue((DataToken)nameof(flightGravityBase), flightGravityBase);
+			defaultsStore.SetValue((DataToken)nameof(requireJump), requireJump);
+			defaultsStore.SetValue((DataToken)nameof(allowLoco), allowLoco);
+			defaultsStore.SetValue((DataToken)nameof(useAvatarModifiers), useAvatarModifiers);
+			defaultsStore.SetValue((DataToken)nameof(wingtipOffset), wingtipOffset);
+			defaultsStore.SetValue((DataToken)nameof(canGlide), canGlide);
+			defaultsStore.SetValue((DataToken)nameof(fallToGlide), fallToGlide);
+			defaultsStore.SetValue((DataToken)nameof(horizontalStrengthMod), horizontalStrengthMod);
+			defaultsStore.SetValue((DataToken)nameof(glideControl), glideControl);
+			defaultsStore.SetValue((DataToken)nameof(airFriction), airFriction);
+			defaultsStore.SetValue((DataToken)nameof(useGravityCurve), useGravityCurve);
+			defaultsStore.SetValue((DataToken)nameof(bankingTurns), bankingTurns);
+			defaultsStore.SetValue((DataToken)nameof(glideAngleOffset), glideAngleOffset);
+			defaultsStore.SetValue((DataToken)nameof(useAvatarScale), useAvatarScale);
+			defaultsStore.SetValue((DataToken)nameof(fallToGlideActivationDelay), fallToGlideActivationDelay);
+			Logger.Log(string.Format("Defaults initialized ({0} values).", defaultsStore.Count), this);
 		}
 
 		/// <summary>
@@ -983,21 +947,41 @@ namespace OpenFlightVRC
 		/// </summary>
 		public void RestoreDefaults()
 		{
-			flapStrengthBase = flapStrengthBase_DEFAULT;
-			flightGravityBase = flightGravityBase_DEFAULT;
-			requireJump = requireJump_DEFAULT;
-			allowLoco = allowLoco_DEFAULT;
-			useAvatarModifiers = useAvatarModifiers_DEFAULT;
-			canGlide = canGlide_DEFAULT;
-			fallToGlide = fallToGlide_DEFAULT;
-			horizontalStrengthMod = horizontalStrengthMod_DEFAULT;
-			glideControl = glideControl_DEFAULT;
-			airFriction = airFriction_DEFAULT;
-			useGravityCurve = useGravityCurve_DEFAULT;
-			bankingTurns = bankingTurns_DEFAULT;
-			glideAngleOffset = glideAngleOffset_DEFAULT;
-			useAvatarScale = useAvatarScale_DEFAULT;
-			Logger.Log("Defaults restored.", this);
+			flapStrengthBase = GetDefaultValue(nameof(flapStrengthBase)).Int;
+			flightGravityBase = GetDefaultValue(nameof(flightGravityBase)).Float;
+			requireJump = GetDefaultValue(nameof(requireJump)).Boolean;
+			allowLoco = GetDefaultValue(nameof(allowLoco)).Boolean;
+			useAvatarModifiers = GetDefaultValue(nameof(useAvatarModifiers)).Boolean;
+			wingtipOffset = GetDefaultValue(nameof(wingtipOffset)).Float;
+			canGlide = GetDefaultValue(nameof(canGlide)).Boolean;
+			fallToGlide = GetDefaultValue(nameof(fallToGlide)).Boolean;
+			horizontalStrengthMod = GetDefaultValue(nameof(horizontalStrengthMod)).Float;
+			glideControl = GetDefaultValue(nameof(glideControl)).Float;
+			airFriction = GetDefaultValue(nameof(airFriction)).Float;
+			useGravityCurve = GetDefaultValue(nameof(useGravityCurve)).Boolean;
+			bankingTurns = GetDefaultValue(nameof(bankingTurns)).Boolean;
+			glideAngleOffset = GetDefaultValue(nameof(glideAngleOffset)).Float;
+			useAvatarScale = GetDefaultValue(nameof(useAvatarScale)).Boolean;
+			fallToGlideActivationDelay = GetDefaultValue(nameof(fallToGlideActivationDelay)).Int;
+			Logger.Log(string.Format("Defaults restored ({0} values).", defaultsStore.Count), this);
+		}
+
+		/// <summary>
+		/// Gets the default value for a given key. If the key is not found, a warning is logged and a default value of 0 is returned.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		private DataToken GetDefaultValue(string key)
+		{
+			if (defaultsStore.TryGetValue(key, out DataToken value))
+			{
+				return value;
+			}
+			else
+			{
+				Logger.LogError("Key not found in defaults store: " + key, this);
+				return new DataToken(0);
+			}
 		}
 	}
 }

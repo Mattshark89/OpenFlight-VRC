@@ -163,14 +163,21 @@ namespace OpenFlightVRC.Editor
         [MenuItem("VRC Packages/OpenFlight/Add OpenFlight Tag")]
         private static async Task runAutoTag()
         {
-            //exit if they have opted out
-            if (getProjectTagDecision())
+            try
             {
-                return;
-            }
+                //exit if they have opted out
+                if (getProjectTagDecision())
+                {
+                    return;
+                }
 
-            await GetWorld();
-            addTag("openflight");
+                await GetWorld();
+                addTag("openflight");
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("OpenFlight: Error automatically adding OpenFlight tag. This is not a critical error, but you may want to add the tag manually. Error: " + e.Message);
+            }
         }
 
         //button to reset opt out decision

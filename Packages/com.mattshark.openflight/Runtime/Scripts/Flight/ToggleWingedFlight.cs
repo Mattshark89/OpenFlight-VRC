@@ -18,12 +18,13 @@ namespace OpenFlightVRC
 		const float OFFTEXTUREOFFSET = 0f;
 		const float AUTOTEXTUREOFFSET = 0.5f;
 		const float ONTEXTUREOFFSET = 0.75f;
-		public OpenFlight openFlight;
+        private const string ShaderTextureProperty = "_MainTex";
+        public OpenFlight openFlight;
 		public GameObject wingedFlight;
 
 		void Start()
 		{
-			GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0, 0.75f));
+			GetComponent<MeshRenderer>().material.SetTextureOffset(ShaderTextureProperty, new Vector2(0, 0.75f));
 		}
 
 		public override void Interact()
@@ -38,20 +39,20 @@ namespace OpenFlightVRC
 			{
 				case 0:
 					openFlight.FlightOff();
-					GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, OFFTEXTUREOFFSET));
+					GetComponent<MeshRenderer>().material.SetTextureOffset(ShaderTextureProperty, new Vector2(0f, OFFTEXTUREOFFSET));
 					break;
 				case 1:
 					openFlight.FlightOn();
-					GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, AUTOTEXTUREOFFSET));
+					GetComponent<MeshRenderer>().material.SetTextureOffset(ShaderTextureProperty, new Vector2(0f, AUTOTEXTUREOFFSET));
 					break;
 				case 2:
 					openFlight.FlightAuto();
-					GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, ONTEXTUREOFFSET));
+					GetComponent<MeshRenderer>().material.SetTextureOffset(ShaderTextureProperty, new Vector2(0f, ONTEXTUREOFFSET));
 					break;
 				default:
 					//default to auto if something has gone wrong here, but this should never happen
 					openFlight.FlightAuto();
-					GetComponent<MeshRenderer>().material.SetTextureOffset("_MainTex", new Vector2(0f, AUTOTEXTUREOFFSET));
+					GetComponent<MeshRenderer>().material.SetTextureOffset(ShaderTextureProperty, new Vector2(0f, AUTOTEXTUREOFFSET));
 					Debug.LogError("Invalid flight setting: " + setting);
 					break;
 			}

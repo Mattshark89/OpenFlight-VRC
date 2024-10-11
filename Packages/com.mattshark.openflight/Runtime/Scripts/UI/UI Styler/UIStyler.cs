@@ -224,6 +224,12 @@ namespace OpenFlightVRC.UI
         [PostProcessSceneAttribute]
         public static void OnPostProcessScene()
         {
+            //apply the style
+            UIStyler[] stylers = GameObject.FindObjectsOfType<UIStyler>();
+            foreach (UIStyler styler in stylers)
+            {
+                styler.ApplyStyle();
+            }
             //find all style markup components
             UIStyleMarkup[] markups = GameObject.FindObjectsOfType<UIStyleMarkup>();
 
