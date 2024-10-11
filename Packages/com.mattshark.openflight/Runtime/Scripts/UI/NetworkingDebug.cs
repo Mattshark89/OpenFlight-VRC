@@ -6,10 +6,10 @@ using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
-using OpenFlightVRC.Integrations.Cyan.PlayerObjectPool;
 using TMPro;
 using OpenFlightVRC.Net;
 using System;
+using OpenFlightVRC.Effects;
 
 namespace OpenFlightVRC.UI
 {
@@ -19,20 +19,10 @@ namespace OpenFlightVRC.UI
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class NetworkingDebug : LoggableUdonSharpBehaviour
 	{
-		private CyanPlayerObjectAssigner _assigner;
-		public UdonBehaviour assignerProxy;
 		private TextMeshProUGUI _TMP;
 
 		void Start()
 		{
-			//get the real assigner from the proxy, if it exists
-			if (assignerProxy.GetProgramVariable("target") != null)
-			{
-				//get the assigner as a component first
-				UdonBehaviour assignerBehaviour = (UdonBehaviour)assignerProxy.GetProgramVariable("target");
-				_assigner = (CyanPlayerObjectAssigner)assignerBehaviour.GetComponent(typeof(UdonBehaviour));
-			}
-
 			_TMP = GetComponent<TextMeshProUGUI>();
 		}
 
@@ -84,17 +74,22 @@ namespace OpenFlightVRC.UI
 
 		private string QueryForPlayer(VRCPlayerApi player)
 		{
-			Component behaviour = _assigner._GetPlayerPooledUdon(player);
+			const string divider = "---------------------";
+			const string tab = "  ";
 
-			//if null, player is not in the pool yet
-			if (behaviour == null)
-			{
-				return player.displayName + " not in pool";
-			}
-
-			PlayerInfoStore store = (PlayerInfoStore)behaviour;
+			PlayerEffects store = Util.GetPlayerObjectOfType<PlayerEffects>(player);
 
 			string playerHeader = "<b>" + player.displayName + "</b>";
+
+			//check if its null
+			if (store == null)
+			{
+				return playerHeader
+					+ "\n"
+					+ "PlayerInfoStore not found on player. Something has gone wrong."
+					+ "\n"
+					+ divider;
+			}
 
 			//estimate ping based on time since startup and simulation time
 			//in MS
@@ -105,8 +100,6 @@ namespace OpenFlightVRC.UI
 
 			//get the packed data in a bit string
 			string packedData = Convert.ToString(store.PackedData, 2).PadLeft(8, '0');
-
-			const string tab = "  ";
 
 			return playerHeader
 				+ "\n"
@@ -148,7 +141,7 @@ namespace OpenFlightVRC.UI
 				+ "WorldWingtipOffset: "
 				+ store.WorldWingtipOffset
 				+ "\n"
-				+ "---------------------";
+				+ divider;
 		}
 	}
 }

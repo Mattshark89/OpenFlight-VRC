@@ -93,7 +93,7 @@ namespace OpenFlightVRC.UI
 			if (_contributers.Contains(player.displayName) && contributerInWorld)
 			{
 				Logger.Log("Player that left was a contributer! Checking for remaining contributers...", this);
-				_contributersInWorld.Remove(player.displayName);
+				_contributersInWorld.RemoveAll(player.displayName);
 
 				//check if there are any contributers left
 				if (_contributersInWorld.Count == 0)

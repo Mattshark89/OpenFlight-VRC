@@ -38,11 +38,27 @@ namespace OpenFlightVRC
 	}
 #endif
 
+	public enum WingFlightPlusGlideCallback
+	{
+		/// <summary>
+		/// Called when the player takes off
+		/// </summary>
+		TakeOff,
+		/// <summary>
+		/// Called when the player lands
+		/// </summary>
+		Land,
+		/// <summary>
+		/// Called when the player flaps
+		/// </summary>
+		Flap
+	}
+
 	/// <summary>
 	/// This is the main script that controls all of the physics for the flight system.
 	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class WingFlightPlusGlide : LoggableUdonSharpBehaviour
+	public class WingFlightPlusGlide : CallbackUdonSharpBehaviour
 	{
 		#region Settings
 		/// <summary>
@@ -316,7 +332,6 @@ namespace OpenFlightVRC
 
 		[Tooltip("Default avatar wingtipOffset. (Default: 0)")]
 		public float wingtipOffset = 0;
-		float wingtipOffset_DEFAULT = 0;
 
 		[Tooltip("Default avatar weight. (Default: 1)")]
 		[Range(0f, 2f)]
@@ -495,6 +510,7 @@ namespace OpenFlightVRC
 					isFlapping = true;
 					// TakeOff() will check !isFlying
 					TakeOff();
+					RunCallback(WingFlightPlusGlideCallback.Flap);
 				}
 			}
 
@@ -746,6 +762,7 @@ namespace OpenFlightVRC
 			if (!isFlying)
 			{
 				isFlying = true;
+				RunCallback(WingFlightPlusGlideCallback.TakeOff);
 				if (dynamicPlayerPhysics)
 				{
 					oldGravityStrength = LocalPlayer.GetGravityStrength();
@@ -843,6 +860,7 @@ namespace OpenFlightVRC
 		/// </summary>
 		public void Land()
 		{
+			RunCallback(WingFlightPlusGlideCallback.Land);
 			isFlying = false;
 			isFlapping = false;
 			isGliding = false;
@@ -948,7 +966,6 @@ namespace OpenFlightVRC
 			requireJump_DEFAULT = requireJump;
 			allowLoco_DEFAULT = allowLoco;
 			useAvatarModifiers_DEFAULT = useAvatarModifiers;
-			wingtipOffset_DEFAULT = wingtipOffset;
 			canGlide_DEFAULT = canGlide;
 			fallToGlide_DEFAULT = fallToGlide;
 			horizontalStrengthMod_DEFAULT = horizontalStrengthMod;
@@ -971,7 +988,6 @@ namespace OpenFlightVRC
 			requireJump = requireJump_DEFAULT;
 			allowLoco = allowLoco_DEFAULT;
 			useAvatarModifiers = useAvatarModifiers_DEFAULT;
-			wingtipOffset = wingtipOffset_DEFAULT;
 			canGlide = canGlide_DEFAULT;
 			fallToGlide = fallToGlide_DEFAULT;
 			horizontalStrengthMod = horizontalStrengthMod_DEFAULT;

@@ -5,15 +5,17 @@
 using UnityEngine;
 using UdonSharp;
 using OpenFlightVRC.UI;
+using VRC.SDK3.Data;
+using TMPro;
 
 namespace OpenFlightVRC
 {
 	/// <summary>
 	/// The type of log to write
 	/// </summary>
-	enum LogType
+	enum LogLevel
 	{
-		Log,
+		Info,
 		Warning,
 		Error
 	};
@@ -22,73 +24,174 @@ namespace OpenFlightVRC
 	/// A simple logger that prefixes all messages with [OpenFlight]
 	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+	[DefaultExecutionOrder(-1000)] //Ensure this runs before any other scripts so its name is correct
 	public class Logger : UdonSharpBehaviour
 	{
-		const int MaxLogLength = 50;
+		/// <summary>
+		/// The name of the log object
+		/// </summary>
+		const string logObjectName = "OpenFlightLogObject";
 
-		const string PackageColor = "orange";
+		#region In-Client Log Visualisation
+		public string log = "";
+		public TextMeshProUGUI text;
 
-		private static string Prefix()
+		void Start()
 		{
-			return "[" + ColorText("OpenFlight", PackageColor) + "]";
-		}
-
-		private static void WriteToUILog(string text, LogType lT, LoggableUdonSharpBehaviour self)
-		{
-			LoggerProxy logProxy = self._logProxy;
-
-			if (logProxy == null)
-			{
-				const string log = "OpenFlightLogObject";
-
-				GameObject logObject = GameObject.Find(log);
-
-				if (logObject == null)
-				{
-					return;
-				}
-
-				LoggerProxy logUdon = logObject.GetComponent<LoggerProxy>();
-
-				self._logProxy = logUdon;
-				logProxy = logUdon;
-			}
-
-			switch (lT)
-			{
-				case LogType.Log:
-					text = "[" + ColorText("Log", "white") + "] " + text;
-					break;
-				case LogType.Warning:
-					text = "[" + ColorText("Warning", "yellow") + "] " + text;
-					break;
-				case LogType.Error:
-					text = "[" + ColorText("Error", "red") + "] " + text;
-					break;
-			}
-
-			string logString = logProxy.log;
-
-			logString += text + "\n";
-
-			//trim text if too many lines
-			if (logString.Split('\n').Length > MaxLogLength)
-			{
-				logString = logString.Substring(logString.IndexOf('\n') + 1);
-			}
-
-			logProxy.log = logString;
+			//set our name just to be sure its correct
+			gameObject.name = logObjectName;
 		}
 
 		/// <summary>
-		/// Logs a message to the console
+		/// Updates the log text
 		/// </summary>
-		/// <param name="text">The text to print to the console</param>
-		/// <param name="self">The UdonSharpBehaviour that is logging the text</param>
-		internal static void Log(string text, LoggableUdonSharpBehaviour self)
+		internal void UpdateLog()
 		{
-			Debug.Log(Format(text, self));
-			WriteToUILog(Format(text, self, false), LogType.Log, self);
+			text.text = log;
+		}
+		#endregion
+
+		#region Public Logging API
+		const string PackageColor = "orange";
+		const string PackageName = "OpenFlight";
+		/// <summary>
+		/// The max number of log messages to display
+		/// </summary>
+		const int MaxLogMessages = 50;
+
+		private static void WriteToUILog(string text, LoggableUdonSharpBehaviour self)
+        {
+            Logger logProxy = null;
+            if (!SetupLogProxy(self, ref logProxy))
+            {
+                return;
+            }
+
+            //add the text to the log
+			logProxy.log += text + "\n";
+
+			//split into lines
+			//trim the log if it is too long
+			string[] lines = logProxy.log.Split('\n');
+			if (lines.Length > MaxLogMessages)
+			{
+				logProxy.log = string.Join("\n", lines, lines.Length - MaxLogMessages, MaxLogMessages);
+			}
+
+            logProxy.UpdateLog();
+        }
+
+		/// <summary>
+		/// Gets the log type string
+		/// </summary>
+		/// <param name="lT"></param>
+		/// <returns></returns>
+        private static string GetLogTypeString(LogLevel lT)
+        {
+            switch (lT)
+            {
+                case LogLevel.Info:
+					return ColorText(nameof(LogLevel.Info), "white");
+                case LogLevel.Warning:
+					return ColorText(nameof(LogLevel.Warning), "yellow");
+                case LogLevel.Error:
+					return ColorText(nameof(LogLevel.Error), "red");
+				default:
+					return "";
+            }
+        }
+
+		/// <summary>
+		/// Converts a LogType to a string
+		/// </summary>
+		/// <param name="LT"></param>
+		/// <returns></returns>
+		private static string LogTypeToString(LogLevel LT)
+		{
+			switch (LT)
+			{
+				case LogLevel.Info:
+					return nameof(LogLevel.Info);
+				case LogLevel.Warning:
+					return nameof(LogLevel.Warning);
+				case LogLevel.Error:
+					return nameof(LogLevel.Error);
+				default:
+					return "";
+			}
+		}
+
+        /// <summary>
+        /// Sets up the log proxy system
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="Logger"></param>
+        /// <returns> Whether or not the setup was successful </returns>
+        private static bool SetupLogProxy(LoggableUdonSharpBehaviour self, ref Logger Logger)
+        {
+            //check if self is null
+            //if it isnt, we can check for and setup the logproxy cache system
+            if (self != null)
+            {
+                Logger = self._logProxy;
+
+                if (Logger == null)
+                {
+
+                    GameObject logObject = GameObject.Find(logObjectName);
+
+                    if (logObject == null)
+                    {
+                        return false;
+                    }
+
+                    Logger logUdon = logObject.GetComponent<Logger>();
+
+                    self._logProxy = logUdon;
+                    Logger = logUdon;
+                }
+            }
+            else
+            {
+                //if it *is* null, we need to do the more expensive gameobject.find every time
+                GameObject logObject = GameObject.Find(logObjectName);
+
+                if (logObject == null)
+                {
+                    return false;
+                }
+
+                Logger logUdon = logObject.GetComponent<Logger>();
+
+                Logger = logUdon;
+            }
+
+			return true;
+        }
+
+        /// <summary>
+        /// Logs a message to the console
+        /// </summary>
+        /// <param name="text">The text to print to the console</param>
+        /// <param name="self">The UdonSharpBehaviour that is logging the text</param>
+        internal static void Log(string text, LoggableUdonSharpBehaviour self)
+		{
+			Debug.Log(Format(text, LogLevel.Info, self));
+			WriteToUILog(Format(text, LogLevel.Info, self, false), self);
+		}
+
+		/// <inheritdoc cref="Log(string, LoggableUdonSharpBehaviour)"/>
+		/// <remarks> This version of Log will only log the message once </remarks>
+		internal static void LogOnce(string text, LoggableUdonSharpBehaviour self)
+		{
+			//check if the message has already been logged
+			if (CheckIfLogged(text, self))
+			{
+				return;
+			}
+
+			Debug.Log(Format(text, LogLevel.Info, self));
+			WriteToUILog(Format(text, LogLevel.Info, self, false), self);
 		}
 
 		/// <summary>
@@ -98,8 +201,22 @@ namespace OpenFlightVRC
 		/// <param name="self">The UdonSharpBehaviour that is logging the text</param>
 		internal static void LogWarning(string text, LoggableUdonSharpBehaviour self)
 		{
-			Debug.LogWarning(Format(text, self));
-			WriteToUILog(Format(text, self, false), LogType.Warning, self);
+			Debug.LogWarning(Format(text, LogLevel.Warning, self));
+			WriteToUILog(Format(text, LogLevel.Warning, self, false), self);
+		}
+
+		/// <inheritdoc cref="LogWarning(string, LoggableUdonSharpBehaviour)"/>
+		/// <remarks> This version of LogWarning will only log the warning once </remarks>
+		internal static void LogWarningOnce(string text, LoggableUdonSharpBehaviour self)
+		{
+			//check if the warning has already been logged
+			if (CheckIfLogged(text, self))
+			{
+				return;
+			}
+
+			Debug.LogWarning(Format(text, LogLevel.Warning, self));
+			WriteToUILog(Format(text, LogLevel.Warning, self, false), self);
 		}
 
 		/// <summary>
@@ -109,8 +226,52 @@ namespace OpenFlightVRC
 		/// <param name="self">The UdonSharpBehaviour that is logging the text</param>
 		internal static void LogError(string text, LoggableUdonSharpBehaviour self)
 		{
-			Debug.LogError(Format(text, self));
-			WriteToUILog(Format(text, self, false), LogType.Error, self);
+			Debug.LogError(Format(text, LogLevel.Error, self));
+			WriteToUILog(Format(text, LogLevel.Error, self, false), self);
+		}
+
+		/// <inheritdoc cref="LogError(string, LoggableUdonSharpBehaviour)"/>
+		/// <remarks> This version of LogError will only log the error once </remarks>
+		internal static void LogErrorOnce(string text, LoggableUdonSharpBehaviour self)
+		{
+			//check if the error has already been logged
+			if (CheckIfLogged(text, self))
+			{
+				return;
+			}
+
+			Debug.LogError(Format(text, LogLevel.Error, self));
+			WriteToUILog(Format(text, LogLevel.Error, self, false), self);
+		}
+
+		/// <summary>
+		/// Checks if a specific text has been logged already, as the latest message
+		/// </summary>
+		/// <param name="text"></param>
+		/// <param name="self"></param>
+		/// <returns> Whether or not the text has been logged as the latest message </returns>
+		internal static bool CheckIfLogged(string text, LoggableUdonSharpBehaviour self)
+		{
+			Logger logProxy = null;
+			if (!SetupLogProxy(self, ref logProxy))
+			{
+				return false;
+			}
+
+			string logString = logProxy.log;
+
+			//check if the latest message is the same as the text
+			return logString.EndsWith(text + "\n");
+		}
+
+		/// <summary>
+		/// Gets the current timestamp
+		/// </summary>
+		/// <returns></returns>
+		private static string GetTimeStampString()
+		{
+			string time = System.DateTime.Now.ToString("T");
+			return ColorText(time, "white");
 		}
 
 		/// <summary>
@@ -120,10 +281,11 @@ namespace OpenFlightVRC
 		/// <param name="self">The UdonSharpBehaviour that is logging the text</param>
 		/// <param name="includePrefix">Whether or not to include the prefix</param>
 		/// <returns>The formatted text</returns>
-		private static string Format(string text, UdonSharpBehaviour self, bool includePrefix = true)
+		private static string Format(string text, LogLevel LT, UdonSharpBehaviour self, bool includePrefix = true)
 		{
-			string prefix = includePrefix ? Prefix() + " " : "";
-			return prefix + "[" + ColorizeScript(self) + "] " + text;
+			string prefix = includePrefix ? string.Format("[{0}]", ColorText(PackageName, PackageColor)) : "";
+			return string.Format("{0} [{1}] [{2}] [{3}] {4}", prefix, GetLogTypeString(LT), GetTimeStampString(), ColorizeScript(self), text);
+			//return string.Format("{0} [{1}] {2}", prefix, ColorizeScript(self), text);
 			//return (includePrefix ? Prefix() + " " : "") + ColorizeScript(self) + " " + text;
 		}
 
@@ -134,7 +296,7 @@ namespace OpenFlightVRC
 		/// <returns>The colored name</returns>
 		public static string ColorizeScript(UdonSharpBehaviour script)
 		{
-			return ColorText(script.name, ChooseColor(script));
+			return ColorText(GetScriptName(script), ChooseColor(script));
 		}
 
 		/// <summary>
@@ -148,7 +310,7 @@ namespace OpenFlightVRC
 			string colorized = ColorText(function, ChooseColor(script));
 
 			//italicise it to denote that it is a function
-			return "<i>" + colorized + "</i>";
+			return string.Format("<i>{0}</i>", colorized);
 		}
 
 		/// <summary>
@@ -159,7 +321,7 @@ namespace OpenFlightVRC
 		/// <returns>The colored text</returns>
 		private static string ColorText(string text, string color)
 		{
-			return "<color=" + color + ">" + text + "</color>";
+			return string.Format("<color={0}>{1}</color>", color, text);
 		}
 
 		/// <summary>
@@ -177,7 +339,7 @@ namespace OpenFlightVRC
 			else
 			{
 				//set random seed to hash of name
-				Random.InitState(self.name.GetHashCode());
+				Random.InitState(GetScriptName(self).GetHashCode());
 			}
 
 			float Saturation = 1f;
@@ -203,5 +365,22 @@ namespace OpenFlightVRC
 
 			return "#" + RHex + GHex + BHex;
 		}
+
+		/// <summary>
+		/// Gets the name of the UdonSharpBehaviour. If null, returns "Untraceable Static Function Call"
+		/// </summary>
+		/// <param name="script"></param>
+		/// <returns></returns>
+		private static string GetScriptName(UdonSharpBehaviour script)
+		{
+			//check if null
+			if (script == null)
+			{
+				return "Untraceable Static Function Call";
+			}
+
+			return script.name;
+		}
+		#endregion
 	}
 }

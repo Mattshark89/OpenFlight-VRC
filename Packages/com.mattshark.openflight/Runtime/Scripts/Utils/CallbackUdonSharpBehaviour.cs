@@ -112,11 +112,20 @@ namespace OpenFlightVRC
                     //get the behaviour
                     UdonSharpBehaviour behaviour = (UdonSharpBehaviour)tokens[i].Reference;
 
+
                     //get the method name list
                     DataList methods = data[tokens[i]].DataList;
                     for (int j = 0; j < methods.Count; j++)
                     {
                         string methodName = methods[j].String;
+
+                        //check if the behaviour is null, and if it is, remove it
+                        if (behaviour == null)
+                        {
+                            Logger.LogWarning(String.Format("Behaviour for callback [{0}] is null, removing callback", Logger.ColorizeFunction(behaviour, methodName)), this);
+                            methods.Remove(methodName);
+                            continue;
+                        }
 
                         //run the method
                         behaviour.SendCustomEvent(methodName);

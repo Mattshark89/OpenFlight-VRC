@@ -56,6 +56,7 @@ public class UIStyleMarkupScenePostProcessor {
 #endif
 
 	[AddComponentMenu("Udon Sharp/Video/UI/Style Markup")]
+	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	internal class UIStyleMarkup : UdonSharpBehaviour
 	{
 #pragma warning disable CS0649

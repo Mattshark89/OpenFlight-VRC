@@ -2,7 +2,9 @@
  * @ Maintainer: Happyrobot33
  */
 
+using OpenFlightVRC.Net;
 using UnityEngine;
+using VRC.SDK3.Data;
 using VRC.SDKBase;
 
 namespace OpenFlightVRC
@@ -209,5 +211,53 @@ namespace OpenFlightVRC
 			}
 			return false;
 		}
-	}
+
+		/// <summary>
+		/// Gets all player objects of a specific type
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		public static T[] GetAllPlayerObjectsOfType<T>()
+		{
+			//get the full player list
+			VRCPlayerApi[] players = new VRCPlayerApi[VRCPlayerApi.GetPlayerCount()];
+			VRCPlayerApi.GetPlayers(players);
+
+			T[] scripts = new T[players.Length];
+
+			for (int i = 0; i < players.Length; i++)
+            {
+                VRCPlayerApi player = players[i];
+                scripts[i] = GetPlayerObjectOfType<T>(player);
+            }
+
+            return scripts;
+		}
+
+		/// <summary>
+		/// Gets a player object of a specific type passed into it
+		/// </summary>
+		/// <typeparam name="T">The type of object to get</typeparam>
+		/// <param name="player">The player to get the object from</param>
+		/// <returns>The object of the type passed in</returns>
+        public static T GetPlayerObjectOfType<T>(VRCPlayerApi player)
+        {
+            //TODO: If something is introduced that allows us to ask specifically for tagged objects, use that instead so we dont have to loop through all objects
+            GameObject[] objects = Networking.GetPlayerObjects(player);
+
+            //loop through all objects to find the one we want
+            foreach (GameObject obj in objects)
+            {
+                T script = obj.GetComponent<T>();
+                if (script != null)
+                {
+					return script;
+                }
+            }
+
+			//Logger.LogErrorOnce("Could not find type on player " + player.displayName, null);
+			Debug.LogError("Could not find type on player " + player.displayName);
+			return default;
+		}
+    }
 }
