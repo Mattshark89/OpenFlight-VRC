@@ -77,7 +77,7 @@ namespace OpenFlightVRC.UI
 			const string divider = "---------------------";
 			const string tab = "  ";
 
-			PlayerEffects store = Util.GetPlayerObjectOfType<PlayerEffects>(player);
+			PlayerEffects store = Util.GetPlayerObjectOfType<PoolObjectReferenceManager>(player).PlayerEffects;
 
 			string playerHeader = "<b>" + player.displayName + "</b>";
 

@@ -341,7 +341,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: selectedPlayer
+      Entry: 6
+      Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 99599908}
   _logProxy: {fileID: 0}
   dropdown: {fileID: 99599910}
@@ -399,7 +402,19 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 99599908}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: SendCustomEvent
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: OnValueChanged
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &99599911
 MonoBehaviour:
@@ -1888,6 +1903,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1387480281}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &707634108 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2682370999467873922, guid: 83a1dcf8462378640b7615b3011c0c6f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1387480281}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &734435127 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3908956120036173207, guid: 83a1dcf8462378640b7615b3011c0c6f,
@@ -3217,6 +3238,12 @@ PrefabInstance:
       propertyPath: _syncMethod
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 506646044496361523, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 506646044496361523, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
     - target: {fileID: 525425880361129853, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
       propertyPath: serializationData.Prefab
@@ -4468,6 +4495,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2333134721467993876, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
+      propertyPath: _syncMethod
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2340682760287045380, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
@@ -7327,6 +7359,11 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6086324243248966538, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
+      propertyPath: textTemplate
+      value: 
+      objectReference: {fileID: 2742280180523204435}
     - target: {fileID: 6086324243248966538, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
       propertyPath: serializationData.Prefab
@@ -12007,7 +12044,7 @@ PrefabInstance:
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.size
-      value: 221
+      value: 222
       objectReference: {fileID: 0}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
@@ -13122,7 +13159,7 @@ PrefabInstance:
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.data[221].ID
-      value: 2414
+      value: 2826
       objectReference: {fileID: 0}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
@@ -17723,7 +17760,7 @@ PrefabInstance:
         type: 3}
       propertyPath: NetworkIDs.Array.data[221].gameObject
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 707634108}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.data[222].gameObject
@@ -21251,6 +21288,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
+      propertyPath: NetworkIDs.Array.data[221].SerializedTypeNames.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
       propertyPath: NetworkIDs.Array.data[206].SerializedTypeNames.Array.data[0]
       value: VRC.Udon.UdonBehaviour
       objectReference: {fileID: 0}
@@ -21332,6 +21374,11 @@ PrefabInstance:
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.data[220].SerializedTypeNames.Array.data[0]
+      value: VRC.Udon.UdonBehaviour
+      objectReference: {fileID: 0}
+    - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
+      propertyPath: NetworkIDs.Array.data[221].SerializedTypeNames.Array.data[0]
       value: VRC.Udon.UdonBehaviour
       objectReference: {fileID: 0}
     - target: {fileID: 8464459589408506562, guid: 8894fa7e4588a5c4fab98453e558847d,
@@ -34330,6 +34377,7 @@ MonoBehaviour:
   importDB: {fileID: 4004505844190680361}
   exportDB: {fileID: 5171312846276019441}
   RemoteDifferencesPanel: {fileID: 7854708774099041153}
+  playerDropdown: {fileID: 99599909}
   DisabledWhenNotOwner:
   - {fileID: 2398041920185836654}
   - {fileID: 5095342567079484376}

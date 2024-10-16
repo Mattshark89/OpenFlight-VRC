@@ -51,7 +51,7 @@ namespace OpenFlightVRC.Net
         private PlayerSettings m_ReferencePlayerStore;
         void Start()
         {
-            m_LocalPlayerStore = Util.GetPlayerObjectOfType<PlayerSettings>(Networking.LocalPlayer);
+            m_LocalPlayerStore = Util.GetPlayerObjectOfType<PoolObjectReferenceManager>(Networking.LocalPlayer).PlayerSettingsStore;
             //start the reference off as the local players store
             m_ReferencePlayerStore = m_LocalPlayerStore;
             //subscribe to the world join callback
