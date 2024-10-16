@@ -3,6 +3,8 @@ using System;
 using TMPro;
 using UdonSharp;
 using UnityEngine;
+
+using VRC.SDK3.Components;
 using VRC.SDKBase;
 using VRC.Udon;
 
@@ -16,6 +18,7 @@ namespace OpenFlightVRC.Net
         OnDataChanged
     }
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+    [RequireComponent(typeof(VRCEnablePersistence))]
     public class PlayerMetrics : CallbackUdonSharpBehaviour
     {
         #region Metrics

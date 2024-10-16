@@ -325,11 +325,11 @@ namespace OpenFlightVRC.Net
             }
 
             //get all the button objects
-            PlayerButton[] buttons = Util.GetAllPlayerObjectsOfType<PlayerButton>();
+            /* PlayerButton[] buttons = Util.GetAllPlayerObjectsOfType<PlayerButton>();
             foreach (PlayerButton button in buttons)
             {
                 button.UpdateHighlight(player);
-            }
+            } */
 
             UpdateUI();
         }

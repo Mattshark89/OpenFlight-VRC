@@ -63,6 +63,7 @@ namespace OpenFlightVRC.Net
     /// This class is used to store player settings
     /// </summary>
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+    [RequireComponent(typeof(VRCEnablePersistence))]
     public class PlayerSettings : CallbackUdonSharpBehaviour
     {
         #region Object References
