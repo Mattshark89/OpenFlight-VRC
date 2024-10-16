@@ -122,15 +122,6 @@ namespace OpenFlightVRC.UI
 			}
 		}
 
-		public void FixInitialization()
-		{
-			//disable the tabs that were initialized
-			foreach (GameObject tab in tabsToInitialize)
-			{
-				tab.SetActive(false);
-			}
-		}
-
         public void UpdateVersionInfo()
         {
 			VersionInfo.text = String.Format("Open-Flight Ver {0}\nJSON Ver {1}\nJSON Date {2}", OpenFlight.OpenFlightVersion, AvatarDetection.jsonVersion, AvatarDetection.jsonDate);

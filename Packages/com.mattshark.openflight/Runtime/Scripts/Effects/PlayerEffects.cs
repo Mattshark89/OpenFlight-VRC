@@ -13,7 +13,6 @@ using static OpenFlightVRC.Util;
 namespace OpenFlightVRC.Effects
 {
 	[UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-	[RequireComponent(typeof(VRCDisablePersistence))]
 	/// <summary>
 	/// This class is used to store and manage effects information, such as if the player is flying, flapping, or a contributer.
 	/// </summary>

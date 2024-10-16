@@ -11,7 +11,6 @@ namespace OpenFlightVRC.Net
     /// The goal of this class is purely to act as a variable reference to various child pooled objects
     /// </summary>
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    [RequireComponent(typeof(VRCDisablePersistence))]
     [RequireComponent(typeof(VRCPlayerObject))]
     public class PoolObjectReferenceManager : LoggableUdonSharpBehaviour
     {
