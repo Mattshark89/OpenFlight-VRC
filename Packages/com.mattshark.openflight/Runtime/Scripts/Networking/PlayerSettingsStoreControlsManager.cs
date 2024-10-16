@@ -9,6 +9,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 using VRC.SDK3.Data;
 using TMPro;
+using OpenFlightVRC.UI;
 
 namespace OpenFlightVRC.Net
 {
@@ -24,6 +25,7 @@ namespace OpenFlightVRC.Net
         public InputField importDB;
         public InputField exportDB;
         public GameObject RemoteDifferencesPanel;
+        public PlayerUIDropdown playerDropdown;
         /// <summary>
         /// The objects that should be disabled when the player is not the owner of the reference player store
         /// </summary>
@@ -63,6 +65,12 @@ namespace OpenFlightVRC.Net
             m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnRemoteDifferencesResolved, this, nameof(UpdateStorageText));
             m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnStorageFull, this, nameof(UpdateStorageText));
             m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnStorageFree, this, nameof(UpdateStorageText));
+            playerDropdown.AddCallback(PlayerUIDropdownCallback.ValueChanged, this, nameof(SelectedPlayerChanged));
+        }
+
+        public void SelectedPlayerChanged()
+        {
+            SetReferencePlayerStore(playerDropdown.selectedPlayer);
         }
 
         #region Callback Triggered Functions
@@ -334,24 +342,24 @@ namespace OpenFlightVRC.Net
             UpdateUI();
         }
 
-        public override void OnPlayerLeft(VRCPlayerApi player)
-        {
-            //TODO: Once fixed, use this method and remove the owner variable. Current bug does not allow this to work, and will return the local player instead
-            //we need to verify that the player that left was not the reference player, and if it is, we need to set the reference player to the local player
-            /*if (Networking.GetOwner(ReferencePlayerStore.gameObject) == player)
-            {
-                Logger.Log("Reference player left, setting to local player", this);
-                SetReferencePlayerStore(Networking.LocalPlayer);
-            }
-            */
+        // public override void OnPlayerLeft(VRCPlayerApi player)
+        // {
+        //     //TODO: Once fixed, use this method and remove the owner variable. Current bug does not allow this to work, and will return the local player instead
+        //     //we need to verify that the player that left was not the reference player, and if it is, we need to set the reference player to the local player
+        //     /*if (Networking.GetOwner(ReferencePlayerStore.gameObject) == player)
+        //     {
+        //         Logger.Log("Reference player left, setting to local player", this);
+        //         SetReferencePlayerStore(Networking.LocalPlayer);
+        //     }
+        //     */
 
-            //get the player 
-            VRCPlayerApi playerref = m_ReferencePlayerStore.TEMPOWNERDOREMOVEWHENFIXED;
-            if (playerref == player)
-            {
-                Logger.Log("Reference player left, setting to local player", this);
-                SetReferencePlayerStore(Networking.LocalPlayer);
-            }
-        }
+        //     //get the player 
+        //     VRCPlayerApi playerref = m_ReferencePlayerStore.TEMPOWNERDOREMOVEWHENFIXED;
+        //     if (playerref == player)
+        //     {
+        //         Logger.Log("Reference player left, setting to local player", this);
+        //         SetReferencePlayerStore(Networking.LocalPlayer);
+        //     }
+        // }
     }
 }

@@ -11,7 +11,7 @@ namespace OpenFlightVRC.UI
 	/// <summary>
 	/// The base class for all UI elements that need proxy interactions
 	/// </summary>
-	public class UIBase : LoggableUdonSharpBehaviour
+	public class UIBase : CallbackUdonSharpBehaviour
 	{
 		/// <summary>
 		/// The target UdonBehaviour
