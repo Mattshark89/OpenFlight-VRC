@@ -286,9 +286,23 @@ Remote: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes",
                 slotName = _GetUniqueSlotName(slotName);
             }
 
-            slotData.SetValue(new DataToken(revisionKey), new DataToken(_GetSlotRevision(slotName) + 1));
-            slotData.SetValue(new DataToken(updatedDateTimeKey), new DataToken(System.DateTime.Now.ToString()));
-            //UpdateRevisionAndDate(slotData, slotName, localSlots);
+            //get the pre-existing slot data if it exists
+            DataDictionary prevSlotData = new DataDictionary();
+            if (localSlots.TryGetValue(new DataToken(slotName), TokenType.DataDictionary, out DataToken slotDataToken))
+            {
+                prevSlotData = slotDataToken.DataDictionary;
+
+                //Load in the metadata
+                slotData.SetValue(new DataToken(revisionKey), new DataToken(_GetSlotRevision(slotName)));
+                slotData.SetValue(new DataToken(updatedDateTimeKey), new DataToken(_GetSlotUpdatedDateTime(slotName)));
+            }
+
+            //only edit these if there is differences
+            if (_GetDictionaryDifferences(slotData, prevSlotData))
+            {
+                slotData.SetValue(new DataToken(revisionKey), new DataToken(_GetSlotRevision(slotName) + 1));
+                slotData.SetValue(new DataToken(updatedDateTimeKey), new DataToken(System.DateTime.Now.ToString()));
+            }
 
             //slot name is assumed valid past here
             localSlots.SetValue(new DataToken(slotName), new DataToken(slotData));
@@ -313,7 +327,7 @@ Remote: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes",
         public void _UploadSettings()
         {
             //get the revision number
-            if(_GetGlobalSetting(revisionKey, out DataToken revision))
+            if (_GetGlobalSetting(revisionKey, out DataToken revision))
             {
                 _SetGlobalSetting(revisionKey, new DataToken((long)revision.Double + 1));
             }
@@ -840,7 +854,7 @@ Remote: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes",
         /// <returns>-1 if invalid</returns>
         public long _GetSlotRevision(string slot)
         {
-            if(_IsSlotValid(slot))
+            if (_IsSlotValid(slot))
             {
                 //get the revision in the slot
                 DataDictionary remoteSlots = GetSlots(m_RemoteSettings);
@@ -889,14 +903,19 @@ Remote: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes",
         /// </summary>
         /// <param name="dict1"> The first dictionary </param>
         /// <param name="dict2"> The second dictionary </param>
-        /// <param name="differences"> The resulting dictionary of differences </param>
         /// <returns> True if there are differences, false if there are not </returns>
-        public bool _GetDictionaryDifferences(DataDictionary dict1, DataDictionary dict2, out DataDictionary differences)
+        public bool _GetDictionaryDifferences(DataDictionary dict1, DataDictionary dict2)
         {
-            differences = _GetDictionaryDifferencesRecursive(dict1, dict2);
-            return differences.Count > 0;
+            //this is the lazy way right now but fuck it, the recursive system is really confusing my brain and semi unnecesary
+            //TODO: Make this actually work properly and the way it should again. The ordering *shouldnt* matter since they are dictionarys
+            //convert both to strings and use compare on them
+            string dict1str = ConvertDictToString(dict1);
+            string dict2str = ConvertDictToString(dict2);
+            return !dict1str.Equals(dict2str);
+            //differences = _GetDictionaryDifferencesRecursive(dict1, dict2);
+            //return differences.Count > 0;
         }
-
+/* 
         /// <inheritdoc cref="_GetDictionaryDifferences(DataDictionary, DataDictionary, out DataDictionary)"/>
         [RecursiveMethod]
         public DataDictionary _GetDictionaryDifferencesRecursive(DataDictionary dict1, DataDictionary dict2)
@@ -947,7 +966,7 @@ Remote: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes",
             }
 
             return differences;
-        }
+        } */
 
         /// <summary>
         /// Checks if there are differences between the local and remote settings
@@ -960,7 +979,7 @@ Remote: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes",
                 return true;
             }
 
-            return _GetDictionaryDifferences(m_LocalSettings, m_RemoteSettings, out var DISCARD);
+            return _GetDictionaryDifferences(m_LocalSettings, m_RemoteSettings);
         }
 
 
