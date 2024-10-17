@@ -78,7 +78,10 @@ namespace OpenFlightVRC
 
 			//check if the release we are on is a prerelease
 			bool isPrerelease = IsPrerelease(OF.OpenFlightVersion.ToString());
-			Logger.Log("World is on prerelease: " + isPrerelease, this);
+			if (isPrerelease)
+			{
+				Logger.Log("World is on a prerelease", this);
+			}
 
 			//check if on latest release. If the world is on a prerelease, this compares to those. if it isnt, we want to find the latest release that isnt a prerelease
 			//string releaseVersion = releases[0]["tag_name"].ToString();
