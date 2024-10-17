@@ -915,7 +915,11 @@ Remote: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes",
                     {
                         //recursively check the dictionaries
                         DataDictionary subDifferences = _GetDictionaryDifferencesRecursive(dict1[key].DataDictionary, dict2[key].DataDictionary);
-                        differences.Add(key, new DataToken(subDifferences));
+                        //only add the key if subDifferences contains anything
+                        if (subDifferences.Count > 0)
+                        {
+                            differences.Add(key, new DataToken(subDifferences));
+                        }
                     }
                     else
                     {
