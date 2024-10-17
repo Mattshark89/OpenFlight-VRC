@@ -33,7 +33,10 @@ namespace OpenFlightVRC.Net
         /// </summary>
         public Selectable[] DisabledWhenNotOwner;
         public TextMeshProUGUI defaultSlotNameText;
-        public TextMeshProUGUI StorageInfo;
+        public TextMeshProUGUI LocalStorageInfo;
+        public TextMeshProUGUI RemoteStorageInfo;
+        public Slider LocalStorageSlider;
+        public Slider RemoteStorageSlider;
         public TextMeshProUGUI SlotInfo;
         public TextMeshProUGUI DBInfo;
         #endregion
@@ -92,7 +95,11 @@ namespace OpenFlightVRC.Net
 
         public void UpdateStorageText()
         {
-            StorageInfo.text = m_ReferencePlayerStore._GetStorageInfo();
+            LocalStorageInfo.text = string.Format("{0} / {1}", m_ReferencePlayerStore._LocalSpaceUsed(), PlayerSettings.MAXSAVEBYTES);
+            RemoteStorageInfo.text = string.Format("{0} / {1}", m_ReferencePlayerStore._RemoteSpaceUsed(), PlayerSettings.MAXSAVEBYTES);
+
+            LocalStorageSlider.value = m_ReferencePlayerStore._LocalSpaceUsed() / (float)PlayerSettings.MAXSAVEBYTES;
+            RemoteStorageSlider.value = m_ReferencePlayerStore._RemoteSpaceUsed() / (float)PlayerSettings.MAXSAVEBYTES;
         }
 
         public void UpdateSlotInfoText()

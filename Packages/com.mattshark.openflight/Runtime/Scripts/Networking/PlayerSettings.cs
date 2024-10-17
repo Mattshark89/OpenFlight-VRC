@@ -161,26 +161,34 @@ namespace OpenFlightVRC.Net
             }
         }
 
+        public int _RemoteSpaceUsed()
+        {
+            return _SpaceUsed(m_RemoteSettings);
+        }
+
+        public int _LocalSpaceUsed()
+        {
+            return _SpaceUsed(m_LocalSettings);
+        }
+
         public int _SpaceFree(DataDictionary settings)
         {
             return MAXSAVEBYTES - _SpaceUsed(settings);
         }
 
+        public int _RemoteSpaceFree()
+        {
+            return _SpaceFree(m_RemoteSettings);
+        }
+
+        public int _LocalSpaceFree()
+        {
+            return _SpaceFree(m_LocalSettings);
+        }
+
         public bool _IsSpaceAvailable(DataDictionary settings, int bytes)
         {
             return _SpaceFree(settings) >= bytes;
-        }
-
-        public string _GetStorageInfo()
-        {
-            return string.Format(@"Local: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes
-Remote: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes",
-                                 _SpaceUsed(m_LocalSettings),
-                                 _SpaceFree(m_LocalSettings),
-                                 MAXSAVEBYTES,
-                                 _SpaceUsed(m_RemoteSettings),
-                                 _SpaceFree(m_RemoteSettings),
-                                 MAXSAVEBYTES);
         }
 
         public string _GetDBInfo()
