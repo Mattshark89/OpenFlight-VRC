@@ -9,6 +9,7 @@ using VRC.Udon;
 using VRC.SDK3.Data;
 using VRC.Udon.Common;
 using VRC.SDK3.Components;
+using System;
 
 namespace OpenFlightVRC.Net
 {
@@ -123,6 +124,16 @@ namespace OpenFlightVRC.Net
         /// The slot to load by default upon joining the world, if <see cref="useWorldDefaultsWhenLoadingKey"/> is false
         /// </summary>
         public const string slotToLoadByDefaultKey = "slotToLoadByDefault";
+
+        /// <summary>
+        /// The key for the last updated date time
+        /// </summary>
+        public const string updatedDateTimeKey = "lastUpdatedDateTime";
+
+        /// <summary>
+        /// The key for the revision number, increments every time the settings are changed
+        /// </summary>
+        public const string revisionKey = "revision";
         #endregion
 
 
@@ -151,6 +162,14 @@ namespace OpenFlightVRC.Net
         public string _GetStorageInfo()
         {
             return string.Format("Used: {0} bytes, Free: {1} bytes, Total: {2} bytes", _SpaceUsed(m_LocalSettings), _SpaceFree(m_LocalSettings), MAXSAVEBYTES);
+        }
+
+        public string _GetDBInfo()
+        {
+            //get from remote
+            _GetGlobalSetting(m_RemoteSettings, revisionKey, out DataToken revision);
+            _GetGlobalSetting(m_RemoteSettings, updatedDateTimeKey, out DataToken updatedDateTime);
+            return string.Format("Revision: {0}, Last Updated: {1}", revision.ToString(), updatedDateTime.ToString());
         }
 
         /// <summary>
@@ -260,6 +279,10 @@ namespace OpenFlightVRC.Net
                 slotName = _GetUniqueSlotName(slotName);
             }
 
+            slotData.SetValue(new DataToken(revisionKey), new DataToken(_GetSlotRevision(slotName) + 1));
+            slotData.SetValue(new DataToken(updatedDateTimeKey), new DataToken(System.DateTime.Now.ToString()));
+            //UpdateRevisionAndDate(slotData, slotName, localSlots);
+
             //slot name is assumed valid past here
             localSlots.SetValue(new DataToken(slotName), new DataToken(slotData));
 
@@ -276,11 +299,24 @@ namespace OpenFlightVRC.Net
 
 
 
+
         /// <summary>
         /// Uploads the settings to the VRC servers, along with updating our local unchanged copy
         /// </summary>
         public void _UploadSettings()
         {
+            //get the revision number
+            if(_GetGlobalSetting(revisionKey, out DataToken revision))
+            {
+                _SetGlobalSetting(revisionKey, new DataToken((long)revision.Double + 1));
+            }
+            else
+            {
+                Logger.Log("Revision key not found, initializing it", this);
+                //initialize it
+                _SetGlobalSetting(revisionKey, new DataToken(0));
+            }
+
             //check if we have space
             if (!_IsSpaceAvailable(m_LocalSettings, _SpaceUsed(m_LocalSettings)))
             {
@@ -292,6 +328,9 @@ namespace OpenFlightVRC.Net
             {
                 RunCallback(PlayerSettingsCallback.OnStorageFree);
             }
+
+            //update the date
+            _SetGlobalSetting(updatedDateTimeKey, new DataToken(System.DateTime.Now.ToString()));
 
             if (VRCJson.TrySerializeToJson(m_LocalSettings, JsonExportType.Minify, out DataToken _settings_token))
             {
@@ -305,7 +344,7 @@ namespace OpenFlightVRC.Net
             }
             else
             {
-                Logger.LogWarning(string.Format("Failed to uploaded settings! Your settings have not been uploaded to prevent corruption. Error reason: {0}", _settings_token.Error.ToString()), this);
+                Logger.LogWarning(string.Format("Failed to upload settings! Your settings have not been uploaded to prevent corruption. Error reason: {0}", _settings_token.Error.ToString()), this);
             }
         }
 
@@ -768,6 +807,55 @@ namespace OpenFlightVRC.Net
             DataDictionary localSlots = GetSlots(m_LocalSettings);
             return localSlots.ContainsKey(new DataToken(slot));
         }
+
+        /// <summary>
+        /// Gets the revision of a slot
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns>-1 if invalid</returns>
+        public long _GetSlotRevision(string slot)
+        {
+            if(_IsSlotValid(slot))
+            {
+                //get the revision in the slot
+                DataDictionary remoteSlots = GetSlots(m_RemoteSettings);
+                if (remoteSlots.TryGetValue(slot, TokenType.DataDictionary, out DataToken slotDataToken))
+                {
+                    if (slotDataToken.DataDictionary.TryGetValue(revisionKey, out DataToken revision))
+                    {
+                        return (long)revision.Double;
+                    }
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Gets the last updated date time of a slot
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        public string _GetSlotUpdatedDateTime(string slot)
+        {
+            if (_IsSlotValid(slot))
+            {
+                //get the date in the slot
+                DataDictionary remoteSlots = GetSlots(m_RemoteSettings);
+                if (remoteSlots.TryGetValue(slot, TokenType.DataDictionary, out DataToken slotDataToken))
+                {
+                    if (slotDataToken.DataDictionary.TryGetValue(updatedDateTimeKey, out DataToken updatedDateTime))
+                    {
+                        return updatedDateTime.ToString();
+                    }
+                }
+            }
+            return "Unknown";
+        }
+
+        public string _GetSlotInfo(string slot)
+        {
+            return string.Format("Slot Revision: {0}, Last Updated: {1}", _GetSlotRevision(slot), _GetSlotUpdatedDateTime(slot));
+        }
         #endregion
 
         #region Remote Differences
@@ -978,6 +1066,9 @@ namespace OpenFlightVRC.Net
                 //make sure the slot to load by default is set
                 _SetGlobalSetting(slotToLoadByDefaultKey, defaultSlotName);
                 _SetGlobalSetting(useWorldDefaultsWhenLoadingKey, false);
+
+                //save the settings
+                _UploadSettings();
             }
 
             //else, we have data already

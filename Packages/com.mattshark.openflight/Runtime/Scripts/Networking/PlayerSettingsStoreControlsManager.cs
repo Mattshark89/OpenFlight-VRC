@@ -32,6 +32,8 @@ namespace OpenFlightVRC.Net
         public Selectable[] DisabledWhenNotOwner;
         public TextMeshProUGUI defaultSlotNameText;
         public TextMeshProUGUI StorageInfo;
+        public TextMeshProUGUI SlotInfo;
+        public TextMeshProUGUI DBInfo;
         #endregion
 
 
@@ -60,11 +62,12 @@ namespace OpenFlightVRC.Net
             m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnRemoteDifferencesDetected, this, nameof(RemoteDifferencesDetected));
             m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnRemoteDifferencesResolved, this, nameof(RemoteDifferencesResolved));
 
-            m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnLocalDataReady, this, nameof(UpdateStorageText));
-            m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnRemoteDifferencesDetected, this, nameof(UpdateStorageText));
-            m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnRemoteDifferencesResolved, this, nameof(UpdateStorageText));
-            m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnStorageFull, this, nameof(UpdateStorageText));
-            m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnStorageFree, this, nameof(UpdateStorageText));
+            m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnLocalDataReady, this, new string[] { nameof(UpdateStorageText), nameof(UpdateSlotInfoText), nameof(UpdateDBInfoText) });
+            m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnRemoteDifferencesDetected, this, new string[] { nameof(UpdateStorageText), nameof(UpdateSlotInfoText), nameof(UpdateDBInfoText) });
+            m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnRemoteDifferencesResolved, this, new string[] { nameof(UpdateStorageText), nameof(UpdateSlotInfoText), nameof(UpdateDBInfoText) });
+            m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnStorageFull, this, new string[] { nameof(UpdateStorageText), nameof(UpdateSlotInfoText), nameof(UpdateDBInfoText) });
+            m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnStorageFree, this, new string[] { nameof(UpdateStorageText), nameof(UpdateSlotInfoText), nameof(UpdateDBInfoText) });
+
             playerDropdown.AddCallback(PlayerUIDropdownCallback.ValueChanged, this, nameof(SelectedPlayerChanged));
         }
 
@@ -87,6 +90,16 @@ namespace OpenFlightVRC.Net
         public void UpdateStorageText()
         {
             StorageInfo.text = m_ReferencePlayerStore._GetStorageInfo();
+        }
+
+        public void UpdateSlotInfoText()
+        {
+            SlotInfo.text = m_ReferencePlayerStore._GetSlotInfo(m_CurrentSlot);
+        }
+
+        public void UpdateDBInfoText()
+        {
+            DBInfo.text = m_ReferencePlayerStore._GetDBInfo();
         }
 
         public void InitialWorldJoin()
@@ -295,6 +308,8 @@ namespace OpenFlightVRC.Net
             }
 
             defaultSlotNameText.text = m_ReferencePlayerStore._GetDefaultSlot();
+
+            UpdateSlotInfoText();
         }
 
         /// <summary>

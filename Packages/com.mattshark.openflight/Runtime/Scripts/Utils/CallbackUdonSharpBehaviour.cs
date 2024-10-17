@@ -26,6 +26,17 @@ namespace OpenFlightVRC
         /// </remarks>
         private DataDictionary _callbackData = new DataDictionary();
 
+        /// <inheritdoc cref="AddCallback(Enum, UdonSharpBehaviour, string)"/>
+        public bool AddCallback(Enum callbackID, UdonSharpBehaviour behaviour, params string[] methodName)
+        {
+            bool success = true;
+            for (int i = 0; i < methodName.Length; i++)
+            {
+                success &= AddCallback(callbackID, behaviour, methodName[i]);
+            }
+            return success;
+        }
+
         /// <summary>
         /// Adds a callback based on the callback ID
         /// </summary>
