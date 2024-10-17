@@ -10,6 +10,7 @@ using VRC.SDK3.Data;
 using VRC.Udon.Common;
 using VRC.SDK3.Components;
 using System;
+using VRC.SDK3.Persistence;
 
 namespace OpenFlightVRC.Net
 {
@@ -134,6 +135,17 @@ namespace OpenFlightVRC.Net
         /// The key for the revision number, increments every time the settings are changed
         /// </summary>
         public const string revisionKey = "revision";
+
+
+        /// <summary>
+        /// The player data folder key
+        /// </summary>
+        public const string playerDataFolderKey = "OpenFlightVRC/";
+
+        /// <summary>
+        /// The player data key for the backup of the settings
+        /// </summary>
+        public const string DBBackupKey = playerDataFolderKey + "DBBackup";
         #endregion
 
 
@@ -915,58 +927,58 @@ Remote: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes",
             //differences = _GetDictionaryDifferencesRecursive(dict1, dict2);
             //return differences.Count > 0;
         }
-/* 
-        /// <inheritdoc cref="_GetDictionaryDifferences(DataDictionary, DataDictionary, out DataDictionary)"/>
-        [RecursiveMethod]
-        public DataDictionary _GetDictionaryDifferencesRecursive(DataDictionary dict1, DataDictionary dict2)
-        {
-            //TODO: possible early exit strategy, if the dictionarys are exactly the same
-
-            DataDictionary differences = new DataDictionary();
-            DataList dict1keys = dict1.GetKeys();
-            DataList dict2keys = dict2.GetKeys();
-            foreach (DataToken key in dict1keys.ToArray())
-            {
-                if (dict2keys.Contains(key))
+        /* 
+                /// <inheritdoc cref="_GetDictionaryDifferences(DataDictionary, DataDictionary, out DataDictionary)"/>
+                [RecursiveMethod]
+                public DataDictionary _GetDictionaryDifferencesRecursive(DataDictionary dict1, DataDictionary dict2)
                 {
-                    //dictionary 2 has the same key, but we need to check its contents to see if they are the same or not
-                    if (dict1[key].TokenType == TokenType.DataDictionary && dict2[key].TokenType == TokenType.DataDictionary)
+                    //TODO: possible early exit strategy, if the dictionarys are exactly the same
+
+                    DataDictionary differences = new DataDictionary();
+                    DataList dict1keys = dict1.GetKeys();
+                    DataList dict2keys = dict2.GetKeys();
+                    foreach (DataToken key in dict1keys.ToArray())
                     {
-                        //recursively check the dictionaries
-                        DataDictionary subDifferences = _GetDictionaryDifferencesRecursive(dict1[key].DataDictionary, dict2[key].DataDictionary);
-                        //only add the key if subDifferences contains anything
-                        if (subDifferences.Count > 0)
+                        if (dict2keys.Contains(key))
                         {
-                            differences.Add(key, new DataToken(subDifferences));
+                            //dictionary 2 has the same key, but we need to check its contents to see if they are the same or not
+                            if (dict1[key].TokenType == TokenType.DataDictionary && dict2[key].TokenType == TokenType.DataDictionary)
+                            {
+                                //recursively check the dictionaries
+                                DataDictionary subDifferences = _GetDictionaryDifferencesRecursive(dict1[key].DataDictionary, dict2[key].DataDictionary);
+                                //only add the key if subDifferences contains anything
+                                if (subDifferences.Count > 0)
+                                {
+                                    differences.Add(key, new DataToken(subDifferences));
+                                }
+                            }
+                            else
+                            {
+                                //the values are normal, so we can compare them directly
+                                if (!dict1[key].Equals(dict2[key]))
+                                {
+                                    differences.Add(key, dict1[key]);
+                                }
+                            }
                         }
-                    }
-                    else
-                    {
-                        //the values are normal, so we can compare them directly
-                        if (!dict1[key].Equals(dict2[key]))
+                        else
                         {
+                            //dictionary 2 does not have the key, so we add it to the differences entirely
                             differences.Add(key, dict1[key]);
                         }
                     }
-                }
-                else
-                {
-                    //dictionary 2 does not have the key, so we add it to the differences entirely
-                    differences.Add(key, dict1[key]);
-                }
-            }
 
-            //do the same but in the opposite direction, being just as vigilant
-            foreach (DataToken key in dict2keys.ToArray())
-            {
-                if (!dict1keys.Contains(key))
-                {
-                    differences.Add(key, dict2[key]);
-                }
-            }
+                    //do the same but in the opposite direction, being just as vigilant
+                    foreach (DataToken key in dict2keys.ToArray())
+                    {
+                        if (!dict1keys.Contains(key))
+                        {
+                            differences.Add(key, dict2[key]);
+                        }
+                    }
 
-            return differences;
-        } */
+                    return differences;
+                } */
 
         /// <summary>
         /// Checks if there are differences between the local and remote settings
@@ -1061,19 +1073,55 @@ Remote: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes",
 
             TEMPOWNERDOREMOVEWHENFIXED = Owner;
 
-            //check if we are initialized locally
-            if (Networking.IsOwner(gameObject))
-            {
-                //Check for the data to be intialized, and if we dont get anything, create a default slot
-
-            }
-
             RunCallback(PlayerSettingsCallback.OnStartFinished);
         }
 
         public override void OnPlayerRestored(VRCPlayerApi player)
         {
             SendCustomEventDelayedFrames(nameof(_InitializeDatabase), UI.OpenFlightTablet.fadeTimeoutStart);
+        }
+
+        /// <summary>
+        /// Loads the settings from the backup stored in playerdata
+        /// </summary>
+        public void _LoadFromBackup()
+        {
+            VRCPlayerApi owner = Networking.GetOwner(gameObject);
+            //set the synched settings to the backup
+            if (PlayerData.TryGetString(owner, DBBackupKey, out string backup))
+            {
+                synchedSettings = backup;
+                if (VRCJson.TryDeserializeFromJson(synchedSettings, out DataToken _settings_token))
+                {
+                    m_RemoteSettings = _settings_token.DataDictionary;
+                    //if is the local player, we want a full clone of the data so we can manipulate it. Otherwise, we just want a reference
+                    if (Networking.IsOwner(gameObject))
+                    {
+                        m_LocalSettings = m_RemoteSettings.DeepClone();
+                    }
+                    else
+                    {
+                        m_LocalSettings = m_RemoteSettings;
+                    }
+                    Logger.Log("Settings database recovered successfully", this);
+                    //invoke the callback
+                    RunCallback(PlayerSettingsCallback.OnDataReady);
+                    RunCallback(PlayerSettingsCallback.OnDataChanged);
+                }
+                else
+                {
+                    string tokenError = _settings_token.Error.ToString();
+                    Logger.LogWarning(string.Format("Failed to recover settings for player {0}. Error Reason: {1}.", owner.displayName, tokenError), this);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Saves the settings to the backup stored in playerdata. This should be used sparingly, as it can be a potentially heavy operation based on what other data is in player data
+        /// </summary>
+        public void _SaveBackup()
+        {
+            PlayerData.SetString(DBBackupKey, synchedSettings);
         }
 
         public void _InitializeDatabase()
@@ -1100,7 +1148,8 @@ Remote: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes",
             else
             {
                 string tokenError = _settings_token.Error.ToString();
-                Logger.LogWarning("Failed to deserialize settings for player " + owner.displayName + ". Error reason: " + tokenError, this);
+                Logger.LogWarning(string.Format("Failed to deserialize settings for player {0}. Error Reason: {1}. Attempting to load from backup instead", owner.displayName, tokenError), this);
+                _LoadFromBackup();
             }
 
             //skip everything past here if its not the local player
@@ -1120,9 +1169,11 @@ Remote: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes",
                 //make sure the slot to load by default is set
                 _SetGlobalSetting(slotToLoadByDefaultKey, defaultSlotName);
                 _SetGlobalSetting(useWorldDefaultsWhenLoadingKey, false);
-
-                //save the settings
-                //_UploadSettings();
+            }
+            else
+            {
+                //we should save the backup
+                _SaveBackup();
             }
 
             //else, we have data already
