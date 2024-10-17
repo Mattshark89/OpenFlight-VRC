@@ -1082,7 +1082,7 @@ Remote: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes",
         }
 
         /// <summary>
-        /// Loads the settings from the backup stored in playerdata
+        /// Loads the settings from the backup stored in playerdata. This is a one way operation, and should only be used if the settings are lost
         /// </summary>
         public void _LoadFromBackup()
         {
@@ -1107,6 +1107,9 @@ Remote: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes",
                     //invoke the callback
                     RunCallback(PlayerSettingsCallback.OnDataReady);
                     RunCallback(PlayerSettingsCallback.OnDataChanged);
+
+                    //immediately serialize since our original data is just lost
+                    _UploadSettings();
                 }
                 else
                 {

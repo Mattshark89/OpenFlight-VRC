@@ -59,9 +59,6 @@ namespace OpenFlightVRC.Net
             //start the reference off as the local players store
             m_ReferencePlayerStore = m_LocalPlayerStore;
 
-            //ensure the UI is initialized
-            UpdateUI();
-
             //subscribe to the world join callback
             m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnLocalDataReady, this, nameof(InitialWorldJoin));
             m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.useWorldDefaultsWhenLoadingChanged, this, nameof(UpdateUI));
