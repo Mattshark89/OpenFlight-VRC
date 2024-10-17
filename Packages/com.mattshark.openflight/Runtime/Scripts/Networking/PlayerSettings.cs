@@ -721,6 +721,24 @@ namespace OpenFlightVRC.Net
         }
 
         /// <summary>
+        /// Gets all the slot names in order
+        /// </summary>
+        /// <returns></returns>
+        public string[] _GetSlotNames()
+        {
+            //get the local slots
+            DataDictionary localSlots = GetSlots(m_LocalSettings);
+
+            DataList keys = localSlots.GetKeys();
+            string[] names = new string[keys.Count];
+            for (int i = 0; i < keys.Count; i++)
+            {
+                names[i] = keys[i].ToString();
+            }
+            return names;
+        }
+
+        /// <summary>
         /// Gets the slot index based on a slot name
         /// </summary>
         /// <param name="slotName"> The name of the slot </param>

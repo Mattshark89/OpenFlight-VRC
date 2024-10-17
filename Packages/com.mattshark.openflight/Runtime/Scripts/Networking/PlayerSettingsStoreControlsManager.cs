@@ -10,6 +10,7 @@ using VRC.Udon;
 using VRC.SDK3.Data;
 using TMPro;
 using OpenFlightVRC.UI;
+using VRC.SDK3.Components;
 
 namespace OpenFlightVRC.Net
 {
@@ -26,6 +27,7 @@ namespace OpenFlightVRC.Net
         public InputField exportDB;
         public GameObject RemoteDifferencesPanel;
         public PlayerUIDropdown playerDropdown;
+        public TMPro.TMP_Dropdown slotDropdown;
         /// <summary>
         /// The objects that should be disabled when the player is not the owner of the reference player store
         /// </summary>
@@ -56,6 +58,10 @@ namespace OpenFlightVRC.Net
             m_LocalPlayerStore = Util.GetPlayerObjectOfType<PoolObjectReferenceManager>(Networking.LocalPlayer).PlayerSettingsStore;
             //start the reference off as the local players store
             m_ReferencePlayerStore = m_LocalPlayerStore;
+
+            //ensure the UI is initialized
+            UpdateUI();
+
             //subscribe to the world join callback
             m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnLocalDataReady, this, nameof(InitialWorldJoin));
             m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.useWorldDefaultsWhenLoadingChanged, this, nameof(UpdateUI));
@@ -174,7 +180,14 @@ namespace OpenFlightVRC.Net
             UpdateUI();
         }
 
-        public void PreviousSlot()
+        public void SlotDropdownChanged()
+        {
+            m_CurrentSlot = m_ReferencePlayerStore._GetSlotName(slotDropdown.value);
+
+            UpdateUI();
+        }
+
+        /* public void PreviousSlot()
         {
             //advance the slot index
             m_CurrentSlot = m_ReferencePlayerStore._GetSlotName(m_ReferencePlayerStore._GetSlotIndex(m_CurrentSlot) - 1);
@@ -194,7 +207,7 @@ namespace OpenFlightVRC.Net
             m_CurrentSlot = m_ReferencePlayerStore._ValidateSlot(m_CurrentSlot);
 
             UpdateUI();
-        }
+        } */
 
         public void SetAsDefaultSlot()
         {
@@ -287,6 +300,13 @@ namespace OpenFlightVRC.Net
         {
             //set the text
             slotNameInput.text = m_CurrentSlot;
+
+            //rebuild the dropdown entries
+            slotDropdown.ClearOptions();
+            string[] slotNames = m_ReferencePlayerStore._GetSlotNames();
+            slotDropdown.AddOptions(slotNames);
+            //set the value to the current slot
+            slotDropdown.SetValueWithoutNotify(System.Array.IndexOf(slotNames, m_CurrentSlot));
 
             if (m_ReferencePlayerStore._GetSlotExport(m_CurrentSlot, out string export))
             {
