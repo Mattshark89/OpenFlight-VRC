@@ -161,7 +161,14 @@ namespace OpenFlightVRC.Net
 
         public string _GetStorageInfo()
         {
-            return string.Format("Used: {0} bytes, Free: {1} bytes, Total: {2} bytes", _SpaceUsed(m_LocalSettings), _SpaceFree(m_LocalSettings), MAXSAVEBYTES);
+            return string.Format(@"Local: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes
+Remote: Used: {0} bytes, Free: {1} bytes, Total: {2} bytes",
+                                 _SpaceUsed(m_LocalSettings),
+                                 _SpaceFree(m_LocalSettings),
+                                 MAXSAVEBYTES,
+                                 _SpaceUsed(m_RemoteSettings),
+                                 _SpaceFree(m_RemoteSettings),
+                                 MAXSAVEBYTES);
         }
 
         public string _GetDBInfo()
