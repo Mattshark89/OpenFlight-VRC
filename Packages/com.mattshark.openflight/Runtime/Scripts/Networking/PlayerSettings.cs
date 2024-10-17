@@ -943,6 +943,12 @@ namespace OpenFlightVRC.Net
         /// </summary>
         public bool _HasRemoteDifferences()
         {
+            //do a dummy early check and see if their counts are different
+            if (m_LocalSettings.Count != m_RemoteSettings.Count)
+            {
+                return true;
+            }
+
             return _GetDictionaryDifferences(m_LocalSettings, m_RemoteSettings, out var DISCARD);
         }
 
@@ -1086,7 +1092,7 @@ namespace OpenFlightVRC.Net
                 _SetGlobalSetting(useWorldDefaultsWhenLoadingKey, false);
 
                 //save the settings
-                _UploadSettings();
+                //_UploadSettings();
             }
 
             //else, we have data already
@@ -1116,7 +1122,7 @@ namespace OpenFlightVRC.Net
             }
 
             RunCallback(PlayerSettingsCallback.OnLocalDataReady);
-            RunCallback(PlayerSettingsCallback.OnRemoteDifferencesResolved);
+            CheckForDifferences();
         }
 
         /// <summary>
