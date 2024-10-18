@@ -1125,6 +1125,10 @@ namespace OpenFlightVRC.Net
                     Logger.LogWarning(string.Format("Failed to recover settings for player {0}. Error Reason: {1}.", owner.displayName, tokenError), this);
                 }
             }
+            else
+            {
+                Logger.LogWarning(string.Format("Failed to recover settings for player {0}. No backup found!", owner.displayName), this);
+            }
         }
 
         /// <summary>

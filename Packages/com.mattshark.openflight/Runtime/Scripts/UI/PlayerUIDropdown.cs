@@ -84,5 +84,30 @@ namespace OpenFlightVRC.UI
                 dropdown.SetValueWithoutNotify(newIndex);
             }
         }
+
+        /// <summary>
+        /// Sets the value of the dropdown to the given player
+        /// </summary>
+        /// <param name="player"></param>
+        public void SetPlayer(VRCPlayerApi player)
+        {
+            //get the player list
+            VRCPlayerApi[] players = new VRCPlayerApi[VRCPlayerApi.GetPlayerCount()];
+            VRCPlayerApi.GetPlayers(players);
+
+            //find the index of the player
+            int index = -1;
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] == player)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            //set the value
+            dropdown.value = index;
+        }
     }
 }

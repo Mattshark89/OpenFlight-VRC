@@ -57,7 +57,7 @@ namespace OpenFlightVRC
 		/// <summary>
 		/// The max number of log messages to display
 		/// </summary>
-		const int MaxLogMessages = 50;
+		const int MaxLogMessages = 200;
 
 		private static void WriteToUILog(string text, LoggableUdonSharpBehaviour self)
         {

@@ -340,6 +340,7 @@ namespace OpenFlightVRC.Net
         /// Sets the reference player store to the given player
         /// </summary>
         /// <param name="player"></param>
+        [RecursiveMethod]
         public void SetReferencePlayerStore(VRCPlayerApi player)
         {
             //get the reference manager
@@ -357,7 +358,8 @@ namespace OpenFlightVRC.Net
             //check if the store is initialized
             if (!store.IsInitialized)
             {
-                Logger.LogWarning("Player store is not initialized, cannot set as reference", this);
+                Logger.LogWarning("Player store is not initialized, cannot set as reference. Setting back to local player", this);
+                playerDropdown.SetPlayer(Networking.LocalPlayer);
                 return;
             }
 
