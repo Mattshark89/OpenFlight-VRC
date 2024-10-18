@@ -95,8 +95,8 @@ namespace OpenFlightVRC.Net
 
         public void UpdateStorageText()
         {
-            LocalStorageInfo.text = string.Format("{0} / {1}", m_ReferencePlayerStore._LocalSpaceUsed(), PlayerSettings.MAXSAVEBYTES);
-            RemoteStorageInfo.text = string.Format("{0} / {1}", m_ReferencePlayerStore._RemoteSpaceUsed(), PlayerSettings.MAXSAVEBYTES);
+            LocalStorageInfo.text = string.Format("{0}% ({1} / {2} Bytes)", Mathf.RoundToInt((m_ReferencePlayerStore._LocalSpaceUsed() / (float)PlayerSettings.MAXSAVEBYTES) * 1000) * 0.1, m_ReferencePlayerStore._LocalSpaceUsed(), PlayerSettings.MAXSAVEBYTES);
+            RemoteStorageInfo.text = string.Format("{0}% ({1} / {2} Bytes)", Mathf.RoundToInt((m_ReferencePlayerStore._RemoteSpaceUsed() / (float)PlayerSettings.MAXSAVEBYTES) * 1000) * 0.1, m_ReferencePlayerStore._RemoteSpaceUsed(), PlayerSettings.MAXSAVEBYTES);
 
             LocalStorageSlider.value = m_ReferencePlayerStore._LocalSpaceUsed() / (float)PlayerSettings.MAXSAVEBYTES;
             RemoteStorageSlider.value = m_ReferencePlayerStore._RemoteSpaceUsed() / (float)PlayerSettings.MAXSAVEBYTES;

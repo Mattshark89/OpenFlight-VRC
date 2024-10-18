@@ -4,6 +4,7 @@
 
 using UnityEditor;
 using UnityEngine;
+using VRC.SDK3.ClientSim;
 
 namespace OpenFlightVRC.Editor
 {
@@ -12,6 +13,47 @@ namespace OpenFlightVRC.Editor
     /// </summary>
     public class ClientSimTestSetup : EditorWindow
     {
+        private const string ClientsimObjectName = "__ClientSimSystem";
+
+
+        [MenuItem("VRC Packages/OpenFlight/Editor/Create Dummy Players")]
+        public static void CreateDummyPlayers()
+        {
+            if (!EditorApplication.isPlaying)
+            {
+                EditorUtility.DisplayDialog("Error", "You must be in play mode to use this feature", "Ok");
+                return;
+            }
+
+            //make sure the client sim objects exist
+            GameObject clientSim = GameObject.Find(ClientsimObjectName);
+            if (clientSim == null)
+            {
+                EditorUtility.DisplayDialog("Error", "You must have a ClientSimSystem active in your scene to use this feature", "Ok");
+                return;
+            }
+
+            //list of dummy player names to pull from
+            string[] dummyPlayerNames = new string[]
+            {
+                "Flaccid Noodle",
+                "Bootleg Edgelord",
+                "Mario Party",
+                "Lominsa Limsa",
+                "Based God",
+                "Icarly Dotcom",
+                "What Queue",
+                "Data Lost",
+                "Guilt Culture",
+                "Raccoon Dude",
+            };
+
+            foreach (string dummyPlayerName in dummyPlayerNames)
+            {
+                ClientSimMain.SpawnRemotePlayer(dummyPlayerName);
+            }
+        }
+
         [MenuItem("VRC Packages/OpenFlight/Editor/Modify Client Sim Objects")]
         public static void ModifyClientSimObjects()
         {
@@ -22,7 +64,7 @@ namespace OpenFlightVRC.Editor
             }
 
             //make sure the client sim objects exist
-            GameObject clientSim = GameObject.Find("__ClientSimSystem");
+            GameObject clientSim = GameObject.Find(ClientsimObjectName);
             if (clientSim == null)
             {
                 EditorUtility.DisplayDialog("Error", "You must have a ClientSimSystem active in your scene to use this feature", "Ok");
@@ -94,7 +136,7 @@ namespace OpenFlightVRC.Editor
                 return;
             }
 
-            GameObject clientSim = GameObject.Find("__ClientSimSystem");
+            GameObject clientSim = GameObject.Find(ClientsimObjectName);
             if (clientSim == null)
             {
                 EditorUtility.DisplayDialog("Error", "You must have a ClientSimSystem active in your scene to use this feature", "Ok");

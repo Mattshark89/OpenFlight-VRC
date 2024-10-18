@@ -196,7 +196,7 @@ namespace OpenFlightVRC.Net
             //get from remote
             _GetGlobalSetting(m_RemoteSettings, revisionKey, out DataToken revision);
             _GetGlobalSetting(m_RemoteSettings, updatedDateTimeKey, out DataToken updatedDateTime);
-            return string.Format("Revision: {0}, Last Updated: {1}", revision.ToString(), updatedDateTime.ToString());
+            return string.Format("Database Revision: {0}, Last Updated: {1}, Total Slots: {2}", revision.ToString(), updatedDateTime.ToString(), GetSlots(m_RemoteSettings).Count);
         }
 
         /// <summary>
