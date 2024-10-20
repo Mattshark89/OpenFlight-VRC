@@ -1,6 +1,6 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.29.1",
+  "JSON Version": "2.30.0",
   "JSON Date": "2024-10-20",
   "Contributers": [
     "-Jinxy-",
@@ -37,7 +37,7 @@
     "InvertedCrink",
     "~Angiethekirin~",
     "Kitsune KAZE",
-    "Neszumi"
+    "Neszumi",
     "Reazy Fluff"
   ],
   "Bases": {
@@ -1585,17 +1585,17 @@
       }
     },
     "Uncia Gryphonet": {
-	    "Original": {
-  	    "Name": "Uncia Gryphonet",
-  	    "Creator": "バウワウナード",
-  	    "Introducer": "Neszumi",
-  	    "Hash": [
-  		    "-53031928v2"
-  	    ],
-  	    "Weight": 1,
-  	    "WingtipOffset": 3.61
-  	  }
-  	},
+      "Original": {
+        "Name": "Uncia Gryphonet",
+        "Creator": "バウワウナード",
+        "Introducer": "Neszumi",
+        "Hash": [
+          "-53031928v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 3.61
+      }
+    },
     "Durgarra": {
       "Original": {
         "Name": "Durgarra",
@@ -1622,7 +1622,7 @@
     },
     "Litria": {
       "Original": {
-        "Name": "Litria_Sample_Pedestal",
+        "Name": "Litria",
         "Creator": "Koubato",
         "Introducer": "Reazy Fluff",
         "Hash": [
@@ -1630,7 +1630,7 @@
         ],
         "Weight": 1,
         "WingtipOffset": 5.1
-  }
-}
+      }
+    }
   }
 }
