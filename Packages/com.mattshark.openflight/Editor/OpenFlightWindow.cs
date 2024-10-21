@@ -11,7 +11,8 @@ namespace OpenFlightVRC.Editor
 	/// </summary>
 	public class OpenFlightWindow : EditorWindow
 	{
-		[MenuItem("VRC Packages/OpenFlight/Prefabs/Lite")]
+		[MenuItem("VRC Packages/OpenFlight/Prefabs/Lite (Deprecated)")]
+		[System.Obsolete("This prefab is deprecated, please use the Full prefab instead")]
 		public static void OpenFlightBasic()
 		{
 			// Open the Lite prefab
