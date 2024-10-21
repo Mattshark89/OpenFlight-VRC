@@ -14,7 +14,7 @@ using OpenFlightVRC.Effects;
 namespace OpenFlightVRC.UI
 {
 	/// <summary>
-	/// Controls the text information on the networking tab of the tablet
+	/// Controls the text information on the player info tab of the tablet
 	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class PlayerInfo : LoggableUdonSharpBehaviour
@@ -28,6 +28,7 @@ namespace OpenFlightVRC.UI
 			//playerDropdown.AddCallback(PlayerUIDropdownCallback.ValueChanged, this, nameof(OnDropdownChange));
 		}
 
+		//TODO: Doing this in update is slow. Make this entirely callback based
 		void Update()
 		{
 			int playerCount = VRCPlayerApi.GetPlayerCount();
