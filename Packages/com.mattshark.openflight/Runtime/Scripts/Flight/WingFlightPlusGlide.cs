@@ -486,6 +486,8 @@ namespace OpenFlightVRC
 
 			if (setFinalVelocity)
 			{
+				// Hard cap velocity to prevent lag abuse
+				finalVelocity = Vector3.ClampMagnitude(finalVelocity, 1000);
 				LocalPlayer.SetVelocity(finalVelocity);
 			}
 		}
