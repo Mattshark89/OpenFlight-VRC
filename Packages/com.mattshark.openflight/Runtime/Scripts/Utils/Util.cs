@@ -259,5 +259,25 @@ namespace OpenFlightVRC
 			Debug.LogError("Could not find type on player " + player.displayName);
 			return default;
 		}
+
+		/// <summary>
+		/// Gets the estimated latency of a player in milliseconds
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public static float Latency(VRCPlayerApi player)
+		{
+			return (Time.realtimeSinceStartup - Networking.SimulationTime(player)) * 1000;
+		}
+
+		/// <summary>
+		/// Gets the estimated latency of a gameobject in milliseconds
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		public static float Latency(GameObject obj)
+		{
+			return (Time.realtimeSinceStartup - Networking.SimulationTime(obj)) * 1000;
+		}
     }
 }

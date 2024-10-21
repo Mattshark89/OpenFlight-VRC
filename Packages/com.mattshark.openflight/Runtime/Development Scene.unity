@@ -6172,6 +6172,12 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1384312052186683281, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 1384312052186683281, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
     - target: {fileID: 1404994776641595860, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
       propertyPath: _syncMethod
@@ -7890,6 +7896,11 @@ PrefabInstance:
     - target: {fileID: 3904026087113581596, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
       propertyPath: m_fontColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3910697520227649496, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
+      propertyPath: _syncMethod
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3923130322990911282, guid: 83a1dcf8462378640b7615b3011c0c6f,
@@ -15078,6 +15089,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1387480281}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1654906563 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3204507882338179975, guid: 83a1dcf8462378640b7615b3011c0c6f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1387480281}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1665026949 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1381040194867501183, guid: 83a1dcf8462378640b7615b3011c0c6f,
@@ -15186,7 +15203,7 @@ PrefabInstance:
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.size
-      value: 221
+      value: 222
       objectReference: {fileID: 0}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
@@ -16301,7 +16318,7 @@ PrefabInstance:
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.data[221].ID
-      value: 2826
+      value: 2829
       objectReference: {fileID: 0}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
@@ -20902,7 +20919,7 @@ PrefabInstance:
         type: 3}
       propertyPath: NetworkIDs.Array.data[221].gameObject
       value: 
-      objectReference: {fileID: 707634108}
+      objectReference: {fileID: 1654906563}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.data[222].gameObject

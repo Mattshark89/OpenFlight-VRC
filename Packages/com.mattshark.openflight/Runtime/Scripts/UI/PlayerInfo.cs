@@ -50,14 +50,16 @@ namespace OpenFlightVRC.UI
 			}
 
 			//player is valid past this point
-			float IKLatency = (Time.realtimeSinceStartup - Networking.SimulationTime(player)) * 1000;
-			IKLatency = Mathf.Round(IKLatency);
+			float IKLatency = Mathf.Round(Util.Latency(player));
 
 			//we need to get the players storage object for both settings and for metrics
 			PoolObjectReferenceManager reference = Util.GetPlayerObjectOfType<PoolObjectReferenceManager>(player);
 			PlayerSettings settings = reference.PlayerSettingsStore;
+			float settingsLatency = Mathf.Round(Util.Latency(settings.gameObject));
 			PlayerMetrics metrics = reference.PlayerMetricsStore;
+			float metricsLatency = Mathf.Round(Util.Latency(metrics.gameObject));
 			PlayerEffects effects = reference.PlayerEffects;
+			float effectsLatency = Mathf.Round(Util.Latency(effects.gameObject));
 
 			string packedData = Convert.ToString(effects.PackedData, 2).PadLeft(8, '0');
 
@@ -69,26 +71,32 @@ Metrics:
 	Time Spent Flying: {2}
 	Flap Count: {3}
 	Distance Traveled: {4}m
+	Latency: {5}ms
 Effects System:
-	Packed Data: 0b{5}
-	isFlying: {6}
-	isFlapping: {7}
-	isContributer: {8}
+	Packed Data: 0b{6}
+	isFlying: {7}
+	isFlapping: {8}
+	isContributer: {9}
+	Latency: {10}ms
 Settings System:
-	DB Size: {9} bytes
-	Slot Count: {10}
+	DB Size: {11} bytes
+	Slot Count: {12}
+	Latency: {13}ms
 ",
 				player.playerId,
 				IKLatency,
 				TimeSpan.FromTicks(metrics.TicksSpentFlying).ToString(@"d\:hh\:mm\:ss\:fff"),
 				metrics.FlapCount,
 				Math.Round(metrics.DistanceTraveled, 2),
+				metricsLatency,
 				packedData,
 				effects.IsFlying,
 				effects.IsFlapping,
 				effects.IsContributer,
+				effectsLatency,
 				settings._RemoteSpaceUsed(),
-				settings._GetSlotCount(true)
+				settings._GetSlotCount(true),
+				settingsLatency
 			);
 		}
 	}

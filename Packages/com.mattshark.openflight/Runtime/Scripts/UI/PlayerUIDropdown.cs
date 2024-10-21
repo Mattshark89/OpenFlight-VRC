@@ -14,6 +14,7 @@ namespace OpenFlightVRC.UI
 	}
 
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+    //This script must always be able to be on! if it isnt, player join / leave events will get lost
     public class PlayerUIDropdown : CallbackUdonSharpBehaviour
     {
         public TMPro.TMP_Dropdown dropdown;
