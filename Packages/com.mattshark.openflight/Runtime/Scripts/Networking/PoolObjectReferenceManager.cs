@@ -16,6 +16,7 @@ namespace OpenFlightVRC.Net
     {
         public Effects.PlayerEffects PlayerEffects;
         public PlayerSettings PlayerSettingsStore;
+        public PlayerMetrics PlayerMetricsStore;
 
         void Start()
         {

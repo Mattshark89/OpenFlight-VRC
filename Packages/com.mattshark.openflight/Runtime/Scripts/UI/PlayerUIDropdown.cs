@@ -27,18 +27,25 @@ namespace OpenFlightVRC.UI
         public void OnValueChanged()
         {
             //get the player
-            VRCPlayerApi[] players = new VRCPlayerApi[VRCPlayerApi.GetPlayerCount()];
-            VRCPlayerApi.GetPlayers(players);
-            selectedPlayer = players[dropdown.value];
+            UpdatePlayerReference();
             RunCallback(PlayerUIDropdownCallback.ValueChanged);
         }
 
+        private void UpdatePlayerReference()
+        {
+            VRCPlayerApi[] players = new VRCPlayerApi[VRCPlayerApi.GetPlayerCount()];
+            VRCPlayerApi.GetPlayers(players);
+            selectedPlayer = players[dropdown.value];
+        }
+
         //on player join, rebuild the dropdown and reselect
+
         public override void OnPlayerJoined(VRCPlayerApi player)
         {
             string[] displayName = new string[1];
             displayName[0] = player.displayName;
             dropdown.AddOptions(displayName);
+            UpdatePlayerReference();
         }
 
         public override void OnPlayerLeft(VRCPlayerApi player)

@@ -46,21 +46,11 @@ namespace OpenFlightVRC.Net
         public WingFlightPlusGlide WingFlightPlusGlide;
         private VRCPlayerApi Owner;
         private VRCPlayerApi LocalPlayer;
-        public GameObject textTemplate;
-        private TextMeshProUGUI text;
-        private GameObject textObject;
 
         void Start()
         {
-            //make a copy of the text template
-            text = Instantiate(textTemplate, textTemplate.transform.parent).GetComponent<TextMeshProUGUI>();
-            textObject = text.gameObject;
-            text.gameObject.SetActive(true);
-
             Owner = Networking.GetOwner(gameObject);
             LocalPlayer = Networking.LocalPlayer;
-
-            UpdateText();
 
             if(Owner == LocalPlayer)
             {
@@ -95,9 +85,6 @@ namespace OpenFlightVRC.Net
                 WingFlightPlusGlide.RemoveCallback(WingFlightPlusGlideCallback.Land, this, nameof(FlightEnd));
                 WingFlightPlusGlide.RemoveCallback(WingFlightPlusGlideCallback.Flap, this, nameof(IncrementFlapCount));
             }
-
-            //remove our text
-            Destroy(textObject);
         }
 
         public void IncrementFlapCount()
@@ -117,19 +104,12 @@ namespace OpenFlightVRC.Net
             isFlying = false;
             //Only serialize everything if the player lands
             RequestSerialization();
-            UpdateText();
             RunCallback(PlayerMetricsCallback.OnDataChanged);
         }
 
         public override void OnDeserialization()
         {
-            UpdateText();
             RunCallback(PlayerMetricsCallback.OnDataChanged);
-        }
-
-        private void UpdateText()
-        {
-            text.text = string.Format("{0}'s Time spent flying: {1} Flap count: {2} Total distance traveled: {3}m", Owner.displayName, TimeSpan.FromTicks(TicksSpentFlying).ToString(@"d\:hh\:mm\:ss\:fff"), FlapCount, Math.Round(DistanceTraveled, 2));
         }
     }
 }

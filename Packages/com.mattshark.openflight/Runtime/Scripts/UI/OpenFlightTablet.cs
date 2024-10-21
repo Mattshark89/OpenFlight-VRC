@@ -197,7 +197,7 @@ namespace OpenFlightVRC.UI
 			SetActiveTab(3);
 		}
 
-		public void SetActiveTabNetworking()
+		public void SetActiveTabPlayerInfo()
 		{
 			SetActiveTab(4);
 		}

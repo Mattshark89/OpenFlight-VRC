@@ -196,7 +196,7 @@ namespace OpenFlightVRC.Net
             //get from remote
             _GetGlobalSetting(m_RemoteSettings, revisionKey, out DataToken revision);
             _GetGlobalSetting(m_RemoteSettings, updatedDateTimeKey, out DataToken updatedDateTime);
-            return string.Format("Database Revision: {0}, Last Updated: {1}, Total Slots: {2}", revision.ToString(), updatedDateTime.ToString(), GetSlots(m_RemoteSettings).Count);
+            return string.Format("Database Revision: {0}, Last Updated: {1}, Total Slots: {2}", revision.ToString(), updatedDateTime.ToString(), _GetSlotCount(true));
         }
 
         /// <summary>
@@ -699,7 +699,7 @@ namespace OpenFlightVRC.Net
         /// <summary>
         /// Checks if the player settings store is initialized with data, and has atleast one slot
         /// </summary>
-        public bool IsInitialized => m_LocalSettings.Count > 0 && _GetSlotCount() > 0;
+        public bool IsInitialized => m_LocalSettings.Count > 0 && _GetSlotCount(false) > 0;
 
         /// <summary>
         /// Makes a unique name for a slot
@@ -797,11 +797,11 @@ namespace OpenFlightVRC.Net
         /// Gets the count of slots
         /// </summary>
         /// <returns> The count of slots </returns>
-        public int _GetSlotCount()
+        public int _GetSlotCount(bool remote)
         {
             //get the local slots
-            DataDictionary localSlots = GetSlots(m_LocalSettings);
-            return localSlots.GetKeys().Count;
+            DataDictionary slots = remote ? GetSlots(m_RemoteSettings) : GetSlots(m_LocalSettings);
+            return slots.GetKeys().Count;
         }
 
         /// <summary>
@@ -815,9 +815,9 @@ namespace OpenFlightVRC.Net
             {
                 return 0;
             }
-            else if (slot >= _GetSlotCount())
+            else if (slot >= _GetSlotCount(false))
             {
-                return _GetSlotCount() - 1;
+                return _GetSlotCount(false) - 1;
             }
             else
             {
@@ -1202,7 +1202,7 @@ namespace OpenFlightVRC.Net
                     {
                         if (_IsSlotValid(settingValue.ToString()))
                         {
-                            _LoadSlot(_ValidateSlot(settingValue.ToString()), out var DISCARD, false);
+                            _LoadSlot(_ValidateSlot(settingValue.ToString()), out var DISCARD, true);
                         }
                         else
                         {
@@ -1211,10 +1211,10 @@ namespace OpenFlightVRC.Net
                         }
                     }
                 }
-            }
-            else
-            {
-                Logger.Log("Not loading local user settings on join", this);
+                else
+                {
+                    Logger.Log("Not loading local user settings on join", this);
+                }
             }
 
             RunCallback(PlayerSettingsCallback.OnLocalDataReady);
