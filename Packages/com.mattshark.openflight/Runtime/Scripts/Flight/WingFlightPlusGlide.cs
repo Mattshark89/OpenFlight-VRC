@@ -336,6 +336,14 @@ namespace OpenFlightVRC
 
 		public void Update()
 		{
+			//do a sanity check due to https://feedback.vrchat.com/udon/p/update-is-executed-for-one-frame-after-the-script-is-disabled
+            //we might run for 1 extra frame if we are turned off
+            if (!gameObject.activeSelf || !gameObject.activeInHierarchy)
+            {
+                //return as we shouldnt actually be running any of this code!
+                return;
+            }
+			
 			// FixedUpdate()'s tick rate varies per VR headset.
 			// Therefore, I am using Update() to create my own fake homebrew FixedUpdate()
 			// It is called MainFlightTick()
