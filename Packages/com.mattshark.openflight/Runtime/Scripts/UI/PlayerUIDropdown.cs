@@ -14,7 +14,6 @@ namespace OpenFlightVRC.UI
 	}
 
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    //This script must always be able to be on! if it isnt, player join / leave events will get lost
     public class PlayerUIDropdown : CallbackUdonSharpBehaviour
     {
         public TMPro.TMP_Dropdown dropdown;
@@ -24,6 +23,57 @@ namespace OpenFlightVRC.UI
             //make sure the dropdown is empty
             dropdown.ClearOptions();
         }
+
+        void OnEnable()
+        {
+            //our dropdown might be in a invalid state
+            //we need to rebuild it
+            dropdown.ClearOptions();
+            VRCPlayerApi[] players = new VRCPlayerApi[VRCPlayerApi.GetPlayerCount()];
+            VRCPlayerApi.GetPlayers(players);
+
+            for (int i = 0; i < players.Length; i++)
+            {
+                string[] displayName = new string[1];
+                displayName[0] = players[i].displayName;
+                dropdown.AddOptions(displayName);
+            }
+
+            //check if our selected player is valid
+            if (selectedPlayer != null && Utilities.IsValid(selectedPlayer))
+            {
+                //find the index of the player
+                int index = FindPlayerIndex(players, selectedPlayer);
+
+                //set the value
+                dropdown.value = index;
+            }
+            else
+            {
+                //set the value to the local player
+                dropdown.value = FindPlayerIndex(players, Networking.LocalPlayer);
+            }
+
+            //directly trigger this as the dropdown component doesnt trigger it when setting the value in on enable for some reason
+            OnValueChanged();
+            Logger.Log("PlayerUIDropdown enabled", this);
+        }
+
+        private int FindPlayerIndex(VRCPlayerApi[] players, VRCPlayerApi player)
+        {
+            int index = -1;
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] == player)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            return index;
+        }
+
 
         public void OnValueChanged()
         {
