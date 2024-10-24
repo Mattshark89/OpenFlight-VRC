@@ -20,7 +20,8 @@ namespace OpenFlightVRC.Net
 
         #region UI References
         public InputField slotNameInput;
-        public Toggle useWorldDefaultsToggle;
+        public Toggle ignoreWorldDefaultsToggle;
+        public TMP_Dropdown defaultSlotDropdown;
         public InputField importSlot;
         public InputField exportSlot;
         public InputField importDB;
@@ -32,7 +33,6 @@ namespace OpenFlightVRC.Net
         /// The objects that should be disabled when the player is not the owner of the reference player store
         /// </summary>
         public Selectable[] DisabledWhenNotOwner;
-        public TextMeshProUGUI defaultSlotNameText;
         public TextMeshProUGUI LocalStorageInfo;
         public TextMeshProUGUI RemoteStorageInfo;
         public Slider LocalStorageSlider;
@@ -83,6 +83,12 @@ namespace OpenFlightVRC.Net
         }
 
         #region Callback Triggered Functions
+        public void defaultSlotDropdownChanged()
+        {
+            //use the value to get the slot name
+            var slots = m_ReferencePlayerStore._GetSlotNames();
+            m_ReferencePlayerStore._SetGlobalSetting(PlayerSettings.slotToLoadByDefaultKey, slots[defaultSlotDropdown.value]);
+        }
         public void RemoteDifferencesDetected()
         {
             RemoteDifferencesPanel.SetActive(true);
@@ -213,26 +219,12 @@ namespace OpenFlightVRC.Net
             UpdateUI();
         } */
 
-        public void SetAsDefaultSlot()
-        {
-            //check if we can edit
-            if (!m_ReferencePlayerStore.CanEdit)
-            {
-                return;
-            }
-
-            //ReferencePlayerStore.slotToLoadByDefault = currentSlot;
-            //ReferencePlayerStore.useWorldDefaultsWhenLoading = false;
-            m_ReferencePlayerStore._SetGlobalSetting(PlayerSettings.slotToLoadByDefaultKey, m_CurrentSlot);
-            m_ReferencePlayerStore._SetGlobalSetting(PlayerSettings.useWorldDefaultsWhenLoadingKey, false);
-
-            UpdateUI();
-        }
-
         public void WorldDefaultToggleChanged()
         {
             //ReferencePlayerStore.useWorldDefaultsWhenLoading = useWorldDefaultsToggle.isOn;
-            m_ReferencePlayerStore._SetGlobalSetting(PlayerSettings.useWorldDefaultsWhenLoadingKey, useWorldDefaultsToggle.isOn);
+            m_ReferencePlayerStore._SetGlobalSetting(PlayerSettings.useWorldDefaultsWhenLoadingKey, !ignoreWorldDefaultsToggle.isOn);
+
+            UpdateUI();
         }
 
         public void Duplicate()
@@ -328,10 +320,16 @@ namespace OpenFlightVRC.Net
             //useWorldDefaultsToggle.isOn = m_ReferencePlayerStore._GetGlobalSetting(PlayerSettings.useWorldDefaultsWhenLoadingKey).Boolean;
             if (m_ReferencePlayerStore._GetGlobalSetting(PlayerSettings.useWorldDefaultsWhenLoadingKey, out DataToken value))
             {
-                useWorldDefaultsToggle.isOn = value.Boolean;
+                ignoreWorldDefaultsToggle.isOn = !value.Boolean;
             }
 
-            defaultSlotNameText.text = m_ReferencePlayerStore._GetDefaultSlot();
+            //we need to update the default slot dropdown
+            string defaultSlot = m_ReferencePlayerStore._GetDefaultSlot();
+            defaultSlotDropdown.ClearOptions();
+            defaultSlotDropdown.AddOptions(slotNames);
+            defaultSlotDropdown.SetValueWithoutNotify(System.Array.IndexOf(slotNames, defaultSlot));
+
+            defaultSlotDropdown.interactable = ignoreWorldDefaultsToggle.isOn;
 
             UpdateSlotInfoText();
         }
