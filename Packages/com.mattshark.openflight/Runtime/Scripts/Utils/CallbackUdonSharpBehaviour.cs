@@ -15,7 +15,7 @@ namespace OpenFlightVRC
     /// A Base class that allows for callbacks to be added and run
     /// </summary>
     /// <typeparam name="EnumType">The type of the callback ID. This should be an enum</typeparam>
-    public class CallbackUdonSharpBehaviour<EnumType> : CallbackUdonSharpBehaviourDataStorage where EnumType : Enum
+    public abstract class CallbackUdonSharpBehaviour<EnumType> : CallbackUdonSharpBehaviourDataStorage where EnumType : Enum
     {
         //FOREWARNING: There is some stupid as fuck behaviour going on in here.
         //Normally, you would want to put any variables you are using in the same class file you are using them in
