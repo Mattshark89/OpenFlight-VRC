@@ -45,7 +45,7 @@ namespace OpenFlightVRC
 		/// <summary>
 		/// Updates the log text
 		/// </summary>
-		internal void UpdateLog()
+		private void UpdateLog()
 		{
 			text.text = log;
 		}
@@ -59,7 +59,7 @@ namespace OpenFlightVRC
 		/// </summary>
 		const int MaxLogMessages = 200;
 
-		private static void WriteToUILog(string text, LoggableUdonSharpBehaviour self)
+		internal static void WriteToUILog(string text, LoggableUdonSharpBehaviour self)
         {
             Logger logProxy = null;
             if (!SetupLogProxy(self, ref logProxy))
@@ -281,7 +281,7 @@ namespace OpenFlightVRC
 		/// <param name="self">The UdonSharpBehaviour that is logging the text</param>
 		/// <param name="includePrefix">Whether or not to include the prefix</param>
 		/// <returns>The formatted text</returns>
-		private static string Format(string text, LogLevel LT, UdonSharpBehaviour self, bool includePrefix = true)
+		internal static string Format(string text, LogLevel LT, UdonSharpBehaviour self, bool includePrefix = true)
 		{
 			string prefix = includePrefix ? string.Format("[{0}]", ColorText(PackageName, PackageColor)) : "";
 			return string.Format("{0} [{1}] [{2}] [{3}] {4}", prefix, GetLogTypeString(LT), GetTimeStampString(), ColorizeScript(self), text);

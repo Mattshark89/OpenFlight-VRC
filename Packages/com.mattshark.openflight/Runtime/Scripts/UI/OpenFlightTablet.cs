@@ -147,7 +147,7 @@ namespace OpenFlightVRC.UI
 		{
 			if (player.isLocal && automaticScale)
 			{
-				Logger.Log("Player eye height changed, updating tablet scale", this);
+				Log("Player eye height changed, updating tablet scale");
 				transform.localScale = new Vector3(ScaleModifier(), ScaleModifier(), ScaleModifier());
 			}
 		}

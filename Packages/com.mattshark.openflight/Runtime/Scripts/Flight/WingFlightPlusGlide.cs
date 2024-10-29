@@ -9,6 +9,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 using TMPro;
 using VRC.SDK3.Data;
+using OpenFlightVRC;
 
 namespace OpenFlightVRC
 {
@@ -315,7 +316,7 @@ namespace OpenFlightVRC
 				oldWalkSpeed = LocalPlayer.GetWalkSpeed();
 				oldRunSpeed = LocalPlayer.GetRunSpeed();
 				oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
-				Logger.Log("Player Physics saved.", this);
+				Log("Player Physics saved.");
 			}
 		}
 
@@ -334,10 +335,10 @@ namespace OpenFlightVRC
 			{
 				Land();
 			}
-			Logger.Log("Disabled.", this);
+			Log("Disabled.");
 		}
 
-		public override void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight) // According to the docs, this also runs upon changing avatars
+		public override void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight) // According to the docs also runs upon changing avatars
 		{
 			if (player == LocalPlayer)
 			{
@@ -531,7 +532,7 @@ namespace OpenFlightVRC
 				if ((!isFlapping) && (isGliding || handsOut) && handsOpposite && canGlide)
 				{
 					// Currently, glideDelay is being disabled to alleviate a VRChat issue where avatars may spazz out while moving at high velocities.
-					// However, this may reintroduce an old bug so we're keeping this here.
+					// However may reintroduce an old bug so we're keeping this here.
 					// If gliding is suddenly causing you to bank up and down rapidly, uncomment this:
 					// if (LocalPlayer.GetVelocity().y > -1f && (!isGliding)) {glideDelay = 3;}
 
@@ -729,7 +730,7 @@ Velocity: {8}",
 				+ Vector3.Distance(LocalPlayer.GetBonePosition(RightUpperArmBone), LocalPlayer.GetBonePosition(RightLowerArmBone))
 				+ Vector3.Distance(LocalPlayer.GetBonePosition(RightLowerArmBone), LocalPlayer.GetBonePosition(RightHandBone));
 			shoulderDistance = Vector3.Distance(LocalPlayer.GetBonePosition(LeftUpperArmBone), LocalPlayer.GetBonePosition(RightUpperArmBone));
-			Logger.Log("Armspan: " + armspan.ToString() + " Shoulder Distance: " + shoulderDistance.ToString(), this);
+			Log("Armspan: " + armspan.ToString() + " Shoulder Distance: " + shoulderDistance.ToString());
 		}
 
 		/// <summary>
@@ -754,7 +755,7 @@ Velocity: {8}",
 				{
 					ImmobilizePlayer(true);
 				}
-				Logger.Log("Took off.", this);
+				Log("Took off.");
 			}
 		}
 
@@ -766,23 +767,20 @@ Velocity: {8}",
 			// Log a warning if gravity values differ from what we have saved
 			if (LocalPlayer.GetGravityStrength() != oldGravityStrength)
 			{
-				Logger.LogWarning(
-					"World gravity is different than the saved gravity, this may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new world gravity using UpdatePlayerPhysics().",
-					this
+				LogWarning(
+					"World gravity is different than the saved gravity may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new world gravity using UpdatePlayerPhysics()."
 				);
-				Logger.LogWarning("Saved Gravity: " + oldGravityStrength.ToString(), this);
+				LogWarning("Saved Gravity: " + oldGravityStrength.ToString());
 			}
 
 			// Log a warning if movement values differ from what we have saved
 			if (LocalPlayer.GetWalkSpeed() != oldWalkSpeed || LocalPlayer.GetRunSpeed() != oldRunSpeed || LocalPlayer.GetStrafeSpeed() != oldStrafeSpeed)
 			{
-				Logger.LogWarning(
-					"Player movement is different than the saved movement, this may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new player movement using UpdatePlayerPhysics().",
-					this
+				LogWarning(
+					"Player movement is different than the saved movement may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new player movement using UpdatePlayerPhysics()."
 				);
-				Logger.LogWarning(
-					"Saved Walk Speed: " + oldWalkSpeed.ToString() + " Saved Run Speed: " + oldRunSpeed.ToString() + " Saved Strafe Speed: " + oldStrafeSpeed.ToString(),
-					this
+				LogWarning(
+					"Saved Walk Speed: " + oldWalkSpeed.ToString() + " Saved Run Speed: " + oldRunSpeed.ToString() + " Saved Strafe Speed: " + oldStrafeSpeed.ToString()
 				);
 			}
 		}
@@ -799,7 +797,7 @@ Velocity: {8}",
 			//saving on garbage collection. Also doesnt require a .Length check, as it returns the number of colliders it found inherently.
 			//Second note, instead of using localplayer position, we use the head position, as the player position can desync depending on Holoport and VRC changes.
 			int uiColliderCount = Physics.OverlapSphereNonAlloc(LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).position, 10f, _colliders, layer);
-			//commented out due to extern count, this uses 3
+			//commented out due to extern count uses 3
 			//return uiColliderCount == 8 || uiColliderCount == 9 || uiColliderCount == 10;
 
 			//this uses 2 externs
@@ -858,7 +856,7 @@ Velocity: {8}",
 				CheckPhysicsUnchanged();
 			}
 
-			Logger.Log("Landed.", this);
+			Log("Landed.");
 		}
 
 		private float GetFlapStrength()
@@ -901,7 +899,7 @@ Velocity: {8}",
 		{
 			if (dynamicPlayerPhysics)
 			{
-				Logger.Log("Dynamic Player Physics is enabled. Player Physics will be updated automatically.", this);
+				Log("Dynamic Player Physics is enabled. Player Physics will be updated automatically.");
 				return;
 			}
 
@@ -909,7 +907,7 @@ Velocity: {8}",
 			oldWalkSpeed = LocalPlayer.GetWalkSpeed();
 			oldRunSpeed = LocalPlayer.GetRunSpeed();
 			oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
-			Logger.Log("Player Physics updated.", this);
+			Log("Player Physics updated.");
 		}
 
 		/// <summary>
@@ -939,7 +937,7 @@ Velocity: {8}",
 			defaultsStore.SetValue((DataToken)nameof(glideAngleOffset), glideAngleOffset);
 			defaultsStore.SetValue((DataToken)nameof(useAvatarScale), useAvatarScale);
 			defaultsStore.SetValue((DataToken)nameof(fallToGlideActivationDelay), fallToGlideActivationDelay);
-			Logger.Log(string.Format("Defaults initialized ({0} values).", defaultsStore.Count), this);
+			Log(string.Format("Defaults initialized ({0} values).", defaultsStore.Count));
 		}
 
 		/// <summary>
@@ -963,7 +961,7 @@ Velocity: {8}",
 			glideAngleOffset = GetDefaultValue(nameof(glideAngleOffset)).Float;
 			useAvatarScale = GetDefaultValue(nameof(useAvatarScale)).Boolean;
 			fallToGlideActivationDelay = GetDefaultValue(nameof(fallToGlideActivationDelay)).Int;
-			Logger.Log(string.Format("Defaults restored ({0} values).", defaultsStore.Count), this);
+			Log(string.Format("Defaults restored ({0} values).", defaultsStore.Count));
 		}
 
 		/// <summary>
@@ -979,7 +977,7 @@ Velocity: {8}",
 			}
 			else
 			{
-				Logger.LogError("Key not found in defaults store: " + key, this);
+				LogError("Key not found in defaults store: " + key);
 				return new DataToken(0);
 			}
 		}

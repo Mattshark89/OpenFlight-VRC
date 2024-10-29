@@ -12,7 +12,7 @@ namespace OpenFlightVRC
 	/// <summary>
 	/// A collection of useful functions that I cant find a better place for
 	/// </summary>
-	public abstract class Util : LoggableUdonSharpBehaviour
+	public sealed class Util : LoggableUdonSharpBehaviour
 	{
 		/// <summary>
 		/// Returns a a byte that is made up of the bools in the array
@@ -255,8 +255,7 @@ namespace OpenFlightVRC
                 }
             }
 
-			//Logger.LogErrorOnce("Could not find type on player " + player.displayName, null);
-			Debug.LogError("Could not find type on player " + player.displayName);
+			Logger.LogErrorOnce("Could not find type on player " + player.displayName, null);
 			return default;
 		}
 

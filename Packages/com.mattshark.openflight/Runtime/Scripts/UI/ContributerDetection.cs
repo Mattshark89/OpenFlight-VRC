@@ -67,7 +67,7 @@ namespace OpenFlightVRC.UI
 			if (_contributers.Contains(Networking.LocalPlayer.displayName))
 			{
 				localPlayerIsContributer = true;
-				Logger.Log("Local player is a contributer!", this);
+				Log("Local player is a contributer!");
 				contributerInWorld = true;
 				_contributersInWorld.Add(Networking.LocalPlayer.displayName);
 			}
@@ -81,7 +81,7 @@ namespace OpenFlightVRC.UI
 			//check if the player is a contributer
 			if (_contributers.Contains(player.displayName))
 			{
-				Logger.Log(player.displayName + " is a contributer!", this);
+				Log(player.displayName + " is a contributer!");
 				contributerInWorld = true;
 				_contributersInWorld.Add(player.displayName);
 			}
@@ -92,18 +92,18 @@ namespace OpenFlightVRC.UI
 			//check if the user that left was a contributer
 			if (_contributers.Contains(player.displayName) && contributerInWorld)
 			{
-				Logger.Log("Player that left was a contributer! Checking for remaining contributers...", this);
+				Log("Player that left was a contributer! Checking for remaining contributers...");
 				_contributersInWorld.RemoveAll(player.displayName);
 
 				//check if there are any contributers left
 				if (_contributersInWorld.Count == 0)
 				{
-					Logger.Log("No contributers left!", this);
+					Log("No contributers left!");
 					contributerInWorld = false;
 				}
 				else
 				{
-					Logger.Log("Contributers left: " + _contributersInWorld.Count, this);
+					Log("Contributers left: " + _contributersInWorld.Count);
 				}
 			}
 		}
@@ -113,7 +113,7 @@ namespace OpenFlightVRC.UI
 		/// </summary>
 		public void CheckForContributers()
 		{
-			Logger.Log("Checking for contributers...", this);
+			Log("Checking for contributers...");
 
 			//format them into a string
 			contributersString = "";
@@ -138,7 +138,7 @@ namespace OpenFlightVRC.UI
 				//check if the player is a contributer
 				if (_contributers.Contains(player.displayName))
 				{
-					Logger.Log(player.displayName + " is a contributer!", this);
+					Log(player.displayName + " is a contributer!");
 					contributerInWorld = true;
 					_contributersInWorld.Add(player.displayName);
 				}
@@ -147,7 +147,7 @@ namespace OpenFlightVRC.UI
 			//check if there are any contributers in the instance
 			if (!contributerInWorld)
 			{
-				Logger.Log("No contributers in the instance!", this);
+				Log("No contributers in the instance!");
 			}
 		}
 	}

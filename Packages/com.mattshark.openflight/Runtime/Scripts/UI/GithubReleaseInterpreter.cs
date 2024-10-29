@@ -37,14 +37,14 @@ namespace OpenFlightVRC
 
 		public void LoadURL()
 		{
-			Logger.Log("Loading Github Releases URL...", this);
+			Log("Loading Github Releases URL...");
 			VRCStringDownloader.LoadUrl(URL, (VRC.Udon.Common.Interfaces.IUdonEventReceiver)this);
 		}
 
 		public override void OnStringLoadSuccess(IVRCStringDownload data)
 		{
 			string result = data.Result;
-			Logger.Log("Loaded Github Releases URL!", this);
+			Log("Loaded Github Releases URL!");
 
 			//deserialize
 			bool success = VRCJson.TryDeserializeFromJson(result, out DataToken json);
@@ -55,7 +55,7 @@ namespace OpenFlightVRC
 
 		public override void OnStringLoadError(IVRCStringDownload data)
 		{
-			Logger.LogError("Failed to load Github Releases URL!", this);
+			LogError("Failed to load Github Releases URL!");
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace OpenFlightVRC
 		{
 			int releaseCount = json.DataList.Count;
 			_releases = new DataDictionary[releaseCount];
-			Logger.Log(json.DataList.Count + " releases found.", this);
+			Log(json.DataList.Count + " releases found.");
 
 			for (int i = 0; i < releaseCount; i++)
 			{
@@ -80,7 +80,7 @@ namespace OpenFlightVRC
 			bool isPrerelease = IsPrerelease(OF.OpenFlightVersion.ToString());
 			if (isPrerelease)
 			{
-				Logger.Log("World is on a prerelease", this);
+				Log("World is on a prerelease");
 			}
 
 			//check if on latest release. If the world is on a prerelease, this compares to those. if it isnt, we want to find the latest release that isnt a prerelease
@@ -117,7 +117,7 @@ namespace OpenFlightVRC
 				//if the world is on a prerelease, show all prereleases aswell. Otherwise, skip prereleases
 				if (!isPrerelease && IsPrerelease(release["tag_name"].ToString()))
 				{
-					Logger.Log("Skipping prerelease " + release["tag_name"].ToString(), this);
+					Log("Skipping prerelease " + release["tag_name"].ToString());
 					continue;
 				}
 
@@ -133,13 +133,13 @@ namespace OpenFlightVRC
 				releasesBehind = behind.ToString() + "+";
 			}
 
-			Logger.Log("Releases behind: " + releasesBehind, this);
+			Log("Releases behind: " + releasesBehind);
 
 			//If the world is on the latest release, set the output text to say so
 			if (onLatestRelease)
 			{
 				outputText = "You are on the latest release!";
-				Logger.Log("On latest release!", this);
+				Log("On latest release!");
 			}
 		}
 

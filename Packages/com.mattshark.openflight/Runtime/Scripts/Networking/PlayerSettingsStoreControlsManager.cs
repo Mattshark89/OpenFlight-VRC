@@ -356,7 +356,7 @@ namespace OpenFlightVRC.Net
             //check if the store is initialized
             if (!store.IsInitialized)
             {
-                Logger.LogWarning("Player store is not initialized, cannot set as reference. Setting back to local player", this);
+                LogWarning("Player store is not initialized, cannot set as reference. Setting back to local player");
                 playerDropdown.SetPlayer(Networking.LocalPlayer);
                 return;
             }
@@ -387,7 +387,7 @@ namespace OpenFlightVRC.Net
         //     //we need to verify that the player that left was not the reference player, and if it is, we need to set the reference player to the local player
         //     /*if (Networking.GetOwner(ReferencePlayerStore.gameObject) == player)
         //     {
-        //         Logger.Log("Reference player left, setting to local player", this);
+        //         );Log("Reference player left, setting to local player", this);
         //         SetReferencePlayerStore(Networking.LocalPlayer);
         //     }
         //     */
@@ -396,7 +396,7 @@ namespace OpenFlightVRC.Net
         //     VRCPlayerApi playerref = m_ReferencePlayerStore.TEMPOWNERDOREMOVEWHENFIXED;
         //     if (playerref == player)
         //     {
-        //         Logger.Log("Reference player left, setting to local player", this);
+        //         );Log("Reference player left, setting to local player", this);
         //         SetReferencePlayerStore(Networking.LocalPlayer);
         //     }
         // }
