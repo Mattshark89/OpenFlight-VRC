@@ -59,7 +59,7 @@ namespace OpenFlightVRC
 	/// This is the main script that controls all of the physics for the flight system.
 	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class WingFlightPlusGlide : CallbackUdonSharpBehaviour
+	public class WingFlightPlusGlide : CallbackUdonSharpBehaviour<WingFlightPlusGlideCallback>
 	{
 		#region Settings
 		/// <summary>

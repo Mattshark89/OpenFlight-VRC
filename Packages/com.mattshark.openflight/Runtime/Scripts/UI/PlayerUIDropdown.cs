@@ -14,7 +14,7 @@ namespace OpenFlightVRC.UI
 	}
 
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class PlayerUIDropdown : CallbackUdonSharpBehaviour
+    public class PlayerUIDropdown : CallbackUdonSharpBehaviour<PlayerUIDropdownCallback>
     {
         public TMPro.TMP_Dropdown dropdown;
         public VRCPlayerApi selectedPlayer;

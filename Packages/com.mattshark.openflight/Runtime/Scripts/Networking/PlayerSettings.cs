@@ -66,7 +66,7 @@ namespace OpenFlightVRC.Net
     /// </summary>
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     [RequireComponent(typeof(VRCEnablePersistence))]
-    public class PlayerSettings : CallbackUdonSharpBehaviour
+    public class PlayerSettings : CallbackUdonSharpBehaviour<PlayerSettingsCallback>
     {
         #region Object References
         public WingFlightPlusGlide wingFlightPlusGlide;

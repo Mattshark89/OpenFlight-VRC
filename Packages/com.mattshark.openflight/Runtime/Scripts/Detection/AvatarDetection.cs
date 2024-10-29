@@ -20,7 +20,7 @@ namespace OpenFlightVRC
 	/// A script to detect the avatar worn and check if it is allowed to fly
 	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class AvatarDetection : CallbackUdonSharpBehaviour
+	public class AvatarDetection : CallbackUdonSharpBehaviour<AvatarDetectionCallback>
 	{
 		private VRCPlayerApi _localPlayer = null;
 

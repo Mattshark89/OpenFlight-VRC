@@ -18,7 +18,7 @@ namespace OpenFlightVRC
 	/// This is used to query the Github data.json file for the list of avatars. It supports falling back to the in-world list if the Github list fails to load.
 	/// </summary>
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-	public class AvatarListLoader : CallbackUdonSharpBehaviour
+	public class AvatarListLoader : CallbackUdonSharpBehaviour<AvatarListLoaderCallback>
 	{
 		public VRCUrl URL = new VRCUrl("https://mattshark89.github.io/OpenFlight-VRC/data.json");
 

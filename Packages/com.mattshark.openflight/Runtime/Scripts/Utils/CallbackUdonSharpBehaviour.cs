@@ -16,7 +16,8 @@ namespace OpenFlightVRC
     /// <summary>
     /// A Base class that allows for callbacks to be added and run
     /// </summary>
-    public class CallbackUdonSharpBehaviour : LoggableUdonSharpBehaviour
+    /// <typeparam name="T">The type of the callback ID. This should be an enum</typeparam>
+    public class CallbackUdonSharpBehaviour<T> : LoggableUdonSharpBehaviour where T : Enum
     {
         /// <summary>
         /// Stores all the data on callbacks
@@ -27,7 +28,7 @@ namespace OpenFlightVRC
         private DataDictionary _callbackData = new DataDictionary();
 
         /// <inheritdoc cref="AddCallback(Enum, UdonSharpBehaviour, string)"/>
-        public bool AddCallback(Enum callbackID, UdonSharpBehaviour behaviour, params string[] methodName)
+        public bool AddCallback(T callbackID, UdonSharpBehaviour behaviour, params string[] methodName)
         {
             bool success = true;
             for (int i = 0; i < methodName.Length; i++)
@@ -44,7 +45,7 @@ namespace OpenFlightVRC
         /// <param name="behaviour">The behaviour to run the callback on. Use <see cref="this"/> to run the callback on the behaviour this script is attached to</param>
         /// <param name="methodName">The name of the method to run when this callback is triggered. Recommended to use <see cref="nameof"/> to get the method name</param>
         /// <returns>Returns a true if the callback was added successfully, and false if the callback already exists</returns>
-        public bool AddCallback(Enum callbackID, UdonSharpBehaviour behaviour, string methodName)
+        public bool AddCallback(T callbackID, UdonSharpBehaviour behaviour, string methodName)
         {
             int id = Convert.ToInt32(callbackID);
 
@@ -64,7 +65,7 @@ namespace OpenFlightVRC
             }
             else
             {
-                Logger.LogWarning(String.Format("[{0}] Tried to register a callback for [{1}] that already exists!", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodName)), this);
+                Debug.LogWarning(String.Format("[{0}] Tried to register a callback for [{1}] that already exists!", behaviour.name, methodName));
                 return false;
             }
             return true;
@@ -75,7 +76,7 @@ namespace OpenFlightVRC
         /// </summary>
         /// <inheritdoc cref="AddCallback(Enum, UdonSharpBehaviour, string)"/>
         /// <returns>Returns a true if the callback was removed successfully, and false if the callback does not exist</returns>
-        public bool RemoveCallback(Enum callbackID, UdonSharpBehaviour behaviour, string methodName)
+        public bool RemoveCallback(T callbackID, UdonSharpBehaviour behaviour, string methodName)
         {
             int id = Convert.ToInt32(callbackID);
             //check if the callback exists
@@ -96,7 +97,7 @@ namespace OpenFlightVRC
                     }
                 }
             }
-            Logger.LogWarning(String.Format("[{0}] Tried to remove a callback for [{1}] that does not exist!", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodName)), this);
+            Debug.LogWarning(String.Format("[{0}] Tried to remove a callback for [{1}] that does not exist!", behaviour.name, methodName));
             return false;
         }
 
@@ -104,7 +105,7 @@ namespace OpenFlightVRC
         /// Runs all the callbacks for the given callback ID
         /// </summary>
         /// <param name="callbackID"><inheritdoc cref="AddCallback(Enum, UdonSharpBehaviour, string)" path="/param[@name='callbackID']"/></param>
-        internal void RunCallback(Enum callbackID)
+        internal void RunCallback(T callbackID)
         {
             int id = Convert.ToInt32(callbackID);
             //check if the callback exists
@@ -133,14 +134,14 @@ namespace OpenFlightVRC
                         //check if the behaviour is null, and if it is, remove it
                         if (behaviour == null)
                         {
-                            Logger.LogWarning(String.Format("Behaviour for callback [{0}] is null, removing callback", Logger.ColorizeFunction(behaviour, methodName)), this);
+                            Debug.LogWarning(String.Format("Behaviour for callback [{0}] is null, removing callback", methodName));
                             methods.Remove(methodName);
                             continue;
                         }
 
                         //run the method
                         behaviour.SendCustomEvent(methodName);
-                        Logger.Log(String.Format("Running callback [{0}] for [{1}]", Logger.ColorizeFunction(behaviour, methodName), Logger.ColorizeScript(behaviour)), this);
+                        Debug.Log(String.Format("Running callback [{0}] for [{1}]", methodName, behaviour));
                     }
                 }
             }

@@ -19,7 +19,7 @@ namespace OpenFlightVRC.Net
     }
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     [RequireComponent(typeof(VRCEnablePersistence))]
-    public class PlayerMetrics : CallbackUdonSharpBehaviour
+    public class PlayerMetrics : CallbackUdonSharpBehaviour<PlayerMetricsCallback>
     {
         #region Metrics
         #region Flying Time
