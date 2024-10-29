@@ -358,20 +358,30 @@ namespace OpenFlightVRC
 		/// <param name="color">The color to convert</param>
 		/// <returns>The HTML color</returns>
 		private static string ColorToHTML(Color color)
-		{
-			string RHex = ((int)(color.r * 255)).ToString("X2");
-			string GHex = ((int)(color.g * 255)).ToString("X2");
-			string BHex = ((int)(color.b * 255)).ToString("X2");
+        {
+            string RHex = GetHex(color);
+            string GHex = GetHex(color);
+            string BHex = GetHex(color);
 
-			return "#" + RHex + GHex + BHex;
-		}
+            return "#" + RHex + GHex + BHex;
+        }
 
 		/// <summary>
-		/// Gets the name of the UdonSharpBehaviour. If null, returns "Untraceable Static Function Call"
+		/// Gets the hex value of a color
 		/// </summary>
-		/// <param name="script"></param>
+		/// <param name="color"></param>
 		/// <returns></returns>
-		private static string GetScriptName(UdonSharpBehaviour script)
+        private static string GetHex(Color color)
+        {
+            return ((int)(color.r * 255)).ToString("X2");
+        }
+
+        /// <summary>
+        /// Gets the name of the UdonSharpBehaviour. If null, returns "Untraceable Static Function Call"
+        /// </summary>
+        /// <param name="script"></param>
+        /// <returns></returns>
+        private static string GetScriptName(UdonSharpBehaviour script)
 		{
 			//check if null
 			if (script == null)
