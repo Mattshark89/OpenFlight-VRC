@@ -248,14 +248,14 @@ namespace OpenFlightVRC.Net
                 }
                 else
                 {
-                    Logger.LogWarning(string.Format("Failed to get global setting {0}! Setting not found", key), this);
+                    Logger.Warning(string.Format("Failed to get global setting {0}! Setting not found", key), this);
                     returnToken = default;
                     return false;
                 }
             }
             else
             {
-                Logger.LogWarning("Failed to get global setting! Global settings not found", this);
+                Logger.Warning("Failed to get global setting! Global settings not found", this);
                 returnToken = default;
                 return false;
             }
@@ -287,7 +287,7 @@ namespace OpenFlightVRC.Net
             //check if we can edit the settings
             if (!CanEdit)
             {
-                Logger.LogWarning("Failed to save settings! Must be the owner of the object to save settings", this);
+                Logger.Warning("Failed to save settings! Must be the owner of the object to save settings", this);
 
                 returnSlotName = "";
                 return false;
@@ -361,7 +361,7 @@ namespace OpenFlightVRC.Net
             //check if we have space
             if (!_IsSpaceAvailable(m_LocalSettings, _SpaceUsed(m_LocalSettings)))
             {
-                Logger.LogWarning("Failed to upload settings! Not enough space to save settings", this);
+                Logger.Warning("Failed to upload settings! Not enough space to save settings", this);
                 RunCallback(PlayerSettingsCallback.OnStorageFull);
                 return;
             }
@@ -385,7 +385,7 @@ namespace OpenFlightVRC.Net
             }
             else
             {
-                Logger.LogWarning(string.Format("Failed to upload settings! Your settings have not been uploaded to prevent corruption. Error reason: {0}", _settings_token.Error.ToString()), this);
+                Logger.Warning(string.Format("Failed to upload settings! Your settings have not been uploaded to prevent corruption. Error reason: {0}", _settings_token.Error.ToString()), this);
             }
         }
 
@@ -444,7 +444,7 @@ namespace OpenFlightVRC.Net
             //check if we can edit the settings
             if (!CanEdit)
             {
-                Logger.LogWarning("Failed to rename slot! Must be the owner of the object to rename a slot", this);
+                Logger.Warning("Failed to rename slot! Must be the owner of the object to rename a slot", this);
                 return false;
             }
 
@@ -456,7 +456,7 @@ namespace OpenFlightVRC.Net
             //check if the new name doesnt already exist
             if (localSlots.ContainsKey(new DataToken(newName)))
             {
-                Logger.LogWarning("Failed to rename slot! New slot name already exists!", this);
+                Logger.Warning("Failed to rename slot! New slot name already exists!", this);
                 return false;
             }
 
@@ -484,7 +484,7 @@ namespace OpenFlightVRC.Net
             }
             else
             {
-                Logger.LogWarning("Failed to rename slot! Slot does not exist", this);
+                Logger.Warning("Failed to rename slot! Slot does not exist", this);
                 return false;
             }
         }
@@ -521,7 +521,7 @@ namespace OpenFlightVRC.Net
             }
             else
             {
-                Logger.LogWarning(string.Format("Failed to load settings from slot {0}. Keeping current settings. Error reason: {1}", slotName, slotData.Error.ToString()), this);
+                Logger.Warning(string.Format("Failed to load settings from slot {0}. Keeping current settings. Error reason: {1}", slotName, slotData.Error.ToString()), this);
                 outDict = new DataDictionary();
                 return false;
             }
@@ -539,7 +539,7 @@ namespace OpenFlightVRC.Net
             //check if we can edit the settings
             if (!CanEdit)
             {
-                Logger.LogWarning("Failed to delete slot! Must be the owner of the object to delete a slot", this);
+                Logger.Warning("Failed to delete slot! Must be the owner of the object to delete a slot", this);
                 return false;
             }
 
@@ -549,7 +549,7 @@ namespace OpenFlightVRC.Net
             //only allow deletion if there is more than one slot
             if (localSlots.GetKeys().Count <= 1)
             {
-                Logger.LogWarning("Failed to delete slot! Must have at least one slot", this);
+                Logger.Warning("Failed to delete slot! Must have at least one slot", this);
                 return false;
             }
 
@@ -579,7 +579,7 @@ namespace OpenFlightVRC.Net
             }
             else
             {
-                Logger.LogWarning("Failed to delete slot! Slot does not exist", this);
+                Logger.Warning("Failed to delete slot! Slot does not exist", this);
                 return false;
             }
         }
@@ -607,14 +607,14 @@ namespace OpenFlightVRC.Net
                 }
                 else
                 {
-                    Logger.LogWarning(string.Format("Failed to export slot {0}! Error reason: {1}", slot, _settings_token.Error.ToString()), this);
+                    Logger.Warning(string.Format("Failed to export slot {0}! Error reason: {1}", slot, _settings_token.Error.ToString()), this);
                     json = "";
                     return false;
                 }
             }
             else
             {
-                Logger.LogWarning("Failed to export slot! Slot does not exist", this);
+                Logger.Warning("Failed to export slot! Slot does not exist", this);
                 json = "";
                 return false;
             }
@@ -634,7 +634,7 @@ namespace OpenFlightVRC.Net
             }
             else
             {
-                Logger.LogWarning(string.Format("Failed to export settings! Error reason: {0}", _settings_token.Error.ToString()), this);
+                Logger.Warning(string.Format("Failed to export settings! Error reason: {0}", _settings_token.Error.ToString()), this);
                 json = "";
                 return false;
             }
@@ -663,7 +663,7 @@ namespace OpenFlightVRC.Net
             }
             else
             {
-                Logger.LogWarning(string.Format("Failed to import slot! Error reason: {0}", token.Error.ToString()), this);
+                Logger.Warning(string.Format("Failed to import slot! Error reason: {0}", token.Error.ToString()), this);
                 returnSlotName = "";
                 return false;
             }
@@ -687,7 +687,7 @@ namespace OpenFlightVRC.Net
             }
             else
             {
-                Logger.LogWarning(string.Format("Failed to import settings! Error reason: {0}", token.Error.ToString()), this);
+                Logger.Warning(string.Format("Failed to import settings! Error reason: {0}", token.Error.ToString()), this);
                 return false;
             }
         }
@@ -1122,12 +1122,12 @@ namespace OpenFlightVRC.Net
                 else
                 {
                     string tokenError = _settings_token.Error.ToString();
-                    Logger.LogWarning(string.Format("Failed to recover settings for player {0}. Error Reason: {1}.", owner.displayName, tokenError), this);
+                    Logger.Warning(string.Format("Failed to recover settings for player {0}. Error Reason: {1}.", owner.displayName, tokenError), this);
                 }
             }
             else
             {
-                Logger.LogWarning(string.Format("Failed to recover settings for player {0}. No backup found!", owner.displayName), this);
+                Logger.Warning(string.Format("Failed to recover settings for player {0}. No backup found!", owner.displayName), this);
             }
         }
 
@@ -1163,7 +1163,7 @@ namespace OpenFlightVRC.Net
             else
             {
                 string tokenError = _settings_token.Error.ToString();
-                Logger.LogWarning(string.Format("Failed to deserialize settings for player {0}. Error Reason: {1}. Attempting to load from backup instead", owner.displayName, tokenError), this);
+                Logger.Warning(string.Format("Failed to deserialize settings for player {0}. Error Reason: {1}. Attempting to load from backup instead", owner.displayName, tokenError), this);
                 _LoadFromBackup();
             }
 
@@ -1206,7 +1206,7 @@ namespace OpenFlightVRC.Net
                         }
                         else
                         {
-                            Logger.LogWarning("Slot to load by default is invalid! Setting to first slot", this);
+                            Logger.Warning("Slot to load by default is invalid! Setting to first slot", this);
                             _SetGlobalSetting(slotToLoadByDefaultKey, _GetSlotName(0));
                         }
                     }
@@ -1294,7 +1294,7 @@ namespace OpenFlightVRC.Net
             }
             else
             {
-                Logger.LogWarning(string.Format("Failed to get setting {0} from settings. Keeping current setting. Error reason: {1}", key, token.Error.ToString()), null);
+                Logger.Warning(string.Format("Failed to get setting {0} from settings. Keeping current setting. Error reason: {1}", key, token.Error.ToString()), null);
                 return false;
             }
         }
@@ -1333,7 +1333,7 @@ namespace OpenFlightVRC.Net
                         variableReference = (T)(object)token.Number;
                         break;
                     default:
-                        Logger.LogError(string.Format("Failed to apply setting {0}. Unsupported type {1}", keyName, token.TokenType.ToString()), null);
+                        Logger.Error(string.Format("Failed to apply setting {0}. Unsupported type {1}", keyName, token.TokenType.ToString()), null);
                         return false;
                 }
                 return true;

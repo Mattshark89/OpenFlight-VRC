@@ -23,7 +23,7 @@ namespace OpenFlightVRC
 		{
 			if (bools.Length > 8)
 			{
-				Logger.LogError("Too many bools to pack into a byte!", null);
+				Logger.Error("Too many bools to pack into a byte!", null);
 				return 0;
 			}
 
@@ -255,7 +255,7 @@ namespace OpenFlightVRC
                 }
             }
 
-			Logger.LogErrorOnce("Could not find type on player " + player.displayName, null);
+			Logger.ErrorOnce("Could not find type on player " + player.displayName, null);
 			return default;
 		}
 

@@ -767,19 +767,19 @@ Velocity: {8}",
 			// Log a warning if gravity values differ from what we have saved
 			if (LocalPlayer.GetGravityStrength() != oldGravityStrength)
 			{
-				LogWarning(
+				Warning(
 					"World gravity is different than the saved gravity may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new world gravity using UpdatePlayerPhysics()."
 				);
-				LogWarning("Saved Gravity: " + oldGravityStrength.ToString());
+				Warning("Saved Gravity: " + oldGravityStrength.ToString());
 			}
 
 			// Log a warning if movement values differ from what we have saved
 			if (LocalPlayer.GetWalkSpeed() != oldWalkSpeed || LocalPlayer.GetRunSpeed() != oldRunSpeed || LocalPlayer.GetStrafeSpeed() != oldStrafeSpeed)
 			{
-				LogWarning(
+				Warning(
 					"Player movement is different than the saved movement may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new player movement using UpdatePlayerPhysics()."
 				);
-				LogWarning(
+				Warning(
 					"Saved Walk Speed: " + oldWalkSpeed.ToString() + " Saved Run Speed: " + oldRunSpeed.ToString() + " Saved Strafe Speed: " + oldStrafeSpeed.ToString()
 				);
 			}
@@ -977,7 +977,7 @@ Velocity: {8}",
 			}
 			else
 			{
-				LogError("Key not found in defaults store: " + key);
+				Error("Key not found in defaults store: " + key);
 				return new DataToken(0);
 			}
 		}

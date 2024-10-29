@@ -356,7 +356,7 @@ namespace OpenFlightVRC.Net
             //check if the store is initialized
             if (!store.IsInitialized)
             {
-                LogWarning("Player store is not initialized, cannot set as reference. Setting back to local player");
+                Warning("Player store is not initialized, cannot set as reference. Setting back to local player");
                 playerDropdown.SetPlayer(Networking.LocalPlayer);
                 return;
             }

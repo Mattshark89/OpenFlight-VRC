@@ -221,7 +221,7 @@ namespace OpenFlightVRC
 		{
 			if (ignoreVRCheck)
 			{
-				LogWarning("VR check is being ignored! This should not be enabled in a production build!");
+				Warning("VR check is being ignored! This should not be enabled in a production build!");
 			}
 
 			//ensure the user is valid
@@ -259,7 +259,7 @@ namespace OpenFlightVRC
 					FlightAuto();
 					break;
 				default:
-					LogWarning("Invalid flight mode: " + flightModeString);
+					Warning("Invalid flight mode: " + flightModeString);
 					break;
 			}
 

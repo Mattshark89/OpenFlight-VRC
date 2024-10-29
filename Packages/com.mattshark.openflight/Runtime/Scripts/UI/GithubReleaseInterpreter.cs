@@ -55,7 +55,7 @@ namespace OpenFlightVRC
 
 		public override void OnStringLoadError(IVRCStringDownload data)
 		{
-			LogError("Failed to load Github Releases URL!");
+			Error("Failed to load Github Releases URL!");
 		}
 
 		/// <summary>

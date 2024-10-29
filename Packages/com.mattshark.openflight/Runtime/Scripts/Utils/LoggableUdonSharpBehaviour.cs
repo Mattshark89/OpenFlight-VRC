@@ -26,16 +26,16 @@ namespace OpenFlightVRC
         /// <inheritdoc cref="Logger.LogOnce(string, LoggableUdonSharpBehaviour)"/>
 		internal void LogOnce(string text) => Logger.LogOnce(text, this);
 
-        /// <inheritdoc cref="Logger.LogWarning(string, LoggableUdonSharpBehaviour)"/>
-		internal void LogWarning(string text) => Logger.LogWarning(text, this);
+        /// <inheritdoc cref="Logger.Warning(string, LoggableUdonSharpBehaviour)"/>
+		internal void Warning(string text) => Logger.Warning(text, this);
 
-        /// <inheritdoc cref="Logger.LogWarningOnce(string, LoggableUdonSharpBehaviour)"/>
-		internal void LogWarningOnce(string text) => Logger.LogWarningOnce(text, this);
+        /// <inheritdoc cref="Logger.WarningOnce(string, LoggableUdonSharpBehaviour)"/>
+		internal void WarningOnce(string text) => Logger.WarningOnce(text, this);
 
-        /// <inheritdoc cref="Logger.LogError(string, LoggableUdonSharpBehaviour)"/>
-		internal void LogError(string text) => Logger.LogError(text, this);
+        /// <inheritdoc cref="Logger.Error(string, LoggableUdonSharpBehaviour)"/>
+		internal void Error(string text) => Logger.Error(text, this);
 
-        /// <inheritdoc cref="Logger.LogErrorOnce(string, LoggableUdonSharpBehaviour)"/>
-		internal void LogErrorOnce(string text) => Logger.LogErrorOnce(text, this);
+        /// <inheritdoc cref="Logger.ErrorOnce(string, LoggableUdonSharpBehaviour)"/>
+		internal void ErrorOnce(string text) => Logger.ErrorOnce(text, this);
     }
 }

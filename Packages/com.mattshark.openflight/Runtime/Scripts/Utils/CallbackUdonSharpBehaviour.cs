@@ -60,7 +60,7 @@ namespace OpenFlightVRC
                 }
                 else
                 {
-                    LogWarning(String.Format("[{0}] Tried to register a callback for [{1}] that already exists!", behaviour.name, methodNames[i]));
+                    Warning(String.Format("[{0}] Tried to register a callback for [{1}] that already exists!", behaviour.name, methodNames[i]));
                     return false;
                 }
                 success &= true;
@@ -95,7 +95,7 @@ namespace OpenFlightVRC
                     }
                 }
             }
-            LogWarning(String.Format("[{0}] Tried to remove a callback for [{1}] that does not exist!", behaviour.name, methodName));
+            Warning(String.Format("[{0}] Tried to remove a callback for [{1}] that does not exist!", behaviour.name, methodName));
             return false;
         }
 
@@ -132,7 +132,7 @@ namespace OpenFlightVRC
                         //check if the behaviour is null, and if it is, remove it
                         if (behaviour == null)
                         {
-                            LogWarning(String.Format("Behaviour for callback [{0}] is null, removing callback", methodName));
+                            Warning(String.Format("Behaviour for callback [{0}] is null, removing callback", methodName));
                             methods.Remove(methodName);
                             continue;
                         }

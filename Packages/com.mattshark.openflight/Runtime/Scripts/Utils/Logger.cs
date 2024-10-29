@@ -199,15 +199,15 @@ namespace OpenFlightVRC
 		/// </summary>
 		/// <param name="text">The text to print to the console</param>
 		/// <param name="self">The UdonSharpBehaviour that is logging the text</param>
-		internal static void LogWarning(string text, LoggableUdonSharpBehaviour self)
+		internal static void Warning(string text, LoggableUdonSharpBehaviour self)
 		{
 			Debug.LogWarning(Format(text, LogLevel.Warning, self));
 			WriteToUILog(Format(text, LogLevel.Warning, self, false), self);
 		}
 
-		/// <inheritdoc cref="LogWarning(string, LoggableUdonSharpBehaviour)"/>
+		/// <inheritdoc cref="Warning(string, LoggableUdonSharpBehaviour)"/>
 		/// <remarks> This version of LogWarning will only log the warning once </remarks>
-		internal static void LogWarningOnce(string text, LoggableUdonSharpBehaviour self)
+		internal static void WarningOnce(string text, LoggableUdonSharpBehaviour self)
 		{
 			//check if the warning has already been logged
 			if (CheckIfLogged(text, self))
@@ -224,15 +224,15 @@ namespace OpenFlightVRC
 		/// </summary>
 		/// <param name="text">The text to print to the console</param>
 		/// <param name="self">The UdonSharpBehaviour that is logging the text</param>
-		internal static void LogError(string text, LoggableUdonSharpBehaviour self)
+		internal static void Error(string text, LoggableUdonSharpBehaviour self)
 		{
 			Debug.LogError(Format(text, LogLevel.Error, self));
 			WriteToUILog(Format(text, LogLevel.Error, self, false), self);
 		}
 
-		/// <inheritdoc cref="LogError(string, LoggableUdonSharpBehaviour)"/>
+		/// <inheritdoc cref="Error(string, LoggableUdonSharpBehaviour)"/>
 		/// <remarks> This version of LogError will only log the error once </remarks>
-		internal static void LogErrorOnce(string text, LoggableUdonSharpBehaviour self)
+		internal static void ErrorOnce(string text, LoggableUdonSharpBehaviour self)
 		{
 			//check if the error has already been logged
 			if (CheckIfLogged(text, self))

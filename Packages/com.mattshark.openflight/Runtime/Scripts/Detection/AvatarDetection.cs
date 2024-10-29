@@ -287,7 +287,7 @@ namespace OpenFlightVRC
             //if error token, return false and log error
             if (hash_token.Error != DataError.None)
             {
-                LogError("Invalid Hash Sent, received error: " + hash_token.Error + " with hash: " + in_hash);
+                Error("Invalid Hash Sent, received error: " + hash_token.Error + " with hash: " + in_hash);
                 return false;
             }
 
@@ -311,7 +311,7 @@ namespace OpenFlightVRC
                 }
             }
 
-            LogWarning("HashTable not found, falling back to old crawling method");
+            Warning("HashTable not found, falling back to old crawling method");
 
             //Old crawling method
             DataDictionary bases = _json["Bases"].DataDictionary;
@@ -376,7 +376,7 @@ namespace OpenFlightVRC
 			if (!VRCJson.TryDeserializeFromJson(_jsonString, out DataToken jsonDataToken))
 			{
 				debugInfo = "Failed to load JSON list!";
-				LogError("Failed to load JSON list! This shouldnt occur unless we messed up the JSON, or VRChat broke something!");
+				Error("Failed to load JSON list! This shouldnt occur unless we messed up the JSON, or VRChat broke something!");
 				return;
 			}
 			_json = jsonDataToken.DataDictionary;
@@ -469,7 +469,7 @@ namespace OpenFlightVRC
 					boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
 					return boneInfo.GetHashCode().ToString() + "v2";
 				default:
-					LogError("Invalid Hash Version Sent");
+					Error("Invalid Hash Version Sent");
 					return "0";
 			}
 		}
