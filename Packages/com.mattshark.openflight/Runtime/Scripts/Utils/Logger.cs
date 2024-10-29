@@ -60,14 +60,14 @@ namespace OpenFlightVRC
 		const int MaxLogMessages = 200;
 
 		internal static void WriteToUILog(string text, LoggableUdonSharpBehaviour self)
-        {
-            Logger logProxy = null;
-            if (!SetupLogProxy(self, ref logProxy))
-            {
-                return;
-            }
+		{
+			Logger logProxy = null;
+			if (!SetupLogProxy(self, ref logProxy))
+			{
+				return;
+			}
 
-            //add the text to the log
+			//add the text to the log
 			logProxy.log += text + "\n";
 
 			//split into lines
@@ -78,28 +78,28 @@ namespace OpenFlightVRC
 				logProxy.log = string.Join("\n", lines, lines.Length - MaxLogMessages, MaxLogMessages);
 			}
 
-            logProxy.UpdateLog();
-        }
+			logProxy.UpdateLog();
+		}
 
 		/// <summary>
 		/// Gets the log type string
 		/// </summary>
 		/// <param name="lT"></param>
 		/// <returns></returns>
-        private static string GetLogTypeString(LogLevel lT)
-        {
-            switch (lT)
-            {
-                case LogLevel.Info:
+		private static string GetLogTypeString(LogLevel lT)
+		{
+			switch (lT)
+			{
+				case LogLevel.Info:
 					return ColorText(nameof(LogLevel.Info), "white");
-                case LogLevel.Warning:
+				case LogLevel.Warning:
 					return ColorText(nameof(LogLevel.Warning), "yellow");
-                case LogLevel.Error:
+				case LogLevel.Error:
 					return ColorText(nameof(LogLevel.Error), "red");
 				default:
 					return "";
-            }
-        }
+			}
+		}
 
 		/// <summary>
 		/// Converts a LogType to a string
@@ -121,60 +121,60 @@ namespace OpenFlightVRC
 			}
 		}
 
-        /// <summary>
-        /// Sets up the log proxy system
-        /// </summary>
-        /// <param name="self"></param>
-        /// <param name="Logger"></param>
-        /// <returns> Whether or not the setup was successful </returns>
-        private static bool SetupLogProxy(LoggableUdonSharpBehaviour self, ref Logger Logger)
-        {
-            //check if self is null
-            //if it isnt, we can check for and setup the logproxy cache system
-            if (self != null)
-            {
-                Logger = self._logProxy;
+		/// <summary>
+		/// Sets up the log proxy system
+		/// </summary>
+		/// <param name="self"></param>
+		/// <param name="Logger"></param>
+		/// <returns> Whether or not the setup was successful </returns>
+		private static bool SetupLogProxy(LoggableUdonSharpBehaviour self, ref Logger Logger)
+		{
+			//check if self is null
+			//if it isnt, we can check for and setup the logproxy cache system
+			if (self != null)
+			{
+				Logger = self._logProxy;
 
-                if (Logger == null)
-                {
+				if (Logger == null)
+				{
 
-                    GameObject logObject = GameObject.Find(logObjectName);
+					GameObject logObject = GameObject.Find(logObjectName);
 
-                    if (logObject == null)
-                    {
-                        return false;
-                    }
+					if (logObject == null)
+					{
+						return false;
+					}
 
-                    Logger logUdon = logObject.GetComponent<Logger>();
+					Logger logUdon = logObject.GetComponent<Logger>();
 
-                    self._logProxy = logUdon;
-                    Logger = logUdon;
-                }
-            }
-            else
-            {
-                //if it *is* null, we need to do the more expensive gameobject.find every time
-                GameObject logObject = GameObject.Find(logObjectName);
+					self._logProxy = logUdon;
+					Logger = logUdon;
+				}
+			}
+			else
+			{
+				//if it *is* null, we need to do the more expensive gameobject.find every time
+				GameObject logObject = GameObject.Find(logObjectName);
 
-                if (logObject == null)
-                {
-                    return false;
-                }
+				if (logObject == null)
+				{
+					return false;
+				}
 
-                Logger logUdon = logObject.GetComponent<Logger>();
+				Logger logUdon = logObject.GetComponent<Logger>();
 
-                Logger = logUdon;
-            }
+				Logger = logUdon;
+			}
 
 			return true;
-        }
+		}
 
-        /// <summary>
-        /// Logs a message to the console
-        /// </summary>
-        /// <param name="text">The text to print to the console</param>
-        /// <param name="self">The UdonSharpBehaviour that is logging the text</param>
-        internal static void Log(string text, LoggableUdonSharpBehaviour self)
+		/// <summary>
+		/// Logs a message to the console
+		/// </summary>
+		/// <param name="text">The text to print to the console</param>
+		/// <param name="self">The UdonSharpBehaviour that is logging the text</param>
+		internal static void Log(string text, LoggableUdonSharpBehaviour self)
 		{
 			Debug.Log(Format(text, LogLevel.Info, self));
 			WriteToUILog(Format(text, LogLevel.Info, self, false), self);
@@ -358,30 +358,30 @@ namespace OpenFlightVRC
 		/// <param name="color">The color to convert</param>
 		/// <returns>The HTML color</returns>
 		private static string ColorToHTML(Color color)
-        {
-            string RHex = GetHex(color);
-            string GHex = GetHex(color);
-            string BHex = GetHex(color);
+		{
+			string RHex = GetHex(color);
+			string GHex = GetHex(color);
+			string BHex = GetHex(color);
 
-            return "#" + RHex + GHex + BHex;
-        }
+			return "#" + RHex + GHex + BHex;
+		}
 
 		/// <summary>
 		/// Gets the hex value of a color
 		/// </summary>
 		/// <param name="color"></param>
 		/// <returns></returns>
-        private static string GetHex(Color color)
-        {
-            return ((int)(color.r * 255)).ToString("X2");
-        }
+		private static string GetHex(Color color)
+		{
+			return ((int)(color.r * 255)).ToString("X2");
+		}
 
-        /// <summary>
-        /// Gets the name of the UdonSharpBehaviour. If null, returns "Untraceable Static Function Call"
-        /// </summary>
-        /// <param name="script"></param>
-        /// <returns></returns>
-        private static string GetScriptName(UdonSharpBehaviour script)
+		/// <summary>
+		/// Gets the name of the UdonSharpBehaviour. If null, returns "Untraceable Static Function Call"
+		/// </summary>
+		/// <param name="script"></param>
+		/// <returns></returns>
+		private static string GetScriptName(UdonSharpBehaviour script)
 		{
 			//check if null
 			if (script == null)
