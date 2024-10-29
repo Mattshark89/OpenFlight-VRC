@@ -12,7 +12,7 @@ namespace OpenFlightVRC
 	/// <summary>
 	/// A collection of useful functions that I cant find a better place for
 	/// </summary>
-	public class Util : LoggableUdonSharpBehaviour
+	public abstract class Util : LoggableUdonSharpBehaviour
 	{
 		/// <summary>
 		/// Returns a a byte that is made up of the bools in the array
