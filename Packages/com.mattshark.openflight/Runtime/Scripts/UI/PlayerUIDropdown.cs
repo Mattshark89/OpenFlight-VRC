@@ -56,7 +56,6 @@ namespace OpenFlightVRC.UI
 
             //directly trigger this as the dropdown component doesnt trigger it when setting the value in on enable for some reason
             OnValueChanged();
-            Logger.Log("PlayerUIDropdown enabled", this);
         }
 
         private int FindPlayerIndex(VRCPlayerApi[] players, VRCPlayerApi player)
