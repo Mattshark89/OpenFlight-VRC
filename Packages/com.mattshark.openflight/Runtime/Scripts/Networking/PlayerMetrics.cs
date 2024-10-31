@@ -17,6 +17,7 @@ namespace OpenFlightVRC.Net
         /// </summary>
         OnDataChanged
     }
+    //TODO: Make this also back up to the player data system like the settings do, or it will be lost on ID mismatch!
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     [RequireComponent(typeof(VRCEnablePersistence))]
     public class PlayerMetrics : CallbackUdonSharpBehaviour<PlayerMetricsCallback>
