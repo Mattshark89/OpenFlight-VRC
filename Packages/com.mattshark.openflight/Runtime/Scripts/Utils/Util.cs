@@ -2,6 +2,8 @@
  * @ Maintainer: Happyrobot33
  */
 
+using System.Text.RegularExpressions;
+
 using OpenFlightVRC.Net;
 using UnityEngine;
 using VRC.SDK3.Data;
@@ -12,7 +14,7 @@ namespace OpenFlightVRC
 	/// <summary>
 	/// A collection of useful functions that I cant find a better place for
 	/// </summary>
-	public sealed class Util : LoggableUdonSharpBehaviour
+	public static class Util
 	{
 		/// <summary>
 		/// Returns a a byte that is made up of the bools in the array
@@ -23,7 +25,7 @@ namespace OpenFlightVRC
 		{
 			if (bools.Length > 8)
 			{
-				Logger.Error("Too many bools to pack into a byte!", null);
+				Logger.Error("Too many bools to pack into a byte!");
 				return 0;
 			}
 
@@ -255,7 +257,7 @@ namespace OpenFlightVRC
                 }
             }
 
-			Logger.ErrorOnce("Could not find type on player " + player.displayName, null);
+			Logger.ErrorOnce("Could not find type on player " + player.displayName);
 			return default;
 		}
 
@@ -277,6 +279,74 @@ namespace OpenFlightVRC
 		public static float Latency(GameObject obj)
 		{
 			return (Time.realtimeSinceStartup - Networking.SimulationTime(obj)) * 1000;
+		}
+
+		//extend string to provide a markdown to rich text converter
+		public static string MarkdownToRichText(this string markdown)
+		{
+			string richText = markdown;
+
+			//setup all the rules
+			DataDictionary rules = new DataDictionary();
+
+			//since U# doesnt support initializers in a function, we have to do this
+			//suppress the warning
+			#pragma warning disable IDE0028
+			//the (?gm) is a inline options set
+
+			//Headers
+			rules.Add(@"(?m:^#{6}\s?([^\n]+))", "<size=067%><b>{0}</b><size=100%>");
+			rules.Add(@"(?m:^#{5}\s?([^\n]+))", "<size=083%><b>{0}</b><size=100%>");
+			rules.Add(@"(?m:^#{4}\s?([^\n]+))", "<size=100%><b>{0}</b><size=100%>");
+			rules.Add(@"(?m:^#{3}\s?([^\n]+))", "<size=117%><b>{0}</b><size=100%>");
+			rules.Add(@"(?m:^#{2}\s?([^\n]+))", "<size=150%><b>{0}</b><size=100%>");
+			rules.Add(@"(?m:^#{1}\s?([^\n]+))", "<size=200%><b>{0}</b><size=100%>");
+
+			//Bold
+			rules.Add(@"\*\*\s?([^\n]+)\*\*", "<b>{0}</b>");
+			rules.Add(@"__\s?([^\n]+)__", "<b>{0}</b>");
+
+			//italic
+			rules.Add(@"\*\s?([^\n]+)\*", "<i>{0}</i>");
+			rules.Add(@"_\s?([^\n]+)_", "<i>{0}</i>");
+
+			//strikethrough
+			rules.Add(@"\~\~\s?([^\n]+)\~\~", "<s>{0}</s>");
+
+			//additional, non-markdown spec rules
+			//github PR and Issue links
+			rules.Add(@"(?m:https?://github.com/.+?/.+?/pull/(\d+))", "<color=#0000EE>PR #{0}</color>"); //pull
+			rules.Add(@"(?m:https?://github.com/.+?/.+?/issues/(\d+))", "<color=#0000EE>Issue #{0}</color>"); //issue
+			rules.Add(@"(?m:https?://github.com/.+?/.+?/compare/(\w+-\d+\.\d+\.\d+\.+\w+-\d+\.\d+\.\d+))", "<color=#0000EE>PR #{0}</color>"); //compare
+
+			//attempt at code blocking, this isnt technically correct but hopefully its good enough
+			rules.Add(@"(?m:\`\s?([^\n]+)\`)", "<color=#FFFFFF><mark=#FFFFFF11>{0}</mark></color>");
+			//no multiline support as of yet, this is weird to figure out
+			//rules.Add(@"(?m:\`\`\`\s?([^\n]+)\`\`\`)", "<color=#FFFFFF><mark=#FFFFFF11>{0}</mark></color>");
+			#pragma warning restore IDE0028
+
+			//apply each rule
+			DataList keys = rules.GetKeys();
+			for (int i = 0; i < rules.Count; i++)
+			{
+				Logger.Log("Applying rule " + keys[i]);
+				string rule = keys[i].ToString();
+				string replacement = rules[rule].ToString();
+				//get all matches
+				MatchCollection matches = Regex.Matches(richText, rule);
+				for (int j = 0; j < matches.Count; j++)
+				{
+					Logger.Log("Match found: " + matches[j].Groups[0].Value);
+					Match match = matches[j];
+					//replace each match
+					string fullmatch = match.Groups[0].Value;
+					string extractedText = match.Groups[1].Value;
+					Logger.Log("Replacing " + fullmatch + " with " + string.Format(replacement, extractedText));
+					richText = richText.Replace(fullmatch, string.Format(replacement, extractedText));
+				}
+			}
+
+			return richText;
 		}
     }
 }

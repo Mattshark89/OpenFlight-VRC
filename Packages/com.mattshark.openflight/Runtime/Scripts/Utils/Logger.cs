@@ -174,7 +174,7 @@ namespace OpenFlightVRC
 		/// </summary>
 		/// <param name="text">The text to print to the console</param>
 		/// <param name="self">The UdonSharpBehaviour that is logging the text</param>
-		internal static void Log(string text, LoggableUdonSharpBehaviour self)
+		internal static void Log(string text, LoggableUdonSharpBehaviour self = null)
 		{
 			Debug.Log(Format(text, LogLevel.Info, self));
 			WriteToUILog(Format(text, LogLevel.Info, self, false), self);
@@ -182,7 +182,7 @@ namespace OpenFlightVRC
 
 		/// <inheritdoc cref="Log(string, LoggableUdonSharpBehaviour)"/>
 		/// <remarks> This version of Log will only log the message once </remarks>
-		internal static void LogOnce(string text, LoggableUdonSharpBehaviour self)
+		internal static void LogOnce(string text, LoggableUdonSharpBehaviour self = null)
 		{
 			//check if the message has already been logged
 			if (CheckIfLogged(text, self))
@@ -199,7 +199,7 @@ namespace OpenFlightVRC
 		/// </summary>
 		/// <param name="text">The text to print to the console</param>
 		/// <param name="self">The UdonSharpBehaviour that is logging the text</param>
-		internal static void Warning(string text, LoggableUdonSharpBehaviour self)
+		internal static void Warning(string text, LoggableUdonSharpBehaviour self = null)
 		{
 			Debug.LogWarning(Format(text, LogLevel.Warning, self));
 			WriteToUILog(Format(text, LogLevel.Warning, self, false), self);
@@ -207,7 +207,7 @@ namespace OpenFlightVRC
 
 		/// <inheritdoc cref="Warning(string, LoggableUdonSharpBehaviour)"/>
 		/// <remarks> This version of LogWarning will only log the warning once </remarks>
-		internal static void WarningOnce(string text, LoggableUdonSharpBehaviour self)
+		internal static void WarningOnce(string text, LoggableUdonSharpBehaviour self = null)
 		{
 			//check if the warning has already been logged
 			if (CheckIfLogged(text, self))
@@ -224,7 +224,7 @@ namespace OpenFlightVRC
 		/// </summary>
 		/// <param name="text">The text to print to the console</param>
 		/// <param name="self">The UdonSharpBehaviour that is logging the text</param>
-		internal static void Error(string text, LoggableUdonSharpBehaviour self)
+		internal static void Error(string text, LoggableUdonSharpBehaviour self = null)
 		{
 			Debug.LogError(Format(text, LogLevel.Error, self));
 			WriteToUILog(Format(text, LogLevel.Error, self, false), self);
@@ -232,7 +232,7 @@ namespace OpenFlightVRC
 
 		/// <inheritdoc cref="Error(string, LoggableUdonSharpBehaviour)"/>
 		/// <remarks> This version of LogError will only log the error once </remarks>
-		internal static void ErrorOnce(string text, LoggableUdonSharpBehaviour self)
+		internal static void ErrorOnce(string text, LoggableUdonSharpBehaviour self = null)
 		{
 			//check if the error has already been logged
 			if (CheckIfLogged(text, self))
@@ -359,21 +359,11 @@ namespace OpenFlightVRC
 		/// <returns>The HTML color</returns>
 		private static string ColorToHTML(Color color)
 		{
-			string RHex = GetHex(color);
-			string GHex = GetHex(color);
-			string BHex = GetHex(color);
+			string RHex = ((int)(color.r * 255)).ToString("X2");
+			string GHex = ((int)(color.g * 255)).ToString("X2");
+			string BHex = ((int)(color.b * 255)).ToString("X2");
 
 			return "#" + RHex + GHex + BHex;
-		}
-
-		/// <summary>
-		/// Gets the hex value of a color
-		/// </summary>
-		/// <param name="color"></param>
-		/// <returns></returns>
-		private static string GetHex(Color color)
-		{
-			return ((int)(color.r * 255)).ToString("X2");
 		}
 
 		/// <summary>
