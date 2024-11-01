@@ -281,7 +281,15 @@ namespace OpenFlightVRC
 			return (Time.realtimeSinceStartup - Networking.SimulationTime(obj)) * 1000;
 		}
 
-		//extend string to provide a markdown to rich text converter
+		/// <summary>
+		/// Converts a markdown string to a rich text string
+		/// </summary>
+		/// <param name="markdown">
+		/// A markdown string
+		/// </param>
+		/// <returns>
+		/// A rich text string
+		/// </returns>
 		public static string MarkdownToRichText(this string markdown)
 		{
 			string richText = markdown;
@@ -329,19 +337,19 @@ namespace OpenFlightVRC
 			DataList keys = rules.GetKeys();
 			for (int i = 0; i < rules.Count; i++)
 			{
-				Logger.Log("Applying rule " + keys[i]);
+				//Logger.Log("Applying rule " + keys[i]);
 				string rule = keys[i].ToString();
 				string replacement = rules[rule].ToString();
 				//get all matches
 				MatchCollection matches = Regex.Matches(richText, rule);
 				for (int j = 0; j < matches.Count; j++)
 				{
-					Logger.Log("Match found: " + matches[j].Groups[0].Value);
+					//Logger.Log("Match found: " + matches[j].Groups[0].Value);
 					Match match = matches[j];
 					//replace each match
 					string fullmatch = match.Groups[0].Value;
 					string extractedText = match.Groups[1].Value;
-					Logger.Log("Replacing " + fullmatch + " with " + string.Format(replacement, extractedText));
+					//Logger.Log("Replacing " + fullmatch + " with " + string.Format(replacement, extractedText));
 					richText = richText.Replace(fullmatch, string.Format(replacement, extractedText));
 				}
 			}

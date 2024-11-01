@@ -18,6 +18,7 @@ namespace OpenFlightVRC.Net
         OnDataChanged
     }
     //TODO: Make this also back up to the player data system like the settings do, or it will be lost on ID mismatch!
+    //TODO: Possible make this coroutine sync every like 5 to 10 seconds?
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     [RequireComponent(typeof(VRCEnablePersistence))]
     public class PlayerMetrics : CallbackUdonSharpBehaviour<PlayerMetricsCallback>
