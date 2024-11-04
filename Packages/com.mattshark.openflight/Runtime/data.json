@@ -1,12 +1,13 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.28.0",
-  "JSON Date": "2024-10-04",
+  "JSON Version": "2.32.0",
+  "JSON Date": "2024-10-26",
   "Contributers": [
     "-Jinxy-",
     "Daernaro",
     "Darizard",
     "DatGek",
+    "gardwolf",
     "Happyrobot33",
     "Heather May",
     "Igneoun",
@@ -37,7 +38,8 @@
     "InvertedCrink",
     "~Angiethekirin~",
     "Kitsune KAZE",
-    "Neszumi"
+    "Neszumi",
+    "Reazy Fluff"
   ],
   "Bases": {
     "Kitavali": {
@@ -1235,6 +1237,16 @@
         ],
         "Weight": 1,
         "WingtipOffset": 2.48
+      },
+      "v1.2": {
+        "Name": "Floofvali",
+        "Creator": "Da Floof",
+        "Introducer": "gardwolf",
+        "Hash": [
+          "148663355v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 2.48
       }
     },
     "Hoshi Avali": {
@@ -1455,7 +1467,18 @@
         "Creator": "Hiyu",
         "Introducer": "Happyrobot33",
         "Hash": [
-          "55850455v2"
+          "55850455v2",
+          "459134982v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 3.81
+      },
+      "PhoenixFallen Mini'spiri'vali Alteration": {
+        "Name": "Mini'spiri'vali",
+        "Creator": "Hiyu / PhoenixFallen",
+        "Introducer": "PhoenixFallen",
+        "Hash": [
+          "1672888727v2"
         ],
         "Weight": 1,
         "WingtipOffset": 3.81
@@ -1583,16 +1606,53 @@
       }
     },
     "Uncia Gryphonet": {
-	    "Original": {
-  	    "Name": "Uncia Gryphonet",
-  	    "Creator": "バウワウナード",
-  	    "Introducer": "Neszumi",
-  	    "Hash": [
-  		    "-53031928v2"
-  	    ],
-  	    "Weight": 1,
-  	    "WingtipOffset": 3.61
-  	  }
-  	}
+      "Original": {
+        "Name": "Uncia Gryphonet",
+        "Creator": "バウワウナード",
+        "Introducer": "Neszumi",
+        "Hash": [
+          "-53031928v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 3.61
+      }
+    },
+    "Durgarra": {
+      "Original": {
+        "Name": "Durgarra",
+        "Creator": "Kyderra",
+        "Introducer": "DarkSpirit019",
+        "Hash": [
+          "-812968432v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 0.91
+      }
+    },
+    "Wyvernarra": {
+      "Original": {
+        "Name": "Wyvernarra",
+        "Creator": "Kyderra",
+        "Introducer": "DarkSpirit019",
+        "Hash": [
+          "634475338v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 1.7
+      }
+    },
+    "Litria": {
+      "Original": {
+        "Name": "Litria",
+        "Creator": "Koubato",
+        "Introducer": "Reazy Fluff",
+        "Hash": [
+          "-2068937614v2",
+          "1613858679v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 5.1
+      }
+    }
   }
 }
