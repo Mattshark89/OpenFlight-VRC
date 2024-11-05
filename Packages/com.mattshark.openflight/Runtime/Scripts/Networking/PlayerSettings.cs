@@ -136,16 +136,10 @@ namespace OpenFlightVRC.Net
         /// </summary>
         public const string revisionKey = "revision";
 
-
-        /// <summary>
-        /// The player data folder key
-        /// </summary>
-        public const string playerDataFolderKey = "OpenFlightVRC/";
-
         /// <summary>
         /// The player data key for the backup of the settings
         /// </summary>
-        public const string DBBackupKey = playerDataFolderKey + "DBBackup";
+        public const string DBBackupKey = Util.playerDataFolderKey + "DBBackup";
         #endregion
 
 
@@ -1265,81 +1259,18 @@ namespace OpenFlightVRC.Net
         /// <param name="settingsLocation"> The settings to spread </param>
         private void SpreadSettings(DataDictionary settingsLocation)
         {
-            TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.flapStrengthBase), ref wingFlightPlusGlide.flapStrengthBase);
-            TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.flightGravityBase), ref wingFlightPlusGlide.flightGravityBase);
-            TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.requireJump), ref wingFlightPlusGlide.requireJump);
-            TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.allowLoco), ref wingFlightPlusGlide.allowLoco);
-            TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.useAvatarModifiers), ref wingFlightPlusGlide.useAvatarModifiers);
-            TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.canGlide), ref wingFlightPlusGlide.canGlide);
-            TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.fallToGlide), ref wingFlightPlusGlide.fallToGlide);
-            TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.glideControl), ref wingFlightPlusGlide.glideControl);
-            TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.airFriction), ref wingFlightPlusGlide.airFriction);
-            TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.bankingTurns), ref wingFlightPlusGlide.bankingTurns);
-            TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.glideAngleOffset), ref wingFlightPlusGlide.glideAngleOffset);
-            TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.useAvatarScale), ref wingFlightPlusGlide.useAvatarScale);
-        }
-
-        /// <summary>
-        /// Gets a setting from the settings dictionary
-        /// </summary>
-        /// <param name="settingsLocation"> The location of the settings </param>
-        /// <param name="key"> The key of the setting </param>
-        /// <param name="token"> The resulting token of the setting </param>
-        /// <returns> True if the setting was retrieved, false if it failed </returns>
-        public static bool GetSetting(DataDictionary settingsLocation, string key, out DataToken token)
-        {
-            if (settingsLocation.TryGetValue(key, out token))
-            {
-                return true;
-            }
-            else
-            {
-                Logger.Warning(string.Format("Failed to get setting {0} from settings. Keeping current setting. Error reason: {1}", key, token.Error.ToString()), null);
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Tries to apply a setting to a variable reference
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="settingsLocation">Where the settings are stored</param>
-        /// <param name="keyName">The key of the setting</param>
-        /// <param name="variableReference">The variable to apply the setting to</param>
-        /// <returns>True if the setting was applied, false if it failed</returns>
-        public static bool TryApplySetting<T>(DataDictionary settingsLocation, string keyName, ref T variableReference)
-        {
-            bool ableToGetSetting = GetSetting(settingsLocation, keyName, out DataToken token);
-            if (ableToGetSetting)
-            {
-                /*
-				just for reference
-				nameof(System.Boolean) = "Boolean"
-				typeof(T).Name = "Boolean"
-				
-				a single in this case actually means float
-				*/
-
-                //enforce the type of the setting
-                switch (typeof(T).Name)
-                {
-                    case nameof(System.Boolean):
-                        variableReference = (T)(object)token.Boolean;
-                        break;
-                    case nameof(System.Single):
-                        variableReference = (T)(object)token.Number;
-                        break;
-                    case nameof(System.Int32):
-                        variableReference = (T)(object)token.Number;
-                        break;
-                    default:
-                        Logger.Error(string.Format("Failed to apply setting {0}. Unsupported type {1}", keyName, token.TokenType.ToString()), null);
-                        return false;
-                }
-                return true;
-            }
-
-            return false;
+            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.flapStrengthBase), ref wingFlightPlusGlide.flapStrengthBase);
+            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.flightGravityBase), ref wingFlightPlusGlide.flightGravityBase);
+            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.requireJump), ref wingFlightPlusGlide.requireJump);
+            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.allowLoco), ref wingFlightPlusGlide.allowLoco);
+            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.useAvatarModifiers), ref wingFlightPlusGlide.useAvatarModifiers);
+            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.canGlide), ref wingFlightPlusGlide.canGlide);
+            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.fallToGlide), ref wingFlightPlusGlide.fallToGlide);
+            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.glideControl), ref wingFlightPlusGlide.glideControl);
+            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.airFriction), ref wingFlightPlusGlide.airFriction);
+            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.bankingTurns), ref wingFlightPlusGlide.bankingTurns);
+            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.glideAngleOffset), ref wingFlightPlusGlide.glideAngleOffset);
+            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.useAvatarScale), ref wingFlightPlusGlide.useAvatarScale);
         }
         #endregion
     }

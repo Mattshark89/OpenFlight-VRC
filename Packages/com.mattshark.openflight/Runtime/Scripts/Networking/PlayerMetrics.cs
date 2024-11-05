@@ -1,10 +1,15 @@
 ﻿
 using System;
+
 using TMPro;
+
 using UdonSharp;
+
 using UnityEngine;
 
 using VRC.SDK3.Components;
+using VRC.SDK3.Data;
+using VRC.SDK3.Persistence;
 using VRC.SDKBase;
 using VRC.Udon;
 
@@ -17,7 +22,6 @@ namespace OpenFlightVRC.Net
         /// </summary>
         OnDataChanged
     }
-    //TODO: Make this also back up to the player data system like the settings do, or it will be lost on ID mismatch!
     //TODO: Possible make this coroutine sync every like 5 to 10 seconds?
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     [RequireComponent(typeof(VRCEnablePersistence))]
@@ -43,7 +47,12 @@ namespace OpenFlightVRC.Net
         private Vector3 lastPosition;
         #endregion
         private bool isFlying = false;
+
+        [UdonSynced]
+        public bool initialized = false;
         #endregion
+
+        public const string MetricsBackupKey = Util.playerDataFolderKey + "MetricsBackup";
 
         public WingFlightPlusGlide WingFlightPlusGlide;
         private VRCPlayerApi Owner;
@@ -54,7 +63,7 @@ namespace OpenFlightVRC.Net
             Owner = Networking.GetOwner(gameObject);
             LocalPlayer = Networking.LocalPlayer;
 
-            if(Owner == LocalPlayer)
+            if (Owner == LocalPlayer)
             {
                 //subscribe to the flight start and end events
                 WingFlightPlusGlide.AddCallback(WingFlightPlusGlideCallback.TakeOff, this, nameof(FlightStart));
@@ -63,6 +72,71 @@ namespace OpenFlightVRC.Net
                 //save the current position
                 lastPosition = Owner.GetPosition();
             }
+        }
+
+        public override void OnPlayerRestored(VRCPlayerApi player)
+        {
+            //if not local player, dont worry about it
+            if (player != LocalPlayer)
+                return;
+
+            //check if initialized
+            if (initialized)
+            {
+                //that means we have proper object data, so instead we should update the backup
+                if (VRCJson.TrySerializeToJson(SerializeData(), JsonExportType.Minify, out DataToken jsonData))
+                {
+                    PlayerData.SetString(MetricsBackupKey, jsonData.String);
+                    Log("PlayerMetrics backup data updated successfully");
+                }
+                else
+                {
+                    Error("PlayerMetrics backup data could not be serialized, backup has not been updated!");
+                }
+            }
+            else
+            {
+                Log("PlayerMetrics not initialized, attempting to restore potential backup data");
+                //this means we either lost the object data or never had any to begin with
+                //to determine further, check the player data
+                if (PlayerData.TryGetString(player, MetricsBackupKey, out string backupData))
+                {
+                    //if we have backup data, deserialize it
+                    if (VRCJson.TryDeserializeFromJson(backupData, out DataToken result))
+                    {
+                        Log("PlayerMetrics backup data restored successfully");
+                        DeserializeData(result.DataDictionary);
+                    }
+                    else
+                    {
+                        Error("PlayerMetrics backup data could not be deserialized, backup has not been restored!");
+                    }
+                }
+                else
+                {
+                    Warning("PlayerMetrics backup data not found, no backup data to restore!");
+                }
+            }
+
+            initialized = true;
+            RequestSerialization();
+        }
+
+        private DataDictionary SerializeData()
+        {
+            DataDictionary data = new DataDictionary();
+            data.Add(new DataToken(nameof(TicksSpentFlying)), TicksSpentFlying);
+            data.Add(new DataToken(nameof(FlapCount)), FlapCount);
+            data.Add(new DataToken(nameof(DistanceTraveled)), DistanceTraveled);
+            return data;
+        }
+
+        private void DeserializeData(DataDictionary data)
+        {
+            Util.TryApplySetting(data, nameof(TicksSpentFlying), ref TicksSpentFlying);
+            Util.TryApplySetting(data, nameof(FlapCount), ref FlapCount);
+            Util.TryApplySetting(data, nameof(DistanceTraveled), ref DistanceTraveled);
+            RequestSerialization();
         }
 
         void Update()
@@ -74,7 +148,7 @@ namespace OpenFlightVRC.Net
                 //if the distance is too large, its likely a teleport or respawn, so we ignore it
                 if (distance < 100)
                     DistanceTraveled += distance;
-                
+
                 lastPosition = Owner.GetPosition();
             }
         }

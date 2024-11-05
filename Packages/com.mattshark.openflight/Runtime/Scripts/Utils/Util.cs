@@ -16,6 +16,87 @@ namespace OpenFlightVRC
 	/// </summary>
 	public static class Util
 	{
+        /// <summary>
+        /// Prefix for all player data keys
+        /// </summary>
+        public const string playerDataFolderKey = "OpenFlightVRC/";
+
+		
+        /// <summary>
+        /// Gets a setting from the settings dictionary
+        /// </summary>
+        /// <param name="settingsLocation"> The location of the settings </param>
+        /// <param name="key"> The key of the setting </param>
+        /// <param name="token"> The resulting token of the setting </param>
+        /// <returns> True if the setting was retrieved, false if it failed </returns>
+        public static bool GetSetting(DataDictionary settingsLocation, string key, out DataToken token)
+        {
+            if (settingsLocation.TryGetValue(key, out token))
+            {
+                return true;
+            }
+            else
+            {
+                Logger.Warning(string.Format("Failed to get setting {0} from settings. Keeping current setting. Error reason: {1}", key, token.Error.ToString()), null);
+                return false;
+            }
+        }
+
+		/// <summary>
+        /// Tries to apply a setting to a variable reference
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="settingsLocation">Where the settings are stored</param>
+        /// <param name="keyName">The key of the setting</param>
+        /// <param name="variableReference">The variable to apply the setting to</param>
+        /// <returns>True if the setting was applied, false if it failed</returns>
+        public static bool TryApplySetting<T>(DataDictionary settingsLocation, string keyName, ref T variableReference)
+        {
+            bool ableToGetSetting = GetSetting(settingsLocation, keyName, out DataToken token);
+            if (ableToGetSetting)
+            {
+                /*
+				just for reference
+				nameof(System.Boolean) = "Boolean"
+				typeof(T).Name = "Boolean"
+				
+				a single in this case actually means float
+				*/
+
+                //enforce the type of the setting
+                switch (typeof(T).Name)
+                {
+                    case nameof(System.Boolean):
+                        variableReference = (T)(object)token.Boolean;
+                        break;
+                    case nameof(System.Single):
+                        variableReference = (T)(object)token.Number;
+                        break;
+                    case nameof(System.Int32):
+                        variableReference = (T)(object)token.Number;
+                        break;
+					case nameof(System.String):
+						variableReference = (T)(object)token.String;
+						break;
+					case nameof(System.Byte):
+						variableReference = (T)(object)token.Number;
+						break;
+					case nameof(System.Int64):
+						variableReference = (T)(object)token.Number;
+						break;
+					case nameof(System.Double):
+						variableReference = (T)(object)token.Number;
+						break;
+                    default:
+                        Logger.Error(string.Format("Failed to apply setting {0}. Unsupported type {1}", keyName, token.TokenType.ToString()), null);
+                        return false;
+                }
+                return true;
+            }
+
+            return false;
+        }
+
 		/// <summary>
 		/// Returns a a byte that is made up of the bools in the array
 		/// </summary>

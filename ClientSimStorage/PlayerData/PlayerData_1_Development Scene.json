@@ -1,10 +1,18 @@
 {
   "OpenFlightVRC/DBBackup": {
-    "LastUpdated": "2024-10-31T10:09:03.3628612-04:00",
+    "LastUpdated": "2024-11-05T10:58:32.1479285-05:00",
     "Key": "OpenFlightVRC/DBBackup",
     "Value": {
       "type": "String",
-      "value": "{\"Slots\": {\"Epic new slot\": {\"flapStrengthBase\": 285, \"flightGravityBase\": 0.4, \"requireJump\": true, \"allowLoco\": false, \"useAvatarModifiers\": true, \"canGlide\": true, \"fallToGlide\": true, \"glideControl\": 2.5, \"airFriction\": 0.02, \"bankingTurns\": true, \"glideAngleOffset\": 0, \"useAvatarScale\": true, \"revision\": 0, \"lastUpdatedDateTime\": \"10/17/2024 2:48:52 PM\"}, \"Default\": {\"flapStrengthBase\": 285, \"flightGravityBase\": 0.4, \"requireJump\": true, \"allowLoco\": false, \"useAvatarModifiers\": true, \"canGlide\": true, \"fallToGlide\": true, \"glideControl\": 2.5, \"airFriction\": 0.02, \"bankingTurns\": true, \"glideAngleOffset\": 0, \"useAvatarScale\": true, \"revision\": 0, \"lastUpdatedDateTime\": \"10/17/2024 2:46:18 PM\"}, \"Desktop Mode Testing\": {\"flapStrengthBase\": 285, \"flightGravityBase\": 0.4, \"requireJump\": true, \"allowLoco\": false, \"useAvatarModifiers\": false, \"canGlide\": true, \"fallToGlide\": true, \"glideControl\": 2.5, \"airFriction\": 0.02, \"bankingTurns\": false, \"glideAngleOffset\": 0, \"useAvatarScale\": false, \"revision\": 3, \"lastUpdatedDateTime\": \"10/31/2024 8:33:57 AM\"}, \"very long slot name to test formatting\": {\"flapStrengthBase\": 285, \"flightGravityBase\": 0.4, \"requireJump\": true, \"allowLoco\": false, \"useAvatarModifiers\": true, \"canGlide\": true, \"fallToGlide\": true, \"glideControl\": 2.5, \"airFriction\": 0.02, \"bankingTurns\": false, \"glideAngleOffset\": 0, \"useAvatarScale\": true, \"revision\": 0, \"lastUpdatedDateTime\": \"10/24/2024 10:07:59 AM\"}}, \"Global Settings\": {\"slotToLoadByDefault\": \"Desktop Mode Testing\", \"useWorldDefaultsWhenLoading\": false, \"revision\": 28, \"lastUpdatedDateTime\": \"10/31/2024 8:40:08 AM\"}}"
+      "value": "{\"Slots\": {\"Epic new slot\": {\"flapStrengthBase\": 285, \"flightGravityBase\": 0.4, \"requireJump\": true, \"allowLoco\": false, \"useAvatarModifiers\": true, \"canGlide\": true, \"fallToGlide\": true, \"glideControl\": 2.5, \"airFriction\": 0.02, \"bankingTurns\": true, \"glideAngleOffset\": 0, \"useAvatarScale\": true, \"revision\": 0, \"lastUpdatedDateTime\": \"10/17/2024 2:48:52 PM\"}, \"Default\": {\"flapStrengthBase\": 285, \"flightGravityBase\": 0.4, \"requireJump\": true, \"allowLoco\": false, \"useAvatarModifiers\": true, \"canGlide\": true, \"fallToGlide\": true, \"glideControl\": 2.5, \"airFriction\": 0.02, \"bankingTurns\": true, \"glideAngleOffset\": 0, \"useAvatarScale\": true, \"revision\": 0, \"lastUpdatedDateTime\": \"10/17/2024 2:46:18 PM\"}, \"Desktop Mode Testing\": {\"flapStrengthBase\": 285, \"flightGravityBase\": 0.4, \"requireJump\": true, \"allowLoco\": false, \"useAvatarModifiers\": false, \"canGlide\": true, \"fallToGlide\": true, \"glideControl\": 2.5, \"airFriction\": 0.02, \"bankingTurns\": false, \"glideAngleOffset\": 0, \"useAvatarScale\": false, \"revision\": 3, \"lastUpdatedDateTime\": \"10/31/2024 8:33:57 AM\"}, \"very long slot name to test formatting\": {\"flapStrengthBase\": 285, \"flightGravityBase\": 0.4, \"requireJump\": true, \"allowLoco\": false, \"useAvatarModifiers\": true, \"canGlide\": true, \"fallToGlide\": true, \"glideControl\": 2.5, \"airFriction\": 0.02, \"bankingTurns\": false, \"glideAngleOffset\": 0, \"useAvatarScale\": true, \"revision\": 0, \"lastUpdatedDateTime\": \"10/24/2024 10:07:59 AM\"}}, \"Global Settings\": {\"slotToLoadByDefault\": \"Desktop Mode Testing\", \"useWorldDefaultsWhenLoading\": false, \"revision\": 29, \"lastUpdatedDateTime\": \"11/5/2024 10:58:32 AM\"}}"
+    }
+  },
+  "OpenFlightVRC/MetricsBackup": {
+    "LastUpdated": "2024-11-05T10:56:58.0470127-05:00",
+    "Key": "OpenFlightVRC/MetricsBackup",
+    "Value": {
+      "type": "String",
+      "value": "{\"TicksSpentFlying\": 71279450, \"FlapCount\": 6, \"DistanceTraveled\": 38.97297}"
     }
   }
 }
