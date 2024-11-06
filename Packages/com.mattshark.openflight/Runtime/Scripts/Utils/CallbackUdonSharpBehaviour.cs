@@ -55,8 +55,7 @@ namespace OpenFlightVRC
                 //add the method name, only if its not already there
                 if (!_callbackData[id].DataDictionary[behaviour].DataList.Contains(methodNames[i]))
                 {
-                    //Logger.Log(String.Format("Added callback [{0}] for [{1}]", Logger.ColorizeFunction(behaviour, methodName), Logger.ColorizeFunction(behaviour, methodName)), this);
-                    Log(LogLevel.Callback, string.Format("Added callback [{0}] for [{1}]", Logger.ColorizeFunction(behaviour, methodNames[i]), Logger.ColorizeScript(behaviour)), this);
+                    Log(LogLevel.Callback, string.Format("Added callback [{0}] for [{1}]", Logger.ColorizeFunction(behaviour, methodNames[i]), Logger.ColorizeScript(behaviour)));
                     _callbackData[id].DataDictionary[behaviour].DataList.Add(methodNames[i]);
                 }
                 else
