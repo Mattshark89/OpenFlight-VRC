@@ -316,7 +316,7 @@ namespace OpenFlightVRC
 				oldWalkSpeed = LocalPlayer.GetWalkSpeed();
 				oldRunSpeed = LocalPlayer.GetRunSpeed();
 				oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
-				Log("Player Physics saved.");
+				Log(LogLevel.Info, "Player Physics saved.");
 			}
 		}
 
@@ -335,7 +335,7 @@ namespace OpenFlightVRC
 			{
 				Land();
 			}
-			Log("Disabled.");
+			Log(LogLevel.Info, "Disabled.");
 		}
 
 		public override void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight) // According to the docs also runs upon changing avatars
@@ -740,7 +740,7 @@ Velocity: {8}",
 				+ Vector3.Distance(LocalPlayer.GetBonePosition(RightUpperArmBone), LocalPlayer.GetBonePosition(RightLowerArmBone))
 				+ Vector3.Distance(LocalPlayer.GetBonePosition(RightLowerArmBone), LocalPlayer.GetBonePosition(RightHandBone));
 			shoulderDistance = Vector3.Distance(LocalPlayer.GetBonePosition(LeftUpperArmBone), LocalPlayer.GetBonePosition(RightUpperArmBone));
-			Log("Armspan: " + armspan.ToString() + " Shoulder Distance: " + shoulderDistance.ToString());
+			Log(LogLevel.Info, "Armspan: " + armspan.ToString() + " Shoulder Distance: " + shoulderDistance.ToString());
 		}
 
 		/// <summary>
@@ -765,7 +765,7 @@ Velocity: {8}",
 				{
 					ImmobilizePlayer(true);
 				}
-				Log("Took off.");
+				Log(LogLevel.Info, "Took off.");
 			}
 		}
 
@@ -777,19 +777,19 @@ Velocity: {8}",
 			// Log a warning if gravity values differ from what we have saved
 			if (LocalPlayer.GetGravityStrength() != oldGravityStrength)
 			{
-				Warning(
+				Log(LogLevel.Warning, 
 					"World gravity is different than the saved gravity may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new world gravity using UpdatePlayerPhysics()."
 				);
-				Warning("Saved Gravity: " + oldGravityStrength.ToString());
+				Log(LogLevel.Warning, "Saved Gravity: " + oldGravityStrength.ToString());
 			}
 
 			// Log a warning if movement values differ from what we have saved
 			if (LocalPlayer.GetWalkSpeed() != oldWalkSpeed || LocalPlayer.GetRunSpeed() != oldRunSpeed || LocalPlayer.GetStrafeSpeed() != oldStrafeSpeed)
 			{
-				Warning(
+				Log(LogLevel.Warning, 
 					"Player movement is different than the saved movement may cause issues. If you want to avoid this, edit scripts to inform OpenFlight of the new player movement using UpdatePlayerPhysics()."
 				);
-				Warning(
+				Log(LogLevel.Warning, 
 					"Saved Walk Speed: " + oldWalkSpeed.ToString() + " Saved Run Speed: " + oldRunSpeed.ToString() + " Saved Strafe Speed: " + oldStrafeSpeed.ToString()
 				);
 			}
@@ -866,7 +866,7 @@ Velocity: {8}",
 				CheckPhysicsUnchanged();
 			}
 
-			Log("Landed.");
+			Log(LogLevel.Info, "Landed.");
 		}
 
 		private float GetFlapStrength()
@@ -909,7 +909,7 @@ Velocity: {8}",
 		{
 			if (dynamicPlayerPhysics)
 			{
-				Log("Dynamic Player Physics is enabled. Player Physics will be updated automatically.");
+				Log(LogLevel.Info, "Dynamic Player Physics is enabled. Player Physics will be updated automatically.");
 				return;
 			}
 
@@ -917,7 +917,7 @@ Velocity: {8}",
 			oldWalkSpeed = LocalPlayer.GetWalkSpeed();
 			oldRunSpeed = LocalPlayer.GetRunSpeed();
 			oldStrafeSpeed = LocalPlayer.GetStrafeSpeed();
-			Log("Player Physics updated.");
+			Log(LogLevel.Info, "Player Physics updated.");
 		}
 
 		/// <summary>
@@ -947,7 +947,7 @@ Velocity: {8}",
 			defaultsStore.SetValue((DataToken)nameof(glideAngleOffset), glideAngleOffset);
 			defaultsStore.SetValue((DataToken)nameof(useAvatarScale), useAvatarScale);
 			defaultsStore.SetValue((DataToken)nameof(fallToGlideActivationDelay), fallToGlideActivationDelay);
-			Log(string.Format("Defaults initialized ({0} values).", defaultsStore.Count));
+			Log(LogLevel.Info, string.Format("Defaults initialized ({0} values).", defaultsStore.Count));
 		}
 
 		/// <summary>
@@ -971,7 +971,7 @@ Velocity: {8}",
 			glideAngleOffset = GetDefaultValue(nameof(glideAngleOffset)).Float;
 			useAvatarScale = GetDefaultValue(nameof(useAvatarScale)).Boolean;
 			fallToGlideActivationDelay = GetDefaultValue(nameof(fallToGlideActivationDelay)).Int;
-			Log(string.Format("Defaults restored ({0} values).", defaultsStore.Count));
+			Log(LogLevel.Info, string.Format("Defaults restored ({0} values).", defaultsStore.Count));
 		}
 
 		/// <summary>
@@ -987,7 +987,7 @@ Velocity: {8}",
 			}
 			else
 			{
-				Error("Key not found in defaults store: " + key);
+				Log(LogLevel.Error, "Key not found in defaults store: " + key);
 				return new DataToken(0);
 			}
 		}

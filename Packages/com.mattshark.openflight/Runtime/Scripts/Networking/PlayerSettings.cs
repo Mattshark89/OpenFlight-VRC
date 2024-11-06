@@ -214,7 +214,7 @@ namespace OpenFlightVRC.Net
                     RunCallback(PlayerSettingsCallback.slotToLoadByDefaultChanged);
                     break;
                     //default:
-                    //    Logger.LogWarning(string.Format("No callback for global setting {0}! This should be fixed", key), this);
+                    //    Logger.LogWarning(string.Format("No callback for global setting {0}! This should be fixed", key));
                     //    break;
             }
 
@@ -242,14 +242,14 @@ namespace OpenFlightVRC.Net
                 }
                 else
                 {
-                    Logger.Warning(string.Format("Failed to get global setting {0}! Setting not found", key), this);
+                    Log(LogLevel.Warning, string.Format("Failed to get global setting {0}! Setting not found", key));
                     returnToken = default;
                     return false;
                 }
             }
             else
             {
-                Logger.Warning("Failed to get global setting! Global settings not found", this);
+                Log(LogLevel.Warning, "Failed to get global setting! Global settings not found");
                 returnToken = default;
                 return false;
             }
@@ -281,13 +281,13 @@ namespace OpenFlightVRC.Net
             //check if we can edit the settings
             if (!CanEdit)
             {
-                Logger.Warning("Failed to save settings! Must be the owner of the object to save settings", this);
+                Log(LogLevel.Warning, "Failed to save settings! Must be the owner of the object to save settings");
 
                 returnSlotName = "";
                 return false;
             }
 
-            Logger.Log("Saving current settings to slot " + slotName, this);
+            Log(LogLevel.Info, "Saving current settings to slot " + slotName);
 
             //get the local slots
             DataDictionary localSlots = GetSlots(m_LocalSettings);
@@ -347,7 +347,7 @@ namespace OpenFlightVRC.Net
             }
             else
             {
-                Logger.Log("Revision key not found, initializing it", this);
+                Log(LogLevel.Info, "Revision key not found, initializing it");
                 //initialize it
                 _SetGlobalSetting(revisionKey, new DataToken(0));
             }
@@ -355,7 +355,7 @@ namespace OpenFlightVRC.Net
             //check if we have space
             if (!_IsSpaceAvailable(m_LocalSettings, _SpaceUsed(m_LocalSettings)))
             {
-                Logger.Warning("Failed to upload settings! Not enough space to save settings", this);
+                Log(LogLevel.Warning, "Failed to upload settings! Not enough space to save settings");
                 RunCallback(PlayerSettingsCallback.OnStorageFull);
                 return;
             }
@@ -373,13 +373,13 @@ namespace OpenFlightVRC.Net
                 RequestSerialization();
                 //update our live copy of the remote settings
                 m_RemoteSettings = m_LocalSettings.DeepClone();
-                Logger.Log("Settings uploaded successfully", this);
+                Log(LogLevel.Info, "Settings uploaded successfully");
                 //invoke the resolve callback, assuming there is no differences as we just uploaded
                 RunCallback(PlayerSettingsCallback.OnRemoteDifferencesResolved);
             }
             else
             {
-                Logger.Warning(string.Format("Failed to upload settings! Your settings have not been uploaded to prevent corruption. Error reason: {0}", _settings_token.Error.ToString()), this);
+                Log(LogLevel.Warning, string.Format("Failed to upload settings! Your settings have not been uploaded to prevent corruption. Error reason: {0}", _settings_token.Error.ToString()));
             }
         }
 
@@ -438,11 +438,11 @@ namespace OpenFlightVRC.Net
             //check if we can edit the settings
             if (!CanEdit)
             {
-                Logger.Warning("Failed to rename slot! Must be the owner of the object to rename a slot", this);
+                Log(LogLevel.Warning, "Failed to rename slot! Must be the owner of the object to rename a slot");
                 return false;
             }
 
-            Logger.Log("Attempting to rename slot " + slot + " to " + newName, this);
+            Log(LogLevel.Info, "Attempting to rename slot " + slot + " to " + newName);
 
             //get the local slots
             DataDictionary localSlots = GetSlots(m_LocalSettings);
@@ -450,7 +450,7 @@ namespace OpenFlightVRC.Net
             //check if the new name doesnt already exist
             if (localSlots.ContainsKey(new DataToken(newName)))
             {
-                Logger.Warning("Failed to rename slot! New slot name already exists!", this);
+                Log(LogLevel.Warning, "Failed to rename slot! New slot name already exists!");
                 return false;
             }
 
@@ -469,7 +469,7 @@ namespace OpenFlightVRC.Net
                     _SetGlobalSetting(slotToLoadByDefaultKey, newName);
                 }
 
-                Logger.Log("Slot renamed successfully", this);
+                Log(LogLevel.Info, "Slot renamed successfully");
 
                 CheckForDifferences();
                 RunCallback(PlayerSettingsCallback.OnDataChanged);
@@ -478,7 +478,7 @@ namespace OpenFlightVRC.Net
             }
             else
             {
-                Logger.Warning("Failed to rename slot! Slot does not exist", this);
+                Log(LogLevel.Warning, "Failed to rename slot! Slot does not exist");
                 return false;
             }
         }
@@ -494,7 +494,7 @@ namespace OpenFlightVRC.Net
         /// <returns> True if the slot was loaded, false if it failed </returns>
         public bool _LoadSlot(string slotName, out DataDictionary outDict, bool spread = true)
         {
-            //Logger.Log("Loading settings from slot " + slot, this);
+            //Log(LogLevel.Info, "Loading settings from slot " + slot);
 
             //get the local slots
             DataDictionary localSlots = GetSlots(m_LocalSettings);
@@ -509,13 +509,13 @@ namespace OpenFlightVRC.Net
                 {
                     SpreadSettings(slotData.DataDictionary);
                 }
-                //Logger.Log(string.Format("Settings loaded successfully from slot {0} (Slot ID {1})", slotName, slot), this);
+                //Log(LogLevel.Info, string.Format("Settings loaded successfully from slot {0} (Slot ID {1})", slotName, slot));
                 outDict = slotData.DataDictionary;
                 return true;
             }
             else
             {
-                Logger.Warning(string.Format("Failed to load settings from slot {0}. Keeping current settings. Error reason: {1}", slotName, slotData.Error.ToString()), this);
+                Log(LogLevel.Warning, string.Format("Failed to load settings from slot {0}. Keeping current settings. Error reason: {1}", slotName, slotData.Error.ToString()));
                 outDict = new DataDictionary();
                 return false;
             }
@@ -533,7 +533,7 @@ namespace OpenFlightVRC.Net
             //check if we can edit the settings
             if (!CanEdit)
             {
-                Logger.Warning("Failed to delete slot! Must be the owner of the object to delete a slot", this);
+                Log(LogLevel.Warning, "Failed to delete slot! Must be the owner of the object to delete a slot");
                 return false;
             }
 
@@ -543,7 +543,7 @@ namespace OpenFlightVRC.Net
             //only allow deletion if there is more than one slot
             if (localSlots.GetKeys().Count <= 1)
             {
-                Logger.Warning("Failed to delete slot! Must have at least one slot", this);
+                Log(LogLevel.Warning, "Failed to delete slot! Must have at least one slot");
                 return false;
             }
 
@@ -563,7 +563,7 @@ namespace OpenFlightVRC.Net
                     _SetGlobalSetting(useWorldDefaultsWhenLoadingKey, true);
                 }
 
-                Logger.Log("Slot deleted successfully", this);
+                Log(LogLevel.Info, "Slot deleted successfully");
 
                 CheckForDifferences();
 
@@ -573,7 +573,7 @@ namespace OpenFlightVRC.Net
             }
             else
             {
-                Logger.Warning("Failed to delete slot! Slot does not exist", this);
+                Log(LogLevel.Warning, "Failed to delete slot! Slot does not exist");
                 return false;
             }
         }
@@ -601,14 +601,14 @@ namespace OpenFlightVRC.Net
                 }
                 else
                 {
-                    Logger.Warning(string.Format("Failed to export slot {0}! Error reason: {1}", slot, _settings_token.Error.ToString()), this);
+                    Log(LogLevel.Warning, string.Format("Failed to export slot {0}! Error reason: {1}", slot, _settings_token.Error.ToString()));
                     json = "";
                     return false;
                 }
             }
             else
             {
-                Logger.Warning("Failed to export slot! Slot does not exist", this);
+                Log(LogLevel.Warning, "Failed to export slot! Slot does not exist");
                 json = "";
                 return false;
             }
@@ -628,7 +628,7 @@ namespace OpenFlightVRC.Net
             }
             else
             {
-                Logger.Warning(string.Format("Failed to export settings! Error reason: {0}", _settings_token.Error.ToString()), this);
+                Log(LogLevel.Warning, string.Format("Failed to export settings! Error reason: {0}", _settings_token.Error.ToString()));
                 json = "";
                 return false;
             }
@@ -657,7 +657,7 @@ namespace OpenFlightVRC.Net
             }
             else
             {
-                Logger.Warning(string.Format("Failed to import slot! Error reason: {0}", token.Error.ToString()), this);
+                Log(LogLevel.Warning, string.Format("Failed to import slot! Error reason: {0}", token.Error.ToString()));
                 returnSlotName = "";
                 return false;
             }
@@ -674,14 +674,14 @@ namespace OpenFlightVRC.Net
             if (VRCJson.TryDeserializeFromJson(json, out token))
             {
                 m_LocalSettings = token.DataDictionary;
-                Logger.Log("Settings imported successfully", this);
+                Log(LogLevel.Info, "Settings imported successfully");
                 CheckForDifferences();
                 RunCallback(PlayerSettingsCallback.OnDataChanged);
                 return true;
             }
             else
             {
-                Logger.Warning(string.Format("Failed to import settings! Error reason: {0}", token.Error.ToString()), this);
+                Log(LogLevel.Warning, string.Format("Failed to import settings! Error reason: {0}", token.Error.ToString()));
                 return false;
             }
         }
@@ -1105,7 +1105,7 @@ namespace OpenFlightVRC.Net
                     {
                         m_LocalSettings = m_RemoteSettings;
                     }
-                    Logger.Log("Settings database recovered successfully", this);
+                    Log(LogLevel.Info, "Settings database recovered successfully");
                     //invoke the callback
                     RunCallback(PlayerSettingsCallback.OnDataReady);
                     RunCallback(PlayerSettingsCallback.OnDataChanged);
@@ -1116,12 +1116,12 @@ namespace OpenFlightVRC.Net
                 else
                 {
                     string tokenError = _settings_token.Error.ToString();
-                    Logger.Warning(string.Format("Failed to recover settings for player {0}. Error Reason: {1}.", owner.displayName, tokenError), this);
+                    Log(LogLevel.Warning, string.Format("Failed to recover settings for player {0}. Error Reason: {1}.", owner.displayName, tokenError));
                 }
             }
             else
             {
-                Logger.Warning(string.Format("Failed to recover settings for player {0}. No backup found!", owner.displayName), this);
+                Log(LogLevel.Warning, string.Format("Failed to recover settings for player {0}. No backup found!", owner.displayName));
             }
         }
 
@@ -1136,7 +1136,7 @@ namespace OpenFlightVRC.Net
         public void _InitializeDatabase()
         {
             VRCPlayerApi owner = Networking.GetOwner(gameObject);
-            Logger.Log(string.Format("Checking for settings database on player {0}", owner.displayName), this);
+            Log(LogLevel.Info, string.Format("Checking for settings database on player {0}", owner.displayName));
             if (VRCJson.TryDeserializeFromJson(synchedSettings, out DataToken _settings_token))
             {
                 m_RemoteSettings = _settings_token.DataDictionary;
@@ -1149,7 +1149,7 @@ namespace OpenFlightVRC.Net
                 {
                     m_LocalSettings = m_RemoteSettings;
                 }
-                Logger.Log("Settings database deserialized successfully", this);
+                Log(LogLevel.Info, "Settings database deserialized successfully");
                 //invoke the callback
                 RunCallback(PlayerSettingsCallback.OnDataReady);
                 RunCallback(PlayerSettingsCallback.OnDataChanged);
@@ -1157,7 +1157,7 @@ namespace OpenFlightVRC.Net
             else
             {
                 string tokenError = _settings_token.Error.ToString();
-                Logger.Warning(string.Format("Failed to deserialize settings for player {0}. Error Reason: {1}. Attempting to load from backup instead", owner.displayName, tokenError), this);
+                Log(LogLevel.Warning, string.Format("Failed to deserialize settings for player {0}. Error Reason: {1}. Attempting to load from backup instead", owner.displayName, tokenError));
                 _LoadFromBackup();
             }
 
@@ -1170,7 +1170,7 @@ namespace OpenFlightVRC.Net
             //check if this player has any settings that were loaded
             if (!IsInitialized)
             {
-                Logger.Log("No slots found for player " + Networking.LocalPlayer.displayName + ". Creating a default slot", this);
+                Log(LogLevel.Info, "No slots found for player " + Networking.LocalPlayer.displayName + ". Creating a default slot");
                 const string defaultSlotName = "Default";
                 //initialize the settings
                 _SaveSlot(defaultSlotName, out var DISCARD);
@@ -1200,14 +1200,14 @@ namespace OpenFlightVRC.Net
                         }
                         else
                         {
-                            Logger.Warning("Slot to load by default is invalid! Setting to first slot", this);
+                            Log(LogLevel.Warning, "Slot to load by default is invalid! Setting to first slot");
                             _SetGlobalSetting(slotToLoadByDefaultKey, _GetSlotName(0));
                         }
                     }
                 }
                 else
                 {
-                    Logger.Log("Not loading local user settings on join", this);
+                    Log(LogLevel.Info, "Not loading local user settings on join");
                 }
             }
 

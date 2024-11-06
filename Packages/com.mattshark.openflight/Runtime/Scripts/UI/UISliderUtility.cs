@@ -73,7 +73,7 @@ namespace OpenFlightVRC.UI
 					target.SetProgramVariable(targetVariable, (double)value);
 					break;
 				default:
-					Log("Unknown type: " + targetType.ToString());
+					Log(LogLevel.Warning, "Unknown type: " + targetType.ToString());
 					break;
 			}
 

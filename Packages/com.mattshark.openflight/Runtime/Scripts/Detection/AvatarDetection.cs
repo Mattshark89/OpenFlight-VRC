@@ -148,7 +148,7 @@ namespace OpenFlightVRC
 		{
 			if (player.isLocal)
 			{
-				Log("Avatar Changed, reevaluating flight...");
+				Log(LogLevel.Info, "Avatar Changed, reevaluating flight...");
 				RunDetection();
 			}
 		}
@@ -161,7 +161,7 @@ namespace OpenFlightVRC
 			{
 				return;
 			}
-			Log(string.Format("Avatar Scale Changed, reevaluating {0}...", nameof(d_spinetochest)));
+			Log(LogLevel.Info, string.Format("Avatar Scale Changed, reevaluating {0}...", nameof(d_spinetochest)));
 			d_spinetochest = CalculateAvatarScale();
 		}
 
@@ -187,10 +187,10 @@ namespace OpenFlightVRC
 		{
 			if (string.IsNullOrEmpty(_jsonString))
 			{
-				Log("JSON list is empty, returning...");
+				Log(LogLevel.Info, "JSON list is empty, returning...");
 				return;
 			}
-			Log("Running Detection...");
+			Log(LogLevel.Info, "Running Detection...");
 
 			//we need a accurate avatar scale for the hash to work
 			d_spinetochest = CalculateAvatarScale(out Vector3 spine, out Vector3 chest);
@@ -209,7 +209,7 @@ namespace OpenFlightVRC
 			Vector3[] boneVectors = { chest, head, neck, leftShoulder, leftUpperArm, leftLowerArm, leftHand };
 			hash = GenerateHash(boneVectors, 2);
 
-			Log("Avatar Hash: " + hash);
+			Log(LogLevel.Info, "Avatar Hash: " + hash);
 
 			if (hash == LOADINGAVATARHASH && skipLoadingAvatar)
 			{
@@ -219,7 +219,7 @@ namespace OpenFlightVRC
 				introducer = "Loading Avatar";
 				weight = 1;
 				WingtipOffset = 0;
-				Log("Loading Avatar Detected, ignoring...");
+				Log(LogLevel.Info, "Loading Avatar Detected, ignoring...");
 			}
 			else
 			{
@@ -228,14 +228,14 @@ namespace OpenFlightVRC
 				if (allowedToFly)
 				{
 					OpenFlight.CanFly();
-					Log("Avatar is allowed to fly!");
+					Log(LogLevel.Info, "Avatar is allowed to fly!");
 				}
 				else
 				{
 					OpenFlight.CannotFly();
 					WingFlightPlusGlide.wingtipOffset = 0;
 					WingFlightPlusGlide.weight = 1;
-					Log("Avatar is not allowed to fly!");
+					Log(LogLevel.Info, "Avatar is not allowed to fly!");
 				}
 			}
 
@@ -268,7 +268,7 @@ namespace OpenFlightVRC
 		private void ProcessTimer(System.Diagnostics.Stopwatch stopwatch, string hash)
 		{
 			stopwatch.Stop();
-			Log("Hash Lookup Time: " + stopwatch.ElapsedMilliseconds + "ms for hash: " + hash);
+			Log(LogLevel.Info, "Hash Lookup Time: " + stopwatch.ElapsedMilliseconds + "ms for hash: " + hash);
 		}
 
 		/// <summary>
@@ -287,7 +287,7 @@ namespace OpenFlightVRC
             //if error token, return false and log error
             if (hash_token.Error != DataError.None)
             {
-                Error("Invalid Hash Sent, received error: " + hash_token.Error + " with hash: " + in_hash);
+                Log(LogLevel.Error, "Invalid Hash Sent, received error: " + hash_token.Error + " with hash: " + in_hash);
                 return false;
             }
 
@@ -311,7 +311,7 @@ namespace OpenFlightVRC
                 }
             }
 
-            Warning("HashTable not found, falling back to old crawling method");
+            Log(LogLevel.Warning, "HashTable not found, falling back to old crawling method");
 
             //Old crawling method
             DataDictionary bases = _json["Bases"].DataDictionary;
@@ -369,14 +369,14 @@ namespace OpenFlightVRC
         /// </summary>
         public void LoadJSON()
 		{
-			Log("Deserializing JSON list...");
+			Log(LogLevel.Info, "Deserializing JSON list...");
 			_jsonString = JSONLoader.Output;
 
 			//Return type is if the deserialization was successful or not
 			if (!VRCJson.TryDeserializeFromJson(_jsonString, out DataToken jsonDataToken))
 			{
 				debugInfo = "Failed to load JSON list!";
-				Error("Failed to load JSON list! This shouldnt occur unless we messed up the JSON, or VRChat broke something!");
+				Log(LogLevel.Error, "Failed to load JSON list! This shouldnt occur unless we messed up the JSON, or VRChat broke something!");
 				return;
 			}
 			_json = jsonDataToken.DataDictionary;
@@ -384,7 +384,7 @@ namespace OpenFlightVRC
 			jsonDate = _json["JSON Date"].String;
 
 			//generate the hashtable
-			Log("Generating Hash Lookup Table...");
+			Log(LogLevel.Info, "Generating Hash Lookup Table...");
 			//setup and start stopwatch
 			System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 			sw.Start();
@@ -415,7 +415,7 @@ namespace OpenFlightVRC
 			//calculate the time it took to generate each individual hash
 			int hashCount = hashTable.Count;
 			double averageTime = (double)ms / (double)hashCount;
-			Log(string.Format("Hash Lookup Table Generated! Took: {0}ms, Average Time Per Hash: {1}ms", ms, averageTime));
+			Log(LogLevel.Info, string.Format("Hash Lookup Table Generated! Took: {0}ms, Average Time Per Hash: {1}ms", ms, averageTime));
 
 			RunCallback(AvatarDetectionCallback.LoadJSON);
 			RunDetection();
@@ -469,7 +469,7 @@ namespace OpenFlightVRC
 					boneInfo = d_necktohead + "." + d_chesttoneck + "." + d_leftshouldertoleftupperarm + "." + d_leftupperarmtoleftlowerarm + "." + d_leftlowertolefthand;
 					return boneInfo.GetHashCode().ToString() + "v2";
 				default:
-					Error("Invalid Hash Version Sent");
+					Log(LogLevel.Error, "Invalid Hash Version Sent");
 					return "0";
 			}
 		}

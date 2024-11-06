@@ -87,16 +87,16 @@ namespace OpenFlightVRC.Net
                 if (VRCJson.TrySerializeToJson(SerializeData(), JsonExportType.Minify, out DataToken jsonData))
                 {
                     PlayerData.SetString(MetricsBackupKey, jsonData.String);
-                    Log("PlayerMetrics backup data updated successfully");
+                    Log(LogLevel.Info, "PlayerMetrics backup data updated successfully");
                 }
                 else
                 {
-                    Error("PlayerMetrics backup data could not be serialized, backup has not been updated!");
+                    Log(LogLevel.Error, "PlayerMetrics backup data could not be serialized, backup has not been updated!");
                 }
             }
             else
             {
-                Log("PlayerMetrics not initialized, attempting to restore potential backup data");
+                Log(LogLevel.Info, "PlayerMetrics not initialized, attempting to restore potential backup data");
                 //this means we either lost the object data or never had any to begin with
                 //to determine further, check the player data
                 if (PlayerData.TryGetString(player, MetricsBackupKey, out string backupData))
@@ -104,17 +104,17 @@ namespace OpenFlightVRC.Net
                     //if we have backup data, deserialize it
                     if (VRCJson.TryDeserializeFromJson(backupData, out DataToken result))
                     {
-                        Log("PlayerMetrics backup data restored successfully");
+                        Log(LogLevel.Info, "PlayerMetrics backup data restored successfully");
                         DeserializeData(result.DataDictionary);
                     }
                     else
                     {
-                        Error("PlayerMetrics backup data could not be deserialized, backup has not been restored!");
+                        Log(LogLevel.Error, "PlayerMetrics backup data could not be deserialized, backup has not been restored!");
                     }
                 }
                 else
                 {
-                    Warning("PlayerMetrics backup data not found, no backup data to restore!");
+                    Log(LogLevel.Warning, "PlayerMetrics backup data not found, no backup data to restore!");
                 }
             }
 

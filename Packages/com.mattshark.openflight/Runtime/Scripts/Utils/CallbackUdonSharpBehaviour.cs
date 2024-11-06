@@ -56,11 +56,12 @@ namespace OpenFlightVRC
                 if (!_callbackData[id].DataDictionary[behaviour].DataList.Contains(methodNames[i]))
                 {
                     //Logger.Log(String.Format("Added callback [{0}] for [{1}]", Logger.ColorizeFunction(behaviour, methodName), Logger.ColorizeFunction(behaviour, methodName)), this);
+                    Log(LogLevel.Callback, string.Format("Added callback [{0}] for [{1}]", Logger.ColorizeFunction(behaviour, methodNames[i]), Logger.ColorizeScript(behaviour)), this);
                     _callbackData[id].DataDictionary[behaviour].DataList.Add(methodNames[i]);
                 }
                 else
                 {
-                    Warning(String.Format("[{0}] Tried to register a callback for [{1}] that already exists!", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodNames[i])));
+                    Log(LogLevel.Warning, string.Format("[{0}] Tried to register a callback for [{1}] that already exists!", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodNames[i])));
                     return false;
                 }
                 success &= true;
@@ -95,7 +96,7 @@ namespace OpenFlightVRC
                     }
                 }
             }
-            Warning(String.Format("[{0}] Tried to remove a callback for [{1}] that does not exist!", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodName)));
+            Log(LogLevel.Warning, string.Format("[{0}] Tried to remove a callback for [{1}] that does not exist!", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodName)));
             return false;
         }
 
@@ -132,14 +133,14 @@ namespace OpenFlightVRC
                         //check if the behaviour is null, and if it is, remove it
                         if (behaviour == null)
                         {
-                            Warning(String.Format("Behaviour for callback [{0}] is null, removing callback", Logger.ColorizeFunction(behaviour, methodName)));
+                            Log(LogLevel.Warning, string.Format("Behaviour for callback [{0}] is null, removing callback", Logger.ColorizeFunction(behaviour, methodName)));
                             methods.Remove(methodName);
                             continue;
                         }
 
                         //run the method
                         behaviour.SendCustomEvent(methodName);
-                        Log(String.Format("Running callback [{0}] for [{1}]", Logger.ColorizeFunction(behaviour, methodName), Logger.ColorizeScript(behaviour)));
+                        Log(LogLevel.Callback, string.Format("Running callback [{0}] for [{1}]", Logger.ColorizeFunction(behaviour, methodName), Logger.ColorizeScript(behaviour)));
                     }
                 }
             }

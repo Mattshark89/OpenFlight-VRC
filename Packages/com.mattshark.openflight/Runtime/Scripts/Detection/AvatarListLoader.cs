@@ -47,14 +47,14 @@ namespace OpenFlightVRC
 			if (useOfflineJSON)
 			{
 				Output = OfflineJSON.text;
-				Log("Force-using in-world JSON list");
+				Log(LogLevel.Info, "Force-using in-world JSON list");
 				RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
 				return;
 			}
 
 			//initially trigger with the in-world list
 			Output = OfflineJSON.text;
-			Log("Using in-world JSON list until remote is available....");
+			Log(LogLevel.Info, "Using in-world JSON list until remote is available....");
 			RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
 
 			VRCStringDownloader.LoadUrl(URL, (VRC.Udon.Common.Interfaces.IUdonEventReceiver)this);
@@ -64,7 +64,7 @@ namespace OpenFlightVRC
 		{
 			string result = data.Result;
 			Output = result;
-			Log("Loaded Avatar List URL!");
+			Log(LogLevel.Info, "Loaded Avatar List URL!");
 			RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
 		}
 
@@ -72,7 +72,7 @@ namespace OpenFlightVRC
 		public override void OnStringLoadError(IVRCStringDownload data)
 		{
 			Output = OfflineJSON.text;
-			Log("Failed to load Avatar List URL! Using in-world JSON instead.");
+			Log(LogLevel.Info, "Failed to load Avatar List URL! Using in-world JSON instead.");
 			RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
 		}
 	}

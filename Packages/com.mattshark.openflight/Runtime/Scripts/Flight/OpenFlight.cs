@@ -111,7 +111,7 @@ namespace OpenFlightVRC
 					case FlightMode.Off:
 						flightModeString = "Off";
 						SwitchFlight(false);
-						Log("Flight turned off");
+						Log(LogLevel.Info, "Flight turned off");
 						break;
 					case FlightMode.Auto:
 						if (InVR())
@@ -123,12 +123,12 @@ namespace OpenFlightVRC
 							{
 								avatarDetection.ReevaluateFlight();
 							}
-							Log("Flight set to auto");
+							Log(LogLevel.Info, "Flight set to auto");
 						}
 						else
 						{
 							flightMode = FlightMode.Off;
-							Log(string.Format(FLIGHTCANTBESETTEMPLATE, "Auto"));
+							Log(LogLevel.Info, string.Format(FLIGHTCANTBESETTEMPLATE, "Auto"));
 						}
 						break;
 					case FlightMode.On:
@@ -136,12 +136,12 @@ namespace OpenFlightVRC
 						{
 							flightModeString = "On";
 							SwitchFlight(true);
-							Log("Flight turned on");
+							Log(LogLevel.Info, "Flight turned on");
 						}
 						else
 						{
 							flightMode = FlightMode.Off;
-							Log(string.Format(FLIGHTCANTBESETTEMPLATE, "On"));
+							Log(LogLevel.Info, string.Format(FLIGHTCANTBESETTEMPLATE, "On"));
 						}
 						break;
 					default:
@@ -221,7 +221,7 @@ namespace OpenFlightVRC
 		{
 			if (ignoreVRCheck)
 			{
-				Warning("VR check is being ignored! This should not be enabled in a production build!");
+				Log(LogLevel.Warning, "VR check is being ignored! This should not be enabled in a production build!");
 			}
 
 			//ensure the user is valid
@@ -259,11 +259,11 @@ namespace OpenFlightVRC
 					FlightAuto();
 					break;
 				default:
-					Warning("Invalid flight mode: " + flightModeString);
+					Log(LogLevel.Warning, "Invalid flight mode: " + flightModeString);
 					break;
 			}
 
-			Log("OpenFlight version " + OpenFlightVersion);
+			Log(LogLevel.Info, "OpenFlight version " + OpenFlightVersion);
 		}
 
 		/// <summary>

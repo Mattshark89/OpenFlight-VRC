@@ -37,14 +37,14 @@ namespace OpenFlightVRC
 
 		public void LoadURL()
 		{
-			Log("Loading Github Releases URL...");
+			Log(LogLevel.Info, "Loading Github Releases URL...");
 			VRCStringDownloader.LoadUrl(URL, (VRC.Udon.Common.Interfaces.IUdonEventReceiver)this);
 		}
 
 		public override void OnStringLoadSuccess(IVRCStringDownload data)
 		{
 			string result = data.Result;
-			Log("Loaded Github Releases URL!");
+			Log(LogLevel.Info, "Loaded Github Releases URL!");
 
 			//deserialize
 			bool success = VRCJson.TryDeserializeFromJson(result, out DataToken json);
@@ -55,7 +55,7 @@ namespace OpenFlightVRC
 
 		public override void OnStringLoadError(IVRCStringDownload data)
 		{
-			Error("Failed to load Github Releases URL!");
+			Log(LogLevel.Error, "Failed to load Github Releases URL!");
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace OpenFlightVRC
 		{
 			int releaseCount = json.DataList.Count;
 			_releases = new DataDictionary[releaseCount];
-			Log(json.DataList.Count + " releases found.");
+			Log(LogLevel.Info, json.DataList.Count + " releases found.");
 
 			for (int i = 0; i < releaseCount; i++)
 			{
@@ -80,7 +80,7 @@ namespace OpenFlightVRC
 			bool isPrerelease = IsPrerelease(OF.OpenFlightVersion.ToString());
 			if (isPrerelease)
 			{
-				Log("World is on a prerelease");
+				Log(LogLevel.Info, "World is on a prerelease");
 			}
 
 			//check if on latest release. If the world is on a prerelease, this compares to those. if it isnt, we want to find the latest release that isnt a prerelease
@@ -117,13 +117,14 @@ namespace OpenFlightVRC
 				//if the world is on a prerelease, show all prereleases aswell. Otherwise, skip prereleases
 				if (!isPrerelease && IsPrerelease(release["tag_name"].ToString()))
 				{
-					Log("Skipping prerelease " + release["tag_name"].ToString());
+					Log(LogLevel.Info, "Skipping prerelease " + release["tag_name"].ToString());
 					continue;
 				}
 
 				outputText += "<b>" + release["name"].ToString() + "</b>\n";
 				outputText += "Released on " + release["published_at"].ToString() + "\n";
-				outputText += RemoveMarkdown(release["body"].ToString()) + "\n\n";
+				//outputText += RemoveMarkdown(release["body"].ToString()) + "\n\n";
+				outputText += Util.MarkdownToRichText(release["body"].ToString()) + "\n\n";
 				behind++;
 			}
 
@@ -133,13 +134,13 @@ namespace OpenFlightVRC
 				releasesBehind = behind.ToString() + "+";
 			}
 
-			Log("Releases behind: " + releasesBehind);
+			Log(LogLevel.Info, "Releases behind: " + releasesBehind);
 
 			//If the world is on the latest release, set the output text to say so
 			if (onLatestRelease)
 			{
 				outputText = "You are on the latest release!";
-				Log("On latest release!");
+				Log(LogLevel.Info, "On latest release!");
 			}
 		}
 
@@ -193,7 +194,7 @@ namespace OpenFlightVRC
 					return "";
 			}
 		}
-
+/* 
 		/// <summary>
 		/// Removes all markdown from a string.
 		/// </summary>
@@ -208,6 +209,6 @@ namespace OpenFlightVRC
 			//remove headers
 			markdown = markdown.Replace("#", "");
 			return markdown;
-		}
+		} */
 	}
 }

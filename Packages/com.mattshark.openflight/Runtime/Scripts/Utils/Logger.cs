@@ -13,9 +13,15 @@ namespace OpenFlightVRC
 	/// <summary>
 	/// The type of log to write
 	/// </summary>
-	enum LogLevel
+	public enum LogLevel
 	{
 		Info,
+		/// <summary>
+		/// Used for logging where a callback is induced or setup, like <see cref="Info"/> but specifically for callbacks
+		/// This should only be used for info level like messages
+		/// Actual Callback errors or warnings should be logged as <see cref="Error"/> or <see cref="Warning"/> respectively
+		/// </summary>
+		Callback,
 		Warning,
 		Error
 	};
@@ -92,6 +98,8 @@ namespace OpenFlightVRC
 			{
 				case LogLevel.Info:
 					return ColorText(nameof(LogLevel.Info), "white");
+				case LogLevel.Callback:
+					return ColorText(nameof(LogLevel.Callback), "purple");
 				case LogLevel.Warning:
 					return ColorText(nameof(LogLevel.Warning), "yellow");
 				case LogLevel.Error:
@@ -112,12 +120,38 @@ namespace OpenFlightVRC
 			{
 				case LogLevel.Info:
 					return nameof(LogLevel.Info);
+				case LogLevel.Callback:
+					return nameof(LogLevel.Callback);
 				case LogLevel.Warning:
 					return nameof(LogLevel.Warning);
 				case LogLevel.Error:
 					return nameof(LogLevel.Error);
 				default:
 					return "";
+			}
+		}
+
+		/// <summary>
+		/// Logs a message to the console
+		/// </summary>
+		/// <param name="text"></param>
+		/// <param name="LT"></param>
+		private static void LogToConsole(string text, LogLevel LT)
+		{
+			switch (LT)
+			{
+				case LogLevel.Info:
+					Debug.Log(text);
+					break;
+				case LogLevel.Callback:
+					Debug.Log(text);
+					break;
+				case LogLevel.Warning:
+					Debug.LogWarning(text);
+					break;
+				case LogLevel.Error:
+					Debug.LogError(text);
+					break;
 			}
 		}
 
@@ -172,76 +206,20 @@ namespace OpenFlightVRC
 		/// <summary>
 		/// Logs a message to the console
 		/// </summary>
+		/// <param name="level">The level of the log</param>
 		/// <param name="text">The text to print to the console</param>
+		/// <param name="once">Whether or not to only log the message once and ignore future calls until the latest message is different</param>
 		/// <param name="self">The UdonSharpBehaviour that is logging the text</param>
-		internal static void Log(string text, LoggableUdonSharpBehaviour self = null)
-		{
-			Debug.Log(Format(text, LogLevel.Info, self));
-			WriteToUILog(Format(text, LogLevel.Info, self, false), self);
-		}
-
-		/// <inheritdoc cref="Log(string, LoggableUdonSharpBehaviour)"/>
-		/// <remarks> This version of Log will only log the message once </remarks>
-		internal static void LogOnce(string text, LoggableUdonSharpBehaviour self = null)
+		internal static void Log(LogLevel level, string text, bool once = false, LoggableUdonSharpBehaviour self = null)
 		{
 			//check if the message has already been logged
-			if (CheckIfLogged(text, self))
+			if (once && CheckIfLogged(text, self))
 			{
 				return;
 			}
 
-			Debug.Log(Format(text, LogLevel.Info, self));
+			LogToConsole(Format(text, level, self), level);
 			WriteToUILog(Format(text, LogLevel.Info, self, false), self);
-		}
-
-		/// <summary>
-		/// Logs a warning to the console
-		/// </summary>
-		/// <param name="text">The text to print to the console</param>
-		/// <param name="self">The UdonSharpBehaviour that is logging the text</param>
-		internal static void Warning(string text, LoggableUdonSharpBehaviour self = null)
-		{
-			Debug.LogWarning(Format(text, LogLevel.Warning, self));
-			WriteToUILog(Format(text, LogLevel.Warning, self, false), self);
-		}
-
-		/// <inheritdoc cref="Warning(string, LoggableUdonSharpBehaviour)"/>
-		/// <remarks> This version of LogWarning will only log the warning once </remarks>
-		internal static void WarningOnce(string text, LoggableUdonSharpBehaviour self = null)
-		{
-			//check if the warning has already been logged
-			if (CheckIfLogged(text, self))
-			{
-				return;
-			}
-
-			Debug.LogWarning(Format(text, LogLevel.Warning, self));
-			WriteToUILog(Format(text, LogLevel.Warning, self, false), self);
-		}
-
-		/// <summary>
-		/// Logs an error to the console
-		/// </summary>
-		/// <param name="text">The text to print to the console</param>
-		/// <param name="self">The UdonSharpBehaviour that is logging the text</param>
-		internal static void Error(string text, LoggableUdonSharpBehaviour self = null)
-		{
-			Debug.LogError(Format(text, LogLevel.Error, self));
-			WriteToUILog(Format(text, LogLevel.Error, self, false), self);
-		}
-
-		/// <inheritdoc cref="Error(string, LoggableUdonSharpBehaviour)"/>
-		/// <remarks> This version of LogError will only log the error once </remarks>
-		internal static void ErrorOnce(string text, LoggableUdonSharpBehaviour self = null)
-		{
-			//check if the error has already been logged
-			if (CheckIfLogged(text, self))
-			{
-				return;
-			}
-
-			Debug.LogError(Format(text, LogLevel.Error, self));
-			WriteToUILog(Format(text, LogLevel.Error, self, false), self);
 		}
 
 		/// <summary>

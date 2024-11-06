@@ -37,7 +37,7 @@ namespace OpenFlightVRC
             }
             else
             {
-                Logger.Warning(string.Format("Failed to get setting {0} from settings. Keeping current setting. Error reason: {1}", key, token.Error.ToString()), null);
+				Logger.Log(LogLevel.Warning, string.Format("Failed to get setting {0} from settings. Keeping current setting. Error reason: {1}", key, token.Error.ToString()));
                 return false;
             }
         }
@@ -88,7 +88,7 @@ namespace OpenFlightVRC
 						variableReference = (T)(object)token.Number;
 						break;
                     default:
-                        Logger.Error(string.Format("Failed to apply setting {0}. Unsupported type {1}", keyName, token.TokenType.ToString()), null);
+						Logger.Log(LogLevel.Error, string.Format("Failed to apply setting {0}. Unsupported type {1}", keyName, token.TokenType.ToString()));
                         return false;
                 }
                 return true;
@@ -106,7 +106,7 @@ namespace OpenFlightVRC
 		{
 			if (bools.Length > 8)
 			{
-				Logger.Error("Too many bools to pack into a byte!");
+				Logger.Log(LogLevel.Error, "Too many bools to pack into a byte!");
 				return 0;
 			}
 
@@ -338,7 +338,7 @@ namespace OpenFlightVRC
                 }
             }
 
-			Logger.ErrorOnce("Could not find type on player " + player.displayName);
+			Logger.Log(LogLevel.Error, "Could not find type on player " + player.displayName, true);
 			return default;
 		}
 
