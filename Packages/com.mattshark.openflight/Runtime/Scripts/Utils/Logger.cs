@@ -99,7 +99,7 @@ namespace OpenFlightVRC
 				case LogLevel.Info:
 					return ColorText(nameof(LogLevel.Info), "white");
 				case LogLevel.Callback:
-					return ColorText(nameof(LogLevel.Callback), "purple");
+					return ColorText(nameof(LogLevel.Callback), "cyan");
 				case LogLevel.Warning:
 					return ColorText(nameof(LogLevel.Warning), "yellow");
 				case LogLevel.Error:
