@@ -13,17 +13,18 @@ namespace OpenFlightVRC
 	/// <summary>
 	/// The type of log to write
 	/// </summary>
+	[System.Flags]
 	public enum LogLevel
 	{
-		Info,
+		Info = 1 << 0,
 		/// <summary>
 		/// Used for logging where a callback is induced or setup, like <see cref="Info"/> but specifically for callbacks
 		/// This should only be used for info level like messages
 		/// Actual Callback errors or warnings should be logged as <see cref="Error"/> or <see cref="Warning"/> respectively
 		/// </summary>
-		Callback,
-		Warning,
-		Error
+		Callback = 1 << 1,
+		Warning = 1 << 2,
+		Error = 1 << 3
 	};
 
 	/// <summary>
@@ -40,12 +41,17 @@ namespace OpenFlightVRC
 
 		#region In-Client Log Visualisation
 		public string log = "";
+		public DataDictionary logDictionary = new DataDictionary();
 		public TextMeshProUGUI text;
 
 		void Start()
 		{
 			//set our name just to be sure its correct
 			gameObject.name = logObjectName;
+
+			//TODO: Remove this, but this is testing calls for toggles
+			SetControlMatrix("PlayerSettings", Util.OrEnums(LogLevel.Info, LogLevel.Warning, LogLevel.Error));
+			SetControlMatrix("PlayerMetrics", Util.OrEnums(LogLevel.Info, LogLevel.Callback, LogLevel.Error));
 		}
 
 		/// <summary>
@@ -65,7 +71,23 @@ namespace OpenFlightVRC
 		/// </summary>
 		const int MaxLogMessages = 200;
 
-		internal static void WriteToUILog(string text, LoggableUdonSharpBehaviour self)
+		public void SetControlMatrix(string category, LogLevel levels)
+		{
+			DataDictionary categoryDict = new DataDictionary();
+			if (logDictionary.TryGetValue(category, out DataToken levelToken))
+			{
+				//token is a dictionary of the different log levels
+				categoryDict = levelToken.DataDictionary;
+			}
+
+			//if the category does not exist, create it
+			categoryDict.SetValue("logLevelFlags", new DataToken(System.Convert.ToInt64(levels)));
+
+			//make sure the dictionary has the key
+			logDictionary.SetValue(category, categoryDict);
+		}
+
+		internal static void WriteToUILog(string text, LogLevel level, LoggableUdonSharpBehaviour self)
 		{
 			Logger logProxy = null;
 			if (!SetupLogProxy(self, ref logProxy))
@@ -73,7 +95,64 @@ namespace OpenFlightVRC
 				return;
 			}
 
-			//add the text to the log
+			//do our work on the list
+			DataDictionary logEntry = new DataDictionary();
+			logEntry.SetValue("text", text);
+			logEntry.SetValue("time", System.DateTime.Now.Ticks);
+			//TODO: Re-enable this when not debugging the outputted json structure using string
+			//logEntry.SetValue("script", self);
+
+			//if self is null, then use a static string
+			string logCategory = "Utility Methods";
+			if (self != null)
+			{
+				logCategory = self._logCategory;
+			}
+
+			if (logCategory != null)
+			{
+				DataDictionary categoryDict = new DataDictionary();
+				DataList logList = new DataList();
+				//get the value
+				if (logProxy.logDictionary.TryGetValue(logCategory, out DataToken levelToken))
+				{
+					//token is a dictionary of the different log levels
+					categoryDict = levelToken.DataDictionary;
+
+					if (categoryDict.TryGetValue(LogTypeToString(level), out DataToken logToken))
+					{
+						logList = logToken.DataList;
+					}
+				}
+				else
+				{
+					//if the category does not exist, create it
+					logProxy.logDictionary.SetValue(logCategory, categoryDict);
+				}
+
+
+				//add the entry to the list
+				logList.Add(logEntry);
+
+				//update the key
+				categoryDict.SetValue(LogTypeToString(level), logList);
+
+				//print out the entire json
+				if (VRCJson.TrySerializeToJson(logProxy.logDictionary, JsonExportType.Minify, out DataToken jsonData))
+				{
+					Debug.Log(jsonData.String);
+				}
+				else
+				{
+					Debug.LogError("Could not serialize log dictionary to json! " + jsonData.Error);
+				}
+			}
+			else
+			{
+				Debug.LogError("Log category is null, cannot log to UI!");
+			}
+
+			/* //add the text to the log
 			logProxy.log += text + "\n";
 
 			//split into lines
@@ -84,7 +163,7 @@ namespace OpenFlightVRC
 				logProxy.log = string.Join("\n", lines, lines.Length - MaxLogMessages, MaxLogMessages);
 			}
 
-			logProxy.UpdateLog();
+			logProxy.UpdateLog(); */
 		}
 
 		/// <summary>
@@ -219,7 +298,8 @@ namespace OpenFlightVRC
 			}
 
 			LogToConsole(Format(text, level, self), level);
-			WriteToUILog(Format(text, LogLevel.Info, self, false), self);
+			//WriteToUILog(Format(text, LogLevel.Info, self, false), self);
+			WriteToUILog(text, level, self);
 		}
 
 		/// <summary>

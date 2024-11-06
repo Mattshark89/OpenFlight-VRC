@@ -308,6 +308,8 @@ namespace OpenFlightVRC
 
 		public void Start()
 		{
+			_logCategory = nameof(WingFlightPlusGlide);
+
 			LocalPlayer = Networking.LocalPlayer;
 			//save the user gravity if dynamic gravity is disabled
 			if (!dynamicPlayerPhysics)

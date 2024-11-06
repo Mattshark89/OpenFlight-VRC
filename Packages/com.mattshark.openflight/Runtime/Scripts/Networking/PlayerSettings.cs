@@ -1069,6 +1069,8 @@ namespace OpenFlightVRC.Net
         #region Initialization and Data retrieval
         void Start()
         {
+            _logCategory = nameof(PlayerSettings);
+
             //setup our object name
             VRCPlayerApi Owner = Networking.GetOwner(gameObject);
             gameObject.name = Owner.displayName + "'s OF Settings";

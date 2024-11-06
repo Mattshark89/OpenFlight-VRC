@@ -60,6 +60,8 @@ namespace OpenFlightVRC.Net
 
         void Start()
         {
+            _logCategory = nameof(PlayerMetrics);
+
             Owner = Networking.GetOwner(gameObject);
             LocalPlayer = Networking.LocalPlayer;
 

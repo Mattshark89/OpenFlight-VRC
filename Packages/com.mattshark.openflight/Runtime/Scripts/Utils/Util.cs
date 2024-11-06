@@ -2,6 +2,7 @@
  * @ Maintainer: Happyrobot33
  */
 
+using System;
 using System.Text.RegularExpressions;
 
 using OpenFlightVRC.Net;
@@ -133,6 +134,24 @@ namespace OpenFlightVRC
 			for (int i = 0; i < 8; i++)
 			{
 				result[i] = (b & (1 << i)) != 0;
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// Returns a byte that is made up of the enums in the array.
+		/// This is equivalent to <code>ENUM1.flag1 | ENUM2.flag2</code>
+		/// U# doesnt support the | operator on enums, so this is a workaround
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="flags"></param>
+		/// <returns></returns>
+		public static T OrEnums<T>(params T[] flags) where T : System.Enum
+		{
+			T result = (T)(object)0;
+			foreach (T flag in flags)
+			{
+				result = (T)(object)(Convert.ToInt64(result) | Convert.ToInt64(flag));
 			}
 			return result;
 		}
