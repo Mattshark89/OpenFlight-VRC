@@ -124,7 +124,7 @@ namespace OpenFlightVRC
 				outputText += "<b>" + release["name"].ToString() + "</b>\n";
 				outputText += "Released on " + release["published_at"].ToString() + "\n";
 				//outputText += RemoveMarkdown(release["body"].ToString()) + "\n\n";
-				outputText += Util.MarkdownToRichText(release["body"].ToString()) + "\n\n";
+				outputText += release["body"].ToString().MarkdownToRichText() + "\n\n";
 				behind++;
 			}
 
