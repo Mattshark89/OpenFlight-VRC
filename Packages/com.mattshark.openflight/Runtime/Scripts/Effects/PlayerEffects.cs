@@ -18,6 +18,7 @@ namespace OpenFlightVRC.Effects
 	/// </summary>
 	public class PlayerEffects : LoggableUdonSharpBehaviour
 	{
+		public override string _logCategory { get => "Effects"; }
 		public PoolGlobalManager PoolGlobalManager;
 
 		#region Synced Variables

@@ -19,6 +19,8 @@ namespace OpenFlightVRC.UI
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class ProxyUdonScript : LoggableUdonSharpBehaviour
 	{
+		public override string _logCategory { get => "Proxys"; }
+
 		/// <summary>
 		/// The UdonBehaviour to proxy
 		/// </summary>

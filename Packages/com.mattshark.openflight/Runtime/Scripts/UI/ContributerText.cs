@@ -14,6 +14,7 @@ namespace OpenFlightVRC.UI
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class ContributerText : LoggableUdonSharpBehaviour
 	{
+		public override string _logCategory { get => UIBase.UICATEGORY; }
 		public UdonBehaviour ContributerDetection;
 		private TextMeshProUGUI _text;
 

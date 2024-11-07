@@ -16,6 +16,8 @@ namespace OpenFlightVRC.Net
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class PoolGlobalManager : LoggableUdonSharpBehaviour
     {
+        public const string POOLGLOBALCATEGORY = "Pool Managers";
+        public override string _logCategory { get => POOLGLOBALCATEGORY; }
         public bool VFX = true;
         private bool _VFX_last = true;
         public bool SFX = true;

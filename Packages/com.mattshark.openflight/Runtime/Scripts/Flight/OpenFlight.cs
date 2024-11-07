@@ -75,6 +75,7 @@ namespace OpenFlightVRC
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class OpenFlight : LoggableUdonSharpBehaviour
 	{
+		public override string _logCategory { get => UI.UIBase.UICATEGORY; }
 		//this removes any override that the editor might have set through the inspector ([HideInInspector] does NOT do that)
 		/// <summary>
 		/// The version of OpenFlight that is currently installed in the world. This should not be set, as this value is set upon scene load

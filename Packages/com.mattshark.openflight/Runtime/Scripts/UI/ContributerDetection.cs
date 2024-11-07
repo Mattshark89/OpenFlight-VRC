@@ -16,6 +16,7 @@ namespace OpenFlightVRC.UI
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class ContributerDetection : LoggableUdonSharpBehaviour
 	{
+		public override string _logCategory { get => "Contributer Detection"; }
 		public AvatarListLoader AvatarListLoader;
 		/// <summary>
 		/// Will be true if there is at least one contributer in the instance

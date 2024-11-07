@@ -15,6 +15,7 @@ namespace OpenFlightVRC
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class GithubReleaseInterpreter : LoggableUdonSharpBehaviour
 	{
+		public override string _logCategory { get => "Release Tracker"; }
 		private VRCUrl URL = new VRCUrl("https://api.github.com/repos/Mattshark89/OpenFlight-VRC/releases?per_page=20");
 		public OpenFlight OF;
 		public AvatarListLoader AvatarListLoader;
@@ -31,8 +32,6 @@ namespace OpenFlightVRC
 
 		void Start()
 		{
-			_logCategory = nameof(GithubReleaseInterpreter);
-
 			//subscribe to the avatar list loader callback
 			AvatarListLoader.AddCallback(AvatarListLoaderCallback.AvatarListLoaded, this, nameof(LoadURL));
 		}

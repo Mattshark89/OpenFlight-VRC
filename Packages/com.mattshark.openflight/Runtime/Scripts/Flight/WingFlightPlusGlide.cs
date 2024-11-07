@@ -62,6 +62,7 @@ namespace OpenFlightVRC
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class WingFlightPlusGlide : CallbackUdonSharpBehaviour<WingFlightPlusGlideCallback>
 	{
+		public override string _logCategory { get => "Physics"; }
 		#region Settings
 		/// <summary>
 		/// Base strength of a flap. This value is affected by the avatar's armspan. See sizeCurve.
@@ -308,8 +309,6 @@ namespace OpenFlightVRC
 
 		public void Start()
 		{
-			_logCategory = nameof(WingFlightPlusGlide);
-
 			LocalPlayer = Networking.LocalPlayer;
 			//save the user gravity if dynamic gravity is disabled
 			if (!dynamicPlayerPhysics)
@@ -350,6 +349,16 @@ namespace OpenFlightVRC
 				setFinalVelocity = false;
 
 				CalculateStats();
+			}
+		}
+
+		public override void OnPlayerRespawn(VRCPlayerApi player)
+		{
+			//the whole reason this even needs to exist is really fucking cursed,
+			//but VRChat doesnt reset your velocity when you respawn for whatever reason, so we do it ourselves here
+			if (player.isLocal)
+			{
+				player.SetVelocity(Vector3.zero);
 			}
 		}
 

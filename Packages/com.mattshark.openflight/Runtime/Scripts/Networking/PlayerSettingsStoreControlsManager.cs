@@ -17,6 +17,7 @@ namespace OpenFlightVRC.Net
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class PlayerSettingsStoreControlsManager : LoggableUdonSharpBehaviour
     {
+        public override string _logCategory { get => PlayerSettings.SETTINGSDATABASECATEGORY; }
 
         #region UI References
         public InputField slotNameInput;

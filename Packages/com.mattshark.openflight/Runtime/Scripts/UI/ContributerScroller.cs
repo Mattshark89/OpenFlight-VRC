@@ -14,6 +14,7 @@ namespace OpenFlightVRC.UI
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class ContributerScroller : LoggableUdonSharpBehaviour
 	{
+		public override string _logCategory { get => UIBase.UICATEGORY; }
 		public GameObject T1;
 		public GameObject ScrollRect;
 		private float _time = 0;

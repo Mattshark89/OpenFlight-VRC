@@ -8,6 +8,7 @@ using OpenFlightVRC.UI;
 using VRC.SDK3.Data;
 using TMPro;
 using UnityEngine.PlayerLoop;
+using VRC.SDKBase;
 
 namespace OpenFlightVRC
 {
@@ -175,9 +176,9 @@ namespace OpenFlightVRC
 		const string PackageColor = "orange";
 		const string PackageName = "OpenFlight";
 		/// <summary>
-		/// The max number of log messages to display
+		/// The max number of log messages to store in the internal log data sets
 		/// </summary>
-		const int MaxLogMessages = 200;
+		const int MaxInternalLogMessages = 200;
 
 		public void SetControlMatrix(string category, LogLevel levels)
 		{
@@ -214,17 +215,10 @@ namespace OpenFlightVRC
 				logCategory = self._logCategory;
 			}
 
-			if (logCategory != null)
-			{
-				DataList logList = GetLogList(level, logProxy, logCategory);
+			DataList logList = GetLogList(level, logProxy, logCategory);
 
-				//add the entry to the list
-				logList.Add(logEntry);
-			}
-			else
-			{
-				Debug.LogError(Format("This script has a null log category! It should be set in Start() as a string or else it wont appear in the UI", System.DateTime.Now.Ticks, LogLevel.Error, self, true));
-			}
+			//add the entry to the list
+			logList.Add(logEntry);
 
 			logProxy.AttemptToPopulateText();
 		}

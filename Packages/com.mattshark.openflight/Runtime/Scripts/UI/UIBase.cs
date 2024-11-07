@@ -13,6 +13,8 @@ namespace OpenFlightVRC.UI
 	/// </summary>
 	public abstract class UIBase : LoggableUdonSharpBehaviour
 	{
+		internal const string UICATEGORY = "UI";
+		public override string _logCategory { get => UICATEGORY; }
 		/// <summary>
 		/// The target UdonBehaviour
 		/// </summary>

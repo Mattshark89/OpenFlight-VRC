@@ -68,6 +68,8 @@ namespace OpenFlightVRC.Net
     [RequireComponent(typeof(VRCEnablePersistence))]
     public class PlayerSettings : CallbackUdonSharpBehaviour<PlayerSettingsCallback>
     {
+        public const string SETTINGSDATABASECATEGORY = "Player DB";
+        public override string _logCategory { get => SETTINGSDATABASECATEGORY; }
         #region Object References
         public WingFlightPlusGlide wingFlightPlusGlide;
         #endregion
@@ -1069,8 +1071,6 @@ namespace OpenFlightVRC.Net
         #region Initialization and Data retrieval
         void Start()
         {
-            _logCategory = nameof(PlayerSettings);
-
             //setup our object name
             VRCPlayerApi Owner = Networking.GetOwner(gameObject);
             gameObject.name = Owner.displayName + "'s OF Settings";

@@ -20,6 +20,7 @@ namespace OpenFlightVRC
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class AvatarListLoader : CallbackUdonSharpBehaviour<AvatarListLoaderCallback>
 	{
+		public override string _logCategory { get => "Avatar DB"; }
 		public VRCUrl URL = new VRCUrl("https://mattshark89.github.io/OpenFlight-VRC/data.json");
 
 		/// <summary>

@@ -10,6 +10,7 @@ namespace OpenFlightVRC
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class ToggleWingedFlight : LoggableUdonSharpBehaviour
 	{
+		public override string _logCategory { get => UI.UIBase.UICATEGORY; }
 		// Settings:
 		// 0- Flight Disabled
 		// 1- Flight Enabled

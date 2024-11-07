@@ -27,6 +27,7 @@ namespace OpenFlightVRC.Net
     [RequireComponent(typeof(VRCEnablePersistence))]
     public class PlayerMetrics : CallbackUdonSharpBehaviour<PlayerMetricsCallback>
     {
+        public override string _logCategory { get => "Metrics"; }
         #region Metrics
         #region Flying Time
         /// <summary>
@@ -60,8 +61,6 @@ namespace OpenFlightVRC.Net
 
         void Start()
         {
-            _logCategory = nameof(PlayerMetrics);
-
             Owner = Networking.GetOwner(gameObject);
             LocalPlayer = Networking.LocalPlayer;
 

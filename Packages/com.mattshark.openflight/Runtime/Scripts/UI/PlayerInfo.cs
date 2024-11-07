@@ -19,6 +19,8 @@ namespace OpenFlightVRC.UI
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class PlayerInfo : LoggableUdonSharpBehaviour
 	{
+		public override string _logCategory { get => UIBase.UICATEGORY; }
+
 		public TextMeshProUGUI GlobalInfo;
 		public PlayerUIDropdown playerDropdown;
 		public TextMeshProUGUI playerInfoText;

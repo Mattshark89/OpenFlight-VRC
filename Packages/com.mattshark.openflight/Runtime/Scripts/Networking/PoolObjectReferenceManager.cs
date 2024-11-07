@@ -14,6 +14,7 @@ namespace OpenFlightVRC.Net
     [RequireComponent(typeof(VRCPlayerObject))]
     public class PoolObjectReferenceManager : LoggableUdonSharpBehaviour
     {
+        public override string _logCategory { get => PoolGlobalManager.POOLGLOBALCATEGORY; }
         public Effects.PlayerEffects PlayerEffects;
         public PlayerSettings PlayerSettingsStore;
         public PlayerMetrics PlayerMetricsStore;

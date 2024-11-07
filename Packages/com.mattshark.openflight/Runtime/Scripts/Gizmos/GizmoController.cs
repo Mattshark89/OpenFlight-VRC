@@ -11,6 +11,7 @@ namespace OpenFlightVRC.Gizmos
 {
 	public class GizmoController : LoggableUdonSharpBehaviour
 	{
+		public override string _logCategory { get => "Gizmos"; }
 		[Header("Script References")]
 		public AvatarDetection avatarDetection;
 		public WingFlightPlusGlide wingFlightPlusGlide;

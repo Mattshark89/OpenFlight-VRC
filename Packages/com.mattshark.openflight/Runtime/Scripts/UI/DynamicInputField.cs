@@ -15,6 +15,7 @@ namespace OpenFlightVRC.UI
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class DynamicInputField : LoggableUdonSharpBehaviour
 	{
+		public override string _logCategory { get => UIBase.UICATEGORY; }
 		/// <summary>
 		/// The target UdonBehaviour to get the variable from
 		/// </summary>

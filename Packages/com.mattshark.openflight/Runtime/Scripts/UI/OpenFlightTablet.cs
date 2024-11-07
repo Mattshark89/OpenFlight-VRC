@@ -19,6 +19,7 @@ namespace OpenFlightVRC.UI
 	[DefaultExecutionOrder(-999)]
 	public class OpenFlightTablet : LoggableUdonSharpBehaviour
 	{
+		public override string _logCategory { get => UIBase.UICATEGORY; }
 		private VRCPlayerApi _localPlayer = null;
 		/// <summary>
 		/// The distance from the tablet the player has to be for it to fade out

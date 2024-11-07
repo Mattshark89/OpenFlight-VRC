@@ -22,6 +22,7 @@ namespace OpenFlightVRC
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class AvatarDetection : CallbackUdonSharpBehaviour<AvatarDetectionCallback>
 	{
+		public override string _logCategory { get => "Avatar Detection"; }
 		private VRCPlayerApi _localPlayer = null;
 
 		/// <summary>

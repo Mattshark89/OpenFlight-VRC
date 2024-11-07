@@ -14,9 +14,9 @@ namespace OpenFlightVRC
     public abstract class LoggableUdonSharpBehaviour : UdonSharpBehaviour
     {
         /// <summary>
-        /// What category should this script log under. Sample override looks like this <code>internal override string _logCategory => "PlayerSettings";</code>
+        /// What category should this script log under. Sample override looks like this <code>public override string _logCategory { get => "MyCategory"; }</code>
         /// </summary>
-        internal string _logCategory;
+        public abstract string _logCategory { get; } //This annoyingly has to be public, as internal doesnt seem to compile properly and will just lead to seeing this value as null even if you override it
 
         /// <summary>
         /// The object to log to. This essentially acts as a static variable in disguise since U# does not support static variables
