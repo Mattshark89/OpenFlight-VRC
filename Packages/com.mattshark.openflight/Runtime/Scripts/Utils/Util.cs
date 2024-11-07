@@ -157,6 +157,24 @@ namespace OpenFlightVRC
 		}
 
 		/// <summary>
+		/// Returns a byte that is made up of the enums in the array.
+		/// This is equivalent to <code><![CDATA[ENUM1.flag1 & ENUM2.flag2]]></code>
+		/// U# doesnt support the <![CDATA[&]]> operator on enums, so this is a workaround
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="flags"></param>
+		/// <returns></returns>
+		public static T AndEnums<T>(params T[] flags) where T : System.Enum
+		{
+			T result = flags[0];
+			foreach (T flag in flags)
+			{
+				result = (T)(object)(Convert.ToInt64(result) & Convert.ToInt64(flag));
+			}
+			return result;
+		}
+
+		/// <summary>
 		/// Returns the distance between two bones, modified by the scaling factor and spine
 		/// </summary>
 		/// <param name="bone1">The first bone</param>
@@ -401,6 +419,7 @@ namespace OpenFlightVRC
 			//suppress the warning
 			#pragma warning disable IDE0028
 			//the (?gm) is a inline options set
+			//group 1 is the text that will be used in the replacement
 
 			//Headers
 			rules.Add(@"(?m:^#{6}\s?([^\n]+))", "<size=067%><b>{0}</b><size=100%>");
@@ -420,6 +439,9 @@ namespace OpenFlightVRC
 
 			//strikethrough
 			rules.Add(@"\~\~\s?([^\n]+)\~\~", "<s>{0}</s>");
+
+			//images
+			rules.Add(@"!\[([^\]]+)\]\(([^\)]+)\)", "<color=#0000EE>{0}</color>");
 
 			//additional, non-markdown spec rules
 			//github PR and Issue links

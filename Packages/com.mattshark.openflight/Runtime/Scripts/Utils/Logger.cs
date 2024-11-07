@@ -7,6 +7,7 @@ using UdonSharp;
 using OpenFlightVRC.UI;
 using VRC.SDK3.Data;
 using TMPro;
+using UnityEngine.PlayerLoop;
 
 namespace OpenFlightVRC
 {
@@ -27,6 +28,14 @@ namespace OpenFlightVRC
 		Error = 1 << 3
 	};
 
+	public enum LogEntryKeys
+	{
+		Text,
+		Time,
+		Script,
+		Level
+	}
+
 	/// <summary>
 	/// A simple logger that prefixes all messages with [OpenFlight]
 	/// </summary>
@@ -40,7 +49,7 @@ namespace OpenFlightVRC
 		const string logObjectName = "OpenFlightLogObject";
 
 		#region In-Client Log Visualisation
-		public string log = "";
+		//public string log = "";
 		public DataDictionary logDictionary = new DataDictionary();
 		public TextMeshProUGUI text;
 
@@ -50,16 +59,115 @@ namespace OpenFlightVRC
 			gameObject.name = logObjectName;
 
 			//TODO: Remove this, but this is testing calls for toggles
-			SetControlMatrix("PlayerSettings", Util.OrEnums(LogLevel.Info, LogLevel.Warning, LogLevel.Error));
-			SetControlMatrix("PlayerMetrics", Util.OrEnums(LogLevel.Info, LogLevel.Callback, LogLevel.Error));
+			//SetControlMatrix("PlayerSettings", Util.OrEnums(LogLevel.Info, LogLevel.Warning, LogLevel.Error));
+			//SetControlMatrix("PlayerMetrics", Util.OrEnums(LogLevel.Info, LogLevel.Callback, LogLevel.Error));
+		}
+
+		public void TestMethod()
+		{
+			SetControlMatrix("PlayerMetrics", Util.OrEnums(LogLevel.Info, LogLevel.Warning, LogLevel.Error));
+		}
+
+		private const string LogLevelKey = "logLevelFlags";
+
+		public void OnEnable()
+		{
+			//when we become visible again, we should make sure we have the latest text visible
+			AttemptToPopulateText();
 		}
 
 		/// <summary>
 		/// Updates the log text
 		/// </summary>
-		private void UpdateLog()
+		private void AttemptToPopulateText()
 		{
-			text.text = log;
+			//determine if we are visible, and if we are not, then dont do anything
+			if (gameObject.activeInHierarchy == false)
+			{
+				return;
+			}
+
+			text.text = "";
+
+			//will contain all filtered logs
+			DataList FilteredLogs = new DataList();
+
+			//Filter the logs by the categorys
+			DataList categorys = logDictionary.GetKeys();
+			DataToken[] categoryArray = categorys.ToArray();
+			foreach (DataToken category in categoryArray)
+			{
+				//get the dictionary of the category
+				DataDictionary categoryDict = logDictionary[category.String].DataDictionary;
+
+				//get the matrix
+				LogLevel levels = (LogLevel)categoryDict[LogLevelKey].Reference;
+				DataList flags = new DataList();
+
+				//convert to flags by checking each bit
+				for (int i = 1; i < int.MaxValue && i > 0; i *= 2)
+				{
+					if (Util.AndEnums(levels, (LogLevel)i) != 0)
+					{
+						flags.Add(new DataToken(LogLevelToString((LogLevel)i)));
+					}
+				}
+
+				//Filter the logs by the flags
+				DataList logLevels = categoryDict.GetKeys();
+				DataToken[] logLevelArray = logLevels.ToArray();
+				foreach (DataToken logLevel in logLevelArray)
+				{
+					//see if we should even be checking this log level
+					if (flags.Contains(logLevel.String))
+					{
+						//get the list of log entries
+						DataList logList = categoryDict[logLevel.String].DataList;
+
+						//get the log entries
+						FilteredLogs.AddRange(logList);
+					}
+				}
+			}
+
+			//we now need to just sort the logs by time
+			//TODO: Implement the max messages limiter. I am leaving it out for now as I want to experiement without it and I would also like to 
+			//possible make it configurable at runtime
+			DataToken[] logArray = FilteredLogs.ToArray();
+			//insertion sort
+			for (int i = 1; i < logArray.Length; i++)
+			{
+				DataToken tempref = logArray[i];
+				long temp = logArray[i].DataDictionary[(long)LogEntryKeys.Time].Long;
+
+				int j = i - 1;
+				while (j >= 0 && logArray[j].DataDictionary[(long)LogEntryKeys.Time].Long > temp)
+				{
+					logArray[j + 1] = logArray[j];
+					j--;
+				}
+				logArray[j + 1] = tempref;
+			}
+
+			//print out in order
+			foreach (DataToken logEntry in logArray)
+			{
+				DataDictionary logEntryDict = logEntry.DataDictionary;
+				//get the text
+				string logText = logEntryDict[(long)LogEntryKeys.Text].String;
+
+				//get the time
+				long time = logEntryDict[(long)LogEntryKeys.Time].Long;
+
+				//get the level
+				LogLevel level = (LogLevel)logEntryDict[(long)LogEntryKeys.Level].Reference;
+
+				//get the script
+				UdonSharpBehaviour script = (UdonSharpBehaviour)logEntryDict[(long)LogEntryKeys.Script].Reference;
+
+				//add the log to the text
+				text.text += Format(logText, time, level, script, false) + "\n";
+			}
 		}
 		#endregion
 
@@ -73,21 +181,18 @@ namespace OpenFlightVRC
 
 		public void SetControlMatrix(string category, LogLevel levels)
 		{
-			DataDictionary categoryDict = new DataDictionary();
-			if (logDictionary.TryGetValue(category, out DataToken levelToken))
-			{
-				//token is a dictionary of the different log levels
-				categoryDict = levelToken.DataDictionary;
-			}
+			DataDictionary categoryDict = GetLogCategory(this, category);
 
 			//if the category does not exist, create it
-			categoryDict.SetValue("logLevelFlags", new DataToken(System.Convert.ToInt64(levels)));
+			categoryDict.SetValue(LogLevelKey, new DataToken(levels));
 
 			//make sure the dictionary has the key
 			logDictionary.SetValue(category, categoryDict);
+
+			AttemptToPopulateText();
 		}
 
-		internal static void WriteToUILog(string text, LogLevel level, LoggableUdonSharpBehaviour self)
+		internal static void LogToUI(string text, LogLevel level, LoggableUdonSharpBehaviour self)
 		{
 			Logger logProxy = null;
 			if (!SetupLogProxy(self, ref logProxy))
@@ -95,12 +200,12 @@ namespace OpenFlightVRC
 				return;
 			}
 
-			//do our work on the list
+			//Setup our log entry, which is functionally a struct here
 			DataDictionary logEntry = new DataDictionary();
-			logEntry.SetValue("text", text);
-			logEntry.SetValue("time", System.DateTime.Now.Ticks);
-			//TODO: Re-enable this when not debugging the outputted json structure using string
-			//logEntry.SetValue("script", self);
+			logEntry.SetValue((long)LogEntryKeys.Text, text);
+			logEntry.SetValue((long)LogEntryKeys.Time, System.DateTime.Now.Ticks);
+			logEntry.SetValue((long)LogEntryKeys.Script, self);
+			logEntry.SetValue((long)LogEntryKeys.Level, new DataToken(level));
 
 			//if self is null, then use a static string
 			string logCategory = "Utility Methods";
@@ -111,60 +216,56 @@ namespace OpenFlightVRC
 
 			if (logCategory != null)
 			{
-				DataDictionary categoryDict = new DataDictionary();
-				DataList logList = new DataList();
-				//get the value
-				if (logProxy.logDictionary.TryGetValue(logCategory, out DataToken levelToken))
-				{
-					//token is a dictionary of the different log levels
-					categoryDict = levelToken.DataDictionary;
-
-					if (categoryDict.TryGetValue(LogTypeToString(level), out DataToken logToken))
-					{
-						logList = logToken.DataList;
-					}
-				}
-				else
-				{
-					//if the category does not exist, create it
-					logProxy.logDictionary.SetValue(logCategory, categoryDict);
-				}
-
+				DataList logList = GetLogList(level, logProxy, logCategory);
 
 				//add the entry to the list
 				logList.Add(logEntry);
-
-				//update the key
-				categoryDict.SetValue(LogTypeToString(level), logList);
-
-				//print out the entire json
-				if (VRCJson.TrySerializeToJson(logProxy.logDictionary, JsonExportType.Minify, out DataToken jsonData))
-				{
-					Debug.Log(jsonData.String);
-				}
-				else
-				{
-					Debug.LogError("Could not serialize log dictionary to json! " + jsonData.Error);
-				}
 			}
 			else
 			{
-				Debug.LogError("Log category is null, cannot log to UI!");
+				Debug.LogError(Format("This script has a null log category! It should be set in Start() as a string or else it wont appear in the UI", System.DateTime.Now.Ticks, LogLevel.Error, self, true));
 			}
 
-			/* //add the text to the log
-			logProxy.log += text + "\n";
-
-			//split into lines
-			//trim the log if it is too long
-			string[] lines = logProxy.log.Split('\n');
-			if (lines.Length > MaxLogMessages)
-			{
-				logProxy.log = string.Join("\n", lines, lines.Length - MaxLogMessages, MaxLogMessages);
-			}
-
-			logProxy.UpdateLog(); */
+			logProxy.AttemptToPopulateText();
 		}
+
+		private static DataList GetLogList(LogLevel level, Logger logProxy, string logCategory)
+		{
+			DataList logList = new DataList();
+			DataDictionary categoryDict = GetLogCategory(logProxy, logCategory);
+
+			if (categoryDict.TryGetValue(LogLevelToString(level), out DataToken logToken))
+			{
+				logList = logToken.DataList;
+			}
+
+			categoryDict.SetValue(LogLevelToString(level), logList);
+
+			return logList;
+		}
+
+		private static DataDictionary GetLogCategory(Logger logProxy, string logCategory)
+		{
+			DataDictionary categoryDict = new DataDictionary();
+			//get the value
+			if (logProxy.logDictionary.TryGetValue(logCategory, out DataToken levelToken))
+			{
+				//token is a dictionary of the different log levels
+				categoryDict = levelToken.DataDictionary;
+
+			}
+			else
+			{
+				//if the category does not exist, create it
+				logProxy.logDictionary.SetValue(logCategory, categoryDict);
+
+				//setup the log level flags
+				categoryDict.SetValue(LogLevelKey, new DataToken(Util.OrEnums(LogLevel.Info, LogLevel.Callback, LogLevel.Warning, LogLevel.Error)));
+			}
+
+			return categoryDict;
+		}
+
 
 		/// <summary>
 		/// Gets the log type string
@@ -178,7 +279,7 @@ namespace OpenFlightVRC
 				case LogLevel.Info:
 					return ColorText(nameof(LogLevel.Info), "white");
 				case LogLevel.Callback:
-					return ColorText(nameof(LogLevel.Callback), "cyan");
+					return ColorText(nameof(LogLevel.Callback), "#00FFFF");
 				case LogLevel.Warning:
 					return ColorText(nameof(LogLevel.Warning), "yellow");
 				case LogLevel.Error:
@@ -193,7 +294,7 @@ namespace OpenFlightVRC
 		/// </summary>
 		/// <param name="LT"></param>
 		/// <returns></returns>
-		private static string LogTypeToString(LogLevel LT)
+		private static string LogLevelToString(LogLevel LT)
 		{
 			switch (LT)
 			{
@@ -215,21 +316,22 @@ namespace OpenFlightVRC
 		/// </summary>
 		/// <param name="text"></param>
 		/// <param name="LT"></param>
-		private static void LogToConsole(string text, LogLevel LT)
+		private static void LogToConsole(string text, LogLevel LT, LoggableUdonSharpBehaviour self)
 		{
+			string formatted = Format(text, System.DateTime.Now.Ticks, LT, self, true);
 			switch (LT)
 			{
 				case LogLevel.Info:
-					Debug.Log(text);
+					Debug.Log(formatted, self);
 					break;
 				case LogLevel.Callback:
-					Debug.Log(text);
+					Debug.Log(formatted, self);
 					break;
 				case LogLevel.Warning:
-					Debug.LogWarning(text);
+					Debug.LogWarning(formatted, self);
 					break;
 				case LogLevel.Error:
-					Debug.LogError(text);
+					Debug.LogError(formatted, self);
 					break;
 			}
 		}
@@ -297,9 +399,9 @@ namespace OpenFlightVRC
 				return;
 			}
 
-			LogToConsole(Format(text, level, self), level);
+			LogToConsole(text, level, self);
 			//WriteToUILog(Format(text, LogLevel.Info, self, false), self);
-			WriteToUILog(text, level, self);
+			LogToUI(text, level, self);
 		}
 
 		/// <summary>
@@ -316,19 +418,22 @@ namespace OpenFlightVRC
 				return false;
 			}
 
-			string logString = logProxy.log;
+			//TODO: Repair this to work with the new system
+			//string logString = logProxy.log;
+			Debug.Assert(false, string.Format("{0} has been un-implemented!", nameof(CheckIfLogged)));
 
 			//check if the latest message is the same as the text
-			return logString.EndsWith(text + "\n");
+			//return logString.EndsWith(text + "\n");
+			return false;
 		}
 
 		/// <summary>
 		/// Gets the current timestamp
 		/// </summary>
 		/// <returns></returns>
-		private static string GetTimeStampString()
+		private static string GetTimeStampString(long ticks)
 		{
-			string time = System.DateTime.Now.ToString("T");
+			string time = new System.DateTime(ticks).ToString("h:mm:ss.ffff");
 			return ColorText(time, "white");
 		}
 
@@ -339,12 +444,10 @@ namespace OpenFlightVRC
 		/// <param name="self">The UdonSharpBehaviour that is logging the text</param>
 		/// <param name="includePrefix">Whether or not to include the prefix</param>
 		/// <returns>The formatted text</returns>
-		internal static string Format(string text, LogLevel LT, UdonSharpBehaviour self, bool includePrefix = true)
+		internal static string Format(string text, long ticks, LogLevel LT, UdonSharpBehaviour self, bool includePrefix = true)
 		{
 			string prefix = includePrefix ? string.Format("[{0}]", ColorText(PackageName, PackageColor)) : "";
-			return string.Format("{0} [{1}] [{2}] [{3}] {4}", prefix, GetLogTypeString(LT), GetTimeStampString(), ColorizeScript(self), text);
-			//return string.Format("{0} [{1}] {2}", prefix, ColorizeScript(self), text);
-			//return (includePrefix ? Prefix() + " " : "") + ColorizeScript(self) + " " + text;
+			return string.Format("{0} [{1}] [{2}] [{3}] {4}", prefix, GetLogTypeString(LT), GetTimeStampString(ticks), ColorizeScript(self), text);
 		}
 
 		/// <summary>

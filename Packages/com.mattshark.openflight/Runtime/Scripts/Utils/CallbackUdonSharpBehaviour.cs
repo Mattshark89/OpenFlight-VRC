@@ -55,12 +55,12 @@ namespace OpenFlightVRC
                 //add the method name, only if its not already there
                 if (!_callbackData[id].DataDictionary[behaviour].DataList.Contains(methodNames[i]))
                 {
-                    Log(LogLevel.Callback, string.Format("Added callback [{0}] for [{1}]", Logger.ColorizeFunction(behaviour, methodNames[i]), Logger.ColorizeScript(behaviour)));
+                    Log(LogLevel.Callback, string.Format("Subscribed [{0}.{1}] to Callback [{2}]", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodNames[i]), Logger.ColorizeFunction(this, callbackID.ToString())));
                     _callbackData[id].DataDictionary[behaviour].DataList.Add(methodNames[i]);
                 }
                 else
                 {
-                    Log(LogLevel.Warning, string.Format("[{0}] Tried to register a callback for [{1}] that already exists!", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodNames[i])));
+                    Log(LogLevel.Warning, string.Format("Tried to register [{0}.{1}] to [{2}] when it was already registered!", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodNames[i]), Logger.ColorizeFunction(this, callbackID.ToString())));
                     return false;
                 }
                 success &= true;
@@ -91,11 +91,12 @@ namespace OpenFlightVRC
                     if (methods.Contains(methodName))
                     {
                         methods.Remove(methodName);
+                        Log(LogLevel.Callback, string.Format("Removed [{0}.{1}] from Callback [{2}] of [{3}]", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodName), Logger.ColorizeFunction(this, callbackID.ToString()), Logger.ColorizeScript(this)));
                         return true;
                     }
                 }
             }
-            Log(LogLevel.Warning, string.Format("[{0}] Tried to remove a callback for [{1}] that does not exist!", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodName)));
+            Log(LogLevel.Warning, string.Format("Tried to remove [{0}.{1}] from [{2}] when it didnt exist!", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodName), Logger.ColorizeFunction(this, callbackID.ToString())));
             return false;
         }
 
@@ -139,7 +140,7 @@ namespace OpenFlightVRC
 
                         //run the method
                         behaviour.SendCustomEvent(methodName);
-                        Log(LogLevel.Callback, string.Format("Running callback [{0}] for [{1}]", Logger.ColorizeFunction(behaviour, methodName), Logger.ColorizeScript(behaviour)));
+                        Log(LogLevel.Callback, string.Format("Running [{0}.{1}] for callback [{2}]", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodName), Logger.ColorizeFunction(this, callbackID.ToString())));
                     }
                 }
             }

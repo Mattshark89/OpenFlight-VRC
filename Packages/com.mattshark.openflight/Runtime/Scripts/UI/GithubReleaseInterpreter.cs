@@ -31,6 +31,8 @@ namespace OpenFlightVRC
 
 		void Start()
 		{
+			_logCategory = nameof(GithubReleaseInterpreter);
+
 			//subscribe to the avatar list loader callback
 			AvatarListLoader.AddCallback(AvatarListLoaderCallback.AvatarListLoaded, this, nameof(LoadURL));
 		}
@@ -121,12 +123,14 @@ namespace OpenFlightVRC
 					continue;
 				}
 
-				outputText += "<b>" + release["name"].ToString() + "</b>\n";
-				outputText += "Released on " + release["published_at"].ToString() + "\n";
+				outputText += "# " + release["name"].ToString() + "\n";
+				outputText += "###### Released on " + release["published_at"].ToString() + "\n";
 				//outputText += RemoveMarkdown(release["body"].ToString()) + "\n\n";
-				outputText += release["body"].ToString().MarkdownToRichText() + "\n\n";
+				outputText += release["body"].ToString() + "\n\n";
 				behind++;
 			}
+
+			outputText = outputText.MarkdownToRichText();
 
 			//if we didn't find the release the world is on, set the releases behind to +
 			if (!foundRelease)
