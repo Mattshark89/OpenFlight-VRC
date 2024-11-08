@@ -140,7 +140,7 @@ namespace OpenFlightVRC
 			_localPlayer = Networking.LocalPlayer;
 
 			debugInfo = "Loading JSON list...";
-			JSONLoader.AddCallback(AvatarListLoaderCallback.AvatarListLoaded, this, nameof(LoadJSON));
+			JSONLoader.AddCallback(AvatarListLoaderCallback.AvatarListReady, this, nameof(LoadJSON));
 
 			JSONLoader.LoadURL();
 		}

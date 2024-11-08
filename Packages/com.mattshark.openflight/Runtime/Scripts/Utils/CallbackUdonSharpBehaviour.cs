@@ -8,6 +8,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 using VRC.SDK3.Data;
 using System;
+using System.Linq;
 
 namespace OpenFlightVRC
 {
@@ -36,6 +37,9 @@ namespace OpenFlightVRC
             bool success = true;
             int id;
 
+            DataList subscribedMethods = new DataList();
+            DataList failedMethods = new DataList();
+
             for (int i = 0; i < methodNames.Length; i++)
             {
                 id = Convert.ToInt32(callbackID);
@@ -55,16 +59,18 @@ namespace OpenFlightVRC
                 //add the method name, only if its not already there
                 if (!_callbackData[id].DataDictionary[behaviour].DataList.Contains(methodNames[i]))
                 {
-                    Log(LogLevel.Callback, string.Format("Subscribed [{0}.{1}] to Callback [{2}]", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodNames[i]), Logger.ColorizeFunction(this, callbackID.ToString())));
+                    subscribedMethods.Add(string.Format("{0}.{1}", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodNames[i])));
                     _callbackData[id].DataDictionary[behaviour].DataList.Add(methodNames[i]);
                 }
                 else
                 {
-                    Log(LogLevel.Warning, string.Format("Tried to register [{0}.{1}] to [{2}] when it was already registered!", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodNames[i]), Logger.ColorizeFunction(this, callbackID.ToString())));
-                    return false;
+                    failedMethods.Add(string.Format("{0}.{1}", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodNames[i])));
+                    success = false;
                 }
-                success &= true;
             }
+
+            if (subscribedMethods.Count > 0) Log(LogLevel.Callback, string.Format("Subscribed [{0}] to Callback [{1}]", subscribedMethods.ToArray<string>().Join(", "), Logger.ColorizeFunction(this, callbackID.ToString())));
+            if (failedMethods.Count > 0) Log(LogLevel.Warning, string.Format("Failed to subscribe [{0}] to Callback [{1}] as they are already registered!", failedMethods.ToArray<string>().Join(", "), Logger.ColorizeFunction(this, callbackID.ToString())));
 
             return success;
         }
@@ -76,6 +82,7 @@ namespace OpenFlightVRC
         /// <returns>Returns a true if the callback was removed successfully, and false if the callback does not exist</returns>
         public bool RemoveCallback(EnumType callbackID, UdonSharpBehaviour behaviour, string methodName)
         {
+            //TODO: Parameterize this one like all the others
             int id = Convert.ToInt32(callbackID);
             //check if the callback exists
             if (_callbackData.ContainsKey(id))
@@ -117,6 +124,9 @@ namespace OpenFlightVRC
                 //convert to an array of tokens
                 DataToken[] tokens = keys.ToArray();
 
+                DataList calledMethods = new DataList();
+                DataList failedMethods = new DataList();
+
                 //run all the callbacks
                 for (int i = 0; i < tokens.Length; i++)
                 {
@@ -133,16 +143,20 @@ namespace OpenFlightVRC
                         //check if the behaviour is null, and if it is, remove it
                         if (behaviour == null)
                         {
-                            Log(LogLevel.Warning, string.Format("Behaviour for callback [{0}] is null, removing callback", Logger.ColorizeFunction(behaviour, methodName)));
+                            failedMethods.Add(string.Format("{0}.{1}", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodName)));
                             methods.Remove(methodName);
-                            continue;
                         }
-
-                        //run the method
-                        behaviour.SendCustomEvent(methodName);
-                        Log(LogLevel.Callback, string.Format("Running [{0}.{1}] for callback [{2}]", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodName), Logger.ColorizeFunction(this, callbackID.ToString())));
+                        else
+                        {
+                            //run the method
+                            behaviour.SendCustomEvent(methodName);
+                            calledMethods.Add(string.Format("{0}.{1}", Logger.ColorizeScript(behaviour), Logger.ColorizeFunction(behaviour, methodName)));
+                        }
                     }
                 }
+
+                if (calledMethods.Count > 0) Log(LogLevel.Callback, string.Format("Running [{0}] for Callback [{1}]", calledMethods.ToArray<string>().Join(", "), Logger.ColorizeFunction(this, callbackID.ToString())));
+                if (failedMethods.Count > 0) Log(LogLevel.Warning, string.Format("Failed to run [{0}] for Callback [{1}] as they were null and have been removed", failedMethods.ToArray<string>().Join(", "), Logger.ColorizeFunction(this, callbackID.ToString())));
             }
         }
     }

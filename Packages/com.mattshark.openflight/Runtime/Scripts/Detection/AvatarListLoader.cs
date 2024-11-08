@@ -7,12 +7,22 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.SDK3.StringLoading;
 using VRC.SDK3.Data;
+using VRC.Udon.Common.Interfaces;
 
 namespace OpenFlightVRC
 {
 	public enum AvatarListLoaderCallback
 	{
-		AvatarListLoaded
+		/// <summary>
+		/// The avatar list has been loaded and is ready to be ingested by any other scripts that want it
+		/// </summary>
+		AvatarListReady,
+		/// <summary>
+		/// The URL has been queried and the que will be open again
+		/// </summary>
+		URLLoadReturned,
+		URLLoadFailed,
+		URLLoadSuccess
 	}
 	/// <summary>
 	/// This is used to query the Github data.json file for the list of avatars. It supports falling back to the in-world list if the Github list fails to load.
@@ -43,22 +53,19 @@ namespace OpenFlightVRC
 		/// </summary>
 		public void LoadURL()
 		{
-			Output = "";
-
-			if (useOfflineJSON)
-			{
-				Output = OfflineJSON.text;
-				Log(LogLevel.Info, "Force-using in-world JSON list");
-				RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
-				return;
-			}
 
 			//initially trigger with the in-world list
 			Output = OfflineJSON.text;
 			Log(LogLevel.Info, "Using in-world JSON list until remote is available....");
-			RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
+			RunCallback(AvatarListLoaderCallback.AvatarListReady);
 
-			VRCStringDownloader.LoadUrl(URL, (VRC.Udon.Common.Interfaces.IUdonEventReceiver)this);
+			if (useOfflineJSON)
+			{
+				Log(LogLevel.Info, string.Format("Skipping remote JSON list loading forcibly due to {0}", nameof(useOfflineJSON)));
+				return;
+			}
+
+			VRCStringDownloader.LoadUrl(URL, (IUdonEventReceiver)this);
 		}
 
 		public override void OnStringLoadSuccess(IVRCStringDownload data)
@@ -66,39 +73,19 @@ namespace OpenFlightVRC
 			string result = data.Result;
 			Output = result;
 			Log(LogLevel.Info, "Loaded Avatar List URL!");
-			RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
+			RunCallback(AvatarListLoaderCallback.AvatarListReady);
+			RunCallback(AvatarListLoaderCallback.URLLoadReturned);
+			RunCallback(AvatarListLoaderCallback.URLLoadSuccess);
 		}
 
 		//if the URL fails to load, fallback to the in-world stored JSON instead
 		public override void OnStringLoadError(IVRCStringDownload data)
 		{
 			Output = OfflineJSON.text;
-			Log(LogLevel.Info, "Failed to load Avatar List URL! Using in-world JSON instead.");
-			RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
-		}
-	}
-
-	//array extension to append
-	public static class ArrayExtensions
-	{
-		/// <summary>
-		/// Appends an item to an array
-		/// </summary>
-		/// <typeparam name="T">The type of the array</typeparam>
-		/// <param name="array">The array to append to</param>
-		/// <param name="item">The item to append</param>
-		/// <returns>The new array with the item appended</returns>
-		public static T[] Append<T>(this T[] array, T item)
-		{
-			if (array == null)
-			{
-				return new T[] { item };
-			}
-
-			T[] result = new T[array.Length + 1];
-			array.CopyTo(result, 0);
-			result[array.Length] = item;
-			return result;
+			Log(LogLevel.Warning, "Failed to load Avatar List URL! Using in-world JSON instead.");
+			RunCallback(AvatarListLoaderCallback.AvatarListReady);
+			RunCallback(AvatarListLoaderCallback.URLLoadReturned);
+			RunCallback(AvatarListLoaderCallback.URLLoadFailed);
 		}
 	}
 }

@@ -9,13 +9,14 @@ using VRC.SDK3.Data;
 using TMPro;
 using UnityEngine.PlayerLoop;
 using VRC.SDKBase;
+using System;
 
 namespace OpenFlightVRC
 {
 	/// <summary>
 	/// The type of log to write
 	/// </summary>
-	[System.Flags]
+	[Flags]
 	public enum LogLevel
 	{
 		Info = 1 << 0,
@@ -64,11 +65,6 @@ namespace OpenFlightVRC
 			//SetControlMatrix("PlayerMetrics", Util.OrEnums(LogLevel.Info, LogLevel.Callback, LogLevel.Error));
 		}
 
-		public void TestMethod()
-		{
-			SetControlMatrix("PlayerMetrics", Util.OrEnums(LogLevel.Info, LogLevel.Warning, LogLevel.Error));
-		}
-
 		private const string LogLevelKey = "logLevelFlags";
 
 		public void OnEnable()
@@ -87,11 +83,14 @@ namespace OpenFlightVRC
 			{
 				return;
 			}
+			
+			System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
 
 			text.text = "";
 
-			//will contain all filtered logs
-			DataList FilteredLogs = new DataList();
+			//will contain all filtered logs, with keys being the timestamp to use as a lookup table
+			DataDictionary filteredLogTable = new DataDictionary();
 
 			//Filter the logs by the categorys
 			DataList categorys = logDictionary.GetKeys();
@@ -123,37 +122,32 @@ namespace OpenFlightVRC
 					if (flags.Contains(logLevel.String))
 					{
 						//get the list of log entries
-						DataList logList = categoryDict[logLevel.String].DataList;
+						DataToken[] logList = categoryDict[logLevel.String].DataList.ToArray();
 
-						//get the log entries
-						FilteredLogs.AddRange(logList);
+						//loop through each entry
+						foreach (DataToken logEntry in logList)
+						{
+							DataDictionary logEntryDict = logEntry.DataDictionary;
+
+							//get the time
+							long time = logEntryDict[(long)LogEntryKeys.Time].Long;
+
+							//add the log to the lookup table
+							filteredLogTable.SetValue(time, logEntryDict);
+						}
 					}
 				}
 			}
 
-			//we now need to just sort the logs by time
+			//we now need to just sort the logs by time, by getting the keys in the log table, and then sorting them, using them as a lookup table
 			//TODO: Implement the max messages limiter. I am leaving it out for now as I want to experiement without it and I would also like to 
-			//possible make it configurable at runtime
-			DataToken[] logArray = FilteredLogs.ToArray();
-			//insertion sort
-			for (int i = 1; i < logArray.Length; i++)
-			{
-				DataToken tempref = logArray[i];
-				long temp = logArray[i].DataDictionary[(long)LogEntryKeys.Time].Long;
-
-				int j = i - 1;
-				while (j >= 0 && logArray[j].DataDictionary[(long)LogEntryKeys.Time].Long > temp)
-				{
-					logArray[j + 1] = logArray[j];
-					j--;
-				}
-				logArray[j + 1] = tempref;
-			}
+			DataList lookupTable = filteredLogTable.GetKeys();
+			lookupTable.Sort(); //sort the keys
 
 			//print out in order
-			foreach (DataToken logEntry in logArray)
+			for (int i = 0; i < lookupTable.Count; i++)
 			{
-				DataDictionary logEntryDict = logEntry.DataDictionary;
+				DataDictionary logEntryDict = filteredLogTable[lookupTable[i]].DataDictionary;
 				//get the text
 				string logText = logEntryDict[(long)LogEntryKeys.Text].String;
 
@@ -169,6 +163,8 @@ namespace OpenFlightVRC
 				//add the log to the text
 				text.text += Format(logText, time, level, script, false) + "\n";
 			}
+
+			sw.Stop(); //TODO: Feed this as a visible statistic in the UI about render time
 		}
 		#endregion
 
@@ -201,10 +197,18 @@ namespace OpenFlightVRC
 				return;
 			}
 
+			//for some bizarre reason, there can be a error here in that the dictionary can be null when leaving play mode
+			//presumably, clientsim starts cleaning up variables before letting all events finish
+			//so we need to check if the dictionary is null and if it is, just do nothing here, since this should never happen in normal execution anyway
+			if (logProxy.logDictionary == null)
+			{
+				return;
+			}
+
 			//Setup our log entry, which is functionally a struct here
 			DataDictionary logEntry = new DataDictionary();
 			logEntry.SetValue((long)LogEntryKeys.Text, text);
-			logEntry.SetValue((long)LogEntryKeys.Time, System.DateTime.Now.Ticks);
+			logEntry.SetValue((long)LogEntryKeys.Time, DateTime.Now.Ticks);
 			logEntry.SetValue((long)LogEntryKeys.Script, self);
 			logEntry.SetValue((long)LogEntryKeys.Level, new DataToken(level));
 
@@ -213,6 +217,10 @@ namespace OpenFlightVRC
 			if (self != null)
 			{
 				logCategory = self._logCategory;
+				if (string.IsNullOrEmpty(logCategory))
+				{
+					logCategory = "Untraceable";
+				}
 			}
 
 			DataList logList = GetLogList(level, logProxy, logCategory);
@@ -241,6 +249,7 @@ namespace OpenFlightVRC
 		private static DataDictionary GetLogCategory(Logger logProxy, string logCategory)
 		{
 			DataDictionary categoryDict = new DataDictionary();
+
 			//get the value
 			if (logProxy.logDictionary.TryGetValue(logCategory, out DataToken levelToken))
 			{
@@ -312,7 +321,7 @@ namespace OpenFlightVRC
 		/// <param name="LT"></param>
 		private static void LogToConsole(string text, LogLevel LT, LoggableUdonSharpBehaviour self)
 		{
-			string formatted = Format(text, System.DateTime.Now.Ticks, LT, self, true);
+			string formatted = Format(text, DateTime.Now.Ticks, LT, self, true);
 			switch (LT)
 			{
 				case LogLevel.Info:
@@ -427,7 +436,7 @@ namespace OpenFlightVRC
 		/// <returns></returns>
 		private static string GetTimeStampString(long ticks)
 		{
-			string time = new System.DateTime(ticks).ToString("h:mm:ss.ffff");
+			string time = new DateTime(ticks).ToString("h:mm:ss.ffff");
 			return ColorText(time, "white");
 		}
 
@@ -489,18 +498,18 @@ namespace OpenFlightVRC
 			//if the script is null, init to a constant
 			if (self == null)
 			{
-				Random.InitState(0);
+				UnityEngine.Random.InitState(0);
 			}
 			else
 			{
 				//set random seed to hash of name
-				Random.InitState(GetScriptName(self).GetHashCode());
+				UnityEngine.Random.InitState(GetScriptName(self).GetHashCode());
 			}
 
 			float Saturation = 1f;
 			float Brightness = 1f;
 
-			float hue = Random.Range(0.0f, 1.0f);
+			float hue = UnityEngine.Random.Range(0.0f, 1.0f);
 
 			Color color = Color.HSVToRGB(hue, Saturation, Brightness);
 

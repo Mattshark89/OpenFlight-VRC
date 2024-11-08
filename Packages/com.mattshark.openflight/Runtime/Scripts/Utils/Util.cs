@@ -6,7 +6,9 @@ using System;
 using System.Text.RegularExpressions;
 
 using OpenFlightVRC.Net;
+
 using UnityEngine;
+
 using VRC.SDK3.Data;
 using VRC.SDKBase;
 
@@ -17,46 +19,46 @@ namespace OpenFlightVRC
 	/// </summary>
 	public static class Util
 	{
-        /// <summary>
-        /// Prefix for all player data keys
-        /// </summary>
-        public const string playerDataFolderKey = "OpenFlightVRC/";
+		/// <summary>
+		/// Prefix for all player data keys
+		/// </summary>
+		public const string playerDataFolderKey = "OpenFlightVRC/";
 
-		
-        /// <summary>
-        /// Gets a setting from the settings dictionary
-        /// </summary>
-        /// <param name="settingsLocation"> The location of the settings </param>
-        /// <param name="key"> The key of the setting </param>
-        /// <param name="token"> The resulting token of the setting </param>
-        /// <returns> True if the setting was retrieved, false if it failed </returns>
-        public static bool GetSetting(DataDictionary settingsLocation, string key, out DataToken token)
-        {
-            if (settingsLocation.TryGetValue(key, out token))
-            {
-                return true;
-            }
-            else
-            {
-				Logger.Log(LogLevel.Warning, string.Format("Failed to get setting {0} from settings. Keeping current setting. Error reason: {1}", key, token.Error.ToString()));
-                return false;
-            }
-        }
 
 		/// <summary>
-        /// Tries to apply a setting to a variable reference
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="settingsLocation">Where the settings are stored</param>
-        /// <param name="keyName">The key of the setting</param>
-        /// <param name="variableReference">The variable to apply the setting to</param>
-        /// <returns>True if the setting was applied, false if it failed</returns>
-        public static bool TryApplySetting<T>(DataDictionary settingsLocation, string keyName, ref T variableReference)
-        {
-            bool ableToGetSetting = GetSetting(settingsLocation, keyName, out DataToken token);
-            if (ableToGetSetting)
-            {
-                /*
+		/// Gets a setting from the settings dictionary
+		/// </summary>
+		/// <param name="settingsLocation"> The location of the settings </param>
+		/// <param name="key"> The key of the setting </param>
+		/// <param name="token"> The resulting token of the setting </param>
+		/// <returns> True if the setting was retrieved, false if it failed </returns>
+		public static bool GetSetting(DataDictionary settingsLocation, string key, out DataToken token)
+		{
+			if (settingsLocation.TryGetValue(key, out token))
+			{
+				return true;
+			}
+			else
+			{
+				Logger.Log(LogLevel.Warning, string.Format("Failed to get setting {0} from settings. Keeping current setting. Error reason: {1}", key, token.Error.ToString()));
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Tries to apply a setting to a variable reference
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="settingsLocation">Where the settings are stored</param>
+		/// <param name="keyName">The key of the setting</param>
+		/// <param name="variableReference">The variable to apply the setting to</param>
+		/// <returns>True if the setting was applied, false if it failed</returns>
+		public static bool TryApplySetting<T>(DataDictionary settingsLocation, string keyName, ref T variableReference)
+		{
+			bool ableToGetSetting = GetSetting(settingsLocation, keyName, out DataToken token);
+			if (ableToGetSetting)
+			{
+				/*
 				just for reference
 				nameof(System.Boolean) = "Boolean"
 				typeof(T).Name = "Boolean"
@@ -64,18 +66,18 @@ namespace OpenFlightVRC
 				a single in this case actually means float
 				*/
 
-                //enforce the type of the setting
-                switch (typeof(T).Name)
-                {
-                    case nameof(System.Boolean):
-                        variableReference = (T)(object)token.Boolean;
-                        break;
-                    case nameof(System.Single):
-                        variableReference = (T)(object)token.Number;
-                        break;
-                    case nameof(System.Int32):
-                        variableReference = (T)(object)token.Number;
-                        break;
+				//enforce the type of the setting
+				switch (typeof(T).Name)
+				{
+					case nameof(System.Boolean):
+						variableReference = (T)(object)token.Boolean;
+						break;
+					case nameof(System.Single):
+						variableReference = (T)(object)token.Number;
+						break;
+					case nameof(System.Int32):
+						variableReference = (T)(object)token.Number;
+						break;
 					case nameof(System.String):
 						variableReference = (T)(object)token.String;
 						break;
@@ -88,15 +90,15 @@ namespace OpenFlightVRC
 					case nameof(System.Double):
 						variableReference = (T)(object)token.Number;
 						break;
-                    default:
+					default:
 						Logger.Log(LogLevel.Error, string.Format("Failed to apply setting {0}. Unsupported type {1}", keyName, token.TokenType.ToString()));
-                        return false;
-                }
-                return true;
-            }
+						return false;
+				}
+				return true;
+			}
 
-            return false;
-        }
+			return false;
+		}
 
 		/// <summary>
 		/// Returns a a byte that is made up of the bools in the array
@@ -346,12 +348,12 @@ namespace OpenFlightVRC
 			T[] scripts = new T[players.Length];
 
 			for (int i = 0; i < players.Length; i++)
-            {
-                VRCPlayerApi player = players[i];
-                scripts[i] = GetPlayerObjectOfType<T>(player);
-            }
+			{
+				VRCPlayerApi player = players[i];
+				scripts[i] = GetPlayerObjectOfType<T>(player);
+			}
 
-            return scripts;
+			return scripts;
 		}
 
 		/// <summary>
@@ -360,20 +362,20 @@ namespace OpenFlightVRC
 		/// <typeparam name="T">The type of object to get</typeparam>
 		/// <param name="player">The player to get the object from</param>
 		/// <returns>The object of the type passed in</returns>
-        public static T GetPlayerObjectOfType<T>(VRCPlayerApi player)
-        {
-            //TODO: If something is introduced that allows us to ask specifically for tagged objects, use that instead so we dont have to loop through all objects
-            GameObject[] objects = Networking.GetPlayerObjects(player);
+		public static T GetPlayerObjectOfType<T>(VRCPlayerApi player)
+		{
+			//TODO: If something is introduced that allows us to ask specifically for tagged objects, use that instead so we dont have to loop through all objects
+			GameObject[] objects = Networking.GetPlayerObjects(player);
 
-            //loop through all objects to find the one we want
-            foreach (GameObject obj in objects)
-            {
-                T script = obj.GetComponent<T>();
-                if (script != null)
-                {
+			//loop through all objects to find the one we want
+			foreach (GameObject obj in objects)
+			{
+				T script = obj.GetComponent<T>();
+				if (script != null)
+				{
 					return script;
-                }
-            }
+				}
+			}
 
 			Logger.Log(LogLevel.Error, "Could not find type on player " + player.displayName, true);
 			return default;
@@ -417,7 +419,7 @@ namespace OpenFlightVRC
 
 			//since U# doesnt support initializers in a function, we have to do this
 			//suppress the warning
-			#pragma warning disable IDE0028
+#pragma warning disable IDE0028
 			//the (?gm) is a inline options set
 			//group 1 is the text that will be used in the replacement
 
@@ -453,7 +455,7 @@ namespace OpenFlightVRC
 			rules.Add(@"(?m:\`\s?([^\n]+)\`)", "<color=#FFFFFF><mark=#FFFFFF11>{0}</mark></color>");
 			//no multiline support as of yet, this is weird to figure out
 			//rules.Add(@"(?m:\`\`\`\s?([^\n]+)\`\`\`)", "<color=#FFFFFF><mark=#FFFFFF11>{0}</mark></color>");
-			#pragma warning restore IDE0028
+#pragma warning restore IDE0028
 
 			//apply each rule
 			DataList keys = rules.GetKeys();
@@ -478,5 +480,95 @@ namespace OpenFlightVRC
 
 			return richText;
 		}
-    }
+
+		/// <summary>
+		/// Converts a data dictionary to a json string. Not intended for production level code, only for debugging purposes
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="exportType"></param>
+		/// <returns></returns>
+		public static string ToJSONString(this DataDictionary data, JsonExportType exportType = JsonExportType.Beautify)
+		{
+			if (VRCJson.TrySerializeToJson(data, exportType, out DataToken json))
+			{
+				return json.String;
+			}
+			else
+			{
+				Logger.Log(LogLevel.Error, "Failed to serialize data to json when attempting to convert to string");
+				return "";
+			}
+		}
+
+		public static T[] ToArray<T>(this DataList list)
+		{
+			T[] array = new T[list.Count];
+			for (int i = 0; i < list.Count; i++)
+			{
+				array[i] = list[i].Cast<T>();
+			}
+			return array;
+		}
+
+		/// <summary>
+		/// Attempts to cast a DataToken to a type
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="token"></param>
+		/// <returns></returns>
+		public static T Cast<T>(this DataToken token)
+		{
+			switch (token.TokenType)
+			{
+				case TokenType.Boolean:
+					return (T)(object)token.Boolean;
+				case TokenType.SByte:
+					return (T)(object)token.SByte;
+				case TokenType.Byte:
+					return (T)(object)token.Byte;
+				case TokenType.Short:
+					return (T)(object)token.Short;
+				case TokenType.UShort:
+					return (T)(object)token.UShort;
+				case TokenType.Int:
+					return (T)(object)token.Int;
+				case TokenType.UInt:
+					return (T)(object)token.UInt;
+				case TokenType.Long:
+					return (T)(object)token.Long;
+				case TokenType.ULong:
+					return (T)(object)token.ULong;
+				case TokenType.Float:
+					return (T)(object)token.Float;
+				case TokenType.Double:
+					return (T)(object)token.Double;
+				case TokenType.String:
+					return (T)(object)token.String;
+				default:
+					Logger.Log(LogLevel.Error, "Failed to convert DataList to array. Unsupported type " + token.TokenType.ToString());
+					return default;
+			}
+		}
+
+		/// <summary>
+		/// Joins a string array into a single string with a separator
+		/// </summary>
+		/// <param name="array"></param>
+		/// <param name="separator"></param>
+		/// <returns></returns>
+		public static string Join(this string[] array, string separator)
+		{
+			string final = "";
+
+			for (int i = 0; i < array.Length - 1; i++)
+			{
+				final += array[i];
+				final += separator;
+			}
+
+			final += array[array.Length - 1];
+
+			return final;
+		}
+	}
 }

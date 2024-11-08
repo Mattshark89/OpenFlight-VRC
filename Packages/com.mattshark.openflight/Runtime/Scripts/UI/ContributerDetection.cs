@@ -53,7 +53,7 @@ namespace OpenFlightVRC.UI
 		void Start()
 		{
 			//subscribe to the avatar list loader callback
-			AvatarListLoader.AddCallback(AvatarListLoaderCallback.AvatarListLoaded, this, nameof(GetContributersList));
+			AvatarListLoader.AddCallback(AvatarListLoaderCallback.AvatarListReady, this, nameof(GetContributersList));
 		}
 
 		public void GetContributersList()

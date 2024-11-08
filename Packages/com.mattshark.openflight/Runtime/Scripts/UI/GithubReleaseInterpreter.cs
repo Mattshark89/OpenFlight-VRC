@@ -33,7 +33,7 @@ namespace OpenFlightVRC
 		void Start()
 		{
 			//subscribe to the avatar list loader callback
-			AvatarListLoader.AddCallback(AvatarListLoaderCallback.AvatarListLoaded, this, nameof(LoadURL));
+			AvatarListLoader.AddCallback(AvatarListLoaderCallback.URLLoadReturned, this, nameof(LoadURL));
 		}
 
 		public void LoadURL()
@@ -72,7 +72,7 @@ namespace OpenFlightVRC
 			for (int i = 0; i < releaseCount; i++)
 			{
 				json.DataList.TryGetValue(i, out DataToken release);
-				_releases[i] = ParseRelease(release);
+				_releases[i] = release.DataDictionary;
 			}
 
 			outputText = "";
@@ -158,31 +158,12 @@ namespace OpenFlightVRC
 		}
 
 		/// <summary>
-		/// Parses a release DataToken into a DataDictionary.
-		/// </summary>
-		/// <param name="json">The DataToken to parse.</param>
-		/// <returns>The parsed DataDictionary.</returns>
-		private DataDictionary ParseRelease(DataToken json)
-		{
-			DataDictionary releaseDict = json.DataDictionary;
-			DataDictionary release = new DataDictionary();
-			release.Add("tag_name", GetKeyAsString(releaseDict, "tag_name"));
-			release.Add("name", GetKeyAsString(releaseDict, "name"));
-			release.Add("draft", GetKeyAsString(releaseDict, "draft"));
-			release.Add("prerelease", GetKeyAsString(releaseDict, "prerelease"));
-			release.Add("created_at", GetKeyAsString(releaseDict, "created_at"));
-			release.Add("published_at", GetKeyAsString(releaseDict, "published_at"));
-			release.Add("body", GetKeyAsString(releaseDict, "body"));
-			return release;
-		}
-
-		/// <summary>
 		/// Gets a key from a DataDictionary as a string.
 		/// </summary>
 		/// <param name="dict">The DataDictionary to get the key from.</param>
 		/// <param name="key">The key to get.</param>
 		/// <returns>The key as a string.</returns>
-		private string GetKeyAsString(DataDictionary dict, string key)
+		private string GetValueAsString(DataDictionary dict, string key)
 		{
 			dict.TryGetValue(key, out DataToken token);
 			switch (token.TokenType)
@@ -197,21 +178,5 @@ namespace OpenFlightVRC
 					return "";
 			}
 		}
-/* 
-		/// <summary>
-		/// Removes all markdown from a string.
-		/// </summary>
-		/// <param name="markdown">The string to remove markdown from.</param>
-		/// <returns>The string without markdown.</returns>
-		private string RemoveMarkdown(string markdown)
-		{
-			//remove bold
-			markdown = markdown.Replace("**", "");
-			//remove italics
-			markdown = markdown.Replace("*", "");
-			//remove headers
-			markdown = markdown.Replace("#", "");
-			return markdown;
-		} */
 	}
 }
