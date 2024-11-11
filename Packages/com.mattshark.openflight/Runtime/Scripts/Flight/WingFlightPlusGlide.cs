@@ -617,7 +617,7 @@ namespace OpenFlightVRC
 				else // Not in a gliding pose?
 				{
 					isGliding = false;
-					rotSpeedGoal = 0;
+					rotSpeedGoal = 0; //remove this to fix banking not working during flapping?
 					glideDelay = 0;
 				}
 			}
