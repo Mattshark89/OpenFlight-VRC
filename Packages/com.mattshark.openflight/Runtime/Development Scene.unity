@@ -135,12 +135,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1387480281}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &22332665 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4190905667190568865, guid: 83a1dcf8462378640b7615b3011c0c6f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1387480281}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &24557531 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3667859853496093386, guid: 83a1dcf8462378640b7615b3011c0c6f,
@@ -5132,6 +5126,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Color.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049686777490868776, guid: 83a1dcf8462378640b7615b3011c0c6f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4049757043397082687, guid: 83a1dcf8462378640b7615b3011c0c6f,
         type: 3}
@@ -11690,7 +11689,7 @@ PrefabInstance:
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.size
-      value: 279
+      value: 278
       objectReference: {fileID: 0}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
@@ -17671,22 +17670,22 @@ PrefabInstance:
         type: 3}
       propertyPath: NetworkIDs.Array.data[274].gameObject
       value: 
-      objectReference: {fileID: 22332665}
+      objectReference: {fileID: 132319544}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.data[275].gameObject
       value: 
-      objectReference: {fileID: 132319544}
+      objectReference: {fileID: 1229357513}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.data[276].gameObject
       value: 
-      objectReference: {fileID: 1229357513}
+      objectReference: {fileID: 1085573814}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.data[277].gameObject
       value: 
-      objectReference: {fileID: 1085573814}
+      objectReference: {fileID: 1671510359}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.data[278].gameObject
@@ -22245,7 +22244,7 @@ PrefabInstance:
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.data[277].SerializedTypeNames.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
@@ -24010,6 +24009,11 @@ PrefabInstance:
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.data[277].SerializedTypeNames.Array.data[0]
+      value: VRC.Udon.UdonBehaviour
+      objectReference: {fileID: 0}
+    - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
+      propertyPath: NetworkIDs.Array.data[277].SerializedTypeNames.Array.data[1]
       value: VRC.Udon.UdonBehaviour
       objectReference: {fileID: 0}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
