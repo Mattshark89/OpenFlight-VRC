@@ -4,13 +4,20 @@ TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
   fontSize: 16
-  forceTextureCase: -1
+  forceTextureCase: -2
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
   fontNames:
   - Oxanium
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: fe59362e7cfcda0448ad590839aa2a64, type: 3}
+  - {fileID: 12800000, guid: ddb9eab2eab21bd48b79aaa87f71c3a2, type: 3}
+  - {fileID: 12800000, guid: 5a7d6809887b9d54f92d9a22ca1b3814, type: 3}
+  - {fileID: 12800000, guid: 5903d5e4f3c587845a94667294dca91a, type: 3}
+  - {fileID: 12800000, guid: fd916f350d93d9a448bff6b2f6ee175b, type: 3}
+  - {fileID: 12800000, guid: d9a81701b7692b64892cd38cc284b38e, type: 3}
+  - {fileID: 12800000, guid: 53c24a3784851454191d0bc71a627ddc, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

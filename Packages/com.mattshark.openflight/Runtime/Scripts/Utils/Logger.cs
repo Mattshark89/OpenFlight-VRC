@@ -27,7 +27,11 @@ namespace OpenFlightVRC
 		/// </summary>
 		Callback = 1 << 1,
 		Warning = 1 << 2,
-		Error = 1 << 3
+		Error = 1 << 3,
+		/// <summary>
+		/// This is a flag that represents all log levels. Use this to get the count of how many valid flags there are. To do this, use <code>(int)Math.sqrt((int)All - 1)</code>
+		/// </summary>
+		All = Info | Callback | Warning | Error
 	};
 
 	public enum LogEntryKeys
