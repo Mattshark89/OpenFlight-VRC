@@ -27,6 +27,12 @@ namespace OpenFlightVRC.Net
 
         private DataList stores;
 
+        void Start()
+        {
+            //ensure the start state is correct
+            UpdateAllEffectsHandlers();
+        }
+
         void Update()
         {
             if (VFX != _VFX_last || SFX != _SFX_last || volume != _volume_last)
