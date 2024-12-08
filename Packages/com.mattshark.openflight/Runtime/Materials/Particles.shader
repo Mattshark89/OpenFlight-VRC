@@ -22,6 +22,7 @@ Shader "OpenFlight/Particles"
                 #include "UnityCG.cginc"
                 #pragma multi_compile_particles
                 #pragma multi_compile_fog
+                #pragma target 3.0
 
                 #include "UnityCG.cginc"
 
