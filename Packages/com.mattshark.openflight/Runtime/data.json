@@ -1,6 +1,6 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.34.0",
+  "JSON Version": "2.35.0",
   "JSON Date": "2024-11-28",
   "Contributers": [
     "-Jinxy-",
@@ -39,7 +39,8 @@
     "~Angiethekirin~",
     "Kitsune KAZE",
     "Neszumi",
-    "Reazy Fluff"
+    "Reazy Fluff",
+    "Tokyozilla"
   ],
   "Bases": {
     "Kitavali": {
@@ -1677,6 +1678,17 @@
         "Weight": 1,
         "WingtipOffset": 1.25
       }
+    },
+  } "Welpling": {
+    "Original": {
+      "Name": "Welpling",
+      "Creator": "Tokyozilla",
+      "Introducer": "Tokyozilla",
+      "Hash": [
+        "887302968v2"
+      ],
+      "Weight": 1,
+      "WingtipOffset": 7.57
     }
   }
 }
