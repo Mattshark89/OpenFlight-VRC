@@ -9,9 +9,9 @@ using VRC.Udon;
 
 namespace OpenFlightVRC.UI
 {
-    using UdonSharpEditor;
 
 #if UNITY_EDITOR
+    using UdonSharpEditor;
     using UnityEditor;
     using UnityEditor.Events;
 
