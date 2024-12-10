@@ -48,6 +48,12 @@ namespace OpenFlightVRC.UI
             {
                 SelectOptionSetup(target, OptionType.SingleOption);
             }
+
+            //text input box
+            target.nameText.text = EditorGUILayout.TextField("Name", target.nameText.text);
+
+            //set object name based on the name text
+            target.gameObject.name = target.nameText.text;
             base.OnInspectorGUI();
         }
 
@@ -87,6 +93,7 @@ namespace OpenFlightVRC.UI
         public Slider Slider;
         public TMP_InputField SliderInput;
         public TMP_Dropdown Dropdown;
+        public TextMeshProUGUI nameText;
         void Start()
         {
 
