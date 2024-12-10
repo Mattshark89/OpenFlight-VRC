@@ -210,6 +210,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
         type: 3}
+      propertyPath: title
+      value: Flapping Strength
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: description
+      value: How much force does a single flap generate
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
@@ -446,6 +456,17 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: title
+      value: Fall To Glide Delay
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: description
+      value: How long from the point that you start falling to when we put you into
+        a flying state, in flight ticks
       objectReference: {fileID: 0}
     - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
         type: 3}
@@ -1887,6 +1908,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
         type: 3}
+      propertyPath: title
+      value: Allow Joystick Movement While Flying
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: description
+      value: This allows you to use your joystick movement controls while you are
+        flying to affect your velocity
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
@@ -2291,6 +2323,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
         type: 3}
+      propertyPath: title
+      value: Flight Gravity
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: description
+      value: How much gravity is applied while you are flying. This is different
+        from world gravity to give you a floating-like experience
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
@@ -2627,6 +2670,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: title
+      value: Gliding
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: description
+      value: Whether to enable gliding by holding your wings out in a T pose
       objectReference: {fileID: 0}
     - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
         type: 3}
@@ -4485,6 +4538,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
         type: 3}
+      propertyPath: title
+      value: Require Jump To Start Flying
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: description
+      value: This enables/disables the ability to takeoff without any additional
+        input besides your arms. If this is enabled, you must first be off the ground
+        before any flaps will be registered
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
@@ -5593,6 +5658,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
         type: 3}
+      propertyPath: title
+      value: Banking Turns
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: description
+      value: This allows you to tilt your arms to the right or left to turn while
+        gliding
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
@@ -6207,6 +6283,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
         type: 3}
+      propertyPath: title
+      value: Avatar Data Affects Flight
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: description
+      value: This controls whether your flight physics will be different based on
+        what avatar you are wearing
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
@@ -6815,6 +6902,18 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: title
+      value: Fall To Glide
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: description
+      value: Whether falling off of a platform can trigger flight if you are in the
+        correct pose. If this is disabled, the only way to start flying is to do
+        a flapping gesture
       objectReference: {fileID: 0}
     - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
         type: 3}
@@ -8901,6 +9000,17 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: title
+      value: Avatar Scale Affects Flight
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: description
+      value: This controls whether the scale of your avatar will affect the physics
+        while you are flying
       objectReference: {fileID: 0}
     - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
         type: 3}
@@ -23569,6 +23679,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
         type: 3}
+      propertyPath: title
+      value: Air Friction
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: description
+      value: How much air friction do you experience while flying
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
@@ -24175,6 +24295,17 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: title
+      value: Glide Control
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: description
+      value: This controls how responsive the gliding is to the angle of your hands.
+        Higher values will allow you to affect your momentum quicker
       objectReference: {fileID: 0}
     - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
         type: 3}
@@ -39538,6 +39669,17 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: title
+      value: Gliding Pitch Angle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
+        type: 3}
+      propertyPath: description
+      value: This controls what angle is considered straight ahead for gliding. A
+        value of 0 means your hands are directly level when in a T pose
       objectReference: {fileID: 0}
     - target: {fileID: 6128884895289385884, guid: f2584c79a5cdd3047b4ba8b09b5ecc2f,
         type: 3}

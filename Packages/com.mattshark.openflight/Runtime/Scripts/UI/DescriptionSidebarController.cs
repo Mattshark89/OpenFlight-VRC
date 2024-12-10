@@ -43,7 +43,8 @@ namespace OpenFlightVRC.UI
 
         internal void UpdateLayout()
         {
-            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)transform);
+            //LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)transform);
+            LayoutRebuilder.MarkLayoutForRebuild((RectTransform)transform);
         }
     }
 }

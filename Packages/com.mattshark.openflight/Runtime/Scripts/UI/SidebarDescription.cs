@@ -54,9 +54,15 @@ namespace OpenFlightVRC.UI
     public class SidebarDescription : UdonSharpBehaviour
     {
         public string title;
+        [TextArea]
         public string description;
         private DescriptionSidebarController sidebar;
         void Start()
+        {
+            SendCustomEventDelayedFrames(nameof(Delayed), 1);
+        }
+
+        public void Delayed()
         {
             sidebar = GameObject.Find(DescriptionSidebarController.EXPECTEDNAME).GetComponent<DescriptionSidebarController>();
         }
