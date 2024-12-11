@@ -61,9 +61,8 @@ namespace OpenFlightVRC.UI
             if (EditorGUI.EndChangeCheck() || GUILayout.Button("Force Apply"))
             {
                 //make sure the prefab instance overrides is saved
-                PrefabUtility.RecordPrefabInstancePropertyModifications(target.transform);
+                PrefabUtility.RecordPrefabInstancePropertyModifications(target.nameText);
 
-                //force the scene to be marked dirty
                 EditorUtility.SetDirty(target);
             }
             base.OnInspectorGUI();
