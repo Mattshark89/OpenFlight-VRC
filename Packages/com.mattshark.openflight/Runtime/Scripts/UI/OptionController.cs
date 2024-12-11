@@ -27,6 +27,9 @@ namespace OpenFlightVRC.UI
         public override void OnInspectorGUI()
         {
             OptionController target = (OptionController)this.target;
+            
+            //watch for changes
+            EditorGUI.BeginChangeCheck();
 
             //show a few configuration options
             if (GUILayout.Button("Make Slider"))
@@ -49,8 +52,6 @@ namespace OpenFlightVRC.UI
                 SelectOptionSetup(target, OptionType.SingleOption);
             }
 
-            //watch for changes
-            EditorGUI.BeginChangeCheck();
 
             //text input box
             target.nameText.text = EditorGUILayout.TextField("Name", target.nameText.text);
@@ -89,6 +90,9 @@ namespace OpenFlightVRC.UI
         private void SetState(Component comp, bool state)
         {
             comp.gameObject.SetActive(state);
+            //make sure the prefab instance overrides is saved
+            PrefabUtility.RecordPrefabInstancePropertyModifications(comp.gameObject);
+            EditorUtility.SetDirty(comp.gameObject);
         }
     }
 #endif
