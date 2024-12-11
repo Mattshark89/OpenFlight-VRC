@@ -49,11 +49,23 @@ namespace OpenFlightVRC.UI
                 SelectOptionSetup(target, OptionType.SingleOption);
             }
 
+            //watch for changes
+            EditorGUI.BeginChangeCheck();
+
             //text input box
             target.nameText.text = EditorGUILayout.TextField("Name", target.nameText.text);
 
             //set object name based on the name text
             target.gameObject.name = target.nameText.text;
+
+            if (EditorGUI.EndChangeCheck() || GUILayout.Button("Force Apply"))
+            {
+                //make sure the prefab instance overrides is saved
+                PrefabUtility.RecordPrefabInstancePropertyModifications(target.transform);
+
+                //force the scene to be marked dirty
+                EditorUtility.SetDirty(target);
+            }
             base.OnInspectorGUI();
         }
 
