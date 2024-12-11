@@ -1,5 +1,4 @@
-﻿
-using TMPro;
+﻿using TMPro;
 
 using UdonSharp;
 
@@ -11,8 +10,7 @@ using VRC.Udon;
 
 namespace OpenFlightVRC.UI
 {
-
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     using UnityEditor;
     using UnityEditor.Events;
 
@@ -27,7 +25,7 @@ namespace OpenFlightVRC.UI
         public override void OnInspectorGUI()
         {
             OptionController target = (OptionController)this.target;
-            
+
             //watch for changes
             EditorGUI.BeginChangeCheck();
 
@@ -97,70 +95,67 @@ namespace OpenFlightVRC.UI
     }
 #endif
 
-    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class OptionController : UdonSharpBehaviour
-    {
-        public OptionController[] SubOptions;
+	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+	public class OptionController : UdonSharpBehaviour
+	{
+		public OptionController[] SubOptions;
 
-        [Header("Internal Controls")]
-        public Toggle SubOptionToggle;
-        public Toggle SingleOptionToggle;
-        public Slider Slider;
-        public TMP_InputField SliderInput;
-        public TMP_Dropdown Dropdown;
-        public TextMeshProUGUI nameText;
-        void Start()
-        {
+		[Header("Internal Controls")]
+		public Toggle SubOptionToggle;
+		public Toggle SingleOptionToggle;
+		public Slider Slider;
+		public TMP_InputField SliderInput;
+		public TMP_Dropdown Dropdown;
+		public TextMeshProUGUI nameText;
 
-        }
-        
-        public void SubOptionToggleUpdate()
-        {
-            SetInteractability(SubOptionToggle.isOn, true);
-            UpdateSubOptionInteractability(SubOptionToggle.isOn);
-        }
+		void Start() { }
 
-        private void UpdateSubOptionInteractability(bool input)
-        {
-            foreach (var option in SubOptions)
-            {
-                option.SetInteractability(input, false);
-            }
-        }
+		public void SubOptionToggleUpdate()
+		{
+			SetInteractability(SubOptionToggle.isOn, true);
+			UpdateSubOptionInteractability(SubOptionToggle.isOn);
+		}
 
+		private void UpdateSubOptionInteractability(bool input)
+		{
+			foreach (var option in SubOptions)
+			{
+				option.SetInteractability(input, false);
+			}
+		}
 
-        public void SingleOptionToggleUpdate()
-        {
-            Debug.Log("Single Option Toggle Value: " + SingleOptionToggle.isOn);
-        }
+		public void SingleOptionToggleUpdate()
+		{
+			Debug.Log("Single Option Toggle Value: " + SingleOptionToggle.isOn);
+		}
 
-        public void SliderUpdate()
-        {
-            Debug.Log("Slider Value: " + Slider.value);
-        }
+		public void SliderUpdate()
+		{
+			Debug.Log("Slider Value: " + Slider.value);
+		}
 
-        public void SliderInputUpdate()
-        {
-            Debug.Log("Slider Input Value: " + SliderInput.text);
-        }
+		public void SliderInputUpdate()
+		{
+			Debug.Log("Slider Input Value: " + SliderInput.text);
+		}
 
-        public void DropdownUpdate()
-        {
-            Debug.Log("Dropdown Value: " + Dropdown.value);
-        }
+		public void DropdownUpdate()
+		{
+			Debug.Log("Dropdown Value: " + Dropdown.value);
+		}
 
-        internal void SetInteractability(bool interactable, bool topLevelAction)
-        {
-            if (!topLevelAction)
-            {
-                SubOptionToggle.interactable = interactable;
-            }
-            SingleOptionToggle.interactable = interactable;
-            Slider.interactable = interactable;
-            Dropdown.interactable = interactable;
-            SliderInput.interactable = interactable;
+		internal void SetInteractability(bool interactable, bool topLevelAction)
+		{
+			if (!topLevelAction)
+			{
+				SubOptionToggle.interactable = interactable;
+			}
+			SingleOptionToggle.interactable = interactable;
+			Slider.interactable = interactable;
+			Dropdown.interactable = interactable;
+			SliderInput.interactable = interactable;
 
-            UpdateSubOptionInteractability(interactable);
-        }
-    }
+			UpdateSubOptionInteractability(interactable);
+		}
+	}
 }

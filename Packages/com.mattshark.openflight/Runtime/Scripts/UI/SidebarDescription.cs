@@ -1,5 +1,4 @@
-﻿
-using UdonSharp;
+﻿using UdonSharp;
 
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,7 +8,6 @@ using VRC.Udon;
 
 namespace OpenFlightVRC.UI
 {
-
 #if UNITY_EDITOR
     using UdonSharpEditor;
     using UnityEditor;
@@ -49,28 +47,30 @@ namespace OpenFlightVRC.UI
     }
 #endif
 
-    [RequireComponent(typeof(EventTrigger))]
-    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class SidebarDescription : UdonSharpBehaviour
-    {
-        public string title;
-        [TextArea]
-        public string description;
-        private DescriptionSidebarController sidebar;
-        void Start()
-        {
-            SendCustomEventDelayedFrames(nameof(Delayed), 1);
-        }
+	[RequireComponent(typeof(EventTrigger))]
+	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+	public class SidebarDescription : UdonSharpBehaviour
+	{
+		public string title;
 
-        public void Delayed()
-        {
-            sidebar = GameObject.Find(DescriptionSidebarController.EXPECTEDNAME).GetComponent<DescriptionSidebarController>();
-        }
+		[TextArea]
+		public string description;
+		private DescriptionSidebarController sidebar;
 
-        public void HoverEnter()
-        {
-            sidebar.SetTitle(title);
-            sidebar.SetDescription(description);
-        }
-    }
+		void Start()
+		{
+			SendCustomEventDelayedFrames(nameof(Delayed), 1);
+		}
+
+		public void Delayed()
+		{
+			sidebar = GameObject.Find(DescriptionSidebarController.EXPECTEDNAME).GetComponent<DescriptionSidebarController>();
+		}
+
+		public void HoverEnter()
+		{
+			sidebar.SetTitle(title);
+			sidebar.SetDescription(description);
+		}
+	}
 }

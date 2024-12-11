@@ -1,5 +1,4 @@
-﻿
-using TMPro;
+﻿using TMPro;
 
 using UdonSharp;
 
@@ -11,40 +10,41 @@ using VRC.Udon;
 
 namespace OpenFlightVRC.UI
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    [DefaultExecutionOrder(-1000)]
-    public class DescriptionSidebarController : UdonSharpBehaviour
-    {
-        internal const string EXPECTEDNAME = "DescriptionSidebarController";
-        public TextMeshProUGUI titleText;
-        public TextMeshProUGUI descriptionText;
-        void Start()
-        {
-            name = EXPECTEDNAME;
-        }
+	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+	[DefaultExecutionOrder(-1000)]
+	public class DescriptionSidebarController : UdonSharpBehaviour
+	{
+		internal const string EXPECTEDNAME = "DescriptionSidebarController";
+		public TextMeshProUGUI titleText;
+		public TextMeshProUGUI descriptionText;
 
-        void OnEnable()
-        {
-            SetTitle("Info");
-            SetDescription("Hover over something to get a description of what it does!");
-        }
+		void Start()
+		{
+			name = EXPECTEDNAME;
+		}
 
-        internal void SetDescription(string description)
-        {
-            descriptionText.text = description;
-            UpdateLayout();
-        }
+		void OnEnable()
+		{
+			SetTitle("Info");
+			SetDescription("Hover over something to get a description of what it does!");
+		}
 
-        internal void SetTitle(string title)
-        {
-            titleText.text = title;
-            UpdateLayout();
-        }
+		internal void SetDescription(string description)
+		{
+			descriptionText.text = description;
+			UpdateLayout();
+		}
 
-        internal void UpdateLayout()
-        {
-            //LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)transform);
-            LayoutRebuilder.MarkLayoutForRebuild((RectTransform)transform);
-        }
-    }
+		internal void SetTitle(string title)
+		{
+			titleText.text = title;
+			UpdateLayout();
+		}
+
+		internal void UpdateLayout()
+		{
+			//LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)transform);
+			LayoutRebuilder.MarkLayoutForRebuild((RectTransform)transform);
+		}
+	}
 }
