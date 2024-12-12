@@ -62,13 +62,6 @@ jobs:
         with:
           files: docs
 
-
-      - name: Upload debug info
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.release-tag }}-debug
-          path: '.'
-
       #Generate the doxygen documentation
       - name: Generate C# Documentation
         uses: mattnotmitt/doxygen-action@v1.9.5
