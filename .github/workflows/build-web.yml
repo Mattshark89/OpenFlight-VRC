@@ -101,6 +101,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: "./docs/"
+
+      - name: Add to main website
+        run: |
+          for tag in ${{ fromJSON(needs.InitialSetup.outputs.releaseTags) }}
+          do
+            echo "Doing $tag"
+          done
       
       #Copy docs into the website
       - name: Copy Docs
