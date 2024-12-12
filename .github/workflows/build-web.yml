@@ -81,7 +81,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.release-tag }}
-          path: './docs'
+          path: './docs/Doxygen'
 
   FinalWebBuild:
     needs: [InitialSetup, DocMatrix]
