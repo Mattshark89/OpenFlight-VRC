@@ -33,6 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
         releaseTags: ${{ steps.get_latest_release.outputs.data }}
+        latestTag: ${{ steps.get_latest_release.outputs.latest }}
     steps:
       - uses: actions/checkout@v3 # check out this repo
         with:
@@ -40,8 +41,10 @@ jobs:
 
       - name: Get all tags for upcoming matrix
         id: get_latest_release
-        run: echo "DATA=[\"1.0.1\", \"1.1.1\", \"OpenFlight-1.7.9\"]" >> "$GITHUB_OUTPUT"
-        #run: echo "DATA=[\"$(echo $(git tag) | sed 's/ /\", \"/g')\"]" >> "$GITHUB_OUTPUT"
+        #echo "DATA=[\"$(echo $(git tag --sort=-creatordate ) | sed 's/ /\", \"/g')\"]" >> "$GITHUB_OUTPUT"
+        run: | 
+          echo "DATA=[\"1.0.1\", \"1.1.1\", \"OpenFlight-1.7.9\"]" >> "$GITHUB_OUTPUT"
+          echo "LATEST=$(echo $(git tag -l --sort=-creatordate | head -n 1 )" >> "$GITHUB_OUTPUT"
 
   DocMatrix:
     needs: InitialSetup
@@ -108,6 +111,7 @@ jobs:
 
       - name: Add to main website
         run: |
+          echo "* [Latest Scripting Documentation](${{ needs.InitialSetup.outputs.latest }}/Doxygen/html/index.html \":ignore title\")" >> ./docs/_sidebar.md
           for tag in ${{ join(fromJSON(needs.InitialSetup.outputs.releaseTags), ' ') }}
           do
             echo "  * [$tag]($tag/Doxygen/html/index.html \":ignore title\")" >> ./docs/_sidebar.md
