@@ -57,16 +57,17 @@ jobs:
           fetch-depth: 0 # fetch all history
           ref: ${{ matrix.release-tag }}
       
+      - uses: actions/checkout@v3 # check out specifically the docs folder so we have the config info
+        with:
+          sparse-checkout: docs
+          clean: false
+          sparse-checkout-cone-mode: false
+
       - name: Upload debug info
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.release-tag }}-debug
           path: '.'
-      
-      - uses: actions/checkout@v3 # check out specifically the docs folder so we have the config info
-        with:
-          sparse-checkout: docs
-          clean: false
 
       #Generate the doxygen documentation
       - name: Generate C# Documentation
