@@ -81,7 +81,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.release-tag }}
-          path: './docs'
+          path: './docs/Doxygen'
 
   FinalWebBuild:
     needs: [InitialSetup, DocMatrix]
@@ -114,7 +114,7 @@ jobs:
           echo "* [Latest Scripting Documentation](${{ needs.InitialSetup.outputs.latest }}/Doxygen/html/index.html \":ignore title\")" >> ./docs/_sidebar.md
           for tag in ${{ join(fromJSON(needs.InitialSetup.outputs.releaseTags), ' ') }}
           do
-            echo "  * [$tag]($tag/Doxygen/html/index.html \":ignore title\")" >> ./docs/_sidebar.md
+            echo "  * [$tag]($tag/html/index.html \":ignore title\")" >> ./docs/_sidebar.md
           done
       
       #Copy docs into the website
