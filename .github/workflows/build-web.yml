@@ -70,6 +70,12 @@ jobs:
           doxyfile-path: "./DoxygenConfig"
           enable-latex: true
 
+      - name: Upload debug info
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.release-tag }}-debug
+          path: '/'
+
       - name: Upload these docs
         uses: actions/upload-artifact@v4
         with:
