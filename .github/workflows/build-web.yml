@@ -62,6 +62,10 @@ jobs:
         with:
           files: docs
 
+      #modify doxyfile to include tag version
+      - name: edit DoxyFile
+        run: sed -i -e 's/PROJECT_NUMBER         =/PROJECT_NUMBER = ${{ matrix.release-tag }}/g' ./docs/Doxygen/DoxygenConfig
+
       #Generate the doxygen documentation
       - name: Generate C# Documentation
         uses: mattnotmitt/doxygen-action@v1.9.5
@@ -74,7 +78,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.release-tag }}
-          path: './docs/Doxygen'
+          path: './docs'
 
   FinalWebBuild:
     needs: [InitialSetup, DocMatrix]
@@ -106,7 +110,7 @@ jobs:
         run: |
           for tag in ${{ join(fromJSON(needs.InitialSetup.outputs.releaseTags), ' ') }}
           do
-            echo "  * [$tag]($tag/html/index.html \":ignore title\")" >> ./docs/_sidebar.md
+            echo "  * [$tag]($tag/Doxygen/html/index.html \":ignore title\")" >> ./docs/_sidebar.md
           done
       
       #Copy docs into the website
