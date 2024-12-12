@@ -104,7 +104,7 @@ jobs:
 
       - name: Add to main website
         run: |
-          for tag in ${{ fromJSON(needs.InitialSetup.outputs.releaseTags) }}
+          for tag in ${{ join(fromJSON(needs.InitialSetup.outputs.releaseTags), ' ') }}
           do
             echo "Doing $tag"
           done
