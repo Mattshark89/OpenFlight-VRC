@@ -27,13 +27,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-web:
-    name: build-web
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  InitialSetup:
+    name: initial-setup
 
     runs-on: ubuntu-latest
+    outputs:
+        releaseTags: ${{ steps.get_latest_release.outputs.data }}
     steps:
       - uses: actions/checkout@v3 # check out this repo
         with:
@@ -72,7 +71,35 @@ jobs:
       # Makes the file smaller for everyone to download
       - name: Minify and copy data.json
         run: jq -r tostring ./${{env.listPublishDirectory}}/data-original.json > ./${{env.listPublishDirectory}}/data.json
+      
+      - name: Get all tags for upcoming matrix
+        uses: octokit/request-action@v2.x
+        id: get_latest_release
+        with:
+          route: GET /repos/${{ github.repository }}/git/matching-refs/tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+      - name: Upload structure for final step
+        uses: actions/upload-artifact@v4
+        with:
+          name: base
+          path: '.'
 
+
+  C#DocMatrix:
+    needs: InitialSetup
+
+    strategy:
+      matrix:
+        release-tag: ${{ needs.InitialSetup.outputs.releaseTags }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3 # check out this repo
+        with:
+          fetch-depth: 0 # fetch all history
+          ref: ${{ matrix.release-tag }}
 
       #Generate the doxygen documentation
       - name: Generate C# Documentation
@@ -82,6 +109,27 @@ jobs:
           doxyfile-path: "./DoxygenConfig"
           enable-latex: true
 
+      - name: Upload these docs
+        uses: actions/upload-artifact@v4
+        with:
+          name: base
+          path: './docs/.'
+
+  FinalWebBuild:
+    needs: [InitialSetup, DocMatrix]
+    name: final-web-build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download base
+        uses: actions/download-artifact@v4
+        with:
+          name: base
+      
       #Copy docs into the website
       - name: Copy Docs
         uses: canastro/copy-action@master
