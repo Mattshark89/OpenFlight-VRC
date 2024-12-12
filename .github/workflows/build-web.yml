@@ -87,7 +87,7 @@ jobs:
           path: '.'
 
 
-  C#DocMatrix:
+  DocMatrix:
     needs: InitialSetup
 
     strategy:
