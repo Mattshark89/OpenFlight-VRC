@@ -96,6 +96,10 @@ jobs:
         with:
           fetch-depth: 0 # fetch all history
           ref: ${{ matrix.release-tag }}
+      
+      - uses: actions/checkout@v3 # check out specifically the docs folder so we have the config info
+          with:
+            sparse-checkout: docs
 
       #Generate the doxygen documentation
       - name: Generate C# Documentation
