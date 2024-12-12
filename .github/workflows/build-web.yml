@@ -34,6 +34,10 @@ jobs:
     outputs:
         releaseTags: ${{ steps.get_latest_release.outputs.data }}
     steps:
+      - uses: actions/checkout@v3 # check out this repo
+        with:
+          fetch-depth: 0 # fetch all history
+
       - name: Get all tags for upcoming matrix
         id: get_latest_release
         run: echo "DATA=[\"$(echo $(git tag) | sed 's/ /\", \"/g')\"]" >> "$GITHUB_OUTPUT"
