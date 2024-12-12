@@ -109,11 +109,19 @@ jobs:
           doxyfile-path: "./DoxygenConfig"
           enable-latex: true
 
+      #Copy docs into subfolder for later merging
+      - name: Copy Docs For Merging
+        uses: canastro/copy-action@master
+        with:
+          source: "./docs/."
+          target: "./docs/${{matrix.release-tag}}/"
+          flags: "-rp" #recursive and preserve timestamps
+
       - name: Upload these docs
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.release-tag }}
-          path: './docs'
+          path: './docs/${{matrix.release-tag}}'
 
   FinalWebBuild:
     needs: [InitialSetup, DocMatrix]
@@ -125,10 +133,9 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - name: Download base
+      - name: Download everything
         uses: actions/download-artifact@v4
-        with:
-          name: base
+        merge-multiple: true
       
       #Copy docs into the website
       - name: Copy Docs
