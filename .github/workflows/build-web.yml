@@ -106,7 +106,7 @@ jobs:
         run: |
           for tag in ${{ join(fromJSON(needs.InitialSetup.outputs.releaseTags), ' ') }}
           do
-            echo "* [$(tag)]($(tag)/html/index.html ":ignore title")" >> ./docs/_sidebar.md
+            echo "* [$tag]($tag/html/index.html ":ignore title")" >> ./docs/_sidebar.md
           done
       
       #Copy docs into the website
