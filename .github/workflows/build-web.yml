@@ -43,7 +43,7 @@ jobs:
         id: get_latest_release
         run: | 
           echo "DATA=[\"1.0.1\", \"1.1.1\", \"OpenFlight-1.7.9\"]" >> "$GITHUB_OUTPUT"
-          echo "LATEST=$(echo $(git tag -l --sort=-creatordate | head -n 1 )" >> "$GITHUB_OUTPUT"
+          echo "LATEST=$(echo $(git tag -l --sort=-creatordate | head -n 1 ))" >> "$GITHUB_OUTPUT"
         #echo "DATA=[\"$(echo $(git tag --sort=-creatordate ) | sed 's/ /\", \"/g')\"]" >> "$GITHUB_OUTPUT"
         
   DocMatrix:
