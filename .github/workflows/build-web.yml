@@ -34,44 +34,6 @@ jobs:
     outputs:
         releaseTags: ${{ steps.get_latest_release.outputs.data }}
     steps:
-      - uses: actions/checkout@v3 # check out this repo
-        with:
-          fetch-depth: 0 # fetch all history
-
-      - uses: actions/checkout@v3 # check out automation repo
-        with:
-          #repository: vrchat-community/package-list-action
-          repository: Happyrobot33/package-list-action #TODO: Change this to the main repo once it's merged
-          path: ${{env.pathToCi}}
-          clean: false # otherwise the local repo will no longer be checked out
-
-      - name: Restore Timestamps
-        uses: chetan/git-restore-mtime-action@v1
-
-      - name: Restore Cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ${{env.pathToCi}}/.nuke/temp
-            ~/.nuget/packages
-          key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
-
-      - name: Build Package Version Listing
-        run: ${{env.pathToCi}}/build.cmd BuildMultiPackageListing --root ${{env.pathToCi}} --list-publish-directory $GITHUB_WORKSPACE/${{env.listPublishDirectory}}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      #This ensures that the scripts can always refer to the top level copy, allowing us to move it around in the project without issue
-      - name: Copy Data
-        uses: canastro/copy-action@0.0.2
-        with:
-          source: "./Packages/com.mattshark.openflight/Runtime/data.json"
-          target: "./${{env.listPublishDirectory}}/data-original.json"
-
-      # Makes the file smaller for everyone to download
-      - name: Minify and copy data.json
-        run: jq -r tostring ./${{env.listPublishDirectory}}/data-original.json > ./${{env.listPublishDirectory}}/data.json
-      
       - name: Get all tags for upcoming matrix
         id: get_latest_release
         run: echo "DATA=[\"$(echo $(git tag) | sed 's/ /\", \"/g')\"]" >> "$GITHUB_OUTPUT"
@@ -109,19 +71,11 @@ jobs:
           doxyfile-path: "./DoxygenConfig"
           enable-latex: true
 
-      #Copy docs into subfolder for later merging
-      - name: Copy Docs For Merging
-        uses: canastro/copy-action@master
-        with:
-          source: "./docs/."
-          target: "./docs/${{matrix.release-tag}}/"
-          flags: "-rp" #recursive and preserve timestamps
-
       - name: Upload these docs
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.release-tag }}
-          path: './docs/${{matrix.release-tag}}'
+          path: './docs'
 
   FinalWebBuild:
     needs: [InitialSetup, DocMatrix]
@@ -133,10 +87,21 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - name: Download everything
+      - uses: actions/checkout@v3 # check out this repo
+        with:
+          fetch-depth: 0 # fetch all history
+
+      - uses: actions/checkout@v3 # check out automation repo
+        with:
+          #repository: vrchat-community/package-list-action
+          repository: Happyrobot33/package-list-action #TODO: Change this to the main repo once it's merged
+          path: ${{env.pathToCi}}
+          clean: false # otherwise the local repo will no longer be checked out
+        
+      - name: Download Docs
         uses: actions/download-artifact@v4
         with:
-          merge-multiple: true
+          path: "./docs/"
       
       #Copy docs into the website
       - name: Copy Docs
@@ -145,6 +110,33 @@ jobs:
           source: "./docs/."
           target: "./${{env.listPublishDirectory}}/docs/"
           flags: "-rp" #recursive and preserve timestamps
+
+      - name: Restore Timestamps
+        uses: chetan/git-restore-mtime-action@v1
+
+      - name: Restore Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{env.pathToCi}}/.nuke/temp
+            ~/.nuget/packages
+          key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
+
+      - name: Build Package Version Listing
+        run: ${{env.pathToCi}}/build.cmd BuildMultiPackageListing --root ${{env.pathToCi}} --list-publish-directory $GITHUB_WORKSPACE/${{env.listPublishDirectory}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      #This ensures that the scripts can always refer to the top level copy, allowing us to move it around in the project without issue
+      - name: Copy Data
+        uses: canastro/copy-action@0.0.2
+        with:
+          source: "./Packages/com.mattshark.openflight/Runtime/data.json"
+          target: "./${{env.listPublishDirectory}}/data-original.json"
+
+      # Makes the file smaller for everyone to download
+      - name: Minify and copy data.json
+        run: jq -r tostring ./${{env.listPublishDirectory}}/data-original.json > ./${{env.listPublishDirectory}}/data.json
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
