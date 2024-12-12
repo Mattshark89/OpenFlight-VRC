@@ -74,7 +74,7 @@ jobs:
       
       - name: Get all tags for upcoming matrix
         id: get_latest_release
-        run: echo "DATA=[$(echo $(git tag) | tr ' ' ', ')]" >> "$GITHUB_OUTPUT"
+        run: echo "DATA=[$(echo $(git tag) | sed 's/ /, /g')]" >> "$GITHUB_OUTPUT"
         
       - name: Upload structure for final step
         uses: actions/upload-artifact@v4
