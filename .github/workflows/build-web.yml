@@ -57,6 +57,12 @@ jobs:
           fetch-depth: 0 # fetch all history
           ref: ${{ matrix.release-tag }}
       
+      - name: Upload debug info
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.release-tag }}-debug
+          path: '.'
+      
       - uses: actions/checkout@v3 # check out specifically the docs folder so we have the config info
         with:
           sparse-checkout: docs
@@ -69,12 +75,6 @@ jobs:
           working-directory: "./docs/Doxygen/"
           doxyfile-path: "./DoxygenConfig"
           enable-latex: true
-
-      - name: Upload debug info
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.release-tag }}-debug
-          path: '.'
 
       - name: Upload these docs
         uses: actions/upload-artifact@v4
