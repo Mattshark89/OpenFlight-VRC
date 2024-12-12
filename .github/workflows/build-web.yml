@@ -112,8 +112,8 @@ jobs:
       - name: Upload these docs
         uses: actions/upload-artifact@v4
         with:
-          name: base
-          path: './docs/.'
+          name: ${{ matrix.release-tag }}
+          path: './docs'
 
   FinalWebBuild:
     needs: [InitialSetup, DocMatrix]
