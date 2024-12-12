@@ -135,7 +135,8 @@ jobs:
     steps:
       - name: Download everything
         uses: actions/download-artifact@v4
-        merge-multiple: true
+        with:
+          merge-multiple: true
       
       #Copy docs into the website
       - name: Copy Docs
