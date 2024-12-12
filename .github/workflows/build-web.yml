@@ -73,12 +73,8 @@ jobs:
         run: jq -r tostring ./${{env.listPublishDirectory}}/data-original.json > ./${{env.listPublishDirectory}}/data.json
       
       - name: Get all tags for upcoming matrix
-        uses: octokit/request-action@v2.x
         id: get_latest_release
-        with:
-          route: GET /repos/${{ github.repository }}/git/matching-refs/tags
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: git tag
         
       - name: Upload structure for final step
         uses: actions/upload-artifact@v4
