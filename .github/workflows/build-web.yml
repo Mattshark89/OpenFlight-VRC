@@ -88,7 +88,7 @@ jobs:
 
     strategy:
       matrix:
-        release-tag: ${{ needs.InitialSetup.outputs.releaseTags }}
+        release-tag: ${{ fromJSON(needs.InitialSetup.outputs.releaseTags) }}
 
     runs-on: ubuntu-latest
     steps:
