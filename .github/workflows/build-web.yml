@@ -71,7 +71,7 @@ jobs:
 
       #Generate the doxygen documentation
       - name: Generate C# Documentation
-        uses: Happyrobot33/doxygen-action
+        uses: Happyrobot33/doxygen-action@master
         with:
           working-directory: "./docs/Doxygen/"
           doxyfile-path: "./DoxygenConfig"
