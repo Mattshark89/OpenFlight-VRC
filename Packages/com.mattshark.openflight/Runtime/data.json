@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.36.0",
-  "JSON Date": "2024-12-20",
+  "JSON Version": "2.37.0",
+  "JSON Date": "2024-12-23",
   "Contributers": [
     "-Jinxy-",
     "Daernaro",
@@ -41,7 +41,8 @@
     "Neszumi",
     "Reazy Fluff",
     "Tokyozilla",
-    "SandFoxed"
+    "SandFoxed",
+    "BurnsToShine"
   ],
   "Bases": {
     "Kitavali": {
@@ -1702,6 +1703,18 @@
         ],
         "Weight": 1,
         "WingtipOffset": 4
+      }
+    },
+    "Stellaura": {
+      "Original": {
+        "Name": "Stellaura",
+        "Creator": "BurnsToShine",
+        "Introducer": "BurnsToShine",
+        "Hash": [
+          "400544487v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 6
       }
     }
   }
