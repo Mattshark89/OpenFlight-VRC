@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.37.0",
-  "JSON Date": "2024-12-23",
+  "JSON Version": "2.37.1",
+  "JSON Date": "2024-12-26",
   "Contributers": [
     "-Jinxy-",
     "Daernaro",
@@ -43,6 +43,7 @@
     "Tokyozilla",
     "SandFoxed",
     "BurnsToShine"
+    "Mama_TeraByte"
   ],
   "Bases": {
     "Kitavali": {
@@ -1716,6 +1717,18 @@
         "Weight": 1,
         "WingtipOffset": 6
       }
-    }
+    },    
+    "Kyliin v2": {
+      "Original": {
+        "Name": "Kyliin v2",
+        "Creator": "Avislime",
+        "Introducer": "Mama_TeraByte",
+        "Hash": [
+          "2026631960v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 3.6
+      }
+
   }
 }
