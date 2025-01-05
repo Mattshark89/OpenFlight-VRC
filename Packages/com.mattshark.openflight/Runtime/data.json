@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.37.1",
-  "JSON Date": "2024-12-27",
+  "JSON Version": "2.37.2",
+  "JSON Date": "2025-1-5",
   "Contributers": [
     "-Jinxy-",
     "Daernaro",
@@ -43,7 +43,8 @@
     "Tokyozilla",
     "SandFoxed",
     "BurnsToShine",
-    "Mama_TeraByte"
+    "Mama_TeraByte",
+    "Lane_the_Rex",
   ],
   "Bases": {
     "Kitavali": {
@@ -1727,6 +1728,20 @@
         "Weight": 1,
         "WingtipOffset": 6
       }
-    }
+    },
+    "パーレ": {
+      "Original": {
+        "Name": "パーレ",
+        "Creator": "ForestWind",
+        "Introducer": "Lane_the_Rex",
+        "Hash":[
+          "244340153v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 1.4
+
+      }
+     }
+    
   }
-}
+} 
