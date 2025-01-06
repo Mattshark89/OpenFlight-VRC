@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.38.0",
-  "JSON Date": "2025-01-05",
+  "JSON Version": "2.39.0",
+  "JSON Date": "2025-01-06",
   "Contributers": [
     "-Jinxy-",
     "Daernaro",
@@ -44,7 +44,8 @@
     "SandFoxed",
     "BurnsToShine",
     "Mama_TeraByte",
-    "Lane_the_Rex"
+    "Lane_the_Rex",
+    "VixenDaBirb"
   ],
   "Bases": {
     "Kitavali": {
@@ -1739,6 +1740,18 @@
         ],
         "Weight": 1,
         "WingtipOffset": 1.4
+      }
+    },
+    "リトゥーニャ": {
+      "Original": {
+        "Name": "リトゥーニャ",
+        "Creator": "udon-cat-works",
+        "Introducer": "VixenDaBirb",
+        "Hash": [
+          "1787947624v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 3.25
       }
     }
   }
