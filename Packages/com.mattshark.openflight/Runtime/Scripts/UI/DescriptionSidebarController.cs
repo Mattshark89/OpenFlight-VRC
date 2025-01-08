@@ -43,6 +43,11 @@ namespace OpenFlightVRC.UI
 
 		internal void UpdateLayout()
 		{
+			SendCustomEventDelayedFrames(nameof(_DelayedUpdateLayout), 2);
+		}
+
+		public void _DelayedUpdateLayout()
+		{
 			//LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)transform);
 			LayoutRebuilder.MarkLayoutForRebuild((RectTransform)transform);
 		}
