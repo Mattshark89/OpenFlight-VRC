@@ -387,6 +387,11 @@ namespace OpenFlightVRC.Effects
 			//enable the force fields
 			LeftWingForceField.SetActive(true);
 			RightWingForceField.SetActive(true);
+
+			ParticleSystem.MainModule psmain = LeftWingTrail.main;
+			psmain.ringBufferMode = ParticleSystemRingBufferMode.PauseUntilReplaced;
+			psmain = RightWingTrail.main;
+			psmain.ringBufferMode = ParticleSystemRingBufferMode.PauseUntilReplaced;
 		}
 
 		public void DelayedTrailParticlesStop()
@@ -399,6 +404,11 @@ namespace OpenFlightVRC.Effects
 			RightWingForceField.SetActive(false);
 
 			DelayedFlyingShutoff = false;
+
+			ParticleSystem.MainModule psmain = LeftWingTrail.main;
+			psmain.ringBufferMode = ParticleSystemRingBufferMode.Disabled;
+			psmain = RightWingTrail.main;
+			psmain.ringBufferMode = ParticleSystemRingBufferMode.Disabled;
 		}
 
 		public WingFlightPlusGlide WingFlightPlusGlide;

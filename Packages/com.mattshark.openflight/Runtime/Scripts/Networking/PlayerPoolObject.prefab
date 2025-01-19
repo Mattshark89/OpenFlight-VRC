@@ -59,7 +59,6 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 5498324637846999011}
-  _logProxy: {fileID: 0}
   PlayerEffects: {fileID: 820394872130777774}
   PlayerSettingsStore: {fileID: 4185234369786831427}
   PlayerMetricsStore: {fileID: 834265471528821274}
@@ -220,7 +219,7 @@ ParticleSystem:
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
-  ringBufferMode: 1
+  ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
   looping: 0
@@ -5538,7 +5537,6 @@ MonoBehaviour:
       Entry: 6
       Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 8291028337481303609}
-  _logProxy: {fileID: 0}
   wingFlightPlusGlide: {fileID: 0}
   synchedSettings: 
 --- !u!114 &8291028337481303609
@@ -5784,7 +5782,6 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1616783550148785444}
-  _logProxy: {fileID: 0}
   PoolGlobalManager: {fileID: 0}
   LeftWingTrail: {fileID: 2204112517440024153}
   LeftWingForceField: {fileID: 4509956036048608541}
@@ -6537,12 +6534,11 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 564747687412689325}
-  _logProxy: {fileID: 0}
   TicksSpentFlying: 0
   FlapCount: 0
   DistanceTraveled: 0
+  initialized: 0
   WingFlightPlusGlide: {fileID: 0}
-  textTemplate: {fileID: 0}
 --- !u!114 &564747687412689325
 MonoBehaviour:
   m_ObjectHideFlags: 0
