@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.40.0",
-  "JSON Date": "2025-01-09",
+  "JSON Version": "2.41.0",
+  "JSON Date": "2025-01-20",
   "Contributers": [
     "-Jinxy-",
     "Daernaro",
@@ -46,7 +46,8 @@
     "Mama_TeraByte",
     "Lane_the_Rex",
     "VixenDaBirb",
-    "Toys0125"
+    "Toys0125",
+    "hantnor"
   ],
   "Bases": {
     "Kitavali": {
@@ -1763,6 +1764,18 @@
         ],
         "Weight": 1,
         "WingtipOffset": 3.25
+      }
+    },
+    "パーレ": {
+      "Original": {
+        "Name": "Tsukune",
+        "Creator": "udon-cat-works",
+        "Introducer": "hantnor",
+        "Hash": [
+          "2083855801v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 1.9
       }
     }
   }
