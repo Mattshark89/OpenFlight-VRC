@@ -35,27 +35,25 @@ namespace OpenFlightVRC
         public bool AddCallback(EnumType callbackID, UdonSharpBehaviour behaviour, params string[] methodNames)
         {
             bool success = true;
-            int id;
+            int id = Convert.ToInt32(callbackID);
+
+            //add the id dictionary, only making it if it doesn't exist
+            if (!_callbackData.ContainsKey(id))
+            {
+                _callbackData.Add(id, new DataDictionary());
+            }
+
+            //add the behaviour key, only making it if it doesn't exist
+            if (!_callbackData[id].DataDictionary.ContainsKey(behaviour))
+            {
+                _callbackData[id].DataDictionary.Add(behaviour, new DataList());
+            }
 
             DataList subscribedMethods = new DataList();
             DataList failedMethods = new DataList();
 
             for (int i = 0; i < methodNames.Length; i++)
             {
-                id = Convert.ToInt32(callbackID);
-
-                //add the id dictionary, only making it if it doesn't exist
-                if (!_callbackData.ContainsKey(id))
-                {
-                    _callbackData.Add(id, new DataDictionary());
-                }
-
-                //add the behaviour key, only making it if it doesn't exist
-                if (!_callbackData[id].DataDictionary.ContainsKey(behaviour))
-                {
-                    _callbackData[id].DataDictionary.Add(behaviour, new DataList());
-                }
-
                 //add the method name, only if its not already there
                 if (!_callbackData[id].DataDictionary[behaviour].DataList.Contains(methodNames[i]))
                 {
