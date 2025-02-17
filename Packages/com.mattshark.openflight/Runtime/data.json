@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.42.0",
-  "JSON Date": "2025-01-29",
+  "JSON Version": "2.43.0",
+  "JSON Date": "2025-02-17",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -47,7 +47,8 @@
     "Lane_the_Rex",
     "VixenDaBirb",
     "Toys0125",
-    "hantnor"
+    "hantnor",
+    "NeoSnivy"
   ],
   "Bases": {
     "Kitavali": {
@@ -272,6 +273,26 @@
         ],
         "Weight": 1,
         "WingtipOffset": 2.7
+      },
+      "Nexa'vali v4": {
+        "Name": "Nexa'vali",
+        "Creator": "Angelboy",
+        "Introducer": "NeoSnivy",
+        "Hash": [
+          "686616116v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 4.2
+      },
+      "Mamma Nexa'vali": {
+        "Name": "Mamma Nexa'vali",
+        "Creator": "Angelboy/989onan",
+        "Introducer": "NeoSnivy",
+        "Hash": [
+          "-2104754549v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 4.2
       }
     },
     "Seeker Avali": {
@@ -1282,7 +1303,9 @@
         "Name": "PROTOVALI",
         "Creator": "ItsFloofy",
         "Introducer": "Heather May",
-        "Hash": ["610094013v2"],
+        "Hash": [
+          "610094013v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 2.5
       }
