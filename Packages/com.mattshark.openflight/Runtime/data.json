@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.43.0",
-  "JSON Date": "2025-02-17",
+  "JSON Version": "2.44.0",
+  "JSON Date": "2025-03-03",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -48,7 +48,8 @@
     "VixenDaBirb",
     "Toys0125",
     "hantnor",
-    "NeoSnivy"
+    "NeoSnivy",
+    "ArkeoTP"
   ],
   "Bases": {
     "Kitavali": {
@@ -1489,8 +1490,18 @@
       }
     },
     "Nox Wyvern": {
-      "Original": {
-        "Name": "Nox Wyvern",
+      "Arkeo's Nox Wyvern": {
+        "Name": "Arkeo's Nox Wyvern",
+        "Creator": "Arkeo / Fluff Rali",
+        "Introducer": "ArkeoTP",
+        "Hash": [
+          "-158982699v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 7.0
+      },
+      "Sierrlen Nox Wyvern": {
+        "Name": "Sierrlen Nox Wyvern",
         "Creator": "Sierrlen / Fluff Rali",
         "Introducer": "Micca",
         "Hash": [
