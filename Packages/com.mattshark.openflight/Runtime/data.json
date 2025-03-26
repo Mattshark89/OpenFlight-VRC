@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.44.0",
-  "JSON Date": "2025-03-23",
+  "JSON Version": "2.45.0",
+  "JSON Date": "2025-03-26",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -49,7 +49,8 @@
     "Toys0125",
     "hantnor",
     "NeoSnivy",
-    "ArkeoTP"
+    "ArkeoTP",
+    "SkyWarrior"
   ],
   "Bases": {
     "Kitavali": {
@@ -260,6 +261,16 @@
         ],
         "Weight": 1,
         "WingtipOffset": 3.3
+      },
+      "Javali Modif": {
+        "Name": "Javali Modif",
+        "Creator": "Javenchi/Webserfer",
+        "Introducer": "SkyWarrior",
+        "Hash": [
+          "-525410190v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 3.0
       }
     },
     "Nexa'vali": {
