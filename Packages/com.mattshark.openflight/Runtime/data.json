@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.44.0",
-  "JSON Date": "2025-03-23",
+  "JSON Version": "2.45.0",
+  "JSON Date": "2025-03-28",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -49,7 +49,8 @@
     "Toys0125",
     "hantnor",
     "NeoSnivy",
-    "ArkeoTP"
+    "ArkeoTP",
+    "Apache Longbow"
   ],
   "Bases": {
     "Kitavali": {
@@ -1821,6 +1822,20 @@
         "Weight": 1,
         "WingtipOffset": 1.9
       }
+    },
+  "Haggitavali": {
+    "Original": {
+      "Name": "Haggitavali",
+      "Creator": "Haggets",
+      "Introducer": "Apache Longbow",
+      "Hash": [
+        "712425889v2"
+      ],
+      "Weight": 1,
+      "WingtipOffset": 4.44
+      }
     }
   }
-}
+} 
+
+
