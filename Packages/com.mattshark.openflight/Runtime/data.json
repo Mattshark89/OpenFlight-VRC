@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.45.0",
-  "JSON Date": "2025-03-28",
+  "JSON Version": "2.46.0",
+  "JSON Date": "2025-03-30",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -51,7 +51,8 @@
     "NeoSnivy",
     "ArkeoTP",
     "SkyWarrior",
-    "Apache Longbow"
+    "Apache Longbow",
+    "Ordinary_night",
   ],
   "Bases": {
     "Kitavali": {
@@ -1844,6 +1845,16 @@
       ],
       "Weight": 1,
       "WingtipOffset": 4.44
+      }
+    },
+  "Owl": {
+    "Original": {
+      "Name": "Snow Owl",
+      "Creator": "Ordinary_night / Raubana / FoxSerito / もふもふ屋 / aokuro",
+      "Introducer": "Ordinary_night",
+      "Hash": ["-982984078v2"],
+      "Weight": 1,
+      "WingtipOffset": 7.97
       }
     }
   }
