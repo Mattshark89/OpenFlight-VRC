@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.45.1",
-  "JSON Date": "2025-03-31",
+  "JSON Version": "2.46.0",
+  "JSON Date": "2025-04-07",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -51,7 +51,8 @@
     "NeoSnivy",
     "ArkeoTP",
     "SkyWarrior",
-    "Apache Longbow"
+    "Apache Longbow",
+    "Ordinary_night"
   ],
   "Bases": {
     "Kitavali": {
@@ -1834,19 +1835,29 @@
         "WingtipOffset": 1.9
       }
     },
-  "Haggitavali": {
-    "Original": {
-      "Name": "Haggitavali",
-      "Creator": "Haggets",
-      "Introducer": "Apache Longbow",
-      "Hash": [
-        "712425889v2"
-      ],
-      "Weight": 1,
-      "WingtipOffset": 4.44
+    "Haggitavali": {
+      "Original": {
+        "Name": "Haggitavali",
+        "Creator": "Haggets",
+        "Introducer": "Apache Longbow",
+        "Hash": [
+          "712425889v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 4.44
+      }
+    },
+    "Owl": {
+      "Original": {
+        "Name": "Snow Owl",
+        "Creator": "Ordinary_night / Raubana / FoxSerito / もふもふ屋 / aokuro",
+        "Introducer": "Ordinary_night",
+        "Hash": [
+          "-982984078v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 7.97
       }
     }
   }
-} 
-
-
+}
