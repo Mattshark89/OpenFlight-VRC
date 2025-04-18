@@ -210,8 +210,8 @@ namespace OpenFlightVRC
 		private int timeTick = -1; // -1 until the player is valid, then this value cycles from 0-99 at 50 ticks per second
 		private Vector3 RHPos;
 		private Vector3 LHPos;
-		private Vector3 RHPosLast = new Vector3(0f, float.NegativeInfinity, 0f);
-		private Vector3 LHPosLast = new Vector3(0f, float.NegativeInfinity, 0f);
+		private Vector3 RHPosLast = Vector3.zero;
+		private Vector3 LHPosLast = Vector3.zero;
 		private Quaternion RHRot;
 		private Quaternion LHRot;
 
@@ -393,10 +393,10 @@ namespace OpenFlightVRC
 		{
 			if (timeTick < 0)
 			{
-				// This block only runs once shortly after joining the world
-				timeTick = 0;
+				// This block only runs once shortly after joining the world. (1/2)
 				CalculateStats();
 			}
+
 			// Only affect velocity this tick if setFinalVelocity == true by the end
 			setFinalVelocity = false;
 
@@ -411,6 +411,14 @@ namespace OpenFlightVRC
 			VRCPlayerApi.TrackingData rightHandData = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.LeftHand);
 			LHPos = playerPos - rightHandData.position;
 			LHRot = rightHandData.rotation;
+
+			if (timeTick < 0)
+			{
+				// This block only runs once shortly after joining the world. (2/2)
+				timeTick = 0;
+				RHPosLast = RHPos;
+				LHPosLast = LHPos;
+			}
 
 			downThrust = 0;
 			if ((RHPos.y - RHPosLast.y) + (LHPos.y - LHPosLast.y) > 0)
