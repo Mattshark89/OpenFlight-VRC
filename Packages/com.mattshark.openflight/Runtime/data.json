@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.46.0",
-  "JSON Date": "2025-04-07",
+  "JSON Version": "2.47.0",
+  "JSON Date": "2025-04-23",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -52,7 +52,8 @@
     "ArkeoTP",
     "SkyWarrior",
     "Apache Longbow",
-    "Ordinary_night"
+    "Ordinary_night",
+    "Mieze"
   ],
   "Bases": {
     "Kitavali": {
@@ -118,6 +119,16 @@
         "Introducer": "Toys0125",
         "Hash": [
           "1109002599v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 4.05
+      },
+      "Miezes Jerry Avali": {
+        "Name": "Miezes Jerry Avali",
+        "Creator": "Rai Kitamatsu/Mieze",
+        "Introducer": "Mieze",
+        "Hash": [
+          "-1517578892v2"
         ],
         "Weight": 1,
         "WingtipOffset": 4.05
@@ -1857,6 +1868,18 @@
         ],
         "Weight": 1,
         "WingtipOffset": 7.97
+      }
+    },
+    "Derp Butt Birb": {
+      "SL Port": {
+        "Name": "Derp Butt Birb",
+        "Creator": "Derp Butt/Mieze",
+        "Introducer": "Mieze",
+        "Hash": [
+          "946277706v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 2.1
       }
     }
   }
