@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.52.4",
-  "JSON Date": "2025-06-05",
+  "JSON Version": "2.52.5",
+  "JSON Date": "2025-06-10",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -58,7 +58,8 @@
     "TrueHiddenS",
     "S e n t i n e l",
     "Iced_lem0n",
-    "Jafira-Dragon"
+    "Jafira-Dragon",
+    "NoodleTheAvali"
   ],
   "Bases": {
     "Kitavali": {
@@ -1944,6 +1945,18 @@
         ],
         "Weight": 1,
         "WingtipOffset": 0
+      }
+    },
+    "Li'vali": {
+      "Original": {
+        "Name": "Li'vali",
+        "Creator": "Livdays",
+        "Introducer": "NoodleTheAvali",
+        "Hash": [
+          "116905929v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 2.7
       }
     }
   }
