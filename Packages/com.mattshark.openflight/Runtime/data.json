@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.55.0",
-  "JSON Date": "2025-06-20",
+  "JSON Version": "2.56.0",
+  "JSON Date": "2025-06-26",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -61,7 +61,8 @@
     "Jafira-Dragon",
     "NoodleTheAvali",
     "LunaFree",
-    "Dream_LP"
+    "Dream_LP",
+    "AeolusDraco"
   ],
   "Bases": {
     "Kitavali": {
@@ -1981,6 +1982,18 @@
         ],
         "Weight": 1,
         "WingtipOffset": 4.45
+      }
+    },
+    "Muspo": {
+      "Original": {
+        "Name": "Muspo",
+        "Creator": "Rezillo Ryker",
+        "Introducer": "AeolusDraco",
+        "Hash": [
+          "1308003838v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 13.01
       }
     }
   }
