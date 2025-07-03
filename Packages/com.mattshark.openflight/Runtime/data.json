@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.56.2",
-  "JSON Date": "2025-07-01",
+  "JSON Version": "2.57.0",
+  "JSON Date": "2025-07-03",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -62,7 +62,8 @@
     "NoodleTheAvali",
     "LunaFree",
     "Dream_LP",
-    "AeolusDraco"
+    "AeolusDraco",
+    "WingHugs"
   ],
   "Bases": {
     "Kitavali": {
@@ -1994,6 +1995,18 @@
         ],
         "Weight": 1,
         "WingtipOffset": 13.01
+      }
+    },
+    "Ele'vali": {
+      "Original": {
+        "Name": "Ele'vali",
+        "Creator": "WingHugs",
+        "Introducer": "WingHugs",
+        "Hash": [
+          "417425018v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 3.9
       }
     }
   }
