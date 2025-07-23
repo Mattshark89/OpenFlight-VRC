@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.57.0",
-  "JSON Date": "2025-07-03",
+  "JSON Version": "2.58.0",
+  "JSON Date": "2025-07-23",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -63,7 +63,8 @@
     "LunaFree",
     "Dream_LP",
     "AeolusDraco",
-    "WingHugs"
+    "WingHugs",
+    "Zero_assasin"
   ],
   "Bases": {
     "Kitavali": {
@@ -2007,6 +2008,16 @@
         ],
         "Weight": 1,
         "WingtipOffset": 3.9
+      }
+    },
+    "YAAvali": {
+      "Original": {
+        "Name": "YAAvali",
+        "Creator": "DragonSkyRunner",
+        "Introducer": "Zero_assasin",
+        "Hash": ["-242305141v2"],
+        "Weight": 1,
+        "WingtipOffset": 6.40
       }
     }
   }
