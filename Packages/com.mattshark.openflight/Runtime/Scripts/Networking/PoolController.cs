@@ -33,8 +33,25 @@ namespace OpenFlightVRC.Net
 
 		private EffectsHandler[] _effectHandlers = new EffectsHandler[0];
 
-		void Update()
+		private bool initialized = false;
+
+        void Start()
+        {
+			//WORKAROUND: there's a race condition on scene load so default VFX toggles work
+			// Tried to force hander.VFX = VFX after 1s, but any touching of the properties too early causes them to 'stick' in EffectsHandler until they are fully toggled
+			// So we're using a full initialization check here instead. The actual solution is probably reworking EffectsHandler setters.
+			// -Micca
+            SendCustomEventDelayedSeconds(nameof(_Initialize),1f);
+        }
+
+		public void _Initialize() {
+			initialized = true;
+		}
+
+        void Update()
 		{
+			if (!initialized) return; 
+			
 			//TODO: make this not run every frame, and instead do it on property change
 			//gotta figure out why GetProgramVariable doesnt like propertys
 			if (_SFX_OLD == SFX && _VFX_OLD == VFX && _volume_OLD == volume)
