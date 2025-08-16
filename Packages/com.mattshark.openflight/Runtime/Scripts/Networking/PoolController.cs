@@ -41,7 +41,7 @@ namespace OpenFlightVRC.Net
 			// Tried to force hander.VFX = VFX after 1s, but any touching of the properties too early causes them to 'stick' in EffectsHandler until they are fully toggled
 			// So we're using a full initialization check here instead. The actual solution is probably reworking EffectsHandler setters.
 			// -Micca
-            SendCustomEventDelayedSeconds(nameof(_Initialize),1f);
+            SendCustomEventDelayedSeconds(nameof(_Initialize),3f);
         }
 
 		public void _Initialize() {
