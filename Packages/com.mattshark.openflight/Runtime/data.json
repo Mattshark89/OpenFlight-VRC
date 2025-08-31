@@ -1,7 +1,12 @@
 {
   "$schema": "./data_schema.json",
+<<<<<<< HEAD
+  "JSON Version": "2.60.1",
+  "JSON Date": "2025-08-31",
+=======
   "JSON Version": "2.61.0",
   "JSON Date": "2025-08-29",
+>>>>>>> f06bbb19ac3e84f8b2033fa2ec6cbca9be3a1ec6
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -66,6 +71,7 @@
     "WingHugs",
     "Zero_assasin",
     "Talii-bit"
+    "FlorianGrille"
   ],
   "Bases": {
     "Kitavali": {
@@ -2030,6 +2036,17 @@
         "Weight": 1,
         "WingtipOffset": 4
       }
+<<<<<<< HEAD
+    },
+    "Phovali ": {
+  "Original": {
+    "Name": "Phovali ",
+    "Creator": "Alkaline",
+    "Introducer": "Zero_assasin",
+    "Hash": ["523384234v2"],
+    "Weight": 1,
+    "WingtipOffset": 1.40
+=======
     },
     "Avali Pooltoy":{
       "Original": {
@@ -2051,5 +2068,17 @@
         "WingtipOffset": 1.40
       }
     }
+>>>>>>> f06bbb19ac3e84f8b2033fa2ec6cbca9be3a1ec6
+  }
+}"Javali Redux": {
+  "Original": {
+    "Name": "Javali Redux",
+    "Creator": "Javenchi",
+    "Introducer": "FlorianGrille",
+    "Hash": ["-323300775v2"],
+    "Weight": 1,
+    "WingtipOffset": 5.28
+  }
+}
   }
 }
