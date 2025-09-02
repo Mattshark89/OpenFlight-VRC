@@ -1,6 +1,6 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.61.1",
+  "JSON Version": "2.62.0",
   "JSON Date": "2025-09-2",
   "Contributers": [
     "ItsFloofy",
@@ -65,7 +65,7 @@
     "AeolusDraco",
     "WingHugs",
     "Zero_assasin",
-    "Talii-bit"
+    "Talii-bit",
     "FlorianGrille"
   ],
   "Bases": {
@@ -2051,15 +2051,16 @@
         "Weight": 1,
         "WingtipOffset": 1.40
       }
-    }"Javali Redux": {
-  "Original": {
-    "Name": "Javali Redux",
-    "Creator": "Javenchi",
-    "Introducer": "FlorianGrille",
-    "Hash": ["-323300775v2"],
-    "Weight": 1,
-    "WingtipOffset": 5.28
-  }
-}
+    },
+    "Javali Redux": {
+      "Original": {
+        "Name": "Javali Redux",
+        "Creator": "Javenchi",
+        "Introducer": "FlorianGrille",
+        "Hash": ["-323300775v2"],
+        "Weight": 1,
+        "WingtipOffset": 5.28
+      }
+    }
   }
 }
