@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.64.0",
-  "JSON Date": "2025-09-22",
+  "JSON Version": "2.64.1",
+  "JSON Date": "2025-10-29",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -297,16 +297,6 @@
         ],
         "Weight": 1,
         "WingtipOffset": 3.0
-      }
-    },
-    "Javali Redux": {
-      "Original": {
-        "Name": "Javali Redux",
-        "Creator": "Javenchi",
-        "Introducer": "LunaFree",
-        "Hash": ["1317662263v2"],
-        "Weight": 1,
-        "WingtipOffset": 5.0
       }
     },
     "Nexa'vali": {
@@ -2053,13 +2043,21 @@
       }
     },
     "Javali Redux": {
-      "Original": {
+      "Original 1": {
         "Name": "Javali Redux",
         "Creator": "Javenchi",
         "Introducer": "FlorianGrille",
         "Hash": ["-323300775v2"],
         "Weight": 1,
         "WingtipOffset": 5.28
+      },
+      "Original 2": {
+        "Name": "Javali Redux",
+        "Creator": "Javenchi",
+        "Introducer": "LunaFree",
+        "Hash": ["1317662263v2"],
+        "Weight": 1,
+        "WingtipOffset": 5.0
       }
     },
     "Fluffy Gryphon": {
