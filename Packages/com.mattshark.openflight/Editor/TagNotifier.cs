@@ -11,6 +11,7 @@ using System.Reflection;
 using VRC.SDKBase.Editor.Api;
 using VRC.Core;
 using System.Threading.Tasks;
+using System.Linq;
 
 //this script literally is just here to notify the world creator at upload that we recommend adding the openflight tag to the world
 namespace OpenFlightVRC.Editor
