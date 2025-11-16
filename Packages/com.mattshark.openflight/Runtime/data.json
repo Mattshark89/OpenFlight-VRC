@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.66.0",
-  "JSON Date": "2025-11-08",
+  "JSON Version": "2.66.1",
+  "JSON Date": "2025-11-16",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -67,7 +67,8 @@
     "Zero_assasin",
     "Talii-bit",
     "FlorianGrille",
-    "Woffle Nibbler"
+    "Woffle Nibbler",
+    "AztecAngelo"
   ],
   "Bases": {
     "Kitavali": {
@@ -2108,6 +2109,16 @@
         "Weight": 1,
         "WingtipOffset": 8.3
       }
-    } 
+    } ,
+    "Azan": {
+      "Original": {
+        "Name": "Azan",
+        "Creator": "AztecAngelo",
+        "Introducer": "AztecAngelo",
+        "Hash": ["100154178v2"],
+        "Weight": 1,
+        "WingtipOffset": 0
+      }
+    }
   }
 }
