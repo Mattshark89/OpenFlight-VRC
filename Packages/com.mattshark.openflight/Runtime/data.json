@@ -1,6 +1,6 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.67.0",
+  "JSON Version": "2.68.0",
   "JSON Date": "2025-11-24",
   "Contributers": [
     "ItsFloofy",
@@ -67,7 +67,8 @@
     "Zero_assasin",
     "Talii-bit",
     "FlorianGrille",
-    "Woffle Nibbler"
+    "Woffle Nibbler",
+    "WebserferOwO"
   ],
   "Bases": {
     "Kitavali": {
@@ -2108,16 +2109,26 @@
         "Weight": 1,
         "WingtipOffset": 8.3
       }
-    } ,
+    },
+    "Remastered Reverse Avali": {
+      "Original": {
+        "Name": "Remastered Reverse Avali",
+        "Creator": "VictonRoy / WebserferOwO",
+        "Introducer": "WebserferOwO",
+        "Hash": ["-1903530016v2"],
+        "Weight": 1,
+        "WingtipOffset": 7.5
+      }
+    },
     "Vi'Vali": {
-  "Original": {
-    "Name": "Vi'Vali",
-    "Creator": "ChimeraHollow",
-    "Introducer": "Zero_assasin",
-    "Hash": ["464189971v2"],
-    "Weight": 1,
-    "WingtipOffset": 7.99
-  }
-}
+      "Original": {
+        "Name": "Vi'Vali",
+        "Creator": "ChimeraHollow",
+        "Introducer": "Zero_assasin",
+        "Hash": ["464189971v2"],
+        "Weight": 1,
+        "WingtipOffset": 7.99
+      }
+    }
   }
 }
