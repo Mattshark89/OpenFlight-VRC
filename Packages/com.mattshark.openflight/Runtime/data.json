@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.69.0",
-  "JSON Date": "2025-12-09",
+  "JSON Version": "2.70.0",
+  "JSON Date": "2025-12-15",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -69,7 +69,8 @@
     "FlorianGrille",
     "Woffle Nibbler",
     "WebserferOwO",
-    "Zeimyth"
+    "Zeimyth",
+    "Fluxsynth"
   ],
   "Bases": {
     "Kitavali": {
@@ -2139,6 +2140,16 @@
         "Hash": ["1602782311v2"],
         "Weight": 1,
         "WingtipOffset": 11.73
+      }
+    },
+    "Anra": {
+      "Original": {
+        "Name": "Anra",
+        "Creator": "aokuro",
+        "Introducer": "Fluxsynth",
+        "Hash": ["1914552374v2"],
+        "Weight": 1,
+        "WingtipOffset": 6.44
       }
     }
   }
