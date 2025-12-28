@@ -61,9 +61,10 @@ jobs:
           ref: ${{ matrix.release-tag }}
 
       - name: Checkout files
-        uses: Bhacaz/checkout-files@v2
+        uses: actions/checkout@v3
         with:
-          files: docs
+          sparse-checkout: |
+            docs
 
       #modify doxyfile to include tag version
       - name: edit DoxyFile
