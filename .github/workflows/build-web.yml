@@ -3,6 +3,7 @@ name: Update Website
 env:
   listPublishDirectory: Website
   pathToCi: ci
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 on:
   workflow_dispatch:
@@ -55,6 +56,21 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+      - name: ⌛ rate
+        shell: pwsh
+        run: |
+          # get currently authenticated user rate limit info
+          $rate = gh api rate_limit | convertfrom-json | select -expandproperty rate
+
+          # if we don't have at least 10 requests left, wait until reset
+          if ($rate.remaining -lt 10) {
+              $wait = ($rate.reset - (Get-Date (Get-Date).ToUniversalTime() -UFormat %s))
+              echo "Rate limit remaining is $($rate.remaining), waiting for $($wait) seconds to reset"
+              sleep $wait
+              $rate = gh api rate_limit | convertfrom-json | select -expandproperty rate
+              echo "Rate limit has reset to $($rate.remaining) requests"
+          }
+      
       - uses: actions/checkout@v3 # check out this repo
         with:
           fetch-depth: 0 # fetch all history
@@ -94,6 +110,21 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+      - name: ⌛ rate
+        shell: pwsh
+        run: |
+          # get currently authenticated user rate limit info
+          $rate = gh api rate_limit | convertfrom-json | select -expandproperty rate
+
+          # if we don't have at least 10 requests left, wait until reset
+          if ($rate.remaining -lt 10) {
+              $wait = ($rate.reset - (Get-Date (Get-Date).ToUniversalTime() -UFormat %s))
+              echo "Rate limit remaining is $($rate.remaining), waiting for $($wait) seconds to reset"
+              sleep $wait
+              $rate = gh api rate_limit | convertfrom-json | select -expandproperty rate
+              echo "Rate limit has reset to $($rate.remaining) requests"
+          }
+        
       - uses: actions/checkout@v3 # check out this repo
         with:
           fetch-depth: 0 # fetch all history
