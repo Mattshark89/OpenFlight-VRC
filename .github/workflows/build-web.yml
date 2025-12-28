@@ -64,6 +64,7 @@ jobs:
 
           # if we don't have at least 10 requests left, wait until reset
           if ($rate.remaining -lt 10) {
+              echo $rate
               $wait = ($rate.reset - (Get-Date (Get-Date).ToUniversalTime() -UFormat %s))
               echo "Rate limit remaining is $($rate.remaining), waiting for $($wait) seconds to reset"
               sleep $wait
@@ -118,6 +119,7 @@ jobs:
 
           # if we don't have at least 10 requests left, wait until reset
           if ($rate.remaining -lt 10) {
+              echo $rate
               $wait = ($rate.reset - (Get-Date (Get-Date).ToUniversalTime() -UFormat %s))
               echo "Rate limit remaining is $($rate.remaining), waiting for $($wait) seconds to reset"
               sleep $wait
