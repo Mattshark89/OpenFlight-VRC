@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.64.1",
-  "JSON Date": "2025-10-29",
+  "JSON Version": "2.70.0",
+  "JSON Date": "2025-12-15",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -66,7 +66,11 @@
     "WingHugs",
     "Zero_assasin",
     "Talii-bit",
-    "FlorianGrille"
+    "FlorianGrille",
+    "Woffle Nibbler",
+    "WebserferOwO",
+    "Zeimyth",
+    "Fluxsynth"
   ],
   "Bases": {
     "Kitavali": {
@@ -1591,6 +1595,26 @@
         ],
         "Weight": 1,
         "WingtipOffset": 3.81
+      },
+      "Spiri'vali Taur": {
+        "Name": "Spiri'vali Taur",
+        "Creator": "Hiyu / Woffle Nibbler",
+        "Introducer": "Woffle Nibbler",
+        "Hash": [
+          "-1994826213v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 2.7
+      },
+      "Spiri'vern": {
+        "Name": "Spiri'vern",
+        "Creator": "Hiyu / InvertedCrink",
+        "Introducer": "InvertedCrink",
+        "Hash": [
+          "-1215055026v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 9
       }
     },
     "Little Blackbird": {
@@ -2087,6 +2111,46 @@
         "Weight": 1,
         "WingtipOffset": 8.3
       }
-    } 
+    },
+    "Remastered Reverse Avali": {
+      "Original": {
+        "Name": "Remastered Reverse Avali",
+        "Creator": "VictonRoy / WebserferOwO",
+        "Introducer": "WebserferOwO",
+        "Hash": ["-1903530016v2"],
+        "Weight": 1,
+        "WingtipOffset": 7.5
+      }
+    },
+    "Vi'Vali": {
+      "Original": {
+        "Name": "Vi'Vali",
+        "Creator": "ChimeraHollow",
+        "Introducer": "Zero_assasin",
+        "Hash": ["464189971v2"],
+        "Weight": 1,
+        "WingtipOffset": 7.99
+      }
+    },
+    "Moondle": {
+      "Original": {
+        "Name": "Moondle",
+        "Creator": "Meelo / Laser Raptor",
+        "Introducer": "Zeimyth",
+        "Hash": ["1602782311v2"],
+        "Weight": 1,
+        "WingtipOffset": 11.73
+      }
+    },
+    "Anra": {
+      "Original": {
+        "Name": "Anra",
+        "Creator": "aokuro",
+        "Introducer": "Fluxsynth",
+        "Hash": ["1914552374v2"],
+        "Weight": 1,
+        "WingtipOffset": 6.44
+      }
+    }
   }
 }
