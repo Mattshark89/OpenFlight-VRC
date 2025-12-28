@@ -20,13 +20,13 @@ namespace OpenFlightVRC.Net
         public override string _logCategory { get => PlayerSettings.SETTINGSDATABASECATEGORY; }
 
         #region UI References
-        public InputField slotNameInput;
+        public TMP_InputField slotNameInput;
         public Toggle ignoreWorldDefaultsToggle;
         public TMP_Dropdown defaultSlotDropdown;
-        public InputField importSlot;
-        public InputField exportSlot;
-        public InputField importDB;
-        public InputField exportDB;
+        public TMP_InputField importSlot;
+        public TMP_InputField exportSlot;
+        public TMP_InputField importDB;
+        public TMP_InputField exportDB;
         public GameObject RemoteDifferencesPanel;
         public PlayerUIDropdown playerDropdown;
         public TMPro.TMP_Dropdown slotDropdown;
@@ -34,10 +34,10 @@ namespace OpenFlightVRC.Net
         /// The objects that should be disabled when the player is not the owner of the reference player store
         /// </summary>
         public Selectable[] DisabledWhenNotOwner;
-        public TextMeshProUGUI LocalStorageInfo;
-        public TextMeshProUGUI RemoteStorageInfo;
-        public Slider LocalStorageSlider;
-        public Slider RemoteStorageSlider;
+        public TextMeshProUGUI StorageInfo;
+        public Slider PositiveChangeStorageSlider;
+        public Slider NegativeChangeStorageSlider;
+        public Slider CurrentStorageSlider;
         public TextMeshProUGUI SlotInfo;
         public TextMeshProUGUI DBInfo;
         #endregion
@@ -88,7 +88,7 @@ namespace OpenFlightVRC.Net
         {
             //use the value to get the slot name
             var slots = m_ReferencePlayerStore._GetSlotNames();
-            m_ReferencePlayerStore._SetGlobalSetting(PlayerSettings.slotToLoadByDefaultKey, slots[defaultSlotDropdown.value]);
+            m_ReferencePlayerStore._SetGlobalSetting(PlayerSettings.SlotToLoadByDefaultKey, slots[defaultSlotDropdown.value]);
         }
         public void RemoteDifferencesDetected()
         {
@@ -102,11 +102,29 @@ namespace OpenFlightVRC.Net
 
         public void UpdateStorageText()
         {
-            LocalStorageInfo.text = string.Format("{0}% ({1} / {2} Bytes)", Mathf.RoundToInt((m_ReferencePlayerStore._LocalSpaceUsed() / (float)PlayerSettings.MAXSAVEBYTES) * 1000) * 0.1, m_ReferencePlayerStore._LocalSpaceUsed(), PlayerSettings.MAXSAVEBYTES);
-            RemoteStorageInfo.text = string.Format("{0}% ({1} / {2} Bytes)", Mathf.RoundToInt((m_ReferencePlayerStore._RemoteSpaceUsed() / (float)PlayerSettings.MAXSAVEBYTES) * 1000) * 0.1, m_ReferencePlayerStore._RemoteSpaceUsed(), PlayerSettings.MAXSAVEBYTES);
+            //LocalStorageInfo.text = string.Format("{0}% ({1} / {2} Bytes)", Mathf.RoundToInt((m_ReferencePlayerStore._LocalSpaceUsed() / (float)PlayerSettings._GetMaxSaveBytes()) * 1000) * 0.1, m_ReferencePlayerStore._LocalSpaceUsed(), PlayerSettings._GetMaxSaveBytes());
+            //RemoteStorageInfo.text = string.Format("{0}% ({1} / {2} Bytes)", Mathf.RoundToInt((m_ReferencePlayerStore._RemoteSpaceUsed() / (float)PlayerSettings._GetMaxSaveBytes()) * 1000) * 0.1, m_ReferencePlayerStore._RemoteSpaceUsed(), PlayerSettings._GetMaxSaveBytes());
 
-            LocalStorageSlider.value = m_ReferencePlayerStore._LocalSpaceUsed() / (float)PlayerSettings.MAXSAVEBYTES;
-            RemoteStorageSlider.value = m_ReferencePlayerStore._RemoteSpaceUsed() / (float)PlayerSettings.MAXSAVEBYTES;
+            //we need to figure out what change slider to have enabled, and set the value of it accordingly
+            int spaceChange = m_ReferencePlayerStore._LocalSpaceUsed() - m_ReferencePlayerStore._RemoteSpaceUsed();
+            if (spaceChange >= 0)
+            {
+                PositiveChangeStorageSlider.gameObject.SetActive(true);
+                NegativeChangeStorageSlider.gameObject.SetActive(false);
+                //this value is absolute
+                PositiveChangeStorageSlider.value = (spaceChange + m_ReferencePlayerStore._RemoteSpaceUsed()) / (float)PlayerSettings._GetMaxSaveBytes();
+            }
+            else
+            {
+                PositiveChangeStorageSlider.gameObject.SetActive(false);
+                NegativeChangeStorageSlider.gameObject.SetActive(true);
+                //THIS slider is relative to the size of the current storage slider.
+                //so its a percentage of the current storage used
+                NegativeChangeStorageSlider.value = (-spaceChange) / m_ReferencePlayerStore._RemoteSpaceUsed();
+
+                //NegativeChangeStorageSlider.value = (-spaceChange) / (float)PlayerSettings._GetMaxSaveBytes();
+            }
+            CurrentStorageSlider.value = m_ReferencePlayerStore._RemoteSpaceUsed() / (float)PlayerSettings._GetMaxSaveBytes();
         }
 
         public void UpdateSlotInfoText()
@@ -223,7 +241,7 @@ namespace OpenFlightVRC.Net
         public void WorldDefaultToggleChanged()
         {
             //ReferencePlayerStore.useWorldDefaultsWhenLoading = useWorldDefaultsToggle.isOn;
-            m_ReferencePlayerStore._SetGlobalSetting(PlayerSettings.useWorldDefaultsWhenLoadingKey, !ignoreWorldDefaultsToggle.isOn);
+            m_ReferencePlayerStore._SetGlobalSetting(PlayerSettings.UseWorldDefaultsWhenLoadingKey, !ignoreWorldDefaultsToggle.isOn);
 
             UpdateUI();
         }
@@ -319,7 +337,7 @@ namespace OpenFlightVRC.Net
 
             //useWorldDefaultsToggle.isOn = ReferencePlayerStore.useWorldDefaultsWhenLoading;
             //useWorldDefaultsToggle.isOn = m_ReferencePlayerStore._GetGlobalSetting(PlayerSettings.useWorldDefaultsWhenLoadingKey).Boolean;
-            if (m_ReferencePlayerStore._GetGlobalSetting(PlayerSettings.useWorldDefaultsWhenLoadingKey, out DataToken value))
+            if (m_ReferencePlayerStore._GetGlobalSetting(PlayerSettings.UseWorldDefaultsWhenLoadingKey, out DataToken value))
             {
                 ignoreWorldDefaultsToggle.isOn = !value.Boolean;
             }

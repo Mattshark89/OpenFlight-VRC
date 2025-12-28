@@ -68,10 +68,16 @@ namespace OpenFlightVRC.Net
     [RequireComponent(typeof(VRCEnablePersistence))]
     public class PlayerSettings : CallbackUdonSharpBehaviour<PlayerSettingsCallback>
     {
+        /// <summary>
+        /// The interval in seconds to request the storage usage from the VRC servers
+        /// </summary>
+        [Range(10f, 120f)]
+        [Tooltip("The interval in seconds to request the storage usage from the VRC servers")]
+        public float StorageUsageRequestInterval = 30f;
         public const string SETTINGSDATABASECATEGORY = "Player DB";
         public override string _logCategory { get => SETTINGSDATABASECATEGORY; }
         #region Object References
-        public WingFlightPlusGlide wingFlightPlusGlide;
+        public WingFlightPlusGlide WingFlightPlusGlide;
         #endregion
 
         /// <summary>
@@ -84,13 +90,7 @@ namespace OpenFlightVRC.Net
         /// </summary>
         [UdonSynced]
         [ReadOnlyInspector]
-        public string synchedSettings = "";
-
-        /// <summary>
-        /// Maximum ammount of bytes that can be saved before VRC wont save any more
-        /// TODO: Change to a method call once VRC adds a method to get this value directly
-        /// </summary>
-        public const int MAXSAVEBYTES = 100000;
+        public string SynchedSettings = "";
 
         /// <summary>
         /// The searchable settings data
@@ -110,33 +110,33 @@ namespace OpenFlightVRC.Net
         /// ...
         /// }
         /// </value>
-        private DataDictionary m_RemoteSettings = new DataDictionary();
+        private DataDictionary _remoteSettings = new DataDictionary();
 
         /// <summary>
         /// The settings that have changed since the last sync
         /// </summary>
-        private DataDictionary m_LocalSettings = new DataDictionary();
+        private DataDictionary _localSettings = new DataDictionary();
 
         #region Global Settings Management
         #region Key name constants
         /// <summary>
         /// Upon joining the world, should the player use the world defaults for their settings, or load their own settings
         /// </summary>
-        public const string useWorldDefaultsWhenLoadingKey = "useWorldDefaultsWhenLoading";
+        public const string UseWorldDefaultsWhenLoadingKey = "useWorldDefaultsWhenLoading";
         /// <summary>
-        /// The slot to load by default upon joining the world, if <see cref="useWorldDefaultsWhenLoadingKey"/> is false
+        /// The slot to load by default upon joining the world, if <see cref="UseWorldDefaultsWhenLoadingKey"/> is false
         /// </summary>
-        public const string slotToLoadByDefaultKey = "slotToLoadByDefault";
+        public const string SlotToLoadByDefaultKey = "slotToLoadByDefault";
 
         /// <summary>
         /// The key for the last updated date time
         /// </summary>
-        public const string updatedDateTimeKey = "lastUpdatedDateTime";
+        public const string UpdatedDateTimeKey = "lastUpdatedDateTime";
 
         /// <summary>
         /// The key for the revision number, increments every time the settings are changed
         /// </summary>
-        public const string revisionKey = "revision";
+        public const string RevisionKey = "revision";
 
         /// <summary>
         /// The player data key for the backup of the settings
@@ -144,12 +144,21 @@ namespace OpenFlightVRC.Net
         public const string DBBackupKey = Util.playerDataFolderKey + "DBBackup";
         #endregion
 
+        /// <summary>
+        /// Maximum ammount of bytes that can be saved before VRC wont save any more
+        /// </summary>
+        public static int _GetMaxSaveBytes()
+        {
+            return Networking.GetPlayerObjectStorageLimit();
+            // int howMuchIsNotUs = Networking.GetPlayerObjectStorageUsage(Networking.LocalPlayer)
+            // return Networking.GetPlayerObjectStorageLimit() - howMuchIsNotUs;
+        }
 
         public int _SpaceUsed(DataDictionary settings)
         {
-            if (VRCJson.TrySerializeToJson(settings, JsonExportType.Minify, out DataToken _settings_token))
+            if (VRCJson.TrySerializeToJson(settings, JsonExportType.Minify, out DataToken settings_token))
             {
-                return _settings_token.ToString().Length;
+                return settings_token.ToString().Length;
             }
             else
             {
@@ -159,39 +168,30 @@ namespace OpenFlightVRC.Net
 
         public int _RemoteSpaceUsed()
         {
-            return _SpaceUsed(m_RemoteSettings);
+            return _SpaceUsed(_remoteSettings);
         }
 
         public int _LocalSpaceUsed()
         {
-            return _SpaceUsed(m_LocalSettings);
+            return _SpaceUsed(_localSettings);
         }
 
-        public int _SpaceFree(DataDictionary settings)
+        public int _SpaceFree()
         {
-            return MAXSAVEBYTES - _SpaceUsed(settings);
+            //return _GetMaxSaveBytes() - _SpaceUsed(settings);
+            return _GetMaxSaveBytes() - Networking.GetPlayerObjectStorageUsage(Networking.LocalPlayer);
         }
 
-        public int _RemoteSpaceFree()
+        public bool _IsSpaceAvailable(int bytes)
         {
-            return _SpaceFree(m_RemoteSettings);
-        }
-
-        public int _LocalSpaceFree()
-        {
-            return _SpaceFree(m_LocalSettings);
-        }
-
-        public bool _IsSpaceAvailable(DataDictionary settings, int bytes)
-        {
-            return _SpaceFree(settings) >= bytes;
+            return _SpaceFree() >= bytes;
         }
 
         public string _GetDBInfo()
         {
             //get from remote
-            _GetGlobalSetting(m_RemoteSettings, revisionKey, out DataToken revision);
-            _GetGlobalSetting(m_RemoteSettings, updatedDateTimeKey, out DataToken updatedDateTime);
+            _GetGlobalSetting(_remoteSettings, RevisionKey, out DataToken revision);
+            _GetGlobalSetting(_remoteSettings, UpdatedDateTimeKey, out DataToken updatedDateTime);
             return string.Format("Database Revision: {0}, Last Updated: {1}, Total Slots: {2}", revision.ToString(), updatedDateTime.ToString(), _GetSlotCount(true));
         }
 
@@ -203,16 +203,16 @@ namespace OpenFlightVRC.Net
         /// <returns> True if the setting was set, false if it failed </returns>
         public bool _SetGlobalSetting(string key, DataToken value)
         {
-            DataDictionary globalSettings = GetGlobalSettingsDictionary(m_LocalSettings);
+            DataDictionary globalSettings = GetGlobalSettingsDictionary(_localSettings);
 
             globalSettings.SetValue(new DataToken(key), value);
 
             switch (key)
             {
-                case useWorldDefaultsWhenLoadingKey:
+                case UseWorldDefaultsWhenLoadingKey:
                     RunCallback(PlayerSettingsCallback.useWorldDefaultsWhenLoadingChanged);
                     break;
-                case slotToLoadByDefaultKey:
+                case SlotToLoadByDefaultKey:
                     RunCallback(PlayerSettingsCallback.slotToLoadByDefaultChanged);
                     break;
                     //default:
@@ -260,7 +260,7 @@ namespace OpenFlightVRC.Net
         /// <inheritdoc cref="_GetGlobalSetting(DataDictionary, string, out DataToken)"/>
         public bool _GetGlobalSetting(string key, out DataToken returnToken)
         {
-            return _GetGlobalSetting(m_LocalSettings, key, out returnToken);
+            return _GetGlobalSetting(_localSettings, key, out returnToken);
         }
         #endregion
 
@@ -292,7 +292,7 @@ namespace OpenFlightVRC.Net
             Log(LogLevel.Info, "Saving current settings to slot " + slotName);
 
             //get the local slots
-            DataDictionary localSlots = GetSlots(m_LocalSettings);
+            DataDictionary localSlots = GetSlots(_localSettings);
 
             //overwrite the slot data at that slot index
             DataList keys = localSlots.GetKeys();
@@ -309,15 +309,15 @@ namespace OpenFlightVRC.Net
                 prevSlotData = slotDataToken.DataDictionary;
 
                 //Load in the metadata
-                slotData.SetValue(new DataToken(revisionKey), new DataToken(_GetSlotRevision(slotName)));
-                slotData.SetValue(new DataToken(updatedDateTimeKey), new DataToken(_GetSlotUpdatedDateTime(slotName)));
+                slotData.SetValue(new DataToken(RevisionKey), new DataToken(_GetSlotRevision(slotName)));
+                slotData.SetValue(new DataToken(UpdatedDateTimeKey), new DataToken(_GetSlotUpdatedDateTime(slotName)));
             }
 
             //only edit these if there is differences
             if (_GetDictionaryDifferences(slotData, prevSlotData))
             {
-                slotData.SetValue(new DataToken(revisionKey), new DataToken(_GetSlotRevision(slotName) + 1));
-                slotData.SetValue(new DataToken(updatedDateTimeKey), new DataToken(System.DateTime.Now.ToString()));
+                slotData.SetValue(new DataToken(RevisionKey), new DataToken(_GetSlotRevision(slotName) + 1));
+                slotData.SetValue(new DataToken(UpdatedDateTimeKey), new DataToken(System.DateTime.Now.ToString()));
             }
 
             //slot name is assumed valid past here
@@ -343,19 +343,19 @@ namespace OpenFlightVRC.Net
         public void _UploadSettings()
         {
             //get the revision number
-            if (_GetGlobalSetting(revisionKey, out DataToken revision))
+            if (_GetGlobalSetting(RevisionKey, out DataToken revision))
             {
-                _SetGlobalSetting(revisionKey, new DataToken((long)revision.Double + 1));
+                _SetGlobalSetting(RevisionKey, new DataToken((long)revision.Double + 1));
             }
             else
             {
                 Log(LogLevel.Info, "Revision key not found, initializing it");
                 //initialize it
-                _SetGlobalSetting(revisionKey, new DataToken(0));
+                _SetGlobalSetting(RevisionKey, new DataToken(0));
             }
 
             //check if we have space
-            if (!_IsSpaceAvailable(m_LocalSettings, _SpaceUsed(m_LocalSettings)))
+            if (!_IsSpaceAvailable(_SpaceUsed(_localSettings)))
             {
                 Log(LogLevel.Warning, "Failed to upload settings! Not enough space to save settings");
                 RunCallback(PlayerSettingsCallback.OnStorageFull);
@@ -367,14 +367,14 @@ namespace OpenFlightVRC.Net
             }
 
             //update the date
-            _SetGlobalSetting(updatedDateTimeKey, new DataToken(System.DateTime.Now.ToString()));
+            _SetGlobalSetting(UpdatedDateTimeKey, new DataToken(System.DateTime.Now.ToString()));
 
-            if (VRCJson.TrySerializeToJson(m_LocalSettings, JsonExportType.Minify, out DataToken _settings_token))
+            if (VRCJson.TrySerializeToJson(_localSettings, JsonExportType.Minify, out DataToken _settings_token))
             {
-                synchedSettings = _settings_token.ToString();
+                SynchedSettings = _settings_token.ToString();
                 RequestSerialization();
                 //update our live copy of the remote settings
-                m_RemoteSettings = m_LocalSettings.DeepClone();
+                _remoteSettings = _localSettings.DeepClone();
                 Log(LogLevel.Info, "Settings uploaded successfully");
                 //invoke the resolve callback, assuming there is no differences as we just uploaded
                 RunCallback(PlayerSettingsCallback.OnRemoteDifferencesResolved);
@@ -391,7 +391,7 @@ namespace OpenFlightVRC.Net
         public void _RevertSettings()
         {
             //revert the local settings
-            m_LocalSettings = m_RemoteSettings.DeepClone();
+            _localSettings = _remoteSettings.DeepClone();
 
             //if on revert we have no settings, run initial setup
             _InitializeDatabase();
@@ -447,7 +447,7 @@ namespace OpenFlightVRC.Net
             Log(LogLevel.Info, "Attempting to rename slot " + slot + " to " + newName);
 
             //get the local slots
-            DataDictionary localSlots = GetSlots(m_LocalSettings);
+            DataDictionary localSlots = GetSlots(_localSettings);
 
             //check if the new name doesnt already exist
             if (localSlots.ContainsKey(new DataToken(newName)))
@@ -464,11 +464,11 @@ namespace OpenFlightVRC.Net
                 localSlots.Remove(slotName);
                 localSlots.Add(new DataToken(newName), slotData);
                 //update the slot to load by default if it was the slot being renamed
-                _GetGlobalSetting(slotToLoadByDefaultKey, out DataToken slotToLoadByDefault);
+                _GetGlobalSetting(SlotToLoadByDefaultKey, out DataToken slotToLoadByDefault);
                 if (slotToLoadByDefault.ToString() == slotName)
                 {
                     //slotToLoadByDefault = newName;
-                    _SetGlobalSetting(slotToLoadByDefaultKey, newName);
+                    _SetGlobalSetting(SlotToLoadByDefaultKey, newName);
                 }
 
                 Log(LogLevel.Info, "Slot renamed successfully");
@@ -499,7 +499,7 @@ namespace OpenFlightVRC.Net
             //Log(LogLevel.Info, "Loading settings from slot " + slot);
 
             //get the local slots
-            DataDictionary localSlots = GetSlots(m_LocalSettings);
+            DataDictionary localSlots = GetSlots(_localSettings);
 
             //get all keys
             DataList keys = localSlots.GetKeys();
@@ -540,7 +540,7 @@ namespace OpenFlightVRC.Net
             }
 
             //get the slots
-            DataDictionary localSlots = GetSlots(m_LocalSettings);
+            DataDictionary localSlots = GetSlots(_localSettings);
 
             //only allow deletion if there is more than one slot
             if (localSlots.GetKeys().Count <= 1)
@@ -556,13 +556,13 @@ namespace OpenFlightVRC.Net
                 localSlots.Remove(slotName);
                 //update the slot to load by default if it was the slot being deleted
                 //string slotToLoadByDefault = _GetGlobalSetting(slotToLoadByDefaultKey).ToString();
-                _GetGlobalSetting(slotToLoadByDefaultKey, out DataToken slotToLoadByDefault);
+                _GetGlobalSetting(SlotToLoadByDefaultKey, out DataToken slotToLoadByDefault);
                 if (slotToLoadByDefault.ToString() == slotName)
                 {
                     //slotToLoadByDefault = GetSlotName(0);
-                    _SetGlobalSetting(slotToLoadByDefaultKey, _GetSlotName(0));
+                    _SetGlobalSetting(SlotToLoadByDefaultKey, _GetSlotName(0));
                     //use world defaults in this case, to avoid confusion
-                    _SetGlobalSetting(useWorldDefaultsWhenLoadingKey, true);
+                    _SetGlobalSetting(UseWorldDefaultsWhenLoadingKey, true);
                 }
 
                 Log(LogLevel.Info, "Slot deleted successfully");
@@ -623,7 +623,7 @@ namespace OpenFlightVRC.Net
         /// <returns> True if the settings were exported, false if it failed </returns>
         public bool _GetDBExport(out string json)
         {
-            if (VRCJson.TrySerializeToJson(m_RemoteSettings, JsonExportType.Minify, out DataToken _settings_token))
+            if (VRCJson.TrySerializeToJson(_remoteSettings, JsonExportType.Minify, out DataToken _settings_token))
             {
                 json = _settings_token.ToString();
                 return true;
@@ -675,7 +675,7 @@ namespace OpenFlightVRC.Net
             DataToken token;
             if (VRCJson.TryDeserializeFromJson(json, out token))
             {
-                m_LocalSettings = token.DataDictionary;
+                _localSettings = token.DataDictionary;
                 Log(LogLevel.Info, "Settings imported successfully");
                 CheckForDifferences();
                 RunCallback(PlayerSettingsCallback.OnDataChanged);
@@ -695,7 +695,7 @@ namespace OpenFlightVRC.Net
         /// <summary>
         /// Checks if the player settings store is initialized with data, and has atleast one slot
         /// </summary>
-        public bool IsInitialized => m_LocalSettings.Count > 0 && _GetSlotCount(false) > 0;
+        public bool IsInitialized => _localSettings.Count > 0 && _GetSlotCount(false) > 0;
 
         /// <summary>
         /// Makes a unique name for a slot
@@ -707,7 +707,7 @@ namespace OpenFlightVRC.Net
             const string defaultName = "New Slot ";
 
             //get the local slots
-            DataDictionary localSlots = GetSlots(m_LocalSettings);
+            DataDictionary localSlots = GetSlots(_localSettings);
 
             //if the string is empty, use the default name
             if (string.IsNullOrEmpty(name))
@@ -744,7 +744,7 @@ namespace OpenFlightVRC.Net
         public string _GetSlotName(int slot)
         {
             //get the local slots
-            DataDictionary localSlots = GetSlots(m_LocalSettings);
+            DataDictionary localSlots = GetSlots(_localSettings);
 
             DataList keys = localSlots.GetKeys();
             if (keys.Count > slot)
@@ -764,7 +764,7 @@ namespace OpenFlightVRC.Net
         public string[] _GetSlotNames()
         {
             //get the local slots
-            DataDictionary localSlots = GetSlots(m_LocalSettings);
+            DataDictionary localSlots = GetSlots(_localSettings);
 
             DataList keys = localSlots.GetKeys();
             string[] names = new string[keys.Count];
@@ -783,7 +783,7 @@ namespace OpenFlightVRC.Net
         public int _GetSlotIndex(string slotName)
         {
             //get the local slots
-            DataDictionary localSlots = GetSlots(m_LocalSettings);
+            DataDictionary localSlots = GetSlots(_localSettings);
 
             DataList keys = localSlots.GetKeys();
             return keys.IndexOf(new DataToken(slotName));
@@ -796,7 +796,7 @@ namespace OpenFlightVRC.Net
         public int _GetSlotCount(bool remote)
         {
             //get the local slots
-            DataDictionary slots = remote ? GetSlots(m_RemoteSettings) : GetSlots(m_LocalSettings);
+            DataDictionary slots = remote ? GetSlots(_remoteSettings) : GetSlots(_localSettings);
             return slots.GetKeys().Count;
         }
 
@@ -829,7 +829,7 @@ namespace OpenFlightVRC.Net
         public string _ValidateSlot(string slotName)
         {
             //get the local slots
-            DataDictionary localSlots = GetSlots(m_LocalSettings);
+            DataDictionary localSlots = GetSlots(_localSettings);
             if (localSlots.ContainsKey(new DataToken(slotName)))
             {
                 return slotName;
@@ -846,7 +846,7 @@ namespace OpenFlightVRC.Net
         /// <returns> The default slot to load, or the first slot if the default is invalid </returns>
         public string _GetDefaultSlot()
         {
-            _GetGlobalSetting(slotToLoadByDefaultKey, out DataToken slotToLoadByDefault);
+            _GetGlobalSetting(SlotToLoadByDefaultKey, out DataToken slotToLoadByDefault);
             return _ValidateSlot(slotToLoadByDefault.ToString());
         }
 
@@ -859,7 +859,7 @@ namespace OpenFlightVRC.Net
         {
             //return slot >= 0 && slot < GetSlotCount();
             //get the local slots
-            DataDictionary localSlots = GetSlots(m_LocalSettings);
+            DataDictionary localSlots = GetSlots(_localSettings);
             return localSlots.ContainsKey(new DataToken(slot));
         }
 
@@ -873,10 +873,10 @@ namespace OpenFlightVRC.Net
             if (_IsSlotValid(slot))
             {
                 //get the revision in the slot
-                DataDictionary remoteSlots = GetSlots(m_RemoteSettings);
+                DataDictionary remoteSlots = GetSlots(_remoteSettings);
                 if (remoteSlots.TryGetValue(slot, TokenType.DataDictionary, out DataToken slotDataToken))
                 {
-                    if (slotDataToken.DataDictionary.TryGetValue(revisionKey, out DataToken revision))
+                    if (slotDataToken.DataDictionary.TryGetValue(RevisionKey, out DataToken revision))
                     {
                         return (long)revision.Double;
                     }
@@ -895,10 +895,10 @@ namespace OpenFlightVRC.Net
             if (_IsSlotValid(slot))
             {
                 //get the date in the slot
-                DataDictionary remoteSlots = GetSlots(m_RemoteSettings);
+                DataDictionary remoteSlots = GetSlots(_remoteSettings);
                 if (remoteSlots.TryGetValue(slot, TokenType.DataDictionary, out DataToken slotDataToken))
                 {
-                    if (slotDataToken.DataDictionary.TryGetValue(updatedDateTimeKey, out DataToken updatedDateTime))
+                    if (slotDataToken.DataDictionary.TryGetValue(UpdatedDateTimeKey, out DataToken updatedDateTime))
                     {
                         return updatedDateTime.ToString();
                     }
@@ -990,12 +990,12 @@ namespace OpenFlightVRC.Net
         public bool _HasRemoteDifferences()
         {
             //do a dummy early check and see if their counts are different
-            if (m_LocalSettings.Count != m_RemoteSettings.Count)
+            if (_localSettings.Count != _remoteSettings.Count)
             {
                 return true;
             }
 
-            return _GetDictionaryDifferences(m_LocalSettings, m_RemoteSettings);
+            return _GetDictionaryDifferences(_localSettings, _remoteSettings);
         }
 
 
@@ -1078,6 +1078,22 @@ namespace OpenFlightVRC.Net
             TEMPOWNERDOREMOVEWHENFIXED = Owner;
 
             RunCallback(PlayerSettingsCallback.OnStartFinished);
+
+            //startup a coroutine to call update the cached storage usage info
+            //only do this for the local player
+            if (Networking.IsOwner(gameObject))
+            {
+                Networking.RequestStorageUsageUpdate();
+                SendCustomEventDelayedSeconds(nameof(_UpdateCachedStorageUsage), StorageUsageRequestInterval);
+            }
+        }
+
+        public void _UpdateCachedStorageUsage()
+        {
+            Networking.RequestStorageUsageUpdate();
+
+            //self call
+            SendCustomEventDelayedSeconds(nameof(_UpdateCachedStorageUsage), StorageUsageRequestInterval);
         }
 
         public override void OnPlayerRestored(VRCPlayerApi player)
@@ -1094,18 +1110,18 @@ namespace OpenFlightVRC.Net
             //set the synched settings to the backup
             if (PlayerData.TryGetString(owner, DBBackupKey, out string backup))
             {
-                synchedSettings = backup;
-                if (VRCJson.TryDeserializeFromJson(synchedSettings, out DataToken _settings_token))
+                SynchedSettings = backup;
+                if (VRCJson.TryDeserializeFromJson(SynchedSettings, out DataToken _settings_token))
                 {
-                    m_RemoteSettings = _settings_token.DataDictionary;
+                    _remoteSettings = _settings_token.DataDictionary;
                     //if is the local player, we want a full clone of the data so we can manipulate it. Otherwise, we just want a reference
                     if (Networking.IsOwner(gameObject))
                     {
-                        m_LocalSettings = m_RemoteSettings.DeepClone();
+                        _localSettings = _remoteSettings.DeepClone();
                     }
                     else
                     {
-                        m_LocalSettings = m_RemoteSettings;
+                        _localSettings = _remoteSettings;
                     }
                     Log(LogLevel.Info, "Settings database recovered successfully");
                     //invoke the callback
@@ -1132,24 +1148,24 @@ namespace OpenFlightVRC.Net
         /// </summary>
         public void _SaveBackup()
         {
-            PlayerData.SetString(DBBackupKey, synchedSettings);
+            PlayerData.SetString(DBBackupKey, SynchedSettings);
         }
 
         public void _InitializeDatabase()
         {
             VRCPlayerApi owner = Networking.GetOwner(gameObject);
             Log(LogLevel.Info, string.Format("Checking for settings database on player {0}", owner.displayName));
-            if (VRCJson.TryDeserializeFromJson(synchedSettings, out DataToken _settings_token))
+            if (VRCJson.TryDeserializeFromJson(SynchedSettings, out DataToken _settings_token))
             {
-                m_RemoteSettings = _settings_token.DataDictionary;
+                _remoteSettings = _settings_token.DataDictionary;
                 //if is the local player, we want a full clone of the data so we can manipulate it. Otherwise, we just want a reference
                 if (Networking.IsOwner(gameObject))
                 {
-                    m_LocalSettings = m_RemoteSettings.DeepClone();
+                    _localSettings = _remoteSettings.DeepClone();
                 }
                 else
                 {
-                    m_LocalSettings = m_RemoteSettings;
+                    _localSettings = _remoteSettings;
                 }
                 Log(LogLevel.Info, "Settings database deserialized successfully");
                 //invoke the callback
@@ -1178,8 +1194,8 @@ namespace OpenFlightVRC.Net
                 _SaveSlot(defaultSlotName, out var DISCARD);
 
                 //make sure the slot to load by default is set
-                _SetGlobalSetting(slotToLoadByDefaultKey, defaultSlotName);
-                _SetGlobalSetting(useWorldDefaultsWhenLoadingKey, false);
+                _SetGlobalSetting(SlotToLoadByDefaultKey, defaultSlotName);
+                _SetGlobalSetting(UseWorldDefaultsWhenLoadingKey, false);
             }
             else
             {
@@ -1190,11 +1206,11 @@ namespace OpenFlightVRC.Net
             //else, we have data already
 
             //check if we need to load the settings on join
-            if (_GetGlobalSetting(useWorldDefaultsWhenLoadingKey, out DataToken useWorldDefaultsWhenLoading))
+            if (_GetGlobalSetting(UseWorldDefaultsWhenLoadingKey, out DataToken useWorldDefaultsWhenLoading))
             {
                 if (!useWorldDefaultsWhenLoading.Boolean)
                 {
-                    if (_GetGlobalSetting(slotToLoadByDefaultKey, out DataToken settingValue))
+                    if (_GetGlobalSetting(SlotToLoadByDefaultKey, out DataToken settingValue))
                     {
                         if (_IsSlotValid(settingValue.ToString()))
                         {
@@ -1203,7 +1219,7 @@ namespace OpenFlightVRC.Net
                         else
                         {
                             Log(LogLevel.Warning, "Slot to load by default is invalid! Setting to first slot");
-                            _SetGlobalSetting(slotToLoadByDefaultKey, _GetSlotName(0));
+                            _SetGlobalSetting(SlotToLoadByDefaultKey, _GetSlotName(0));
                         }
                     }
                 }
@@ -1218,7 +1234,7 @@ namespace OpenFlightVRC.Net
         }
 
         /// <summary>
-        /// Called when we can ensure that the data in <see cref="synchedSettings"/> is valid
+        /// Called when we can ensure that the data in <see cref="SynchedSettings"/> is valid
         /// </summary>
         public override void OnDeserialization(DeserializationResult result)
         {
@@ -1240,18 +1256,18 @@ namespace OpenFlightVRC.Net
         private DataDictionary GatherSlotSettings()
         {
             DataDictionary slotSettings = new DataDictionary();
-            slotSettings.Add(new DataToken(nameof(wingFlightPlusGlide.flapStrengthBase)), wingFlightPlusGlide.flapStrengthBase);
-            slotSettings.Add(new DataToken(nameof(wingFlightPlusGlide.flightGravityBase)), wingFlightPlusGlide.flightGravityBase);
-            slotSettings.Add(new DataToken(nameof(wingFlightPlusGlide.requireJump)), wingFlightPlusGlide.requireJump);
-            slotSettings.Add(new DataToken(nameof(wingFlightPlusGlide.allowLoco)), wingFlightPlusGlide.allowLoco);
-            slotSettings.Add(new DataToken(nameof(wingFlightPlusGlide.useAvatarModifiers)), wingFlightPlusGlide.useAvatarModifiers);
-            slotSettings.Add(new DataToken(nameof(wingFlightPlusGlide.canGlide)), wingFlightPlusGlide.canGlide);
-            slotSettings.Add(new DataToken(nameof(wingFlightPlusGlide.fallToGlide)), wingFlightPlusGlide.fallToGlide);
-            slotSettings.Add(new DataToken(nameof(wingFlightPlusGlide.glideControl)), wingFlightPlusGlide.glideControl);
-            slotSettings.Add(new DataToken(nameof(wingFlightPlusGlide.airFriction)), wingFlightPlusGlide.airFriction);
-            slotSettings.Add(new DataToken(nameof(wingFlightPlusGlide.bankingTurns)), wingFlightPlusGlide.bankingTurns);
-            slotSettings.Add(new DataToken(nameof(wingFlightPlusGlide.glideAngleOffset)), wingFlightPlusGlide.glideAngleOffset);
-            slotSettings.Add(new DataToken(nameof(wingFlightPlusGlide.useAvatarScale)), wingFlightPlusGlide.useAvatarScale);
+            slotSettings.Add(new DataToken(nameof(WingFlightPlusGlide.flapStrengthBase)), WingFlightPlusGlide.flapStrengthBase);
+            slotSettings.Add(new DataToken(nameof(WingFlightPlusGlide.flightGravityBase)), WingFlightPlusGlide.flightGravityBase);
+            slotSettings.Add(new DataToken(nameof(WingFlightPlusGlide.requireJump)), WingFlightPlusGlide.requireJump);
+            slotSettings.Add(new DataToken(nameof(WingFlightPlusGlide.allowLoco)), WingFlightPlusGlide.allowLoco);
+            slotSettings.Add(new DataToken(nameof(WingFlightPlusGlide.useAvatarModifiers)), WingFlightPlusGlide.useAvatarModifiers);
+            slotSettings.Add(new DataToken(nameof(WingFlightPlusGlide.canGlide)), WingFlightPlusGlide.canGlide);
+            slotSettings.Add(new DataToken(nameof(WingFlightPlusGlide.fallToGlide)), WingFlightPlusGlide.fallToGlide);
+            slotSettings.Add(new DataToken(nameof(WingFlightPlusGlide.glideControl)), WingFlightPlusGlide.glideControl);
+            slotSettings.Add(new DataToken(nameof(WingFlightPlusGlide.airFriction)), WingFlightPlusGlide.airFriction);
+            slotSettings.Add(new DataToken(nameof(WingFlightPlusGlide.bankingTurns)), WingFlightPlusGlide.bankingTurns);
+            slotSettings.Add(new DataToken(nameof(WingFlightPlusGlide.glideAngleOffset)), WingFlightPlusGlide.glideAngleOffset);
+            slotSettings.Add(new DataToken(nameof(WingFlightPlusGlide.useAvatarScale)), WingFlightPlusGlide.useAvatarScale);
             return slotSettings;
         }
 
@@ -1261,18 +1277,18 @@ namespace OpenFlightVRC.Net
         /// <param name="settingsLocation"> The settings to spread </param>
         private void SpreadSettings(DataDictionary settingsLocation)
         {
-            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.flapStrengthBase), ref wingFlightPlusGlide.flapStrengthBase);
-            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.flightGravityBase), ref wingFlightPlusGlide.flightGravityBase);
-            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.requireJump), ref wingFlightPlusGlide.requireJump);
-            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.allowLoco), ref wingFlightPlusGlide.allowLoco);
-            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.useAvatarModifiers), ref wingFlightPlusGlide.useAvatarModifiers);
-            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.canGlide), ref wingFlightPlusGlide.canGlide);
-            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.fallToGlide), ref wingFlightPlusGlide.fallToGlide);
-            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.glideControl), ref wingFlightPlusGlide.glideControl);
-            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.airFriction), ref wingFlightPlusGlide.airFriction);
-            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.bankingTurns), ref wingFlightPlusGlide.bankingTurns);
-            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.glideAngleOffset), ref wingFlightPlusGlide.glideAngleOffset);
-            Util.TryApplySetting(settingsLocation, nameof(wingFlightPlusGlide.useAvatarScale), ref wingFlightPlusGlide.useAvatarScale);
+            Util.TryApplySetting(settingsLocation, nameof(WingFlightPlusGlide.flapStrengthBase), ref WingFlightPlusGlide.flapStrengthBase);
+            Util.TryApplySetting(settingsLocation, nameof(WingFlightPlusGlide.flightGravityBase), ref WingFlightPlusGlide.flightGravityBase);
+            Util.TryApplySetting(settingsLocation, nameof(WingFlightPlusGlide.requireJump), ref WingFlightPlusGlide.requireJump);
+            Util.TryApplySetting(settingsLocation, nameof(WingFlightPlusGlide.allowLoco), ref WingFlightPlusGlide.allowLoco);
+            Util.TryApplySetting(settingsLocation, nameof(WingFlightPlusGlide.useAvatarModifiers), ref WingFlightPlusGlide.useAvatarModifiers);
+            Util.TryApplySetting(settingsLocation, nameof(WingFlightPlusGlide.canGlide), ref WingFlightPlusGlide.canGlide);
+            Util.TryApplySetting(settingsLocation, nameof(WingFlightPlusGlide.fallToGlide), ref WingFlightPlusGlide.fallToGlide);
+            Util.TryApplySetting(settingsLocation, nameof(WingFlightPlusGlide.glideControl), ref WingFlightPlusGlide.glideControl);
+            Util.TryApplySetting(settingsLocation, nameof(WingFlightPlusGlide.airFriction), ref WingFlightPlusGlide.airFriction);
+            Util.TryApplySetting(settingsLocation, nameof(WingFlightPlusGlide.bankingTurns), ref WingFlightPlusGlide.bankingTurns);
+            Util.TryApplySetting(settingsLocation, nameof(WingFlightPlusGlide.glideAngleOffset), ref WingFlightPlusGlide.glideAngleOffset);
+            Util.TryApplySetting(settingsLocation, nameof(WingFlightPlusGlide.useAvatarScale), ref WingFlightPlusGlide.useAvatarScale);
         }
         #endregion
     }
