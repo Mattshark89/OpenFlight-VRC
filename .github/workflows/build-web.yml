@@ -41,8 +41,8 @@ jobs:
 
       - name: Get all tags for upcoming matrix
         id: get_latest_release
-        run: | #head limits the tags list to the latest 20
-          echo "DATA=[\"$(echo $(git tag --sort=-creatordate | head -n 20 ) | sed 's/ /\", \"/g')\"]" >> "$GITHUB_OUTPUT"
+        run: | #head limits the tags list to the latest 2000000 (functionally disabled for now)
+          echo "DATA=[\"$(echo $(git tag --sort=-creatordate | head -n 2000000 ) | sed 's/ /\", \"/g')\"]" >> "$GITHUB_OUTPUT"
           echo "LATEST=$(echo $(git tag -l --sort=-creatordate | head -n 1 ))" >> "$GITHUB_OUTPUT"
         #echo "DATA=[\"1.0.1\", \"1.1.1\", \"OpenFlight-1.7.9\"]" >> "$GITHUB_OUTPUT"
         
