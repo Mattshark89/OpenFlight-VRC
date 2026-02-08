@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.70.0",
-  "JSON Date": "2025-12-15",
+  "JSON Version": "2.71.0",
+  "JSON Date": "2026-02-08",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -70,7 +70,8 @@
     "Woffle Nibbler",
     "WebserferOwO",
     "Zeimyth",
-    "Fluxsynth"
+    "Fluxsynth",
+    "wordweaver1001"
   ],
   "Bases": {
     "Kitavali": {
@@ -83,6 +84,16 @@
         ],
         "Weight": 1,
         "WingtipOffset": 6.6
+      },
+        "Weaver": {
+        "Name": "Kitachi",
+        "Creator": "Rai Kitamatsu/Rantis",
+        "Introducer": "wordweaver1001",
+        "Hash": [
+          "-1331949987v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 0
       }
     },
     "Batdal": {
