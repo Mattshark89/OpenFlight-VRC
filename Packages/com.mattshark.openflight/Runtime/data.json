@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
   "JSON Version": "2.72.0",
-  "JSON Date": "2026-03-08",
+  "JSON Date": "2026-03-09",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -72,6 +72,7 @@
     "Zeimyth",
     "Fluxsynth",
     "wordweaver1001",
+    "KUROPPER",
     "Xavarius"
   ],
   "Bases": {
@@ -2172,6 +2173,28 @@
         "Hash": ["673820797v2"],
         "Weight": 1,
         "WingtipOffset": 2.14
+      }
+    },
+    "Sweater Bird": {
+      "Original": {
+      "Name": "Sweater Bird",
+      "Creator": "Crazium",
+      "Introducer": "KUROPPER",
+      "Hash": ["-489037540v2"],
+      "Weight": 1,
+      "WingtipOffset": 0
+      }
+    },
+    "Feathered Raptor": {
+      "Original": {
+      "Name": "Feathered Raptor",
+      "Creator": "CreatureTime",
+      "Introducer": "Xavarius",
+      "Hash": [
+        ["-713910226v2"],
+      ],
+      "Weight": 1,
+      "WingtipOffset": 1.14
       }
     }
   }
