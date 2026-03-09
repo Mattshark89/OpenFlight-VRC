@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.72.0",
-  "JSON Date": "2026-02-20",
+  "JSON Version": "2.71.3",
+  "JSON Date": "2026-03-09",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -72,7 +72,8 @@
     "Zeimyth",
     "Fluxsynth",
     "wordweaver1001",
-    "KUROPPER"
+    "KUROPPER",
+    "Xavarius"
   ],
   "Bases": {
     "Kitavali": {
@@ -2172,6 +2173,18 @@
       "Hash": ["-489037540v2"],
       "Weight": 1,
       "WingtipOffset": 0
+      }
+    },
+    "Feathered Raptor": {
+      "Original": {
+      "Name": "Feathered Raptor",
+      "Creator": "CreatureTime",
+      "Introducer": "Xavarius",
+      "Hash": [
+        "-713910226v2"
+      ],
+      "Weight": 1,
+      "WingtipOffset": 1.14
       }
     }
   }
