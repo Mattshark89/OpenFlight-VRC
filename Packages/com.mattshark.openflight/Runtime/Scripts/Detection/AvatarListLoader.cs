@@ -21,12 +21,18 @@ namespace OpenFlightVRC
 	public class AvatarListLoader : CallbackUdonSharpBehaviour
 	{
 		public VRCUrl URL = new VRCUrl("https://mattshark89.github.io/OpenFlight-VRC/data.json");
+		
+		/// <summary>
+		/// The time to wait in seconds before starting the download.
+		/// </summary>
+		public float LoadDelay = 0f;
 
 		/// <summary>
 		/// The output of the json file. This is set by the <see cref="LoadURL"/> method, and is done asynchronously, so make sure your script waits for output to be set. See VRCStringDownloader for more information
 		/// </summary>
 		[System.NonSerialized]
 		public string Output = "";
+		
 		/// <summary>
 		/// The in-world json file. This is used if the URL fails to load
 		/// </summary>
@@ -38,27 +44,42 @@ namespace OpenFlightVRC
 		public bool useOfflineJSON = false;
 
 		/// <summary>
-		/// 	Loads the URL and sets the Output property. This is done asynchronously, so make sure your script waits for output to be set. See VRCStringDownloader for more information
+		/// Starts the URL loading processes and sets the Output property once done. This is done asynchronously, so make sure your script waits for output to be set. See VRCStringDownloader for more information.
 		/// </summary>
 		public void LoadURL()
 		{
-			Output = "";
-
-			if (useOfflineJSON)
-			{
-				Output = OfflineJSON.text;
-				Logger.Log("Force-using in-world JSON list", this);
-				RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
-				return;
-			}
-
-			//initially trigger with the in-world list
-			Output = OfflineJSON.text;
-			Logger.Log("Using in-world JSON list until remote is available....", this);
-			RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
-
-			VRCStringDownloader.LoadUrl(URL, (VRC.Udon.Common.Interfaces.IUdonEventReceiver)this);
+            if (LoadDelay > 0)
+            {
+                SendCustomEventDelayedSeconds(nameof(DelayedLoadURL), LoadDelay);
+            }
+            else
+            {
+	            SendCustomEventDelayedFrames(nameof(DelayedLoadURL), 1); // Prevents race condition when applying the OfflineJson before other scripts could register.
+            }
 		}
+
+        /// <summary>
+        /// Loads the URL and sets the Output property. Only used internally after a delay.
+        /// </summary>
+        public void DelayedLoadURL()
+        {
+            Output = "";
+
+            if (useOfflineJSON)
+            {
+                Output = OfflineJSON.text;
+                Logger.Log("Force-using in-world JSON list", this);
+                RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
+                return;
+            }
+
+            //initially trigger with the in-world list
+            Output = OfflineJSON.text;
+            Logger.Log("Using in-world JSON list until remote is available....", this);
+            RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
+
+            VRCStringDownloader.LoadUrl(URL, (VRC.Udon.Common.Interfaces.IUdonEventReceiver)this);
+        }
 
 		public override void OnStringLoadSuccess(IVRCStringDownload data)
 		{
