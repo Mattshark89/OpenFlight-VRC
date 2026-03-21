@@ -140,8 +140,6 @@ namespace OpenFlightVRC
 
 			debugInfo = "Loading JSON list...";
 			JSONLoader.AddCallback(AvatarListLoaderCallback.AvatarListLoaded, this, nameof(LoadJSON));
-
-			JSONLoader.SendCustomEventDelayedFrames(nameof(AvatarListLoader.LoadURL), 1); // 1 frame delay to prevent a race condition where the offline callback is triggered before other scripts could register
 		}
 
 		public override void OnAvatarChanged(VRCPlayerApi player)
