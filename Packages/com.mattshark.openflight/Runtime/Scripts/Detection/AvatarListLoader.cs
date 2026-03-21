@@ -48,26 +48,19 @@ namespace OpenFlightVRC
 		/// </summary>
 		public void LoadURL()
 		{
-			SendCustomEventDelayedFrames(nameof(LoadOfflineJson), 1); // Prevents race condition when applying the OfflineJson before other scripts could register.
-
-			if (!useOfflineJSON)
-				SendCustomEventDelayedSeconds(nameof(DelayedLoadURL), LoadDelay);
-		}
-
-		/// <summary>
-		/// Loads and applies the in-world JSON file.
-		/// </summary>
-		public void LoadOfflineJson()
-		{
+			// Fill with the in-world JSON first
 			Output = OfflineJSON.text;
 			Logger.Log("Loading in-world JSON list.", this);
 			RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
+			
+			if (!useOfflineJSON)
+				SendCustomEventDelayedSeconds(nameof(StartUrlLoadingDelayed), LoadDelay);
 		}
 
         /// <summary>
-        /// Starts the URL Loading Process. Only used internally after a delay.
+        /// Starts the actual URL loading process. Only used internally.
         /// </summary>
-        public void DelayedLoadURL()
+        public void StartUrlLoadingDelayed()
         {
 	        Logger.Log("Loading Avatar List URL...", this);
             VRCStringDownloader.LoadUrl(URL, (VRC.Udon.Common.Interfaces.IUdonEventReceiver)this);
@@ -84,8 +77,9 @@ namespace OpenFlightVRC
 		//if the URL fails to load, fallback to the in-world stored JSON instead
 		public override void OnStringLoadError(IVRCStringDownload data)
 		{
+			Output = OfflineJSON.text;
 			Logger.Log("Failed to load Avatar List URL! Using in-world JSON instead.", this);
-			LoadOfflineJson();
+			RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
 		}
 	}
 
