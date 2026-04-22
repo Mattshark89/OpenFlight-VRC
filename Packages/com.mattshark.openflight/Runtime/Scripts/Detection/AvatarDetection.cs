@@ -140,8 +140,6 @@ namespace OpenFlightVRC
 
 			debugInfo = "Loading JSON list...";
 			JSONLoader.AddCallback(AvatarListLoaderCallback.AvatarListLoaded, this, nameof(LoadJSON));
-
-			JSONLoader.LoadURL();
 		}
 
 		public override void OnAvatarChanged(VRCPlayerApi player)
