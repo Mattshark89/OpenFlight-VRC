@@ -4,7 +4,7 @@
 QualitySettings:
   m_ObjectHideFlags: 0
   serializedVersion: 5
-  m_CurrentQuality: 2
+  m_CurrentQuality: 3
   m_QualitySettings:
   - serializedVersion: 3
     name: VRC Low
@@ -179,7 +179,7 @@ QualitySettings:
     billboardsFaceCameraPosition: 1
     useLegacyDetailDistribution: 1
     vSyncCount: 0
-    realtimeGICPUUsage: 25
+    realtimeGICPUUsage: 50
     lodBias: 2
     maximumLODLevel: 0
     enableLODCrossFade: 1

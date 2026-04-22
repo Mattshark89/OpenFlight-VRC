@@ -11,6 +11,7 @@ using System.Reflection;
 using VRC.SDKBase.Editor.Api;
 using VRC.Core;
 using System.Threading.Tasks;
+using System.Linq;
 
 //this script literally is just here to notify the world creator at upload that we recommend adding the openflight tag to the world
 namespace OpenFlightVRC.Editor
@@ -96,6 +97,16 @@ namespace OpenFlightVRC.Editor
         /// <returns>True if the tag was added, false if it was not</returns>
         private static bool addTag(string Tag)
         {
+            var openflightGameObject = FindObjectsOfType<MonoBehaviour>(true).Where(go => go.GetComponent<OpenFlight>() != null);
+            if (openflightGameObject.Count() == 0)
+            {
+                Debug.Log("Found no Openflight Controller in scene.");
+                return false;
+            }
+            else
+            {
+                Debug.Log("Found Openflight Controller in scene");
+            }
             //check if the tag limit has been reached
             if (getTagCount() >= getTagLimit())
             {

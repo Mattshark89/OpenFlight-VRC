@@ -22,6 +22,7 @@ Shader "OpenFlight/Particles"
                 #include "UnityCG.cginc"
                 #pragma multi_compile_particles
                 #pragma multi_compile_fog
+                #pragma target 3.0
 
                 #include "UnityCG.cginc"
 
@@ -44,7 +45,7 @@ Shader "OpenFlight/Particles"
                     o.uv0 = v.texcoord0;
                     o.vertex = UnityObjectToClipPos(v.vertex);
                     o.color = v.color;
-                    UNITY_TRANSFER_FOG(o,o.pos);
+                    UNITY_TRANSFER_FOG(o,o.vertex);
                     return o;
                 }
                 
