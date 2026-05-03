@@ -77,12 +77,8 @@ jobs:
           fetch-depth: 0 # fetch all history
           ref: ${{ matrix.release-tag }}
 
-      - name: Checkout latest docs
-        uses: actions/checkout@v3
-        with:
-          sparse-checkout: |
-            docs
-          clean: false
+      - name: Fetch latest docs from main
+        run: git fetch origin main:main --depth=1 && git checkout main -- docs
 
       #modify doxyfile to include tag version
       - name: edit DoxyFile
