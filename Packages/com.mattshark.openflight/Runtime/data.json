@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.74.1",
-  "JSON Date": "2026-04-22",
+  "JSON Version": "2.75.0",
+  "JSON Date": "2026-05-04",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -75,7 +75,8 @@
     "KUROPPER",
     "Xavarius",
     "Katislove",
-    "aviona.sys"
+    "aviona.sys",
+    "Beanthing"
   ],
   "Bases": {
     "Kitavali": {
@@ -2216,6 +2217,16 @@
         "Hash": ["1572237321v2"],
         "Weight": 1,
         "WingtipOffset": 2.5
+      }
+    },
+    "Mobu": {
+      "Original": {
+        "Name": "Mobu",
+        "Creator": "Beanthing",
+        "Introducer": "Beanthing",
+        "Hash": ["-841588647v2"],
+        "Weight": 1,
+        "WingtipOffset": 3.5
       }
     }
   }
