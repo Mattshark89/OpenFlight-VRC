@@ -26,13 +26,40 @@ namespace OpenFlightVRC.Contact
         public AvatarDetection AviDetect;
         private VRCPlayerApi Localplayer;
 
+        private Transform objtransform;
 
-        public void Start()
+
+        void Start()
         {
             Sender.enabled = false;
             Localplayer = Networking.LocalPlayer;
+
+            // Place contact at absolute zero
+            objtransform = this.transform;
+            objtransform.position = new Vector3(0.0f,0.0f,0.0f);
+            objtransform.rotation = Quaternion.Euler(0.0f,0.0f,0.0f);
         }
 
+        /// <summary>
+        /// Since the root OpenFlight generally has not minded being moved before contact support, checking, notifying and fixing if it has is now important.
+        /// </summary>
+        public override void OnAvatarEyeHeightChanged(VRCPlayerApi player, float eyeHeight)
+        {
+            if (player.isLocal) {
+                if (Vector3.Distance(objtransform.position, Vector3.zero) > 0.01f)
+                {
+                    Debug.LogError("Root OpenFlight object or parent of it has changed, this is not recommended. If left as is contact support will either not work or randomly work.");
+                    Logger.Log("Root OpenFlight object or parent of it has changed, this is not recommended. If left as is contact support will either not work or randomly work.", this);
+                    objtransform.position = new Vector3(0.0f,0.0f,0.0f);
+                    objtransform.rotation = Quaternion.Euler(0.0f,0.0f,0.0f);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Enables or disables the contact sender, depending on boolstate, which notifies the avatar of whether it is flying.
+        /// </summary>
+        /// <param name="boolState"></param>
         internal void OnFlyingChanged(bool boolState)
         {
             Sender.enabled = boolState;
