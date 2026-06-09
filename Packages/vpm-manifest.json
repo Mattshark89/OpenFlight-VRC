@@ -3,8 +3,14 @@
     "com.vrchat.core.vpm-resolver": {
       "version": "0.1.29"
     },
+    "dev.onevr.vrworldtoolkit": {
+      "version": "3.4.1"
+    },
+    "com.vrchat.base": {
+      "version": "3.10.3"
+    },
     "com.vrchat.worlds": {
-      "version": "3.8.1"
+      "version": "3.10.3"
     }
   },
   "locked": {
@@ -12,15 +18,15 @@
       "version": "0.1.29",
       "dependencies": {}
     },
-    "com.vrchat.worlds": {
-      "version": "3.8.1",
-      "dependencies": {
-        "com.vrchat.base": "3.8.1"
-      }
-    },
     "com.vrchat.base": {
-      "version": "3.8.1",
+      "version": "3.10.3",
       "dependencies": {}
+    },
+    "com.vrchat.worlds": {
+      "version": "3.10.3",
+      "dependencies": {
+        "com.vrchat.base": "3.10.3"
+      }
     }
   }
 }
