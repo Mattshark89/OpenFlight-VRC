@@ -88,15 +88,27 @@ namespace OpenFlightVRC
 		public GameObject wingedFlight;
 
 		/// <summary>
+		/// 	The Desktop Flight game object, used to enable/disable the DesktopFlight script
+		/// </summary>
+		public GameObject desktopFlight;
+
+		/// <summary>
+        /// 	All flight properties contained onto one object
+        /// </summary>
+		public FlightProperties FP;
+
+		/// <summary>
 		/// The AvatarDetection script, used to re-evaluate flight upon switching to auto
 		/// </summary>
 		public AvatarDetection avatarDetection;
+
+		private bool flightoverwritten = false;
 
 		/// <inheritdoc cref="flightMode"/>
 		[FieldChangeCallback(nameof(flightMode)), SerializeField]
 		private FlightMode _flightMode = FlightMode.Auto;
 		/// <summary>
-		/// The current flight mode. Will not allow flight if the player is not in VR. Can be bypassed with <see cref="ignoreVRCheck"/>, but doing so is not recommended.
+		/// The current flight mode.
 		/// </summary>
 		public FlightMode flightMode
 		{
@@ -104,18 +116,18 @@ namespace OpenFlightVRC
 			set
 			{
 				_flightMode = value;
-				const string FLIGHTCANTBESETTEMPLATE = "Flight cannot be set to {0} because the player is not in VR";
 				//update the flight mode string
-				switch (value)
+				if (!flightoverwritten)
 				{
-					case FlightMode.Off:
-						flightModeString = "Off";
-						SwitchFlight(false);
-						Logger.Log("Flight turned off", this);
-						break;
-					case FlightMode.Auto:
-						if (InVR())
-						{
+					switch (value)
+					{
+						case FlightMode.Off:
+							flightModeString = "Off";
+							SwitchFlight(false);
+							Logger.Log("Flight turned off", this);
+							break;
+
+						case FlightMode.Auto:
 							flightModeString = "Auto";
 							SwitchFlight(false);
 							//tell the avatar detection script to check if the player can fly again
@@ -124,30 +136,20 @@ namespace OpenFlightVRC
 								avatarDetection.ReevaluateFlight();
 							}
 							Logger.Log("Flight set to auto", this);
-						}
-						else
-						{
-							flightMode = FlightMode.Off;
-							Logger.Log(string.Format(FLIGHTCANTBESETTEMPLATE, "Auto"), this);
-						}
-						break;
-					case FlightMode.On:
-						if (InVR())
-						{
+							break;
+
+						case FlightMode.On:
 							flightModeString = "On";
 							SwitchFlight(true);
 							Logger.Log("Flight turned on", this);
-						}
-						else
-						{
-							flightMode = FlightMode.Off;
-							Logger.Log(string.Format(FLIGHTCANTBESETTEMPLATE, "On"), this);
-						}
-						break;
-					default:
-						flightModeString = "Unknown";
-						break;
-				}
+							break;
+
+						default:
+							flightModeString = "Unknown";
+							break;
+
+					}
+				}				
 			}
 		}
 
@@ -179,29 +181,20 @@ namespace OpenFlightVRC
 				}
 				else
 				{
-					if (InVR())
-					{
-						flightAllowedString = "Inactive";
-					}
-					else
-					{
-						flightAllowedString = "Inactive (Not in VR)";
-					}
+					flightAllowedString = "Inactive";
 				}
 			}
 		}
 
+		/// <summary
+		/// Udon behavior handing HUD notification for telling if flight is possible or not.
+		/// </summary>
+		[Tooltip("Has to link to the correct udon behavior for notifications to appear.")]
+		public Hud.HudHandler HudNotificationHandler;
+
 		[ReadOnlyInspector]
 		public string flightAllowedString = "";
 
-		/// <summary>
-		/// If true, the system will ignore the VR check and allow flight even if the player is not in VR
-		/// </summary>
-		/// <remarks>
-		/// You REALLY should not turn this on. This is purely for testing purposes
-		/// </remarks>
-		[ReadOnlyInspector]
-		public bool ignoreVRCheck = false;
 
 		/// <summary>
 		/// Turns flight off
@@ -209,8 +202,16 @@ namespace OpenFlightVRC
 		/// <param name="value">If true, flight will be turned off</param>
 		private void SwitchFlight(bool value)
 		{
-			wingedFlight.SetActive(value);
-			flightAllowed = value;
+			if (InVR())
+			{
+				wingedFlight.SetActive(value);
+				flightAllowed = value;
+			}
+			else
+			{
+				desktopFlight.SetActive(value);
+				flightAllowed = value;
+			}
 		}
 
 		/// <summary>
@@ -219,10 +220,6 @@ namespace OpenFlightVRC
 		/// <returns></returns>
 		private bool InVR()
 		{
-			if (ignoreVRCheck)
-			{
-				Logger.LogWarning("VR check is being ignored! This should not be enabled in a production build!", this);
-			}
 
 			//ensure the user is valid
 			if (_localPlayer == null)
@@ -230,7 +227,7 @@ namespace OpenFlightVRC
 				_localPlayer = Networking.LocalPlayer;
 			}
 
-			return _localPlayer.IsUserInVR() || ignoreVRCheck;
+			return _localPlayer.IsUserInVR();
 		}
 
 		public void Start()
@@ -241,10 +238,6 @@ namespace OpenFlightVRC
 			flightAllowed = _flightAllowed;
 
 			_localPlayer = Networking.LocalPlayer;
-			if (!InVR())
-			{
-				FlightOff();
-			}
 
 			//apply flight mode
 			switch (flightMode)
@@ -272,6 +265,12 @@ namespace OpenFlightVRC
 		public void FlightOn()
 		{
 			flightMode = FlightMode.On;
+
+			// TODO Check whether it should even pop up here.
+			if (FP.notifications)
+			{
+				HudNotificationHandler.NotifyFlightCapable();
+			}
 		}
 
 		/// <summary>
@@ -280,6 +279,12 @@ namespace OpenFlightVRC
 		public void FlightOff()
 		{
 			flightMode = FlightMode.Off;
+
+			// TODO Check whether it should even pop up here.
+			if (FP.notifications)
+			{
+				HudNotificationHandler.NotifyNotFlightCapable();
+			}
 		}
 
 		/// <summary>
@@ -290,6 +295,58 @@ namespace OpenFlightVRC
 			flightMode = FlightMode.Auto;
 		}
 
+
+		/// <summary
+		/// Method to notify OpenFlight that its flight mode is being overwritten. Used for flight zones where you want to temporarily change if a player can fly or not.
+		/// </summary>
+		public void FlightModifiedOn()
+		{
+			flightoverwritten = true;
+			SwitchFlight(true);
+
+			if (FP.notifications && flightAllowed == true)
+			{
+				HudNotificationHandler.NotifyFlightCapable();
+			}
+			Logger.Log("Temporarily overwriting flight mode to be On", this);
+		}
+
+		/// <summary
+		/// Method to disable temporary overwriting of flight mode.
+		/// </summary>
+		public void FlightModifiedOff()
+		{
+			flightoverwritten = true;
+			SwitchFlight(false);
+			if (FP.notifications && flightAllowed == false)
+			{
+				HudNotificationHandler.NotifyNotFlightCapable();
+			}
+			Logger.Log("Temporarily overwriting flight mode to be Off", this);
+		}
+
+		/// <summary
+		/// Reset flight mode back to value it normally should.
+		/// </summary>
+		public void FlightModifiedReset()
+		{
+			flightoverwritten = false;
+			flightMode = _flightMode;
+			if (FP.notifications)
+			{
+				if (flightAllowed == true)
+				{
+					HudNotificationHandler.NotifyFlightCapable();
+				}
+				else
+				{
+					HudNotificationHandler.NotifyNotFlightCapable();
+				}
+			}
+			Logger.Log("Resetting overwritten flight mode to what it should be", this);
+		}
+
+
 		/// <summary>
 		/// Allows flight if flightMode is set to Auto
 		/// </summary>
@@ -299,6 +356,11 @@ namespace OpenFlightVRC
 			if (flightMode == FlightMode.Auto)
 			{
 				SwitchFlight(true);
+
+				if (FP.notifications)
+				{
+					HudNotificationHandler.NotifyFlightCapable();
+				}
 			}
 		}
 
@@ -310,6 +372,11 @@ namespace OpenFlightVRC
 			if (flightMode == FlightMode.Auto)
 			{
 				SwitchFlight(false);
+
+				if (FP.notifications)
+				{
+					HudNotificationHandler.NotifyNotFlightCapable();
+				}
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @ Maintainer: Happyrobot33
  */
 
@@ -84,13 +84,13 @@ namespace OpenFlightVRC.UI
 		public void RestoreDefaults()
 		{
 			if (target != null)
-				target.SendCustomEvent(nameof(OpenFlightVRC.WingFlightPlusGlide.RestoreDefaults));
+				target.SendCustomEvent(nameof(OpenFlightVRC.FlightProperties.RestoreDefaults));
 		}
 
 		public void InitializeDefaults()
 		{
 			if (target != null)
-				target.SendCustomEvent(nameof(OpenFlightVRC.WingFlightPlusGlide.InitializeDefaults));
+				target.SendCustomEvent(nameof(OpenFlightVRC.FlightProperties.InitializeDefaults));
 		}
 	}
 }
