@@ -1,4 +1,4 @@
-import { baseLayerLuminance, StandardLuminance } from 'https://unpkg.com/@fluentui/web-components';
+import { baseLayerLuminance, StandardLuminance } from 'https://unpkg.com/@fluentui@2.6.1/web-components';
 
 const LISTING_URL = "{{ listingInfo.Url }}";
 
