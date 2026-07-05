@@ -84,13 +84,13 @@ namespace OpenFlightVRC
 		}
 		
 		/// <summary>
-		/// Applies the in-world JSON to the Output property. And triggers the <see cref="AvatarListLoaderCallback.AvatarListLoaded"/> callback.
+		/// Applies the in-world JSON to the Output property. And triggers the <see cref="AvatarListLoaderCallback.AvatarListReady"/> callback.
 		/// </summary>
 		public void LoadOfflineJson()
 		{
 			Output = OfflineJSON.text;
-			Logger.Log("Loading in-world JSON list.", this);
-			RunCallback(AvatarListLoaderCallback.AvatarListLoaded);
+			Log(LogLevel.Info, "Loading in-world JSON list.", this);
+			RunCallback(AvatarListLoaderCallback.AvatarListReady);
 		}
 		
         /// <summary>
@@ -98,7 +98,7 @@ namespace OpenFlightVRC
         /// </summary>
         public void LoadRemoteString()
         {
-	        Logger.Log("Loading Avatar List URL...", this);
+	        Log(LogLevel.Info, "Loading Avatar List URL...", this);
             VRCStringDownloader.LoadUrl(URL, (VRC.Udon.Common.Interfaces.IUdonEventReceiver)this);
         }
 
@@ -115,7 +115,7 @@ namespace OpenFlightVRC
 		// If the URL fails to load, fallback to the in-world stored JSON instead.
 		public override void OnStringLoadError(IVRCStringDownload data)
 		{
-			Logger.Log("Failed to load Avatar List URL! Using in-world JSON instead.", this);
+			Log(LogLevel.Error, "Failed to load Avatar List URL! Using in-world JSON instead.", this);
 			LoadOfflineJson();
 			RunCallback(AvatarListLoaderCallback.URLLoadReturned);
 			RunCallback(AvatarListLoaderCallback.URLLoadFailed);
