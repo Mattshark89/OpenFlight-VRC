@@ -10,52 +10,56 @@ namespace OpenFlightVRC
 	[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 	public class ToggleWingedFlight : LoggableUdonSharpBehaviour
 	{
-		// Settings:
-		// 0- Flight Disabled
-		// 1- Flight Enabled
-		// 2- Flight Automatic
-		public int setting = 2;
 		const float OFFTEXTUREOFFSET = 0f;
 		const float AUTOTEXTUREOFFSET = 0.5f;
 		const float ONTEXTUREOFFSET = 0.75f;
         private const string ShaderTextureProperty = "_MainTex";
         public OpenFlight openFlight;
-		public GameObject wingedFlight;
 
 		void Start()
 		{
-			GetComponent<MeshRenderer>().material.SetTextureOffset(ShaderTextureProperty, new Vector2(0, 0.75f));
+			UpdateMaterial();
+            SendCustomEventDelayedSeconds(nameof(DelayedStart), 0.5f);
 		}
+
+        public void DelayedStart()
+        {
+            UpdateMaterial();
+        }
+
+		private void UpdateMaterial()
+        {
+            switch (openFlight.flightMode)
+			{
+				case FlightMode.Off:
+					GetComponent<MeshRenderer>().material.SetTextureOffset(ShaderTextureProperty, new Vector2(0f, OFFTEXTUREOFFSET));
+                    InteractionText = "Flight: Off. Click to turn on.";
+					break;
+				case FlightMode.On:
+					GetComponent<MeshRenderer>().material.SetTextureOffset(ShaderTextureProperty, new Vector2(0f, AUTOTEXTUREOFFSET));
+                    InteractionText = "Flight: On. Click to set to Automatic.";
+					break;
+				case FlightMode.Auto:
+					GetComponent<MeshRenderer>().material.SetTextureOffset(ShaderTextureProperty, new Vector2(0f, ONTEXTUREOFFSET));
+                    InteractionText = "Flight: Automatic. Click to turn off.";
+					break;
+				default:
+					GetComponent<MeshRenderer>().material.SetTextureOffset(ShaderTextureProperty, new Vector2(0f, AUTOTEXTUREOFFSET));
+					break;
+			}
+        }
+
+        private void CycleFlightMode()
+        {
+            int currentMode = (int)openFlight.flightMode;
+            int nextMode = (currentMode + 1) % 3; // Cycle through
+            openFlight.flightMode = (FlightMode)nextMode;
+        }
 
 		public override void Interact()
 		{
-			setting++;
-			if (setting > 2)
-			{
-				setting = 0;
-			}
-
-			switch (setting)
-			{
-				case 0:
-					openFlight.FlightOff();
-					GetComponent<MeshRenderer>().material.SetTextureOffset(ShaderTextureProperty, new Vector2(0f, OFFTEXTUREOFFSET));
-					break;
-				case 1:
-					openFlight.FlightOn();
-					GetComponent<MeshRenderer>().material.SetTextureOffset(ShaderTextureProperty, new Vector2(0f, AUTOTEXTUREOFFSET));
-					break;
-				case 2:
-					openFlight.FlightAuto();
-					GetComponent<MeshRenderer>().material.SetTextureOffset(ShaderTextureProperty, new Vector2(0f, ONTEXTUREOFFSET));
-					break;
-				default:
-					//default to auto if something has gone wrong here, but this should never happen
-					openFlight.FlightAuto();
-					GetComponent<MeshRenderer>().material.SetTextureOffset(ShaderTextureProperty, new Vector2(0f, AUTOTEXTUREOFFSET));
-					Debug.LogError("Invalid flight setting: " + setting);
-					break;
-			}
+            CycleFlightMode();
+			UpdateMaterial();
 		}
 	}
 }
