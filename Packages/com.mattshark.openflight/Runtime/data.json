@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.83.0",
-  "JSON Date": "2026-07-18",
+  "JSON Version": "2.84.0",
+  "JSON Date": "2026-07-19",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -81,7 +81,8 @@
     "Mors Phantasma",
     "KuroFoxYokai",
     "DrBlackRat",
-    "kitofox"
+    "kitofox",
+    "Mawterwelon"
   ],
   "Bases": {
     "Kitavali": {
@@ -2384,6 +2385,18 @@
         ],
         "Weight": 1,
         "WingtipOffset": 1.75
+      }
+    },
+    "Protodal": {
+      "Batterwelon Mod": {
+        "Name": "Batterwelon",
+        "Creator": "Nicoreda / Mawterwelon",
+        "Introducer": "Mawterwelon",
+        "Hash": [
+          "607834026v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 10.0
       }
     }
   }
