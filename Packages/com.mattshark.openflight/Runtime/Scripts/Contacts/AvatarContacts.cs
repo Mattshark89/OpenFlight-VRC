@@ -3,6 +3,7 @@ using UdonSharp;
 using UnityEngine;
 using VRC.Dynamics;
 using VRC.SDK3.Dynamics.Contact.Components;
+using VRC.SDK3.Components;
 using VRC.SDKBase;
 using VRC.Udon;
 
@@ -17,9 +18,18 @@ namespace OpenFlightVRC.Contact
 		public OpenFlight OpenFlight;
 
         /// <summary>
+        /// Contact sender for telling the avatar that the world supports OpenFlight contacts, since it could be out of date or the creator has turned it off.
+        /// This allows for fallback cases. 
+        /// </summary>
+        public VRCContactSender ContactSupportSender;
+        /// <summary>
         /// The contact sender, for telling avatars that they are flying.
         /// </summary>
-        public VRCContactSender Sender;
+        public VRCContactSender FlyingSender;
+        /// <summary>
+        /// Contact sender for telling the avatar that the user has flapped.
+        /// </summary>
+        public VRCContactSender FlapSender;
 
         public FlightProperties FP;
 
@@ -28,11 +38,18 @@ namespace OpenFlightVRC.Contact
 
         private Transform objtransform;
 
+        private GameObject flapObject;
+
+        private VRCTweenHandle FlapHandle;
 
         void Start()
         {
-            Sender.enabled = false;
+            FlyingSender.enabled = false;
+            ContactSupportSender.enabled = true;
             Localplayer = Networking.LocalPlayer;
+
+            flapObject = FlapSender.gameObject;
+            flapObject.SetActive(false);
 
             // Place contact at absolute zero
             objtransform = this.transform;
@@ -62,9 +79,18 @@ namespace OpenFlightVRC.Contact
         /// <param name="boolState"></param>
         internal void OnFlyingChanged(bool boolState)
         {
-            Sender.enabled = boolState;
+            FlyingSender.enabled = boolState;
             Logger.Log("Avatar OF_IsFlying Contact " + boolState, this);
         }
+
+        /// <summary>
+        /// Enable flap contact to relay flap info to avatar
+        /// </summary>
+        internal void OnFlap()
+        {
+            flapObject.SetActive(true);
+            FlapHandle = VRCTween.DelayedSetActive(flapObject, false, 0.2f);
+        } 
 
         public override void OnContactEnter(ContactEnterInfo contactInfo)
         {

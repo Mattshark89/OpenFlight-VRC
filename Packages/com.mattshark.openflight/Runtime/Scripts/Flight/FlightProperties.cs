@@ -193,9 +193,27 @@ namespace OpenFlightVRC
         /// <summary> If true, the player is currently gliding. </summary>
         public bool isGliding = false; // Has arms out while flying
 
+        [FieldChangeCallback(nameof(isFlapping))]
+        private bool _isFlapping = false;
         [HideInInspector]
 		/// <summary> If true, the player is currently in the process of flapping. </summary>
-		public bool isFlapping = false; // Doing the arm motion
+		public bool isFlapping // Doing the arm motion
+        {
+            get { return _isFlapping; }
+            set
+            {
+                if (value == _isFlapping)
+                {
+                    return;
+                }
+                _isFlapping = value;
+
+                if (value)
+                {
+                    AviContact.OnFlap();
+                }
+            }
+        }
         
         [HideInInspector]
 		public float armspan = 1f;

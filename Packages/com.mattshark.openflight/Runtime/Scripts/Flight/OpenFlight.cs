@@ -149,6 +149,18 @@ namespace OpenFlightVRC
 							break;
 
 					}
+				}
+				else
+				{
+					if (flightAllowed)
+					{
+						flightModeString = "Override: On";
+					}
+					else
+					{
+						flightModeString = "Override: Off";
+					}
+					
 				}				
 			}
 		}
