@@ -155,7 +155,7 @@ namespace OpenFlightVRC.Net
 		private bool _isLocalPlayer;
 
 		internal AvatarDetection AvatarDetection;
-		internal WingFlightPlusGlide WingFlightPlusGlide;
+		internal FlightProperties flightProperties;
 		internal OpenFlight OpenFlight;
 		internal ContributerDetection ContributerDetection;
 		public EffectsHandler effectsHandler;
@@ -163,7 +163,7 @@ namespace OpenFlightVRC.Net
 		void Update()
 		{
 			//check to make sure both scripts are available. If they arent, return
-			if (AvatarDetection == null || WingFlightPlusGlide == null || OpenFlight == null)
+			if (AvatarDetection == null || flightProperties == null || OpenFlight == null)
 			{
 				return;
 			}
@@ -174,7 +174,7 @@ namespace OpenFlightVRC.Net
 				//IsFlying = wingFlightPlusGlide.isFlying;
 				//IsFlapping = wingFlightPlusGlide.isFlapping;
 				//IsContributer = contributerDetection.localPlayerIsContributer;
-				PackedData = Util.BitPackBool(WingFlightPlusGlide.isFlying, WingFlightPlusGlide.isFlapping, ContributerDetection.localPlayerIsContributer);
+				PackedData = Util.BitPackBool(flightProperties.isFlying, flightProperties.isFlapping, ContributerDetection.localPlayerIsContributer);
 				WorldWingtipOffset = AvatarDetection.WingtipOffset * (float)AvatarDetection.d_spinetochest;
 			}
 		}
