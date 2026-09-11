@@ -381,14 +381,14 @@ namespace OpenFlightVRC
 
 					if (glideDelay <= 1)
 					{
-						Vector3 newForwardRight = Quaternion.Euler(FP.glideAngleOffset, 0, 0) * Vector3.forward;
-						Vector3 newForwardLeft = Quaternion.Euler(-FP.glideAngleOffset, 0, 0) * Vector3.forward;
+						//the -25 is a magic number, which we don't like, but I can't figure out why it is needed since the logic is the same.
+						Vector3 newForward = Quaternion.Euler(FP.glideAngleOffset-25.0f, 0, 0) * Vector3.forward;
 
                         Quaternion headrot = LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).rotation;
+
+						
 						// wingDirection is a normal vector pointing towards the forward direction, based on arm/wing angle
-						//wingDirection = Vector3.Normalize(LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).rotation * newForward);
-                        //wingDirection = Vector3.Normalize(Vector3.Slerp(RHRot * newForwardRight, LHRot * newForwardLeft, 0.5f));
-                        wingDirection = Vector3.Normalize(headrot * Vector3.forward);
+                        wingDirection = Vector3.Normalize(headrot * newForward);
 					}
 					else
 					{
@@ -403,13 +403,6 @@ namespace OpenFlightVRC
 						Vector2 tmpV2 = new Vector2(wingDirection.x, wingDirection.z).normalized * 0.145f;
 						newVelocity = new Vector3(Mathf.Round(tmpV2.x * 10) / 10, newVelocity.y, Mathf.Round(tmpV2.y * 10) / 10);
 					}
-
-					//steering = (RHPos.y - LHPos.y) * 80 / armspan;
-					//clamp steering to 45 degrees
-					//steering = Mathf.Clamp(steering, -45, 45);
-
-                    // Fallback "banking" which is just midair strafing. Nobody likes how this feels, should depreciate it
-                    //wingDirection = Quaternion.Euler(0, steering, 0) * wingDirection;
 
 					// Favoring Fun over Realism
 					// Verbose: X and Z are purely based on which way the wings are pointed ("forward") instead of calculating how the wind would hit each wing, for ease of VR control
@@ -586,7 +579,7 @@ Velocity: {8}",
                 LocalPlayer.SetGravityStrength(FP.GetFlightGravity());
                 if (!FP.allowLoco)
                 {
-                    //ImmobilizePlayer(true);
+                    ImmobilizePlayer(true);
                 }
                 Logger.Log("Took off.", this);
             }
@@ -633,7 +626,7 @@ Velocity: {8}",
 
             if (!FP.allowLoco)
             {
-                //ImmobilizePlayer(false);
+                ImmobilizePlayer(false);
             }
 
             if (!FP.dynamicPlayerPhysics)

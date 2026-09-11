@@ -2140,8 +2140,6 @@ MonoBehaviour:
   - OF_CanNotFly
   - OF_NotisOn
   - OF_NotisOff
-  - OF_JumpFlyOn
-  - OF_JumpFlyOff
   - OF_BankingOn
   - OF_BankingOff
   - OF_WingOffsetMod
@@ -2152,6 +2150,7 @@ MonoBehaviour:
   - OF_GlideControlMod
   - OF_GravityMod
   - OF_WeightMod
+  - OF_ResetToDefault
   allowSelf: 1
   allowOthers: 1
   useFaceProximity: 0

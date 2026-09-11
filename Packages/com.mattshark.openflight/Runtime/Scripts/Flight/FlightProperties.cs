@@ -324,6 +324,7 @@ namespace OpenFlightVRC
             defaultsStore.SetValue((DataToken)nameof(requireJump), requireJump);
             defaultsStore.SetValue((DataToken)nameof(allowLoco), allowLoco);
             defaultsStore.SetValue((DataToken)nameof(useAvatarModifiers), useAvatarModifiers);
+            defaultsStore.SetValue((DataToken)nameof(notifications), notifications);
             //defaultsStore.SetValue((DataToken)nameof(wingtipOffset), wingtipOffset);
             defaultsStore.SetValue((DataToken)nameof(canGlide), canGlide);
             defaultsStore.SetValue((DataToken)nameof(fallToGlide), fallToGlide);
@@ -348,6 +349,7 @@ namespace OpenFlightVRC
             requireJump = GetDefaultValue(nameof(requireJump)).Boolean;
             allowLoco = GetDefaultValue(nameof(allowLoco)).Boolean;
             useAvatarModifiers = GetDefaultValue(nameof(useAvatarModifiers)).Boolean;
+            notifications = GetDefaultValue(nameof(notifications)).Boolean;
             //wingtipOffset = GetDefaultValue(nameof(wingtipOffset)).Float;
             canGlide = GetDefaultValue(nameof(canGlide)).Boolean;
             fallToGlide = GetDefaultValue(nameof(fallToGlide)).Boolean;

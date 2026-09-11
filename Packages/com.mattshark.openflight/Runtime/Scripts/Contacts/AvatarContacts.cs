@@ -40,7 +40,7 @@ namespace OpenFlightVRC.Contact
 
         private GameObject flapObject;
 
-        private VRCTweenHandle FlapHandle;
+        private VRCTweenHandle flapHandle;
 
         void Start()
         {
@@ -50,6 +50,8 @@ namespace OpenFlightVRC.Contact
 
             flapObject = FlapSender.gameObject;
             flapObject.SetActive(false);
+
+            flapHandle = VRCTween.DelayedSetActive(flapObject, false, 0.2f).Pause();
 
             // Place contact at absolute zero
             objtransform = this.transform;
@@ -89,7 +91,7 @@ namespace OpenFlightVRC.Contact
         internal void OnFlap()
         {
             flapObject.SetActive(true);
-            FlapHandle = VRCTween.DelayedSetActive(flapObject, false, 0.2f);
+            flapHandle.Restart();
         } 
 
         public override void OnContactEnter(ContactEnterInfo contactInfo)
@@ -118,18 +120,6 @@ namespace OpenFlightVRC.Contact
                                     //Forcefully turn off notification
                                     FP.notifications = false;
                                     Logger.Log("Notifications turned off using contacts", this);
-                                    break;
-
-                                case "OF_JumpFlyOn":
-                                    //Forcefully turn on jump to fly
-                                    FP.requireJump = true;
-                                    Logger.Log("Require jump turned on using contacts", this);
-                                    break;
-
-                                case "OF_JumpFlyOff":
-                                    //Forcefully turn off jump to fly
-                                    FP.requireJump = false;
-                                    Logger.Log("Require jump turned off using contacts", this);
                                     break;
                                 
                                 case "OF_BankingOn":
@@ -210,6 +200,13 @@ namespace OpenFlightVRC.Contact
                                 case "OF_CanNotFly":
                                     Logger.Log("Contact is deactivating flying", this);
                                     OpenFlight.CannotFly();
+                                    break;
+
+                                case "OF_ResetToDefault":
+                                    Logger.Log("Contact is setting all values back to world default", this);
+                                    OpenFlight.FlightAuto();
+                                    AviDetect.ReevaluateFlight();
+                                    FP.RestoreDefaults();
                                     break;
 
                                 default:
