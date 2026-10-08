@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.85.0",
-  "JSON Date": "2026-08-09",
+  "JSON Version": "2.86.0",
+  "JSON Date": "2026-10-9",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -83,7 +83,8 @@
     "DrBlackRat",
     "kitofox",
     "Mawterwelon",
-    "Icyvarix"
+    "Icyvarix",
+    "Nicoreda"
   ],
   "Bases": {
     "Kitavali": {
@@ -2398,7 +2399,17 @@
         ],
         "Weight": 1,
         "WingtipOffset": 10.0
-      }
+      },
+      "Nico'Vali": {
+  "Original": {
+    "Name": "Nico'Vali",
+    "Creator": "Nicoreda",
+    "Introducer": "Nicoreda",
+    "Hash": ["2147274421v2"],
+    "Weight": 1,
+    "WingtipOffset": 2.23
+  }
+}
     }
   }
 }
