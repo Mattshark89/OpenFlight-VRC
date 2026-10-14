@@ -69,9 +69,9 @@ namespace OpenFlightVRC
 		/// </summary>
 		public OpenFlight OpenFlight;
 		/// <summary>
-		/// The WingFlightPlusGlide script, needed to set the flight properties
+		/// The FlightProperties script, needed to set the flight properties
 		/// </summary>
-		public WingFlightPlusGlide WingFlightPlusGlide;
+		public FlightProperties flightProperties;
 		#endregion
 		#region JSON Info
 		[System.NonSerialized]
@@ -101,11 +101,13 @@ namespace OpenFlightVRC
 		[ReadOnlyInspector]
 		public string hash = "0";
 		internal float[] HashDistances = new float[5];
+
 		/// <summary>
 		/// The weight of the currently worn avatar
 		/// </summary>
 		[ReadOnlyInspector]
 		public float weight = 1;
+
 		/// <summary>
 		/// The offset of the wing tip for the current avatar
 		/// </summary>
@@ -230,8 +232,8 @@ namespace OpenFlightVRC
 				else
 				{
 					OpenFlight.CannotFly();
-					WingFlightPlusGlide.wingtipOffset = 0;
-					WingFlightPlusGlide.weight = 1;
+					WingtipOffset = 0;
+					weight = 1;
 					Logger.Log("Avatar is not allowed to fly!", this);
 				}
 			}

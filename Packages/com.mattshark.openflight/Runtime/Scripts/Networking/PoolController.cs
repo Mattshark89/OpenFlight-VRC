@@ -17,7 +17,7 @@ namespace OpenFlightVRC.Net
 	{
 		public CyanPlayerObjectAssigner Assigner;
 		public AvatarDetection avatarDetection;
-		public WingFlightPlusGlide wingFlightPlusGlide;
+		public FlightProperties flightProperties;
 		public OpenFlight openFlight;
 		public ContributerDetection contributerDetection;
 
@@ -62,7 +62,7 @@ namespace OpenFlightVRC.Net
 
 			//set the values
 			store.AvatarDetection = avatarDetection;
-			store.WingFlightPlusGlide = wingFlightPlusGlide;
+			store.flightProperties = flightProperties;
 			store.OpenFlight = openFlight;
 			store.ContributerDetection = contributerDetection;
 
