@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.96.0",
-  "JSON Date": "2026-10-18",
+  "JSON Version": "2.95.1",
+  "JSON Date": "2026-10-19",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -2402,7 +2402,6 @@
         "WingtipOffset": 10.0
       }
     },
-    "Original": {
     "Nico'Vali": {
       "Original": {
         "Name": "Nico'Vali",
@@ -2413,16 +2412,17 @@
         ],
         "Weight": 1,
         "WingtipOffset": 2.23
+      },
+      "4 Fingers": {
+        "Name": "Nico'Vali",
+        "Creator": "Nicoreda",
+        "Introducer": "bassiy",
+        "Hash": [
+          "645499522v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 2.23
       }
     },
-  "4 finger variant": {
-    "Name": "Nico'Vali",
-    "Creator": "Nicoreda",
-    "Introducer": "bassiy",
-    "Hash": ["645499522v2"],
-    "Weight": 1,
-    "WingtipOffset": 2.23
-  }
-}
   }
 }
