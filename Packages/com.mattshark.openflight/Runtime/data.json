@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.74.0",
-  "JSON Date": "2026-04-22",
+  "JSON Version": "2.86.1",
+  "JSON Date": "2026-10-19",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -51,7 +51,7 @@
     "NeoSnivy",
     "ArkeoTP",
     "SkyWarrior",
-    "Apache Longbow",
+    "Ṉano",
     "Ordinary_night",
     "a distraction",
     "Mieze",
@@ -74,7 +74,18 @@
     "wordweaver1001",
     "KUROPPER",
     "Xavarius",
-    "Katislove"
+    "Katislove",
+    "aviona.sys",
+    "Beanthing",
+    "ReaperAvali",
+    "Mors Phantasma",
+    "KuroFoxYokai",
+    "DrBlackRat",
+    "kitofox",
+    "Mawterwelon",
+    "Icyvarix",
+    "Nicoreda",
+    "Bassiy"
   ],
   "Bases": {
     "Kitavali": {
@@ -88,7 +99,7 @@
         "Weight": 1,
         "WingtipOffset": 6.6
       },
-        "Weaver": {
+      "Weaver": {
         "Name": "Kitachi",
         "Creator": "Rai Kitamatsu/Rantis",
         "Introducer": "wordweaver1001",
@@ -489,6 +500,14 @@
         ],
         "Weight": 1,
         "WingtipOffset": 20.0
+      },
+      "Swaria v3": {
+        "Name": "Swaria",
+        "Creator": "ForestWind (Gennyuu Dousi)",
+        "Introducer": "Kitofox",
+        "Hash": ["1284114604v2"],
+        "Weight": 1,
+        "WingtipOffset": 7.5
       }
     },
     "Shade Owl": {
@@ -1955,7 +1974,7 @@
         ],
         "Weight": 1,
         "WingtipOffset": 1.5
-     }
+      }
     },
     "Revali": {
       "Original": {
@@ -2046,7 +2065,9 @@
         "Name": "YAAvali",
         "Creator": "DragonSkyRunner",
         "Introducer": "Zero_assasin",
-        "Hash": ["-242305141v2"],
+        "Hash": [
+          "-242305141v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 6.40
       }
@@ -2056,27 +2077,33 @@
         "Name": "TaliVali",
         "Creator": "Mero",
         "Introducer": "Talii",
-        "Hash": ["-2091615873v2"],
+        "Hash": [
+          "-2091615873v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 4
       }
     },
-    "Avali Pooltoy":{
+    "Avali Pooltoy": {
       "Original": {
         "Name": "Avali Pooltoy",
         "Creator": "Maitake Shiba",
         "Introducer": "Reazy Fluff",
-        "Hash": ["1797114105v2"],
+        "Hash": [
+          "1797114105v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 2.8
-      }  
+      }
     },
     "Phovali ": {
       "Original": {
         "Name": "Phovali ",
         "Creator": "Alkaline",
         "Introducer": "Zero_assasin",
-        "Hash": ["523384234v2"],
+        "Hash": [
+          "523384234v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 1.40
       }
@@ -2086,7 +2113,9 @@
         "Name": "Javali Redux",
         "Creator": "Javenchi",
         "Introducer": "FlorianGrille",
-        "Hash": ["-323300775v2"],
+        "Hash": [
+          "-323300775v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 5.28
       },
@@ -2094,7 +2123,9 @@
         "Name": "Javali Redux",
         "Creator": "Javenchi",
         "Introducer": "LunaFree",
-        "Hash": ["1317662263v2"],
+        "Hash": [
+          "1317662263v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 5.0
       }
@@ -2104,7 +2135,9 @@
         "Name": "Fluffy Gryphon",
         "Creator": "manyblinkinglights",
         "Introducer": "Purpzie",
-        "Hash": ["-2057119616v2"],
+        "Hash": [
+          "-2057119616v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 10
       },
@@ -2112,7 +2145,9 @@
         "Name": "Fluffy Gryphon (FIK)",
         "Creator": "manyblinkinglights / Purpzie",
         "Introducer": "Purpzie",
-        "Hash": ["808251203v2"],
+        "Hash": [
+          "808251203v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 10
       }
@@ -2122,7 +2157,9 @@
         "Name": "Dovabrodian",
         "Creator": "Neffertity",
         "Introducer": "Darkrei9n",
-        "Hash": ["151408313v2"],
+        "Hash": [
+          "151408313v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 8.3
       }
@@ -2132,7 +2169,9 @@
         "Name": "Remastered Reverse Avali",
         "Creator": "VictonRoy / WebserferOwO",
         "Introducer": "WebserferOwO",
-        "Hash": ["-1903530016v2"],
+        "Hash": [
+          "-1903530016v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 7.5
       }
@@ -2142,7 +2181,9 @@
         "Name": "Vi'Vali",
         "Creator": "ChimeraHollow",
         "Introducer": "Zero_assasin",
-        "Hash": ["464189971v2"],
+        "Hash": [
+          "464189971v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 7.99
       }
@@ -2152,7 +2193,9 @@
         "Name": "Moondle",
         "Creator": "Meelo / Laser Raptor",
         "Introducer": "Zeimyth",
-        "Hash": ["1602782311v2"],
+        "Hash": [
+          "1602782311v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 11.73
       }
@@ -2162,7 +2205,9 @@
         "Name": "Anra",
         "Creator": "aokuro",
         "Introducer": "Fluxsynth",
-        "Hash": ["1914552374v2"],
+        "Hash": [
+          "1914552374v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 6.44
       }
@@ -2172,29 +2217,35 @@
         "Name": "Cync'vali",
         "Creator": "Cynic",
         "Introducer": "Xavarius",
-        "Hash": ["673820797v2"],
+        "Hash": [
+          "673820797v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 2.14
       }
     },
     "Sweater Bird": {
       "Original": {
-      "Name": "Sweater Bird",
-      "Creator": "Crazium",
-      "Introducer": "KUROPPER",
-      "Hash": ["-489037540v2"],
-      "Weight": 1,
-      "WingtipOffset": 0
+        "Name": "Sweater Bird",
+        "Creator": "Crazium",
+        "Introducer": "KUROPPER",
+        "Hash": [
+          "-489037540v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 0
       }
     },
     "Feathered Raptor": {
       "Original": {
-      "Name": "Feathered Raptor",
-      "Creator": "CreatureTime",
-      "Introducer": "Xavarius",
-      "Hash": ["-713910226v2"],
-      "Weight": 1,
-      "WingtipOffset": 1.14
+        "Name": "Feathered Raptor",
+        "Creator": "CreatureTime",
+        "Introducer": "Xavarius",
+        "Hash": [
+          "-713910226v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 1.14
       }
     },
     "SnerVali": {
@@ -2202,7 +2253,9 @@
         "Name": "SnerVali",
         "Creator": "Snerfoil",
         "Introducer": "Katislove",
-        "Hash": ["280791866v2"],
+        "Hash": [
+          "280791866v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 5.55
       }
@@ -2212,9 +2265,163 @@
         "Name": "Tehvali",
         "Creator": "Octo_Hedgie / Ximmer_VR",
         "Introducer": "PhoenixFallen",
-        "Hash": ["1572237321v2"],
+        "Hash": [
+          "1572237321v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 2.5
+      }
+    },
+    "Mobu": {
+      "Original": {
+        "Name": "Mobu",
+        "Creator": "Beanthing",
+        "Introducer": "Beanthing",
+        "Hash": [
+          "-841588647v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 3.5
+      }
+    },
+    "Moonvern": {
+      "Original": {
+        "Name": "Moonvern",
+        "Creator": "Stripe / Morghus",
+        "Introducer": "AeolusDraco",
+        "Hash": [
+          "1814085582v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 10.88
+      },
+      "Royalty FT": {
+        "Name": "Moonvern - Royalty FT",
+        "Creator": "Stripe / Royalty / Morghus",
+        "Introducer": "AeolusDraco",
+        "Hash": [
+          "357482212v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 10.88
+      }
+    },
+    "Murci Bat": {
+      "Original": {
+        "Name": "Murci Bat",
+        "Creator": "Estefanoida",
+        "Introducer": "Reazy Fluff",
+        "Hash": [
+          "-158564000v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 2.1
+      }
+    },
+    "Taube - Bird": {
+      "Original": {
+        "Name": "Taube - Bird",
+        "Creator": "KufiBean",
+        "Introducer": "Mors Phantasma",
+        "Hash": [
+          "-1916865839v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 6.6
+      }
+    },
+    "Griffly": {
+      "Original": {
+        "Name": "Griffly",
+        "Creator": "Burrely",
+        "Introducer": "mackandelius",
+        "Hash": [
+          "-1584282627v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 2.05
+      }
+    },
+    "Sulka": {
+      "Original": {
+        "Name": "Sulka",
+        "Creator": "Sohvi",
+        "Introducer": "mackandelius",
+        "Hash": [
+          "1615644268v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 3.83
+      }
+    },
+    "Fluff Avali": {
+      "Original": {
+        "Name": "Fluff Avali",
+        "Creator": "Melacar",
+        "Introducer": "mackandelius",
+        "Hash": [
+          "580028676v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 7.2
+      }
+    },
+    "Tri'Vali": {
+      "Original": {
+        "Name": "Tri'Vali",
+        "Creator": "fungusfactory",
+        "Introducer": "mackandelius",
+        "Hash": [
+          "1139235167v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 3.8
+      }
+    },
+    "Flit Adventurer of the night": {
+      "Original": {
+        "Name": "Flit Adventurer of the night",
+        "Creator": "BlueGua",
+        "Introducer": "KuroFoxYokai",
+        "Hash": [
+          "-1223323622v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 1.75
+      }
+    },
+    "Protodal": {
+      "Batterwelon Mod": {
+        "Name": "Batterwelon",
+        "Creator": "Nicoreda / Mawterwelon",
+        "Introducer": "Mawterwelon",
+        "Hash": [
+          "607834026v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 10.0
+      }
+    },
+    "Nico'Vali": {
+      "Original": {
+        "Name": "Nico'Vali",
+        "Creator": "Nicoreda",
+        "Introducer": "Zero_assasin",
+        "Hash": [
+          "2147274421v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 2.23
+      },
+      "4 Fingers": {
+        "Name": "Nico'Vali",
+        "Creator": "Nicoreda",
+        "Introducer": "bassiy",
+        "Hash": [
+          "645499522v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 2.23
       }
     }
   }

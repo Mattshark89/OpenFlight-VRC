@@ -194,9 +194,6 @@ namespace OpenFlightVRC
 			//we need a accurate avatar scale for the hash to work
 			d_spinetochest = CalculateAvatarScale(out Vector3 spine, out Vector3 chest);
 
-			WingFlightPlusGlide.wingtipOffset = WingtipOffset;
-			WingFlightPlusGlide.weight = weight;
-
 			//get all the bones
 			Vector3 head = _localPlayer.GetBonePosition(HumanBodyBones.Head);
 			Vector3 neck = _localPlayer.GetBonePosition(HumanBodyBones.Neck);
@@ -227,6 +224,8 @@ namespace OpenFlightVRC
 				if (allowedToFly)
 				{
 					OpenFlight.CanFly();
+					WingFlightPlusGlide.wingtipOffset = WingtipOffset;
+					WingFlightPlusGlide.weight = weight;
 					Log(LogLevel.Info, "Avatar is allowed to fly!");
 				}
 				else
