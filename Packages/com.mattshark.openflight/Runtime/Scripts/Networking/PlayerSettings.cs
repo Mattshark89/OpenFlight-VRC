@@ -349,7 +349,12 @@ namespace OpenFlightVRC.Net
 
 
         //bweh? Should these be here? idfk
-        public void OnPersistenceUsageUpdated(VRCPlayerApi player)
+        public override void OnPersistenceUsageUpdated()
+        {
+            RunCallback(PlayerSettingsCallback.OnStorageSpaceUpdated);
+        }
+
+        public override void OnPlayerObjectStorageExceeded(VRCPlayerApi player)
         {
             if (player != Networking.LocalPlayer)
             {
@@ -359,17 +364,7 @@ namespace OpenFlightVRC.Net
             RunCallback(PlayerSettingsCallback.OnStorageSpaceUpdated);
         }
 
-        public void OnPlayerObjectStorageExceeded(VRCPlayerApi player)
-        {
-            if (player != Networking.LocalPlayer)
-            {
-                return;
-            }
-
-            RunCallback(PlayerSettingsCallback.OnStorageSpaceUpdated);
-        }
-
-        public void OnPlayerObjectStorageWarning(VRCPlayerApi player)
+        public override void OnPlayerObjectStorageWarning(VRCPlayerApi player)
         {
             if (player != Networking.LocalPlayer)
             {
@@ -1192,6 +1187,8 @@ namespace OpenFlightVRC.Net
         /// </summary>
         public void _SaveBackup()
         {
+            //TODO: Robustify this and add size checking and such to it aswell
+            //currently this backup is not very safe to use since it doesnt size check
             PlayerData.SetString(DBBackupKey, SynchedSettings);
         }
 
