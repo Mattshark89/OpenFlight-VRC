@@ -5537,8 +5537,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
   _udonSharpBackingUdonBehaviour: {fileID: 8291028337481303609}
-  wingFlightPlusGlide: {fileID: 0}
-  synchedSettings: 
+  StorageUsageRequestInterval: 30
+  WingFlightPlusGlide: {fileID: 0}
+  SynchedSettings: 
 --- !u!114 &8291028337481303609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11646,6 +11647,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AllowCollisionOwnershipTransfer: 0
+  ForceKinematicOnRemote: 0
 --- !u!1 &8933917556898475085
 GameObject:
   m_ObjectHideFlags: 0
@@ -11724,6 +11726,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AllowCollisionOwnershipTransfer: 0
+  ForceKinematicOnRemote: 0
 --- !u!1 &9166640444727553935
 GameObject:
   m_ObjectHideFlags: 0

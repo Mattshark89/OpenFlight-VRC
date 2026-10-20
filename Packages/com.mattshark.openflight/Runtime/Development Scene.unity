@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028356, g: 0.2257137, b: 0.3069222, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12046,6 +12046,7 @@ MonoBehaviour:
   PositiveChangeStorageSlider: {fileID: 2023277648}
   NegativeChangeStorageSlider: {fileID: 893956235}
   CurrentStorageSlider: {fileID: 182403994}
+  ExternalStorageSlider: {fileID: 0}
   SlotInfo: {fileID: 1872869110}
   DBInfo: {fileID: 226988066}
 --- !u!1 &1025468883 stripped
@@ -28314,6 +28315,17 @@ PrefabInstance:
       propertyPath: serializedProgramAsset
       value: 
       objectReference: {fileID: 11400000, guid: 92edf87f28f6f0d4db0207a393dd8802,
+        type: 2}
+    - target: {fileID: 5042239945321984203, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
+      propertyPath: _syncMethod
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5042239945321984203, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
+      propertyPath: serializedProgramAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: b63a94cb488154f8b8c204fe5b63ea07,
         type: 2}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}

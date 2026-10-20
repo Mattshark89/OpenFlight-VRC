@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.anatawa12.apple-silicon-harmony": {
+      "version": "file:com.anatawa12.apple-silicon-harmony",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.mattshark.openflight": {
       "version": "file:com.mattshark.openflight",
       "depth": 0,

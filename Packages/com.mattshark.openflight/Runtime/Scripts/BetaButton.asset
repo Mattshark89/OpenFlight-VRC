@@ -12,44 +12,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f11136daadff0b44ac2278a314682ab, type: 3}
   m_Name: BetaButton
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 2f2a2508b8d44894aa852f835b2a1304,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: b9d3d9eea4d306e4f8e2143a51ca0f99,
     type: 2}
-  udonAssembly: ".data_start\r\n\r\n    .export OffMaterial\r\n    .export WingedFlightBehavior\r\n   
-    .export OnMaterial\r\n    \r\n    __instance_0: %VRCUdonUdonBehaviour, this\r\n   
-    __symbolName_0: %SystemString, null\r\n    __value_0: %SystemObject, null\r\n   
-    __Boolean_0: %SystemBoolean, null\r\n    __Boolean_1: %SystemBoolean, null\r\n   
-    __name_0: %SystemString, null\r\n    __instance_1: %UnityEngineMeshRenderer,
-    null\r\n    __value_1: %UnityEngineMaterial, null\r\n    __instance_3: %VRCUdonUdonBehaviour,
-    this\r\n    __eventName_0: %SystemString, null\r\n    __String_0: %SystemString,
-    null\r\n    __instance_4: %UnityEngineMeshRenderer, null\r\n    __value_2: %UnityEngineMaterial,
-    null\r\n    __instance_2: %UnityEngineGameObject, this\r\n    __type_0: %SystemString,
-    null\r\n    __GameObject_0: %UnityEngineGameObject, this\r\n    __instance_5:
-    %VRCUdonUdonBehaviour, this\r\n    __eventName_1: %SystemString, null\r\n   
-    __String_1: %SystemString, null\r\n    optedIn: %SystemBoolean, null\r\n    OffMaterial:
-    %UnityEngineMaterial, null\r\n    WingedFlightBehavior: %VRCUdonUdonBehaviour,
-    this\r\n    OnMaterial: %UnityEngineMaterial, null\r\n\r\n.data_end\r\n\r\n.code_start\r\n\r\n   
-    .export _interact\r\n    \r\n    _interact:\r\n    \r\n        PUSH, optedIn\r\n       
-    PUSH, __value_0\r\n        EXTERN, \"SystemBoolean.__op_UnaryNegation__SystemBoolean__SystemBoolean\"\r\n       
-    PUSH, __instance_0\r\n        PUSH, __symbolName_0\r\n        PUSH, __value_0\r\n       
-    EXTERN, \"VRCUdonCommonInterfacesIUdonEventReceiver.__SetProgramVariable__SystemString_SystemObject__SystemVoid\"\r\n       
-    JUMP, 0xFFFFFFFC\r\n    \r\n    .export _onVarChange_optedIn\r\n    \r\n    _onVarChange_optedIn:\r\n   
-    \r\n        PUSH, optedIn\r\n        JUMP_IF_FALSE, 0x000000F8\r\n        PUSH,
-    __GameObject_0\r\n        PUSH, __instance_2\r\n        COPY\r\n        PUSH,
-    __instance_2\r\n        PUSH, __type_0\r\n        PUSH, __instance_1\r\n       
-    EXTERN, \"UnityEngineGameObject.__GetComponent__SystemString__UnityEngineComponent\"\r\n       
-    PUSH, OnMaterial\r\n        PUSH, __value_1\r\n        COPY\r\n        PUSH,
-    __instance_1\r\n        PUSH, __value_1\r\n        EXTERN, \"UnityEngineMeshRenderer.__set_material__UnityEngineMaterial__SystemVoid\"\r\n       
-    PUSH, WingedFlightBehavior\r\n        PUSH, __instance_3\r\n        COPY\r\n       
-    PUSH, __String_0\r\n        PUSH, __eventName_0\r\n        COPY\r\n        PUSH,
-    __instance_3\r\n        PUSH, __eventName_0\r\n        EXTERN, \"VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid\"\r\n       
-    JUMP, 0x0000018C\r\n        PUSH, __GameObject_0\r\n        PUSH, __instance_2\r\n       
-    COPY\r\n        PUSH, __instance_1\r\n        PUSH, __instance_4\r\n        COPY\r\n       
-    PUSH, OffMaterial\r\n        PUSH, __value_2\r\n        COPY\r\n        PUSH,
-    __instance_1\r\n        PUSH, __value_2\r\n        EXTERN, \"UnityEngineMeshRenderer.__set_material__UnityEngineMaterial__SystemVoid\"\r\n       
-    PUSH, WingedFlightBehavior\r\n        PUSH, __instance_5\r\n        COPY\r\n       
-    PUSH, __String_1\r\n        PUSH, __eventName_1\r\n        COPY\r\n        PUSH,
-    __instance_5\r\n        PUSH, __eventName_1\r\n        EXTERN, \"VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid\"\r\n       
-    JUMP, 0xFFFFFFFC\r\n    \r\n\r\n.code_end\r\n"
+  udonAssembly: ".data_start\n\n    .export OffMaterial\n    .export WingedFlightBehavior\n   
+    .export OnMaterial\n    \n    __instance_0: %VRCUdonUdonBehaviour, this\n   
+    __symbolName_0: %SystemString, null\n    __value_0: %SystemObject, null\n   
+    __Boolean_0: %SystemBoolean, null\n    __Boolean_1: %SystemBoolean, null\n   
+    __name_0: %SystemString, null\n    __instance_1: %UnityEngineMeshRenderer, null\n   
+    __value_1: %UnityEngineMaterial, null\n    __instance_3: %VRCUdonUdonBehaviour,
+    this\n    __eventName_0: %SystemString, null\n    __String_0: %SystemString,
+    null\n    __instance_4: %UnityEngineMeshRenderer, null\n    __value_2: %UnityEngineMaterial,
+    null\n    __instance_2: %UnityEngineGameObject, this\n    __type_0: %SystemString,
+    null\n    __GameObject_0: %UnityEngineGameObject, this\n    __instance_5: %VRCUdonUdonBehaviour,
+    this\n    __eventName_1: %SystemString, null\n    __String_1: %SystemString,
+    null\n    optedIn: %SystemBoolean, null\n    OffMaterial: %UnityEngineMaterial,
+    null\n    WingedFlightBehavior: %VRCUdonUdonBehaviour, this\n    OnMaterial:
+    %UnityEngineMaterial, null\n\n.data_end\n\n.code_start\n\n    .export _interact\n   
+    \n    _interact:\n    \n        PUSH, optedIn\n        PUSH, __value_0\n       
+    EXTERN, \"SystemBoolean.__op_UnaryNegation__SystemBoolean__SystemBoolean\"\n       
+    PUSH, __instance_0\n        PUSH, __symbolName_0\n        PUSH, __value_0\n       
+    EXTERN, \"VRCUdonCommonInterfacesIUdonEventReceiver.__SetProgramVariable__SystemString_SystemObject__SystemVoid\"\n       
+    JUMP, 0xFFFFFFFC\n    \n    .export _onVarChange_optedIn\n    \n    _onVarChange_optedIn:\n   
+    \n        PUSH, optedIn\n        JUMP_IF_FALSE, 0x000000F8\n        PUSH, __GameObject_0\n       
+    PUSH, __instance_2\n        COPY\n        PUSH, __instance_2\n        PUSH, __type_0\n       
+    PUSH, __instance_1\n        EXTERN, \"UnityEngineGameObject.__GetComponent__SystemString__UnityEngineComponent\"\n       
+    PUSH, OnMaterial\n        PUSH, __value_1\n        COPY\n        PUSH, __instance_1\n       
+    PUSH, __value_1\n        EXTERN, \"UnityEngineMeshRenderer.__set_material__UnityEngineMaterial__SystemVoid\"\n       
+    PUSH, WingedFlightBehavior\n        PUSH, __instance_3\n        COPY\n       
+    PUSH, __String_0\n        PUSH, __eventName_0\n        COPY\n        PUSH, __instance_3\n       
+    PUSH, __eventName_0\n        EXTERN, \"VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid\"\n       
+    JUMP, 0x0000018C\n        PUSH, __GameObject_0\n        PUSH, __instance_2\n       
+    COPY\n        PUSH, __instance_1\n        PUSH, __instance_4\n        COPY\n       
+    PUSH, OffMaterial\n        PUSH, __value_2\n        COPY\n        PUSH, __instance_1\n       
+    PUSH, __value_2\n        EXTERN, \"UnityEngineMeshRenderer.__set_material__UnityEngineMaterial__SystemVoid\"\n       
+    PUSH, WingedFlightBehavior\n        PUSH, __instance_5\n        COPY\n       
+    PUSH, __String_1\n        PUSH, __eventName_1\n        COPY\n        PUSH, __instance_5\n       
+    PUSH, __eventName_1\n        EXTERN, \"VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid\"\n       
+    JUMP, 0xFFFFFFFC\n    \n\n.code_end\n"
   assemblyError: 
   graphData:
     name: 
