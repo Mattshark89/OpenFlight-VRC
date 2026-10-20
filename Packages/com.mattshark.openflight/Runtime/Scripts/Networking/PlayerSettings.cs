@@ -58,7 +58,12 @@ namespace OpenFlightVRC.Net
         /// <summary>
         /// Called when we detect that storage is free
         /// </summary>
-        OnStorageFree
+        OnStorageFree,
+
+        /// <summary>
+        /// Called when the available storage space is updated
+        /// </summary>
+        OnStorageSpaceUpdated,
     }
 
     /// <summary>
@@ -150,8 +155,15 @@ namespace OpenFlightVRC.Net
         public static int _GetMaxSaveBytes()
         {
             return Networking.GetPlayerObjectStorageLimit();
-            // int howMuchIsNotUs = Networking.GetPlayerObjectStorageUsage(Networking.LocalPlayer)
-            // return Networking.GetPlayerObjectStorageLimit() - howMuchIsNotUs;
+        }
+
+        /// <summary>
+        /// Gets how much space is used by other scripts that is not the database
+        /// </summary>
+        /// <returns></returns>
+        public int _SpaceUsedExternal()
+        {
+            return Networking.GetPlayerObjectStorageUsage(Networking.LocalPlayer) - _SpaceUsed(_remoteSettings);
         }
 
         public int _SpaceUsed(DataDictionary settings)
@@ -335,7 +347,36 @@ namespace OpenFlightVRC.Net
         #endregion
 
 
+        //bweh? Should these be here? idfk
+        public void OnPersistenceUsageUpdated(VRCPlayerApi player)
+        {
+            if (player != Networking.LocalPlayer)
+            {
+                return;
+            }
 
+            RunCallback(PlayerSettingsCallback.OnStorageSpaceUpdated);
+        }
+
+        public void OnPlayerObjectStorageExceeded(VRCPlayerApi player)
+        {
+            if (player != Networking.LocalPlayer)
+            {
+                return;
+            }
+
+            RunCallback(PlayerSettingsCallback.OnStorageSpaceUpdated);
+        }
+
+        public void OnPlayerObjectStorageWarning(VRCPlayerApi player)
+        {
+            if (player != Networking.LocalPlayer)
+            {
+                return;
+            }
+
+            RunCallback(PlayerSettingsCallback.OnStorageSpaceUpdated);
+        }
 
         /// <summary>
         /// Uploads the settings to the VRC servers, along with updating our local unchanged copy
@@ -357,13 +398,15 @@ namespace OpenFlightVRC.Net
             //check if we have space
             if (!_IsSpaceAvailable(_SpaceUsed(_localSettings)))
             {
-                Log(LogLevel.Warning, "Failed to upload settings! Not enough space to save settings");
+                Log(LogLevel.Warning, "Failed to upload settings! Not enough space to save settings. Differences retained");
                 RunCallback(PlayerSettingsCallback.OnStorageFull);
+                RunCallback(PlayerSettingsCallback.OnStorageSpaceUpdated);
                 return;
             }
             else
             {
                 RunCallback(PlayerSettingsCallback.OnStorageFree);
+                RunCallback(PlayerSettingsCallback.OnStorageSpaceUpdated);
             }
 
             //update the date

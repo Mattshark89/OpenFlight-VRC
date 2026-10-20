@@ -38,6 +38,7 @@ namespace OpenFlightVRC.Net
         public Slider PositiveChangeStorageSlider;
         public Slider NegativeChangeStorageSlider;
         public Slider CurrentStorageSlider;
+        public Slider ExternalStorageSlider;
         public TextMeshProUGUI SlotInfo;
         public TextMeshProUGUI DBInfo;
         #endregion
@@ -72,8 +73,7 @@ namespace OpenFlightVRC.Net
             m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnLocalDataReady, this, new string[] { nameof(UpdateStorageText), nameof(UpdateSlotInfoText), nameof(UpdateDBInfoText) });
             m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnRemoteDifferencesDetected, this, new string[] { nameof(UpdateStorageText), nameof(UpdateSlotInfoText), nameof(UpdateDBInfoText) });
             m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnRemoteDifferencesResolved, this, new string[] { nameof(UpdateStorageText), nameof(UpdateSlotInfoText), nameof(UpdateDBInfoText) });
-            m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnStorageFull, this, new string[] { nameof(UpdateStorageText), nameof(UpdateSlotInfoText), nameof(UpdateDBInfoText) });
-            m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnStorageFree, this, new string[] { nameof(UpdateStorageText), nameof(UpdateSlotInfoText), nameof(UpdateDBInfoText) });
+            m_ReferencePlayerStore.AddCallback(PlayerSettingsCallback.OnStorageSpaceUpdated, this, new string[] { nameof(UpdateStorageText), nameof(UpdateSlotInfoText), nameof(UpdateDBInfoText) });
 
             playerDropdown.AddCallback(PlayerUIDropdownCallback.ValueChanged, this, nameof(SelectedPlayerChanged));
         }
@@ -125,6 +125,8 @@ namespace OpenFlightVRC.Net
                 //NegativeChangeStorageSlider.value = (-spaceChange) / (float)PlayerSettings._GetMaxSaveBytes();
             }
             CurrentStorageSlider.value = m_ReferencePlayerStore._RemoteSpaceUsed() / (float)PlayerSettings._GetMaxSaveBytes();
+
+            ExternalStorageSlider.value = m_ReferencePlayerStore._SpaceUsedExternal() / (float)PlayerSettings._GetMaxSaveBytes();
         }
 
         public void UpdateSlotInfoText()
