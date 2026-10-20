@@ -66,6 +66,7 @@ namespace OpenFlightVRC.Net
         OnStorageSpaceUpdated,
     }
 
+    //TODO: Split this into smaller partial segments for organizational purposes
     /// <summary>
     /// This class is used to store player settings
     /// </summary>
