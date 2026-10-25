@@ -1,7 +1,7 @@
 {
   "$schema": "./data_schema.json",
-  "JSON Version": "2.86.1",
-  "JSON Date": "2026-10-19",
+  "JSON Version": "2.87.0",
+  "JSON Date": "2026-10-25",
   "Contributers": [
     "ItsFloofy",
     "Daernaro",
@@ -85,7 +85,8 @@
     "Mawterwelon",
     "Icyvarix",
     "Nicoreda",
-    "Bassiy"
+    "Bassiy",
+    "Void The Avali"
   ],
   "Bases": {
     "Kitavali": {
@@ -505,7 +506,9 @@
         "Name": "Swaria",
         "Creator": "ForestWind (Gennyuu Dousi)",
         "Introducer": "Kitofox",
-        "Hash": ["1284114604v2"],
+        "Hash": [
+          "1284114604v2"
+        ],
         "Weight": 1,
         "WingtipOffset": 7.5
       }
@@ -2378,6 +2381,18 @@
         "WingtipOffset": 3.8
       }
     },
+    "Psychedelic Bat": {
+      "Original": {
+        "Name": "Psychedelic Bat",
+        "Creator": "fungusfactory",
+        "Introducer": "Heather May",
+        "Hash": [
+          "1501049846v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 7
+      }
+    },
     "Flit Adventurer of the night": {
       "Original": {
         "Name": "Flit Adventurer of the night",
@@ -2422,6 +2437,42 @@
         ],
         "Weight": 1,
         "WingtipOffset": 2.23
+      }
+    },
+    "Void Kitbash": {
+      "Original": {
+        "Name": "Void Kitbash",
+        "Creator": "Void The Avali / Kurai Kaiju / Rai Kitamatsu",
+        "Introducer": "Heather May",
+        "Hash": [
+          "1262098459v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 3.3
+      }
+    },
+    "Musavali": {
+      "Original": {
+        "Name": "Musavali",
+        "Creator": "Musashi Aetherius",
+        "Introducer": "Heather May",
+        "Hash": [
+          "1263448219v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 3.25
+      }
+    },
+    "Fae'vali": {
+      "Original": {
+        "Name": "Fae'vali",
+        "Creator": "Beanthing / Hantnor",
+        "Introducer": "Heather May",
+        "Hash": [
+          "-1361159896v2"
+        ],
+        "Weight": 1,
+        "WingtipOffset": 5
       }
     }
   }
